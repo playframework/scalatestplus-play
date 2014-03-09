@@ -50,14 +50,19 @@ trait OneBrowserPerSuite extends SuiteMixin with WebBrowser with Eventually with
    * If there is error when creating the <code>WebDriver</code>, <code>NoDriver</code> will be assigned 
    * instead.
    */
-  implicit val webDriver: WebDriver = try { createNewDriver } catch { case t: Throwable => NoDriver }
+  implicit val webDriver: WebDriver = try { createNewDriver } catch { case ex: Throwable => NoDriver(Some(ex)) }
 
   /**
    * Override to cancel tests automatically when <code>webDriver</code> resolve to <code>NoDriver</code>
    */
   abstract override def withFixture(test: NoArgTest): Outcome = {
     webDriver match {
-      case NoDriver => cancel("WebDriver unavailable")
+      case NoDriver(ex) =>
+          val msg = "Was unable to create the requested WebDriver on this platform"
+          ex match {
+            case Some(e) => cancel(msg, e)
+            case None => cancel(msg)
+          }
       case _ => super.withFixture(test)
     }
   }
@@ -83,7 +88,7 @@ trait OneBrowserPerSuite extends SuiteMixin with WebBrowser with Eventually with
     } finally {
       testServer.stop()
       webDriver match {
-        case NoDriver => // do nothing for NoDriver
+        case NoDriver(_) => // do nothing for NoDriver
         case _ => webDriver.close()
       }
     }

@@ -85,7 +85,7 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
         htmlUnitDriver
       }
       catch {
-        case _: Throwable => NoDriver
+        case ex: Throwable => NoDriver(Some(ex))
       }
 
     /**
@@ -99,7 +99,12 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
      */
     override def apply() {
       webDriver match {
-        case NoDriver => cancel("Unable to create an HtmlUnitDriver on this platform")
+        case NoDriver(ex) =>
+          val msg = "Was unable to create an HtmlUnitDriver on this platform"
+          ex match {
+            case Some(e) => cancel(msg, e)
+            case None => cancel(msg)
+          }
         case _ => 
           try Helpers.running(TestServer(port, app))(super.apply())
           finally webDriver.close()
@@ -126,7 +131,7 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
         new FirefoxDriver(firefoxProfile)
       }
       catch {
-        case _: Throwable => NoDriver
+        case ex: Throwable => NoDriver(Some(ex))
       }
 
     /**
@@ -140,7 +145,12 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
      */
     override def apply() {
       webDriver match {
-        case NoDriver => cancel("Unable to create a FirefoxDriver on this platform")
+        case NoDriver(ex) =>
+          val msg = "Was unable to create a FirefoxDriver on this platform"
+          ex match {
+            case Some(e) => cancel(msg, e)
+            case None => cancel(msg)
+          }
         case _ => 
           try Helpers.running(TestServer(port, app))(super.apply())
           finally webDriver.close()
@@ -161,7 +171,7 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
         new SafariDriver()
       }
       catch {
-        case _: Throwable => NoDriver
+        case ex: Throwable => NoDriver(Some(ex))
       }
 
     /**
@@ -175,7 +185,12 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
      */
     override def apply() {
       webDriver match {
-        case NoDriver => cancel("Unable to create a SafariDriver on this platform")
+        case NoDriver(ex) =>
+          val msg = "Was unable to create a SafariDriver on this platform"
+          ex match {
+            case Some(e) => cancel(msg, e)
+            case None => cancel(msg)
+          }
         case _ => 
           try Helpers.running(TestServer(port, app))(super.apply())
           finally webDriver.close()
@@ -196,7 +211,7 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
         new ChromeDriver()
       }
       catch {
-        case _: Throwable => NoDriver
+        case ex: Throwable => NoDriver(Some(ex))
       }
 
     /**
@@ -210,7 +225,12 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
      */
     override def apply() {
       webDriver match {
-        case NoDriver => cancel("Unable to create a ChromeDriver on this platform")
+        case NoDriver(ex) =>
+          val msg = "Was unable to create a ChromeDriver on this platform"
+          ex match {
+            case Some(e) => cancel(msg, e)
+            case None => cancel(msg)
+          }
         case _ => 
           try Helpers.running(TestServer(port, app))(super.apply())
           finally webDriver.close()
@@ -231,7 +251,7 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
         new InternetExplorerDriver()
       }
       catch {
-        case _: Throwable => NoDriver
+        case ex: Throwable => NoDriver(Some(ex))
       }
 
     /**
@@ -245,7 +265,12 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
      */
     override def apply() {
       webDriver match {
-        case NoDriver => cancel("Unable to create an InternetExplorerDriver on this platform")
+        case NoDriver(ex) =>
+          val msg = "Was unable to create an InternetExplorerDriver on this platform"
+          ex match {
+            case Some(e) => cancel(msg, e)
+            case None => cancel(msg)
+          }
         case _ => 
           try Helpers.running(TestServer(port, app))(super.apply())
           finally webDriver.close()

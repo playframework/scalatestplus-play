@@ -69,12 +69,17 @@ trait OneBrowserPerTest extends SuiteMixin with WebBrowser with Eventually with 
           createNewDriver
         }
         catch {
-          case _: Throwable => NoDriver
+          case ex: Throwable => NoDriver(Some(ex))
         }
     }
     try {
       privateWebDriver match {
-        case NoDriver => cancel("WebDriver unavailable")
+        case NoDriver(ex) =>
+          val msg = "Was unable to create the requested WebDriver on this platform"
+          ex match {
+            case Some(e) => cancel(msg, e)
+            case None => cancel(msg)
+          }
         case _ =>
           Helpers.running(TestServer(port, app)) {
             super.withFixture(test)
@@ -83,7 +88,7 @@ trait OneBrowserPerTest extends SuiteMixin with WebBrowser with Eventually with 
     }
     finally {
       privateWebDriver match {
-        case NoDriver => // do nothing
+        case NoDriver(_) => // do nothing
         case _ => privateWebDriver.close()
       }
     }

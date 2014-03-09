@@ -46,8 +46,10 @@ object BrowserDriver {
    * Traits <code>OneBrowserPerSuite</code>, <code>OneBrowserPerTest</code>, and <code>MixedFixtures</code> check
    * if the requested <code>WebDriver</code> is available, and if not installs this driver (to avoid initializing with <code>null</code>),
    * and cancels the tests.
+   *
+   * @param ex: the <code>Throwable</code>, if any, that was thrown when attempting to use the requested driver
    */
-  object NoDriver extends WebDriver {
+  case class NoDriver(ex: Option[Throwable]) extends WebDriver {
   
     /**
      * Throws <code>UnsupportedOperationException</code>.
