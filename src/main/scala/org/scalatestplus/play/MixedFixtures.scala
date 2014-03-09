@@ -100,7 +100,7 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
     override def apply() {
       webDriver match {
         case NoDriver(ex) =>
-          val msg = "Was unable to create an HtmlUnitDriver on this platform"
+          val msg = Resources("cantCreateHtmlUnitDriver")
           ex match {
             case Some(e) => cancel(msg, e)
             case None => cancel(msg)
@@ -146,7 +146,7 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
     override def apply() {
       webDriver match {
         case NoDriver(ex) =>
-          val msg = "Was unable to create a FirefoxDriver on this platform"
+          val msg = Resources("cantCreateFirefoxDriver")
           ex match {
             case Some(e) => cancel(msg, e)
             case None => cancel(msg)
@@ -186,7 +186,7 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
     override def apply() {
       webDriver match {
         case NoDriver(ex) =>
-          val msg = "Was unable to create a SafariDriver on this platform"
+          val msg = Resources("cantCreateSafariDriver")
           ex match {
             case Some(e) => cancel(msg, e)
             case None => cancel(msg)
@@ -226,7 +226,7 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
     override def apply() {
       webDriver match {
         case NoDriver(ex) =>
-          val msg = "Was unable to create a ChromeDriver on this platform"
+          val msg = Resources("cantCreateChromeDriver")
           ex match {
             case Some(e) => cancel(msg, e)
             case None => cancel(msg)
@@ -266,7 +266,7 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
     override def apply() {
       webDriver match {
         case NoDriver(ex) =>
-          val msg = "Was unable to create an InternetExplorerDriver on this platform"
+          val msg = Resources("cantCreateInternetExplorerDriver")
           ex match {
             case Some(e) => cancel(msg, e)
             case None => cancel(msg)
