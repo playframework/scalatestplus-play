@@ -15,7 +15,7 @@ libraryDependencies ++= Seq(
   "org.seleniumhq.selenium" % "selenium-java" % "2.38.0"
 )
 
-testOptions in Test += Tests.Argument("-oT")
+testOptions in Test += Tests.Argument("-oTK")
 
 parallelExecution in Test := false
 
