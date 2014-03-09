@@ -37,5 +37,8 @@ trait FirefoxBrowser extends BrowserDriver {
    * Creates a new instance of <code>FirefoxDriver</code>.
    */
   def createNewDriver: WebDriver = new FirefoxDriver(firefoxProfile)
+    
+  // Use inherited Scaladoc message
+  def cantCreateRequestedDriver: String = Resources("cantCreateFirefoxDriver")
 }
 

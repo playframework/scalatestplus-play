@@ -32,5 +32,8 @@ trait InternetExplorerBrowser extends BrowserDriver {
    * Create a new instance of <code>InternetExplorerDriver</code>.
    */
   def createNewDriver: WebDriver = new InternetExplorerDriver()
+
+  // Use inherited Scaladoc message
+  def cantCreateRequestedDriver: String = Resources("cantCreateInternetExplorerDriver")
 }
 

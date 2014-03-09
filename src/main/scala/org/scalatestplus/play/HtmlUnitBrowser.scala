@@ -36,5 +36,8 @@ trait HtmlUnitBrowser extends BrowserDriver {
     htmlUnitDriver.setJavascriptEnabled(true)
     htmlUnitDriver
   }
+    
+  // Use inherited Scaladoc message
+  def cantCreateRequestedDriver: String = Resources("cantCreateHtmlUnitDriver")
 }
 

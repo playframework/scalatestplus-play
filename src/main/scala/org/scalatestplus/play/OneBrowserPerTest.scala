@@ -77,8 +77,8 @@ trait OneBrowserPerTest extends SuiteMixin with WebBrowser with Eventually with 
         case NoDriver(ex) =>
           val msg = "Was unable to create the requested WebDriver on this platform"
           ex match {
-            case Some(e) => cancel(msg, e)
-            case None => cancel(msg)
+            case Some(e) => cancel(cantCreateRequestedDriver, e)
+            case None => cancel(cantCreateRequestedDriver)
           }
         case _ =>
           Helpers.running(TestServer(port, app)) {

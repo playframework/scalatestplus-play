@@ -29,6 +29,11 @@ trait BrowserDriver {
    * @return an new instance of Selenium <code>WebDriver</code>
    */
   def createNewDriver: WebDriver
+
+  /**
+   * Error message to use if <code>createNewDriver</code> completes abruptly with an exception.
+   */
+  def cantCreateRequestedDriver: String
 }
 
 import org.openqa.selenium._

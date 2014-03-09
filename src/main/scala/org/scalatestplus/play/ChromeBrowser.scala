@@ -32,5 +32,8 @@ trait ChromeBrowser extends BrowserDriver {
    * Creates a new instance of <code>ChromeDriver</code>.
    */
   def createNewDriver: WebDriver = new ChromeDriver()
+
+  // Use inherited Scaladoc message
+  def cantCreateRequestedDriver: String = Resources("cantCreateChromeDriver")
 }
 

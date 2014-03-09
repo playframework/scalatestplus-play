@@ -32,5 +32,8 @@ trait SafariBrowser extends BrowserDriver {
    * Creates a new instance of <code>SafariDriver</code>.
    */
   def createNewDriver: WebDriver = new SafariDriver()
+
+  // Use inherited Scaladoc message
+  def cantCreateRequestedDriver: String = Resources("cantCreateSafariDriver")
 }
 
