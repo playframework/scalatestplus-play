@@ -21,6 +21,7 @@ import selenium.WebBrowser
 import concurrent.Eventually
 import concurrent.IntegrationPatience
 import org.openqa.selenium.WebDriver
+import BrowserDriver.NoDriver
 
 /**
  * Trait that provides new browser instance for each test executed in a ScalaTest <code>Suite</code>.

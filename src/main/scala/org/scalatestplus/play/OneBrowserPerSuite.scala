@@ -21,6 +21,7 @@ import selenium.WebBrowser
 import concurrent.Eventually
 import concurrent.IntegrationPatience
 import org.openqa.selenium.WebDriver
+import BrowserDriver.NoDriver
 
 /**
  * Trait that provides one <code>WebBrowser</code> instance per ScalaTest <code>Suite</code>.
