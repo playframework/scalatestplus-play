@@ -57,7 +57,7 @@ trait OneBrowserPerSuite extends SuiteMixin with WebBrowser with Eventually with
    */
   abstract override def withFixture(test: NoArgTest): Outcome = {
     webDriver match {
-      case NoDriver => cancel
+      case NoDriver => cancel("WebDriver unavailable")
       case _ => super.withFixture(test)
     }
   }

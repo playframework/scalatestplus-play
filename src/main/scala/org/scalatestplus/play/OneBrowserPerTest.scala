@@ -74,7 +74,7 @@ trait OneBrowserPerTest extends SuiteMixin with WebBrowser with Eventually with 
     }
     try {
       privateWebDriver match {
-        case NoDriver => cancel
+        case NoDriver => cancel("WebDriver unavailable")
         case _ =>
           Helpers.running(TestServer(port, app)) {
             super.withFixture(test)

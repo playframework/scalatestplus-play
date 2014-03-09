@@ -99,7 +99,7 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
      */
     override def apply() {
       webDriver match {
-        case NoDriver => cancel
+        case NoDriver => cancel("Unable to create an HtmlUnitDriver on this platform")
         case _ => 
           try Helpers.running(TestServer(port, app))(super.apply())
           finally webDriver.close()
@@ -140,7 +140,7 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
      */
     override def apply() {
       webDriver match {
-        case NoDriver => cancel
+        case NoDriver => cancel("Unable to create a FirefoxDriver on this platform")
         case _ => 
           try Helpers.running(TestServer(port, app))(super.apply())
           finally webDriver.close()
@@ -175,7 +175,7 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
      */
     override def apply() {
       webDriver match {
-        case NoDriver => cancel
+        case NoDriver => cancel("Unable to create a SafariDriver on this platform")
         case _ => 
           try Helpers.running(TestServer(port, app))(super.apply())
           finally webDriver.close()
@@ -196,7 +196,7 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
         new ChromeDriver()
       }
       catch {
-        case _: Throwable => cancel
+        case _: Throwable => NoDriver
       }
 
     /**
@@ -210,7 +210,7 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
      */
     override def apply() {
       webDriver match {
-        case NoDriver => cancel
+        case NoDriver => cancel("Unable to create a ChromeDriver on this platform")
         case _ => 
           try Helpers.running(TestServer(port, app))(super.apply())
           finally webDriver.close()
@@ -231,7 +231,7 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
         new InternetExplorerDriver()
       }
       catch {
-        case _: Throwable => cancel
+        case _: Throwable => NoDriver
       }
 
     /**
@@ -245,7 +245,7 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
      */
     override def apply() {
       webDriver match {
-        case NoDriver => cancel
+        case NoDriver => cancel("Unable to create an InternetExplorerDriver on this platform")
         case _ => 
           try Helpers.running(TestServer(port, app))(super.apply())
           finally webDriver.close()
