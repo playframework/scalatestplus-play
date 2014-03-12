@@ -15,15 +15,27 @@
  */
 import sbt._
 import sbt.Keys._
+import com.typesafe.sbt.SbtPgp._
 
 object ScalaTestPlusPlayBuild extends Build {
 
   val releaseVersion = "0.9.0"
   val projectTitle = "ScalaTest + Play" // for scaladoc source urls
 
+  def envVar(name: String): String =
+    try {
+      sys.env(name)
+    }
+    catch {
+      case e: NoSuchElementException => "Environment variable '" + name + "' not specified."
+    }
+
+
   val buildSettings = Defaults.defaultSettings ++ Seq(
 
-    name := projectTitle,
+    name := "plusplay",
+
+    organization := "org.scalatest",
 
     version := releaseVersion,
 
@@ -46,7 +58,6 @@ object ScalaTestPlusPlayBuild extends Build {
     scalacOptions in (Compile, doc) := Seq("-doc-title", projectTitle + ", " + releaseVersion)
   )
 
-/*
   val sonatypeSettings = Seq(
     publishMavenStyle := true,
     publishArtifact in Test := false,
@@ -58,7 +69,12 @@ object ScalaTestPlusPlayBuild extends Build {
       else
         Some("releases" at nexus + "service/local/staging/deploy/maven2")
     },
-    credentials += Credentials(Path.userHome / ".ivy2" / ".credentials"),
+
+    credentials += Credentials(
+      "Sonatype Nexus Repository Manager", "oss.sonatype.org", envVar("SCALATEST_NEXUS_LOGIN"), envVar("SCALATEST_NEXUS_PASSWORD")),
+    pgpSecretRing := file(envVar("SCALATEST_GPG_FILE")),
+    // pgpPassphrase := Some(envVar("SCALATEST_GPG_PASSPHASE").toCharArray),
+
     pomExtra := (
       <url>http://www.scalatest.org/plus/play</url>
       <licenses>
@@ -92,11 +108,15 @@ object ScalaTestPlusPlayBuild extends Build {
           <email>cheeseng@amaseng.com</email>
         </developer>
       </developers>
+      <parent>
+        <groupId>org.scalatest</groupId>
+        <artifactId>plus-play</artifactId>
+        <version>0.0.9</version>
+      </parent>
       ))
-*/
   lazy val root = Project(
     "ScalaTestPlusPlay",
     file("."),
-    settings = buildSettings
-  ) /*++ sonatypeSettings ++ Seq()) */
+    settings = buildSettings ++ sonatypeSettings
+  )
 }
