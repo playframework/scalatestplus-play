@@ -1,7 +1,11 @@
 
-name := "ScalaTestPlus-Play"
+val releaseVersion = "0.9.0"
 
-version := "0.9.0"
+val projectTitle = "ScalaTest + Play" // for scaladoc source urls
+
+name := projectTitle
+
+version := releaseVersion
 
 scalaVersion := "2.10.3"
 
@@ -19,4 +23,5 @@ testOptions in Test += Tests.Argument("-oTK")
 
 parallelExecution in Test := false
 
+scalacOptions in (Compile, doc) := Seq("-doc-title", projectTitle + ", " + releaseVersion)
 
