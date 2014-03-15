@@ -19,23 +19,40 @@ import com.typesafe.sbt.SbtPgp._
 
 object ScalaTestPlusPlayBuild extends Build {
 
-  val releaseVersion = "0.9.0"
+  val releaseVersion = "0.8.0"
   val projectTitle = "ScalaTest + Play" // for scaladoc source urls
 
-  def envVar(name: String): String =
+  def envVar(name: String): Option[String] =
     try {
-      sys.env(name)
+      Some(sys.env(name))
     }
     catch {
-      case e: NoSuchElementException => "Environment variable '" + name + "' not specified."
+      case e: NoSuchElementException => None
     }
 
+  def getGPGFilePath: String =
+    envVar("SCALATEST_GPG_FILE") match {
+      case Some(path) => path
+      case None => (Path.userHome / ".gnupg" / "secring.gpg").getAbsolutePath
+    }
+
+  def getGPGPassphase: Option[Array[Char]] =
+    envVar("SCALATEST_GPG_PASSPHASE") match {
+      case Some(passphase) => Some(passphase.toCharArray)
+      case None => None
+    }
+
+  def getNexusCredentials: Credentials =
+    (envVar("SCALATEST_NEXUS_LOGIN"), envVar("SCALATEST_NEXUS_PASSWORD")) match {
+      case (Some(login), Some(password)) => Credentials("Sonatype Nexus Repository Manager", "oss.sonatype.org", login, password)
+      case _ => Credentials(Path.userHome / ".ivy2" / ".credentials")
+    }
 
   val buildSettings = Defaults.defaultSettings ++ Seq(
 
-    name := "plusplay",
+    name := "scalatest-plus-play",
 
-    organization := "org.scalatest",
+    organization := "org.scalatestplus",
 
     version := releaseVersion,
 
@@ -51,17 +68,19 @@ object ScalaTestPlusPlayBuild extends Build {
       "org.seleniumhq.selenium" % "selenium-java" % "2.38.0"
     ),
 
-    testOptions in Test += Tests.Argument("-oTK"),
-
     parallelExecution in Test := false,
+
+    testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oTK"),
 
     scalacOptions in (Compile, doc) := Seq("-doc-title", projectTitle + ", " + releaseVersion)
   )
 
   val sonatypeSettings = Seq(
+
     publishMavenStyle := true,
     publishArtifact in Test := false,
     pomIncludeRepository := { _ => false },
+
     publishTo <<= version { (v: String) =>
       val nexus = "https://oss.sonatype.org/"
       if (v.trim.endsWith("SNAPSHOT"))
@@ -70,10 +89,9 @@ object ScalaTestPlusPlayBuild extends Build {
         Some("releases" at nexus + "service/local/staging/deploy/maven2")
     },
 
-    credentials += Credentials(
-      "Sonatype Nexus Repository Manager", "oss.sonatype.org", envVar("SCALATEST_NEXUS_LOGIN"), envVar("SCALATEST_NEXUS_PASSWORD")),
-    pgpSecretRing := file(envVar("SCALATEST_GPG_FILE")),
-    // pgpPassphrase := Some(envVar("SCALATEST_GPG_PASSPHASE").toCharArray),
+    credentials += getNexusCredentials,
+    pgpSecretRing := file(getGPGFilePath),
+    pgpPassphrase := getGPGPassphase,
 
     pomExtra := (
       <url>http://www.scalatest.org/plus/play</url>
@@ -108,11 +126,6 @@ object ScalaTestPlusPlayBuild extends Build {
           <email>cheeseng@amaseng.com</email>
         </developer>
       </developers>
-      <parent>
-        <groupId>org.scalatest</groupId>
-        <artifactId>plus-play</artifactId>
-        <version>0.0.9</version>
-      </parent>
       ))
   lazy val root = Project(
     "ScalaTestPlusPlay",
