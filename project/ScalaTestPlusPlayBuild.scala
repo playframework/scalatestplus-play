@@ -19,7 +19,7 @@ import com.typesafe.sbt.SbtPgp._
 
 object ScalaTestPlusPlayBuild extends Build {
 
-  val releaseVersion = "0.8.0"
+  val releaseVersion = "0.8.0-SNAP1"
   val projectTitle = "ScalaTest + Play" // for scaladoc source urls
 
   def envVar(name: String): Option[String] =
@@ -50,9 +50,9 @@ object ScalaTestPlusPlayBuild extends Build {
 
   val buildSettings = Defaults.defaultSettings ++ Seq(
 
-    name := "scalatest-plus-play",
+    name := "play", // The Artifact ID when deployed should be "play"
 
-    organization := "org.scalatestplus",
+    organization := "org.scalatestplus", // The Groupd ID when deployed should be "org.scalatestplus"
 
     version := releaseVersion,
 
