@@ -29,14 +29,4 @@ import play.api.http.{ HttpProtocol, Status, HeaderNames }
  * Convenience "super Suite" base class for Play tests.
  */
 abstract class PlaySpec extends WordSpec with MustMatchers with OptionValues
-    with PlayRunners
-    with HeaderNames
-    with Status
-    with HttpProtocol
-    with DefaultAwaitTimeout
-    with ResultExtractors
-    with Writeables
-    with RouteInvokers
-    with WsTestClient
-    with FutureAwaits
 
