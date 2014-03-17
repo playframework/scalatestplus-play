@@ -19,7 +19,7 @@ import com.typesafe.sbt.SbtPgp._
 
 object ScalaTestPlusPlayBuild extends Build {
 
-  val releaseVersion = "0.8.0-SNAP1"
+  val releaseVersion = "0.8.0-SNAP2"
   val projectTitle = "ScalaTest + Play" // for scaladoc source urls
 
   def envVar(name: String): Option[String] =
