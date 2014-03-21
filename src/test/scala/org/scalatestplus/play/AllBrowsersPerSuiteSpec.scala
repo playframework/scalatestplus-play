@@ -72,7 +72,7 @@ class AllBrowsersPerSuiteSpec extends UnitSpec with AllBrowsersPerSuite {
       configuredWebDriver mustBe defined
     }
     "put the webDriverName in the configMap" in {
-      val configuredWebDriverName = configMap.getOptional[WebDriver]("webDriverName")
+      val configuredWebDriverName = configMap.getOptional[String]("webDriverName")
       configuredWebDriverName mustBe defined
     }
     "provide a web driver" in {

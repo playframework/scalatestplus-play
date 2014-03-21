@@ -58,14 +58,6 @@ trait AllBrowsersPerSuite extends SuiteMixin with WebBrowser with Eventually wit
 
   protected def firefoxProfile: FirefoxProfile = new FirefoxProfile
 
-  private[scalatestplus] def createWebDrivers: Map[String, WebDriver] =
-    Map(
-      "CHROME" -> (try { new ChromeDriver() } catch { case ex: Throwable => NoDriver(Some(ex)) }),
-      "FIREFOX" -> (try { new FirefoxDriver(firefoxProfile) } catch { case ex: Throwable => NoDriver(Some(ex)) }),
-      "IE" -> (try { new InternetExplorerDriver } catch { case ex: Throwable => NoDriver(Some(ex)) }),
-      "SAFARI" -> (try { new SafariDriver } catch { case ex: Throwable => NoDriver(Some(ex)) })
-    )
-
   /**
    * Override to cancel tests automatically when <code>webDriver</code> resolve to <code>NoDriver</code>
    */
@@ -95,34 +87,36 @@ trait AllBrowsersPerSuite extends SuiteMixin with WebBrowser with Eventually wit
    */
   abstract override def run(testName: Option[String], args: Args): Status = {
     val testServer = TestServer(port, app)
-    val availableWebDrivers = createWebDrivers
+    val availableWebDrivers =
+      Set(
+        ("CHROME", () => WebDriverFactory.createChromeDriver),
+        ("FIREFOX", () => WebDriverFactory.createFirefoxDriver(firefoxProfile)),
+        ("IE", () => WebDriverFactory.createInternetExplorerDriver),
+        ("SAFARI", () => WebDriverFactory.createSafariDriver)
+      )
     try {
       testServer.start()
       new CompositeStatus(
-        (availableWebDrivers.map { case (name, driver) =>
+        (availableWebDrivers.map { case (name, driverFun) =>
           synchronized {
-            privateWebDriver = driver
+            privateWebDriver = driverFun()
           }
           val newConfigMap = args.configMap + ("app" -> app) + ("port" -> port) + ("webDriver" -> webDriver) + ("webDriverName" -> name)
           val newArgs = args.copy(configMap = newConfigMap)
-          super.run(testName, newArgs)
+          try {
+            super.run(testName, newArgs)
+          }
+          finally {
+            privateWebDriver match {
+              case NoDriver(_) => // do nothing for NoDriver
+              case theDriver => theDriver.close()
+            }
+          }
         }).toSet
       )
     } finally {
       testServer.stop()
-      availableWebDrivers.foreach { case (name, driver) =>
-        driver match {
-          case NoDriver(_) => // do nothing for NoDriver
-          case theDriver => theDriver.close()
-        }
-      }
     }
   }
-
-  /*abstract override def runTest(testName: String, args: Args): Status = {
-    val webDriverName = args.configMap("webDriverName")
-    //this.info(testName + " for " + webDriverName)
-    super.runTest(testName, args)
-  }*/
 }
 
