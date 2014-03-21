@@ -22,20 +22,35 @@ import selenium.WebBrowser
 import concurrent.Eventually
 import concurrent.IntegrationPatience
 import org.openqa.selenium.WebDriver
+import org.openqa.selenium.firefox.FirefoxProfile
 import BrowserDriver.NoDriver
-import org.openqa.selenium.chrome.ChromeDriver
-import org.openqa.selenium.firefox.{FirefoxDriver, FirefoxProfile}
-import org.openqa.selenium.ie.InternetExplorerDriver
-import org.openqa.selenium.safari.SafariDriver
 
 /**
- * Trait that provides one <code>WebBrowser</code> instance per ScalaTest <code>Suite</code>.
+ * Trait that provides facility to discover available <code>WebBrowser</code> on the running platform and create instances to run tests per ScalaTest <code>Suite</code>.
  *
  * It overrides ScalaTest's <code>Suite.run</code> method to start a <code>TestServer</code> before test execution,
- * and stop the <code>TestServer</code> after test execution has completed.  You can access the <code>FakeApplication</code>
- * in <code>args.configMap</code> using the <code>"app"</code> key, the port number of the <code>TestServer</code> using the <code>"port"</code> key and
- * the <code>WebDriver</code> instance using <code>"webDriver"</code> key.  This traits also overrides <code>Suite.withFixture</code>
- * to cancel all the tests automatically if the related <code>WebDriver</code> is not available in the running system.
+ * and stop the <code>TestServer</code> after test execution has completed.  Additionally, it will discover available <code>WebBrowser</code> on the running platform, and
+ * call <code>super.run</code> for each available <code>WebBrowser</code> instance.  You can access the <code>FakeApplication</code>
+ * in <code>args.configMap</code> using the <code>"app"</code> key, the port number of the <code>TestServer</code> using the <code>"port"</code> key,
+ * the <code>WebDriver</code> instance using <code>"webDriver"</code> key and the name of the running <code>WebDriver</code> instance using <code>"webDriverName"</code>.
+ * By default, this traits also overrides <code>Suite.withFixture</code> to cancel all the tests automatically if the related <code>WebDriver</code> is not available in the
+ * running system.
+ *
+ * You can explicitly specify which <code>WebBrowser</code>(s) to run though config map's <code>"browsers"</code> key:
+ *
+ * <ul>
+ *   <li>C - Chrome</li>
+ *   <li>F - Firefox</li>
+ *   <li>I - Internet Explorer</li>
+ *   <li>S - Safari</li>
+ *   <li>H - HtmlUnit</li>
+ * </ul>
+ *
+ * For example, you can pass in <code>-Dbrowsers="CF"</code> to run <code>Chrome</code> and <code>Firefox</code> only.
+ *
+ * If no valid web browser is specified through config map's <code>"browsers"</code> string, it will fallback to default which discover all available <code>WebDriver</code>
+ * and run with them.
+ *
  */
 trait AllBrowsersPerSuite extends SuiteMixin with WebBrowser with Eventually with IntegrationPatience { this: Suite =>
 
@@ -57,6 +72,12 @@ trait AllBrowsersPerSuite extends SuiteMixin with WebBrowser with Eventually wit
    */
   implicit def webDriver: WebDriver = synchronized { privateWebDriver }
 
+  /**
+   * Method to provide <code>FirefoxProfile</code> for creating <code>FirefoxDriver</code>, you can override this method to
+   * provide a customized instance of <code>FirefoxProfile</code>
+   *
+   * @return an instance of <code>FirefoxProfile</code>
+   */
   protected def firefoxProfile: FirefoxProfile = new FirefoxProfile
 
   /**
@@ -77,9 +98,11 @@ trait AllBrowsersPerSuite extends SuiteMixin with WebBrowser with Eventually wit
 
   /**
    * Overriden to start <code>TestServer</code> before running the tests, pass a <code>FakeApplication</code> into the tests in
-   * <code>args.configMap</code> via "app" key, <code>TestServer</code>'s port number via "port" and <code>WebDriver</code>
-   * instance via "webDriver" key.  It then calls <code>super.run</code> to execute the tests, and upon completion stops <code>TestServer</code>
-   * and close the <code>WebDriver</code>.
+   * <code>args.configMap</code> via "app" key, <code>TestServer</code>'s port number via "port", <code>WebDriver</code>
+   * instance via "webDriver" key and the name of <code>WebDriver</code> via "webDriverName" key.  It then discover available
+   * <code>WebBrowser</code> on the running platform (and filter them if -Dbrowsers=... is specified through config map) and calls
+   * <code>super.run</code> for each of them to execute the tests.  An instance of <code>WebBrowser</code> will be closed first before
+   * the next one is created and run.  Upon completion, it stops the <code>TestServer</code>.
    *
    * @param testName an optional name of one test to run. If <code>None</code>, all relevant tests should be run.
    *                 I.e., <code>None</code> acts like a wildcard that means run all relevant tests in this <code>Suite</code>.
