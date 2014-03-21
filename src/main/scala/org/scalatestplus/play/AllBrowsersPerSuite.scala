@@ -89,10 +89,11 @@ trait AllBrowsersPerSuite extends SuiteMixin with WebBrowser with Eventually wit
     val testServer = TestServer(port, app)
     val availableWebDrivers =
       Set(
-        ("CHROME", () => WebDriverFactory.createChromeDriver),
-        ("FIREFOX", () => WebDriverFactory.createFirefoxDriver(firefoxProfile)),
-        ("IE", () => WebDriverFactory.createInternetExplorerDriver),
-        ("SAFARI", () => WebDriverFactory.createSafariDriver)
+        ("Chrome", () => WebDriverFactory.createChromeDriver),
+        ("Firefox", () => WebDriverFactory.createFirefoxDriver(firefoxProfile)),
+        ("Internet Explorer", () => WebDriverFactory.createInternetExplorerDriver),
+        ("Safari", () => WebDriverFactory.createSafariDriver),
+        ("HtmlUnit", () => WebDriverFactory.createHtmlUnitDriver)
       )
     try {
       testServer.start()

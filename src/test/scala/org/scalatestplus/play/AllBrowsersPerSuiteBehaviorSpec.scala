@@ -20,6 +20,7 @@ import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.firefox.{FirefoxDriver, FirefoxProfile}
 import org.openqa.selenium.ie.InternetExplorerDriver
 import org.openqa.selenium.safari.SafariDriver
+import org.openqa.selenium.htmlunit.HtmlUnitDriver
 
 class AllBrowsersPerSuiteBehaviorSpec extends WordSpec {
 
@@ -35,11 +36,21 @@ class AllBrowsersPerSuiteBehaviorSpec extends WordSpec {
       val firefox = try { val d = new FirefoxDriver(new FirefoxProfile); d.close(); 1 } catch { case ex: Throwable => 0 }
       val internetExplorer =  try { val d = new InternetExplorerDriver; d.close(); 1 } catch { case ex: Throwable => 0 }
       val safari = try { val d = new SafariDriver; d.close(); 1 } catch { case ex: Throwable => 0 }
+      val htmlUnit =
+        try {
+          val d = new HtmlUnitDriver()
+          d.setJavascriptEnabled(true)
+          d.close()
+          1
+        }
+        catch {
+          case ex: Throwable => 0
+        }
 
-      val availableBrowserCount = chrome + firefox + internetExplorer + safari
-      val expectedTestStartingCount = 8 // 4 * 2
+      val availableBrowserCount = chrome + firefox + internetExplorer + safari + htmlUnit
+      val expectedTestStartingCount = 10 //5 * 2
       val expectedTestSucceededCount = availableBrowserCount * 2
-      val expectedTestCanceledCount = (4 - availableBrowserCount) * 2
+      val expectedTestCanceledCount = (5 - availableBrowserCount) * 2
 
       val rep = new EventRecordingReporter
       val spec = new TestSpec

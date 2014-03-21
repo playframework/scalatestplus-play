@@ -20,6 +20,7 @@ import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.firefox.{FirefoxDriver, FirefoxProfile}
 import org.openqa.selenium.ie.InternetExplorerDriver
 import org.openqa.selenium.safari.SafariDriver
+import org.openqa.selenium.htmlunit.HtmlUnitDriver
 import org.scalatestplus.play.BrowserDriver.NoDriver
 
 /**
@@ -59,4 +60,19 @@ object WebDriverFactory {
    */
   def createSafariDriver: WebDriver =
     try { new SafariDriver } catch { case ex: Throwable => NoDriver(Some(ex)) }
+
+  /**
+   * Create Html Unit web driver.
+   *
+   * @return An instance of <code>HtmlUnitDriver</code>, <code>NoDriver</code> if Safari is not available on the platform.
+   */
+  def createHtmlUnitDriver: WebDriver =
+    try {
+      val htmlUnitDriver = new HtmlUnitDriver()
+      htmlUnitDriver.setJavascriptEnabled(true)
+      htmlUnitDriver
+    }
+    catch {
+      case ex: Throwable => NoDriver(Some(ex))
+    }
 }
