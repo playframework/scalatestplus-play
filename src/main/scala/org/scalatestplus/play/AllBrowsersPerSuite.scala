@@ -17,6 +17,7 @@ package org.scalatestplus.play
 
 import play.api.test._
 import org.scalatest._
+import org.scalatest.events._
 import selenium.WebBrowser
 import concurrent.Eventually
 import concurrent.IntegrationPatience
@@ -95,10 +96,51 @@ trait AllBrowsersPerSuite extends SuiteMixin with WebBrowser with Eventually wit
         ("Safari", () => WebDriverFactory.createSafariDriver),
         ("HtmlUnit", () => WebDriverFactory.createHtmlUnitDriver)
       )
+
+    val filterWebDrivers =
+      args.configMap.getOptional[String]("browsers") match {
+        case Some("") =>
+          args.reporter(AlertProvided(
+            args.tracker.nextOrdinal(),
+            Resources("emptyBrowsers"),
+            Some(NameInfo(this.suiteName, this.suiteId, Some(this.getClass.getName), testName))
+          ))
+          availableWebDrivers
+
+        case Some(browsers) =>
+          val invalidChars = browsers.filter(c => !"CFISH".contains(c.toString.toUpperCase))
+          if (!invalidChars.isEmpty) {
+            val (resourceName, charsString) =
+              if (invalidChars.length > 1) {
+                val initString = invalidChars.init.map(c => "'" + c + "'").mkString(Resources("commaSpace"))
+                ("invalidBrowsersChars", Resources("and", initString, "'" + invalidChars.last  + "'"))
+              }
+              else
+                ("invalidBrowsersChar", "'" + invalidChars.head + "'")
+            args.reporter(AlertProvided(
+              args.tracker.nextOrdinal(),
+              Resources(resourceName, charsString),
+              Some(NameInfo(this.suiteName, this.suiteId, Some(this.getClass.getName), testName))
+            ))
+          }
+          val filteredDrivers =
+            availableWebDrivers.filter { case (name, webDriverFun) =>
+              browsers.toUpperCase.contains(name.charAt(0))
+            }
+
+          // If no valid option, just fallback to default that uses all available browsers
+          if (filteredDrivers.isEmpty)
+            availableWebDrivers
+          else
+            filteredDrivers
+
+        case None => availableWebDrivers
+      }
+
     try {
       testServer.start()
       new CompositeStatus(
-        (availableWebDrivers.map { case (name, driverFun) =>
+        (filterWebDrivers.map { case (name, driverFun) =>
           synchronized {
             privateWebDriver = driverFun()
           }
