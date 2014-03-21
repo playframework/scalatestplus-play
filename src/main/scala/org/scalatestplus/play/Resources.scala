@@ -30,13 +30,15 @@ private[play] object Resources {
 
   def apply(resourceName: String): String = resourceBundle.getString(resourceName)
 
-  private def makeString(resourceName: String, argArray: Array[Object]): String = {
+  private def makeString(resourceName: String, argArray: Array[Any]): String = {
     val raw = apply(resourceName)
     val msgFmt = new MessageFormat(raw)
     msgFmt.format(argArray)
   }
 
-  def apply(resourceName: String, o1: AnyRef*): String = makeString(resourceName, o1.toArray)
+  def apply(resourceName: String, o1: Any*): String = {
+    makeString(resourceName, o1.toArray)
+  }
 
   def bigProblems(ex: Throwable) = {
     val message = if (ex.getMessage == null) "" else ex.getMessage.trim
