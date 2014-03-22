@@ -89,8 +89,8 @@ trait AllBrowsersPerSuite extends SuiteMixin with WebBrowser with Eventually wit
         val name = test.configMap("webDriverName")
         val message = Resources("cantCreateDriver", name)
         ex match {
-          case Some(e) => cancel(message, e)
-          case None => cancel(message)
+          case Some(e) => Canceled(message, e)
+          case None => Canceled(message)
         }
       case _ => super.withFixture(test)
     }
