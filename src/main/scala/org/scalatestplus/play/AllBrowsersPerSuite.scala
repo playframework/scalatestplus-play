@@ -111,7 +111,7 @@ trait AllBrowsersPerSuite extends SuiteMixin with WebBrowser with Eventually wit
    */
   abstract override def run(testName: Option[String], args: Args): Status = {
     val testServer = TestServer(port, app)
-    val availableWebDrivers =
+    val availableWebDrivers: Set[(String, () => WebDriver)] =
       Set(
         ("Chrome", () => WebDriverFactory.createChromeDriver),
         ("Firefox", () => WebDriverFactory.createFirefoxDriver(firefoxProfile)),

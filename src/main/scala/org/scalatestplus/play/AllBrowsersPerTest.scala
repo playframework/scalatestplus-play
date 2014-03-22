@@ -69,7 +69,7 @@ trait AllBrowsersPerTest extends SuiteMixin with WebBrowser with Eventually with
    */
   protected def firefoxProfile: FirefoxProfile = new FirefoxProfile
 
-  private val webDrivers =
+  private val webDrivers: Set[(String, () => WebDriver)] =
     Set(
       ("Chrome", () => WebDriverFactory.createChromeDriver),
       ("Firefox", () => WebDriverFactory.createFirefoxDriver(firefoxProfile)),

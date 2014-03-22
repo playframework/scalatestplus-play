@@ -26,7 +26,7 @@ import org.scalatestplus.play.BrowserDriver.NoDriver
 /**
  * Factory to create different types of <code>WebDriver</code>
  */
-object WebDriverFactory {
+private[play] object WebDriverFactory {
 
   /**
    * Create Chrome web driver.
