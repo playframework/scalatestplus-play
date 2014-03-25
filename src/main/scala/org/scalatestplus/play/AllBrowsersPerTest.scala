@@ -77,7 +77,7 @@ trait AllBrowsersPerTest extends SuiteMixin with WebBrowser with Eventually with
    *
    * @return an instance of <code>FirefoxProfile</code>
    */
-  protected def firefoxProfile: FirefoxProfile = new FirefoxProfile
+  protected lazy val firefoxProfile: FirefoxProfile = new FirefoxProfile
 
   // Not sealed on purpose, so people can extend it if other
   // Browser driver types appear (or we could just use strings
