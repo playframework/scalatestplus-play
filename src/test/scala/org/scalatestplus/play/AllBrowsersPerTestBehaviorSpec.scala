@@ -24,12 +24,17 @@ import org.openqa.selenium.htmlunit.HtmlUnitDriver
 
 class AllBrowsersPerTestBehaviorSpec extends WordSpec {
 
-  "The AllBrowsersPerTest trait" must {
+  object ChosenTest extends Tag("ChosenTest")
 
-    class TestSpec extends UnitSpec with AllBrowsersPerTest {
-      "test 1" in {}
-      "test 2" in {}
+  class TestSpec extends UnitSpec with AllBrowsersPerTest {
+    def registerSharedTests(forBrowser: ForBrowser) {
+      "test 1" + forBrowser.name in {}
+      "test 2" + forBrowser.name taggedAs(ChosenTest) in {}
     }
+    "test 3" taggedAs(ChosenTest) in {}
+  }
+
+  "The AllBrowsersPerTest trait" must {
 
     val chrome = try { val d = new ChromeDriver(); d.close(); 1 } catch { case ex: Throwable => 0 }
     val firefox = try { val d = new FirefoxDriver(new FirefoxProfile); d.close(); 1 } catch { case ex: Throwable => 0 }
@@ -50,8 +55,8 @@ class AllBrowsersPerTestBehaviorSpec extends WordSpec {
 
     "run all tests with different browsers available on the system one by one" in {
 
-      val expectedTestStartingCount = 10 //5 * 2
-      val expectedTestSucceededCount = availableBrowserCount * 2
+      val expectedTestStartingCount = 11 //5 * 2 + 1
+      val expectedTestSucceededCount = availableBrowserCount * 2 + 1
       val expectedTestCanceledCount = (5 - availableBrowserCount) * 2
 
       val rep = new EventRecordingReporter
@@ -62,371 +67,180 @@ class AllBrowsersPerTestBehaviorSpec extends WordSpec {
       assert(rep.testSucceededEventsReceived.length == expectedTestSucceededCount)
       assert(rep.testCanceledEventsReceived.length == expectedTestCanceledCount)
 
-      assert(testStartingEventsReceived(0).testName == "test 1")
-      assert(testStartingEventsReceived(1).testName == "test 2")
-      assert(testStartingEventsReceived(2).testName == "test 1")
-      assert(testStartingEventsReceived(3).testName == "test 2")
-      assert(testStartingEventsReceived(4).testName == "test 1")
-      assert(testStartingEventsReceived(5).testName == "test 2")
-      assert(testStartingEventsReceived(6).testName == "test 1")
-      assert(testStartingEventsReceived(7).testName == "test 2")
+      assert(testStartingEventsReceived(0).testName == "test 1 [Firefox]")
+      assert(testStartingEventsReceived(1).testName == "test 2 [Firefox]")
+      assert(testStartingEventsReceived(2).testName == "test 1 [Safari]")
+      assert(testStartingEventsReceived(3).testName == "test 2 [Safari]")
+      assert(testStartingEventsReceived(4).testName == "test 1 [InternetExplorer]")
+      assert(testStartingEventsReceived(5).testName == "test 2 [InternetExplorer]")
+      assert(testStartingEventsReceived(6).testName == "test 1 [Chrome]")
+      assert(testStartingEventsReceived(7).testName == "test 2 [Chrome]")
+      assert(testStartingEventsReceived(8).testName == "test 1 [HtmlUnit]")
+      assert(testStartingEventsReceived(9).testName == "test 2 [HtmlUnit]")
+      assert(testStartingEventsReceived(10).testName == "test 3")
 
       assert(rep.alertProvidedEventsReceived.length == 0)
     }
 
-    "run all tests with available browsers on the system one by one when -Dbrowsers=\"\", and get an alert about empty browsers string" in {
-      val expectedTestStartingCount = 10 //5 * 2
-      val expectedTestSucceededCount = availableBrowserCount * 2
-      val expectedTestCanceledCount = (5 - availableBrowserCount) * 2
+    "run only chosen test when ChosenTest tag is passed in" in {
+      val expectedTestStartingCount = 6 //5 + 1
+      val expectedTestSucceededCount = availableBrowserCount + 1
+      val expectedTestCanceledCount = 5 - availableBrowserCount
 
       val rep = new EventRecordingReporter
       val spec = new TestSpec
-      spec.run(None, Args(reporter = rep, configMap = ConfigMap("browsers" -> "")))
+      spec.run(None, Args(reporter = rep, filter = Filter.apply(Some(Set("ChosenTest")))))
       val testStartingEventsReceived = rep.testStartingEventsReceived
       assert(testStartingEventsReceived.length == expectedTestStartingCount)
       assert(rep.testSucceededEventsReceived.length == expectedTestSucceededCount)
       assert(rep.testCanceledEventsReceived.length == expectedTestCanceledCount)
 
-      assert(testStartingEventsReceived(0).testName == "test 1")
-      assert(testStartingEventsReceived(1).testName == "test 2")
-      assert(testStartingEventsReceived(2).testName == "test 1")
-      assert(testStartingEventsReceived(3).testName == "test 2")
-      assert(testStartingEventsReceived(4).testName == "test 1")
-      assert(testStartingEventsReceived(5).testName == "test 2")
-      assert(testStartingEventsReceived(6).testName == "test 1")
-      assert(testStartingEventsReceived(7).testName == "test 2")
-
-      val alertProvidedReceived = rep.alertProvidedEventsReceived
-      assert(alertProvidedReceived.length == 1)
-      assert(alertProvidedReceived(0).message == Resources("emptyBrowsers"))
+      assert(testStartingEventsReceived(0).testName == "test 2 [Firefox]")
+      assert(testStartingEventsReceived(1).testName == "test 2 [Safari]")
+      assert(testStartingEventsReceived(2).testName == "test 2 [InternetExplorer]")
+      assert(testStartingEventsReceived(3).testName == "test 2 [Chrome]")
+      assert(testStartingEventsReceived(4).testName == "test 2 [HtmlUnit]")
+      assert(testStartingEventsReceived(5).testName == "test 3")
     }
 
-    "run all tests with available browsers on the system one by one when -Dbrowsers=\"Ab\", and get an alert about invalid characters in browsers string" in {
-      val expectedTestStartingCount = 10 //5 * 2
-      val expectedTestSucceededCount = availableBrowserCount * 2
-      val expectedTestCanceledCount = (5 - availableBrowserCount) * 2
-
-      val rep = new EventRecordingReporter
-      val spec = new TestSpec
-      spec.run(None, Args(reporter = rep, configMap = ConfigMap("browsers" -> "Ab")))
-      val testStartingEventsReceived = rep.testStartingEventsReceived
-      assert(testStartingEventsReceived.length == expectedTestStartingCount)
-      assert(rep.testSucceededEventsReceived.length == expectedTestSucceededCount)
-      assert(rep.testCanceledEventsReceived.length == expectedTestCanceledCount)
-
-      assert(testStartingEventsReceived(0).testName == "test 1")
-      assert(testStartingEventsReceived(1).testName == "test 2")
-      assert(testStartingEventsReceived(2).testName == "test 1")
-      assert(testStartingEventsReceived(3).testName == "test 2")
-      assert(testStartingEventsReceived(4).testName == "test 1")
-      assert(testStartingEventsReceived(5).testName == "test 2")
-      assert(testStartingEventsReceived(6).testName == "test 1")
-      assert(testStartingEventsReceived(7).testName == "test 2")
-
-      val alertProvidedReceived = rep.alertProvidedEventsReceived
-      assert(alertProvidedReceived.length == 1)
-      assert(alertProvidedReceived(0).message == "Invalid characters 'A' and 'b' found in browsers configuration, they will be ignored.")
-    }
-
-    "run all tests with Chrome browsers on the system one by one when -Dbrowsers=\"C\"" in {
-      val expectedTestStartingCount = 2
-      val expectedTestSucceededCount = chrome * 2
-      val expectedTestCanceledCount = expectedTestStartingCount - expectedTestSucceededCount
-
-      val rep = new EventRecordingReporter
-      val spec = new TestSpec
-      spec.run(None, Args(reporter = rep, configMap = ConfigMap("browsers" -> "C")))
-      val testStartingEventsReceived = rep.testStartingEventsReceived
-      assert(testStartingEventsReceived.length == expectedTestStartingCount)
-      assert(rep.testSucceededEventsReceived.length == expectedTestSucceededCount)
-      assert(rep.testCanceledEventsReceived.length == expectedTestCanceledCount)
-
-      assert(testStartingEventsReceived(0).testName == "test 1")
-      assert(testStartingEventsReceived(1).testName == "test 2")
-
-      assert(rep.alertProvidedEventsReceived.length == 0)
-    }
-
-    "run all tests with Firefox browsers on the system one by one when -Dbrowsers=\"F\"" in {
+    "run only Firefox tests when Firefox tag is passed in" in {
       val expectedTestStartingCount = 2
       val expectedTestSucceededCount = firefox * 2
       val expectedTestCanceledCount = expectedTestStartingCount - expectedTestSucceededCount
 
       val rep = new EventRecordingReporter
       val spec = new TestSpec
-      spec.run(None, Args(reporter = rep, configMap = ConfigMap("browsers" -> "F")))
+      spec.run(None, Args(reporter = rep, filter = Filter.apply(Some(Set("org.scalatest.tags.Firefox")))))
       val testStartingEventsReceived = rep.testStartingEventsReceived
       assert(testStartingEventsReceived.length == expectedTestStartingCount)
       assert(rep.testSucceededEventsReceived.length == expectedTestSucceededCount)
       assert(rep.testCanceledEventsReceived.length == expectedTestCanceledCount)
 
-      assert(testStartingEventsReceived(0).testName == "test 1")
-      assert(testStartingEventsReceived(1).testName == "test 2")
-
-      assert(rep.alertProvidedEventsReceived.length == 0)
+      assert(testStartingEventsReceived(0).testName == "test 1 [Firefox]")
+      assert(testStartingEventsReceived(1).testName == "test 2 [Firefox]")
     }
 
-    "run all tests with Internet Explorer browsers on the system one by one when -Dbrowsers=\"I\"" in {
-      val expectedTestStartingCount = 2
-      val expectedTestSucceededCount = internetExplorer * 2
-      val expectedTestCanceledCount = expectedTestStartingCount - expectedTestSucceededCount
-
-      val rep = new EventRecordingReporter
-      val spec = new TestSpec
-      spec.run(None, Args(reporter = rep, configMap = ConfigMap("browsers" -> "I")))
-      val testStartingEventsReceived = rep.testStartingEventsReceived
-      assert(testStartingEventsReceived.length == expectedTestStartingCount)
-      assert(rep.testSucceededEventsReceived.length == expectedTestSucceededCount)
-      assert(rep.testCanceledEventsReceived.length == expectedTestCanceledCount)
-
-      assert(testStartingEventsReceived(0).testName == "test 1")
-      assert(testStartingEventsReceived(1).testName == "test 2")
-
-      assert(rep.alertProvidedEventsReceived.length == 0)
-    }
-
-    "run all tests with Safari browsers on the system one by one when -Dbrowsers=\"S\"" in {
+    "run only Safari tests when Safari tag is passed in" in {
       val expectedTestStartingCount = 2
       val expectedTestSucceededCount = safari * 2
       val expectedTestCanceledCount = expectedTestStartingCount - expectedTestSucceededCount
 
       val rep = new EventRecordingReporter
       val spec = new TestSpec
-      spec.run(None, Args(reporter = rep, configMap = ConfigMap("browsers" -> "S")))
+      spec.run(None, Args(reporter = rep, filter = Filter.apply(Some(Set("org.scalatest.tags.Safari")))))
       val testStartingEventsReceived = rep.testStartingEventsReceived
       assert(testStartingEventsReceived.length == expectedTestStartingCount)
       assert(rep.testSucceededEventsReceived.length == expectedTestSucceededCount)
       assert(rep.testCanceledEventsReceived.length == expectedTestCanceledCount)
 
-      assert(testStartingEventsReceived(0).testName == "test 1")
-      assert(testStartingEventsReceived(1).testName == "test 2")
-
-      assert(rep.alertProvidedEventsReceived.length == 0)
+      assert(testStartingEventsReceived(0).testName == "test 1 [Safari]")
+      assert(testStartingEventsReceived(1).testName == "test 2 [Safari]")
     }
 
-    "run all tests with HtmlUnit browsers on the system one by one when -Dbrowsers=\"H\"" in {
+    "run only InternetExplorer tests when InternetExplorer tag is passed in" in {
       val expectedTestStartingCount = 2
-      val expectedTestSucceededCount = htmlUnit * 2
+      val expectedTestSucceededCount = internetExplorer * 2
       val expectedTestCanceledCount = expectedTestStartingCount - expectedTestSucceededCount
 
       val rep = new EventRecordingReporter
       val spec = new TestSpec
-      spec.run(None, Args(reporter = rep, configMap = ConfigMap("browsers" -> "H")))
+      spec.run(None, Args(reporter = rep, filter = Filter.apply(Some(Set("org.scalatest.tags.InternetExplorer")))))
       val testStartingEventsReceived = rep.testStartingEventsReceived
       assert(testStartingEventsReceived.length == expectedTestStartingCount)
       assert(rep.testSucceededEventsReceived.length == expectedTestSucceededCount)
       assert(rep.testCanceledEventsReceived.length == expectedTestCanceledCount)
 
-      assert(testStartingEventsReceived(0).testName == "test 1")
-      assert(testStartingEventsReceived(1).testName == "test 2")
-
-      assert(rep.alertProvidedEventsReceived.length == 0)
+      assert(testStartingEventsReceived(0).testName == "test 1 [InternetExplorer]")
+      assert(testStartingEventsReceived(1).testName == "test 2 [InternetExplorer]")
     }
 
-    "run all tests with HtmlUnit and Firefox browsers on the system one by one when -Dbrowsers=\"HF\"" in {
-      val expectedTestStartingCount = 4
-      val expectedTestSucceededCount = (htmlUnit + firefox) * 2
-      val expectedTestCanceledCount = expectedTestStartingCount - expectedTestSucceededCount
-
-      val rep = new EventRecordingReporter
-      val spec = new TestSpec
-      spec.run(None, Args(reporter = rep, configMap = ConfigMap("browsers" -> "HF")))
-      val testStartingEventsReceived = rep.testStartingEventsReceived
-      assert(testStartingEventsReceived.length == expectedTestStartingCount)
-      assert(rep.testSucceededEventsReceived.length == expectedTestSucceededCount)
-      assert(rep.testCanceledEventsReceived.length == expectedTestCanceledCount)
-
-      assert(testStartingEventsReceived(0).testName == "test 1")
-      assert(testStartingEventsReceived(1).testName == "test 2")
-      assert(testStartingEventsReceived(2).testName == "test 1")
-      assert(testStartingEventsReceived(3).testName == "test 2")
-
-      assert(rep.alertProvidedEventsReceived.length == 0)
-    }
-
-    "run all tests with Chrome browsers on the system one by one when -Dbrowsers=\"c\"" in {
+    "run only Chrome tests when Chrome tag is passed in" in {
       val expectedTestStartingCount = 2
       val expectedTestSucceededCount = chrome * 2
       val expectedTestCanceledCount = expectedTestStartingCount - expectedTestSucceededCount
 
       val rep = new EventRecordingReporter
       val spec = new TestSpec
-      spec.run(None, Args(reporter = rep, configMap = ConfigMap("browsers" -> "c")))
+      spec.run(None, Args(reporter = rep, filter = Filter.apply(Some(Set("org.scalatest.tags.Chrome")))))
       val testStartingEventsReceived = rep.testStartingEventsReceived
       assert(testStartingEventsReceived.length == expectedTestStartingCount)
       assert(rep.testSucceededEventsReceived.length == expectedTestSucceededCount)
       assert(rep.testCanceledEventsReceived.length == expectedTestCanceledCount)
 
-      assert(testStartingEventsReceived(0).testName == "test 1")
-      assert(testStartingEventsReceived(1).testName == "test 2")
-
-      assert(rep.alertProvidedEventsReceived.length == 0)
+      assert(testStartingEventsReceived(0).testName == "test 1 [Chrome]")
+      assert(testStartingEventsReceived(1).testName == "test 2 [Chrome]")
     }
 
-    "run all tests with Firefox browsers on the system one by one when -Dbrowsers=\"f\"" in {
-      val expectedTestStartingCount = 2
-      val expectedTestSucceededCount = firefox * 2
-      val expectedTestCanceledCount = expectedTestStartingCount - expectedTestSucceededCount
-
-      val rep = new EventRecordingReporter
-      val spec = new TestSpec
-      spec.run(None, Args(reporter = rep, configMap = ConfigMap("browsers" -> "f")))
-      val testStartingEventsReceived = rep.testStartingEventsReceived
-      assert(testStartingEventsReceived.length == expectedTestStartingCount)
-      assert(rep.testSucceededEventsReceived.length == expectedTestSucceededCount)
-      assert(rep.testCanceledEventsReceived.length == expectedTestCanceledCount)
-
-      assert(testStartingEventsReceived(0).testName == "test 1")
-      assert(testStartingEventsReceived(1).testName == "test 2")
-
-      assert(rep.alertProvidedEventsReceived.length == 0)
-    }
-
-    "run all tests with Internet Explorer browsers on the system one by one when -Dbrowsers=\"i\"" in {
-      val expectedTestStartingCount = 2
-      val expectedTestSucceededCount = internetExplorer * 2
-      val expectedTestCanceledCount = expectedTestStartingCount - expectedTestSucceededCount
-
-      val rep = new EventRecordingReporter
-      val spec = new TestSpec
-      spec.run(None, Args(reporter = rep, configMap = ConfigMap("browsers" -> "i")))
-      val testStartingEventsReceived = rep.testStartingEventsReceived
-      assert(testStartingEventsReceived.length == expectedTestStartingCount)
-      assert(rep.testSucceededEventsReceived.length == expectedTestSucceededCount)
-      assert(rep.testCanceledEventsReceived.length == expectedTestCanceledCount)
-
-      assert(testStartingEventsReceived(0).testName == "test 1")
-      assert(testStartingEventsReceived(1).testName == "test 2")
-
-      assert(rep.alertProvidedEventsReceived.length == 0)
-    }
-
-    "run all tests with Safari browsers on the system one by one when -Dbrowsers=\"s\"" in {
-      val expectedTestStartingCount = 2
-      val expectedTestSucceededCount = safari * 2
-      val expectedTestCanceledCount = expectedTestStartingCount - expectedTestSucceededCount
-
-      val rep = new EventRecordingReporter
-      val spec = new TestSpec
-      spec.run(None, Args(reporter = rep, configMap = ConfigMap("browsers" -> "s")))
-      val testStartingEventsReceived = rep.testStartingEventsReceived
-      assert(testStartingEventsReceived.length == expectedTestStartingCount)
-      assert(rep.testSucceededEventsReceived.length == expectedTestSucceededCount)
-      assert(rep.testCanceledEventsReceived.length == expectedTestCanceledCount)
-
-      assert(testStartingEventsReceived(0).testName == "test 1")
-      assert(testStartingEventsReceived(1).testName == "test 2")
-
-      assert(rep.alertProvidedEventsReceived.length == 0)
-    }
-
-    "run all tests with HtmlUnit browsers on the system one by one when -Dbrowsers=\"h\"" in {
+    "run only HtmlUnit tests when HtmlUnit tag is passed in" in {
       val expectedTestStartingCount = 2
       val expectedTestSucceededCount = htmlUnit * 2
       val expectedTestCanceledCount = expectedTestStartingCount - expectedTestSucceededCount
 
       val rep = new EventRecordingReporter
       val spec = new TestSpec
-      spec.run(None, Args(reporter = rep, configMap = ConfigMap("browsers" -> "h")))
+      spec.run(None, Args(reporter = rep, filter = Filter.apply(Some(Set("org.scalatest.tags.HtmlUnit")))))
       val testStartingEventsReceived = rep.testStartingEventsReceived
       assert(testStartingEventsReceived.length == expectedTestStartingCount)
       assert(rep.testSucceededEventsReceived.length == expectedTestSucceededCount)
       assert(rep.testCanceledEventsReceived.length == expectedTestCanceledCount)
 
-      assert(testStartingEventsReceived(0).testName == "test 1")
-      assert(testStartingEventsReceived(1).testName == "test 2")
-
-      assert(rep.alertProvidedEventsReceived.length == 0)
+      assert(testStartingEventsReceived(0).testName == "test 1 [HtmlUnit]")
+      assert(testStartingEventsReceived(1).testName == "test 2 [HtmlUnit]")
     }
 
-    "run all tests with HtmlUnit and Firefox browsers on the system one by one when -Dbrowsers=\"hf\"" in {
+    "run only Firefox and HtmlUnit tests when Firefox and HtmlUnit tag is passed in" in {
       val expectedTestStartingCount = 4
-      val expectedTestSucceededCount = (htmlUnit + firefox) * 2
+      val expectedTestSucceededCount = (firefox + htmlUnit) * 2
       val expectedTestCanceledCount = expectedTestStartingCount - expectedTestSucceededCount
 
       val rep = new EventRecordingReporter
       val spec = new TestSpec
-      spec.run(None, Args(reporter = rep, configMap = ConfigMap("browsers" -> "hf")))
+      spec.run(None, Args(reporter = rep, filter = Filter.apply(Some(Set("org.scalatest.tags.Firefox", "org.scalatest.tags.HtmlUnit")))))
       val testStartingEventsReceived = rep.testStartingEventsReceived
       assert(testStartingEventsReceived.length == expectedTestStartingCount)
       assert(rep.testSucceededEventsReceived.length == expectedTestSucceededCount)
       assert(rep.testCanceledEventsReceived.length == expectedTestCanceledCount)
 
-      assert(testStartingEventsReceived(0).testName == "test 1")
-      assert(testStartingEventsReceived(1).testName == "test 2")
-      assert(testStartingEventsReceived(2).testName == "test 1")
-      assert(testStartingEventsReceived(3).testName == "test 2")
-
-      assert(rep.alertProvidedEventsReceived.length == 0)
+      assert(testStartingEventsReceived(0).testName == "test 1 [Firefox]")
+      assert(testStartingEventsReceived(1).testName == "test 2 [Firefox]")
+      assert(testStartingEventsReceived(2).testName == "test 1 [HtmlUnit]")
+      assert(testStartingEventsReceived(3).testName == "test 2 [HtmlUnit]")
     }
 
-    "run all tests with HtmlUnit and Firefox browsers on the system one by one and alert that 'A' is invalid for browsers string when -Dbrowsers=\"HAF\"" in {
-      val expectedTestStartingCount = 4
-      val expectedTestSucceededCount = (htmlUnit + firefox) * 2
+    "run only HtmlUnit and ChosenTest tests when HtmlUnit and ChosenTest tag is passed in" in {
+      val expectedTestStartingCount = 7 // HtmlUnit * 2 + 4 other browsers on test 2, + test 3
+      val expectedTestSucceededCount = (htmlUnit * 2) + firefox + chrome + internetExplorer + safari + 1
       val expectedTestCanceledCount = expectedTestStartingCount - expectedTestSucceededCount
 
       val rep = new EventRecordingReporter
       val spec = new TestSpec
-      spec.run(None, Args(reporter = rep, configMap = ConfigMap("browsers" -> "HAF")))
+      spec.run(None, Args(reporter = rep, filter = Filter.apply(Some(Set("org.scalatest.tags.HtmlUnit", "ChosenTest")))))
       val testStartingEventsReceived = rep.testStartingEventsReceived
       assert(testStartingEventsReceived.length == expectedTestStartingCount)
       assert(rep.testSucceededEventsReceived.length == expectedTestSucceededCount)
       assert(rep.testCanceledEventsReceived.length == expectedTestCanceledCount)
 
-      assert(testStartingEventsReceived(0).testName == "test 1")
-      assert(testStartingEventsReceived(1).testName == "test 2")
-      assert(testStartingEventsReceived(2).testName == "test 1")
-      assert(testStartingEventsReceived(3).testName == "test 2")
-
-      val alertProvidedEventsReceived = rep.alertProvidedEventsReceived
-      assert(alertProvidedEventsReceived.length == 1)
-      assert(alertProvidedEventsReceived(0).message == "Invalid character 'A' found in browsers configuration, it will be ignored.")
+      assert(testStartingEventsReceived(0).testName == "test 2 [Firefox]")
+      assert(testStartingEventsReceived(1).testName == "test 2 [Safari]")
+      assert(testStartingEventsReceived(2).testName == "test 2 [InternetExplorer]")
+      assert(testStartingEventsReceived(3).testName == "test 2 [Chrome]")
+      assert(testStartingEventsReceived(4).testName == "test 1 [HtmlUnit]")
+      assert(testStartingEventsReceived(5).testName == "test 2 [HtmlUnit]")
+      assert(testStartingEventsReceived(6).testName == "test 3")
     }
 
-    "run all tests with HtmlUnit and Firefox browsers on the system one by one and alert that 'A' and 'B' is invalid for browsers string when -Dbrowsers=\"HABF\"" in {
-      val expectedTestStartingCount = 4
-      val expectedTestSucceededCount = (htmlUnit + firefox) * 2
-      val expectedTestCanceledCount = expectedTestStartingCount - expectedTestSucceededCount
+    "run no test when unrelated tag is passed in" in {
+      val expectedTestStartingCount = 0
+      val expectedTestSucceededCount = 0
+      val expectedTestCanceledCount = 0
 
       val rep = new EventRecordingReporter
       val spec = new TestSpec
-      spec.run(None, Args(reporter = rep, configMap = ConfigMap("browsers" -> "HABF")))
+      spec.run(None, Args(reporter = rep, filter = Filter.apply(Some(Set("NoTest")))))
       val testStartingEventsReceived = rep.testStartingEventsReceived
       assert(testStartingEventsReceived.length == expectedTestStartingCount)
       assert(rep.testSucceededEventsReceived.length == expectedTestSucceededCount)
       assert(rep.testCanceledEventsReceived.length == expectedTestCanceledCount)
-
-      assert(testStartingEventsReceived(0).testName == "test 1")
-      assert(testStartingEventsReceived(1).testName == "test 2")
-      assert(testStartingEventsReceived(2).testName == "test 1")
-      assert(testStartingEventsReceived(3).testName == "test 2")
-
-      val alertProvidedEventsReceived = rep.alertProvidedEventsReceived
-      assert(alertProvidedEventsReceived.length == 1)
-      assert(alertProvidedEventsReceived(0).message == "Invalid characters 'A' and 'B' found in browsers configuration, they will be ignored.")
-    }
-
-    "run all tests with HtmlUnit and Firefox browsers on the system one by one and alert that 'A', 'B' and 'Z' is invalid for browsers string when -Dbrowsers=\"HABFZ\"" in {
-      val expectedTestStartingCount = 4
-      val expectedTestSucceededCount = (htmlUnit + firefox) * 2
-      val expectedTestCanceledCount = expectedTestStartingCount - expectedTestSucceededCount
-
-      val rep = new EventRecordingReporter
-      val spec = new TestSpec
-      spec.run(None, Args(reporter = rep, configMap = ConfigMap("browsers" -> "HABFZ")))
-      val testStartingEventsReceived = rep.testStartingEventsReceived
-      assert(testStartingEventsReceived.length == expectedTestStartingCount)
-      assert(rep.testSucceededEventsReceived.length == expectedTestSucceededCount)
-      assert(rep.testCanceledEventsReceived.length == expectedTestCanceledCount)
-
-      assert(testStartingEventsReceived(0).testName == "test 1")
-      assert(testStartingEventsReceived(1).testName == "test 2")
-      assert(testStartingEventsReceived(2).testName == "test 1")
-      assert(testStartingEventsReceived(3).testName == "test 2")
-
-      val alertProvidedEventsReceived = rep.alertProvidedEventsReceived
-      assert(alertProvidedEventsReceived.length == 1)
-      assert(alertProvidedEventsReceived(0).message == "Invalid characters 'A', 'B' and 'Z' found in browsers configuration, they will be ignored.")
     }
 
   }

@@ -39,6 +39,25 @@ class AllBrowsersPerTestSpec extends UnitSpec with AllBrowsersPerTest {
     super.withFixture(test)
   }
 
+  def registerSharedTests(forBrowser: ForBrowser) {
+    "The AllBrowsersPerTest trait" must {
+      "put the webDriver in the configMap" + forBrowser.name in {
+        val configuredWebDriver = configMap.getOptional[WebDriver]("webDriver")
+        configuredWebDriver mustBe defined
+      }
+      "put the webDriverName in the configMap" + forBrowser.name in {
+        val configuredWebDriverName = configMap.getOptional[String]("webDriverName")
+        configuredWebDriverName mustBe defined
+      }
+      "provide a web driver" + forBrowser.name in {
+        go to ("http://localhost:" + port + "/testing")
+        pageTitle mustBe "Test Page"
+        click on find(name("b")).value
+        eventually { pageTitle mustBe "scalatest" }
+      }
+    }
+  }
+
   "The AllBrowsersPerTest trait" must {
     "provide a FakeApplication" in {
       app.configuration.getString("foo") mustBe Some("bar")
@@ -52,7 +71,6 @@ class AllBrowsersPerTestSpec extends UnitSpec with AllBrowsersPerTest {
     "provide the port" in {
       port mustBe Helpers.testServerPort
     }
-    import Helpers._
     "send 404 on a bad request" in {
       import java.net._
       val url = new URL("http://localhost:" + port + "/boum")
@@ -76,11 +94,6 @@ class AllBrowsersPerTestSpec extends UnitSpec with AllBrowsersPerTest {
       val configuredWebDriverName = configMap.getOptional[String]("webDriverName")
       configuredWebDriverName mustBe defined
     }
-    "provide a web driver" in {
-      go to ("http://localhost:" + port + "/testing")
-      pageTitle mustBe "Test Page"
-      click on find(name("b")).value
-      eventually { pageTitle mustBe "scalatest" }
-    }
   }
+
 }

@@ -137,4 +137,93 @@ object BrowserDriver {
     def switchTo(): WebDriver.TargetLocator = 
       throw new UnsupportedOperationException("switchTo not supported")
   }
+
+  /**
+   * An implementation of <code>BrowserDriver</code> that does nothing, used when a test in <code>AllBrowsersPerTest</code>
+   * does not require a <code>WebDriver</code>.
+   *
+   */
+  object WithoutDriver extends WebDriver {
+
+    /**
+     * Throws <code>UnsupportedOperationException</code>.
+     */
+    def close() {
+      throw new UnsupportedOperationException("This test is expected to work without any WebDriver, did you forget to register this test under registerSharedTests?")
+    }
+
+    /**
+     * Throws <code>UnsupportedOperationException</code>.
+     */
+    def findElement(by: By): WebElement =
+      throw new UnsupportedOperationException("This test is expected to work without any WebDriver, did you forget to register this test under registerSharedTests?")
+
+    /**
+     * Throws <code>UnsupportedOperationException</code>.
+     */
+    def findElements(by: By): java.util.List[WebElement] =
+      throw new UnsupportedOperationException("This test is expected to work without any WebDriver, did you forget to register this test under registerSharedTests?")
+
+    /**
+     * Throws <code>UnsupportedOperationException</code>.
+     */
+    def get(url: String) {
+      throw new UnsupportedOperationException("This test is expected to work without any WebDriver, did you forget to register this test under registerSharedTests?")
+    }
+
+    /**
+     * Throws <code>UnsupportedOperationException</code>.
+     */
+    def getCurrentUrl(): String =
+      throw new UnsupportedOperationException("This test is expected to work without any WebDriver, did you forget to register this test under registerSharedTests?")
+
+    /**
+     * Throws <code>UnsupportedOperationException</code>.
+     */
+    def getPageSource(): String =
+      throw new UnsupportedOperationException("This test is expected to work without any WebDriver, did you forget to register this test under registerSharedTests?")
+
+    /**
+     * Throws <code>UnsupportedOperationException</code>.
+     */
+    def getTitle(): String =
+      throw new UnsupportedOperationException("This test is expected to work without any WebDriver, did you forget to register this test under registerSharedTests?")
+
+    /**
+     * Throws <code>UnsupportedOperationException</code>.
+     */
+    def getWindowHandle(): String =
+      throw new UnsupportedOperationException("This test is expected to work without any WebDriver, did you forget to register this test under registerSharedTests?")
+
+    /**
+     * Throws <code>UnsupportedOperationException</code>.
+     */
+    def getWindowHandles(): java.util.Set[java.lang.String] =
+      throw new UnsupportedOperationException("This test is expected to work without any WebDriver, did you forget to register this test under registerSharedTests?")
+
+    /**
+     * Throws <code>UnsupportedOperationException</code>.
+     */
+    def manage(): WebDriver.Options =
+      throw new UnsupportedOperationException("This test is expected to work without any WebDriver, did you forget to register this test under registerSharedTests?")
+
+    /**
+     * Throws <code>UnsupportedOperationException</code>.
+     */
+    def navigate(): WebDriver.Navigation =
+      throw new UnsupportedOperationException("This test is expected to work without any WebDriver, did you forget to register this test under registerSharedTests?")
+
+    /**
+     * Throws <code>UnsupportedOperationException</code>.
+     */
+    def quit() {
+      throw new UnsupportedOperationException("This test is expected to work without any WebDriver, did you forget to register this test under registerSharedTests?")
+    }
+
+    /**
+     * Throws <code>UnsupportedOperationException</code>.
+     */
+    def switchTo(): WebDriver.TargetLocator =
+      throw new UnsupportedOperationException("This test is expected to work without any WebDriver, did you forget to register this test under registerSharedTests?")
+  }
 }
