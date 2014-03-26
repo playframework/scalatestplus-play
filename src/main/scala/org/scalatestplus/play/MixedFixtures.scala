@@ -27,6 +27,7 @@ import org.openqa.selenium.safari.SafariDriver
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.ie.InternetExplorerDriver
 import BrowserDriver.NoDriver
+import org.openqa.selenium.safari.SafariDriver
 
 /**
  * Trait that helps you provide different fixtures to each test: a <code>FakeApplication</code>, a <code>TestServer</code>, or one
@@ -193,7 +194,7 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
           }
         case _ => 
           try Helpers.running(TestServer(port, app))(super.apply())
-          finally webDriver.close()
+          finally webDriver.quit()
       }
     }
   }
