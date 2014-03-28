@@ -234,7 +234,7 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
           }
         case _ => 
           try Helpers.running(TestServer(port, app))(super.apply())
-          finally webDriver.close()
+          finally webDriver.quit()
       }
     }
   }

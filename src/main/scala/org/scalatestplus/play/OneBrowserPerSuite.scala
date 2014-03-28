@@ -23,6 +23,7 @@ import concurrent.IntegrationPatience
 import org.openqa.selenium.WebDriver
 import BrowserDriver.NoDriver
 import org.openqa.selenium.safari.SafariDriver
+import org.openqa.selenium.chrome.ChromeDriver
 
 /**
  * Trait that provides one <code>WebBrowser</code> instance per ScalaTest <code>Suite</code>.
@@ -90,6 +91,7 @@ trait OneBrowserPerSuite extends SuiteMixin with WebBrowser with Eventually with
       webDriver match {
         case NoDriver(_) => // do nothing for NoDriver
         case safariDriver: SafariDriver => safariDriver.quit()
+        case chromeDriver: ChromeDriver => chromeDriver.quit()
         case _ => webDriver.close()
       }
     }
