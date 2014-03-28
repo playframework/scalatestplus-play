@@ -23,6 +23,7 @@ import concurrent.IntegrationPatience
 import org.openqa.selenium.WebDriver
 import BrowserDriver.NoDriver
 import org.openqa.selenium.safari.SafariDriver
+import org.openqa.selenium.chrome.ChromeDriver
 
 /**
  * Trait that provides new browser instance for each test executed in a ScalaTest <code>Suite</code>.
@@ -91,6 +92,7 @@ trait OneBrowserPerTest extends SuiteMixin with WebBrowser with Eventually with 
       privateWebDriver match {
         case NoDriver(_) => // do nothing
         case safariDriver: SafariDriver => safariDriver.quit()
+        case chromeDriver: ChromeDriver => chromeDriver.quit()
         case _ => privateWebDriver.close()
       }
     }

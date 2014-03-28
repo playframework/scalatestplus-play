@@ -26,6 +26,7 @@ import org.openqa.selenium.WebDriver
 import BrowserDriver.{NoDriver, WithoutDriver}
 import org.openqa.selenium.firefox.FirefoxProfile
 import org.openqa.selenium.safari.SafariDriver
+import org.openqa.selenium.chrome.ChromeDriver
 
 /**
  * Trait that provides new browser instances (for all browsers available on the running platform) for each test executed in a ScalaTest <code>Suite</code>.
@@ -282,6 +283,7 @@ trait AllBrowsersPerTest extends SuiteMixin with WebBrowser with Eventually with
         case NoDriver(_) => // do nothing
         case WithoutDriver => // do nothing
         case safariDriver: SafariDriver => safariDriver.quit()
+        case chromeDriver: ChromeDriver => chromeDriver.quit()
         case theDriver => theDriver.close()
       }
     }
