@@ -42,11 +42,11 @@ class AllBrowsersPerTestSpec extends UnitSpec with AllBrowsersPerTest {
   def registerSharedTests(forBrowser: ForBrowser) {
     "The AllBrowsersPerTest trait" must {
       "put the webDriver in the configMap" + forBrowser.name in {
-        val configuredWebDriver = configMap.getOptional[WebDriver]("webDriver")
+        val configuredWebDriver = configMap.getOptional[WebDriver]("org.scalatestplus.play.webDriver")
         configuredWebDriver mustBe defined
       }
       "put the webDriverName in the configMap" + forBrowser.name in {
-        val configuredWebDriverName = configMap.getOptional[String]("webDriverName")
+        val configuredWebDriverName = configMap.getOptional[String]("org.scalatestplus.play.webDriverName")
         configuredWebDriverName mustBe defined
       }
       "provide a web driver" + forBrowser.name in {
@@ -79,19 +79,19 @@ class AllBrowsersPerTestSpec extends UnitSpec with AllBrowsersPerTest {
       finally con.disconnect()
     }
     "put the app in the configMap" in {
-      val configuredApp = configMap.getOptional[FakeApplication]("app")
+      val configuredApp = configMap.getOptional[FakeApplication]("org.scalatestplus.play.app")
       configuredApp mustBe defined
     }
     "put the port in the configMap" in {
-      val configuredPort = configMap.getOptional[Int]("port")
+      val configuredPort = configMap.getOptional[Int]("org.scalatestplus.play.port")
       configuredPort.value mustEqual port
     }
     "put the webDriver in the configMap" in {
-      val configuredWebDriver = configMap.getOptional[WebDriver]("webDriver")
+      val configuredWebDriver = configMap.getOptional[WebDriver]("org.scalatestplus.play.webDriver")
       configuredWebDriver mustBe defined
     }
     "put the webDriverName in the configMap" in {
-      val configuredWebDriverName = configMap.getOptional[String]("webDriverName")
+      val configuredWebDriverName = configMap.getOptional[String]("org.scalatestplus.play.webDriverName")
       configuredWebDriverName mustBe defined
     }
   }

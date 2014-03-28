@@ -60,15 +60,15 @@ class SafariBrowserSpec extends UnitSpec with OneBrowserPerSuite with SafariBrow
       finally con.disconnect()
     }
     "put the app in the configMap" in {
-      val configuredApp = configMap.getOptional[FakeApplication]("app")
+      val configuredApp = configMap.getOptional[FakeApplication]("org.scalatestplus.play.app")
       configuredApp.value must be theSameInstanceAs app
     }
     "put the port in the configMap" in {
-      val configuredPort = configMap.getOptional[Int]("port")
+      val configuredPort = configMap.getOptional[Int]("org.scalatestplus.play.port")
       configuredPort.value mustEqual port
     }
     "put the webDriver in the configMap" in {
-      val configuredApp = configMap.getOptional[WebDriver]("webDriver")
+      val configuredApp = configMap.getOptional[WebDriver]("org.scalatestplus.play.webDriver")
       configuredApp mustBe defined
     }
     "provide a web driver" in {

@@ -239,7 +239,7 @@ trait AllBrowsersPerTest extends SuiteMixin with WebBrowser with Eventually with
   abstract override def withFixture(test: NoArgTest): Outcome =
     webDriver match {
       case NoDriver(ex) =>
-        val name = test.configMap.getRequired[String]("webDriverName")
+        val name = test.configMap.getRequired[String]("org.scalatestplus.play.webDriverName")
         val message = Resources("cantCreateDriver", name.trim)
         ex match {
           case Some(e) => Canceled(message, e)
@@ -273,7 +273,7 @@ trait AllBrowsersPerTest extends SuiteMixin with WebBrowser with Eventually with
       privateWebDriverName = theWebDriverName
     }
     try {
-      val newConfigMap = args.configMap + ("app" -> app) + ("port" -> port) + ("webDriver" -> webDriver) + ("webDriverName" -> privateWebDriverName)
+      val newConfigMap = args.configMap + ("org.scalatestplus.play.app" -> app) + ("org.scalatestplus.play.port" -> port) + ("org.scalatestplus.play.webDriver" -> webDriver) + ("org.scalatestplus.play.webDriverName" -> privateWebDriverName)
       val newArgs = args.copy(configMap = newConfigMap)
       super.runTest(testName, newArgs)
     }

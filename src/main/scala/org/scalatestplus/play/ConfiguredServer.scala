@@ -28,13 +28,13 @@ trait ConfiguredServer extends SuiteMixin { this: Suite =>
   def port: Int = synchronized { configuredPort } 
 
   abstract override def run(testName: Option[String], args: Args): Status = {
-    args.configMap.getOptional[FakeApplication]("app") match {
+    args.configMap.getOptional[FakeApplication]("org.scalatestplus.play.app") match {
       case Some(ca) => synchronized { configuredApp = ca }
-      case None => throw new Exception("ConfiguredServer needs a FakeApplication value associated with key \"app\" in the config map")
+      case None => throw new Exception("ConfiguredServer needs a FakeApplication value associated with key \"org.scalatestplus.play.app\" in the config map. Did you forget to annotate a nested suite with @DoNotDiscover?")
     }
-    args.configMap.getOptional[Int]("port") match {
+    args.configMap.getOptional[Int]("org.scalatestplus.play.port") match {
       case Some(cp) => synchronized { configuredPort = cp }
-      case None => throw new Exception("ConfiguredServer needs an Int value associated with key \"port\" in the config map")
+      case None => throw new Exception("ConfiguredServer needs an Int value associated with key \"org.scalatestplus.play.port\" in the config map. Did you forget to annotate a nested suite with @DoNotDiscover?")
     }
     super.run(testName, args)
   }

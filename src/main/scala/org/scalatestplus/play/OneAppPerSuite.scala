@@ -27,7 +27,7 @@ import play.api.Play
  * and <code>Play.stop()</code> after, executing the tests. In the suite that mixes in <code>OneAppPerSuite</code>,
  * you can access the <code>FakeApplication</code> using the <code>app</code> field. In nested suites,
  * you can access the <code>FakeApplication</code> from the <code>args.configMap</code>, where it is associated
- * with key <code>"app"</code>.
+ * with key <code>"org.scalatestplus.play.app"</code>.
  * </p>
  */
 trait OneAppPerSuite extends SuiteMixin { this: Suite => 
@@ -39,7 +39,7 @@ trait OneAppPerSuite extends SuiteMixin { this: Suite =>
   
   /**
    * Overriden to start <code>Play</code> before running the tests, pass a <code>FakeApplication</code> into the tests in 
-   * <code>args.configMap</code> via "app" key, call <code>super.run</code> and stop <code>Play</code> after test executions.
+   * <code>args.configMap</code> via "org.scalatestplus.play.app" key, call <code>super.run</code> and stop <code>Play</code> after test executions.
    *
    * @param testName an optional name of one test to run. If <code>None</code>, all relevant tests should be run.
    *                 I.e., <code>None</code> acts like a wildcard that means run all relevant tests in this <code>Suite</code>.
@@ -49,7 +49,7 @@ trait OneAppPerSuite extends SuiteMixin { this: Suite =>
   abstract override def run(testName: Option[String], args: Args): Status = {
     try {
       Play.start(app)
-      val newConfigMap = args.configMap + ("app" -> app)
+      val newConfigMap = args.configMap + ("org.scalatestplus.play.app" -> app)
       val newArgs = args.copy(configMap = newConfigMap)
       super.run(testName, newArgs)
     } finally Play.stop()

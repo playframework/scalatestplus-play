@@ -29,8 +29,8 @@ import org.openqa.selenium.safari.SafariDriver
  * 
  * It overrides ScalaTest's <code>Suite.run</code> method to start a <code>TestServer</code> before test execution, 
  * and stop the <code>TestServer</code> after test execution has completed.  You can access the <code>FakeApplication</code>
- * in <code>args.configMap</code> using the <code>"app"</code> key, the port number of the <code>TestServer</code> using the <code>"port"</code> key and 
- * the <code>WebDriver</code> instance using <code>"webDriver"</code> key.  This traits also overrides <code>Suite.withFixture</code> 
+ * in <code>args.configMap</code> using the <code>"org.scalatestplus.play.app"</code> key, the port number of the <code>TestServer</code> using the <code>"org.scalatestplus.play.port"</code> key and 
+ * the <code>WebDriver</code> instance using <code>"org.scalatestplus.play.webDriver"</code> key.  This traits also overrides <code>Suite.withFixture</code> 
  * to cancel all the tests automatically if the related <code>WebDriver</code> is not available in the running system.
  */
 trait OneBrowserPerSuite extends SuiteMixin with WebBrowser with Eventually with IntegrationPatience with BrowserDriver { this: Suite =>
@@ -69,8 +69,8 @@ trait OneBrowserPerSuite extends SuiteMixin with WebBrowser with Eventually with
 
   /**
    * Overriden to start <code>TestServer</code> before running the tests, pass a <code>FakeApplication</code> into the tests in 
-   * <code>args.configMap</code> via "app" key, <code>TestServer</code>'s port number via "port" and <code>WebDriver</code> 
-   * instance via "webDriver" key.  It then calls <code>super.run</code> to execute the tests, and upon completion stops <code>TestServer</code> 
+   * <code>args.configMap</code> via "org.scalatestplus.play.app" key, <code>TestServer</code>'s port number via "org.scalatestplus.play.port" and <code>WebDriver</code> 
+   * instance via "org.scalatestplus.play.webDriver" key.  It then calls <code>super.run</code> to execute the tests, and upon completion stops <code>TestServer</code> 
    * and close the <code>WebDriver</code>.
    *
    * @param testName an optional name of one test to run. If <code>None</code>, all relevant tests should be run.
@@ -82,7 +82,7 @@ trait OneBrowserPerSuite extends SuiteMixin with WebBrowser with Eventually with
     val testServer = TestServer(port, app)
     try {
       testServer.start()
-      val newConfigMap = args.configMap + ("app" -> app) + ("port" -> port) + ("webDriver" -> webDriver)
+      val newConfigMap = args.configMap + ("org.scalatestplus.play.app" -> app) + ("org.scalatestplus.play.port" -> port) + ("org.scalatestplus.play.webDriver" -> webDriver)
       val newArgs = args.copy(configMap = newConfigMap)
       super.run(testName, newArgs)
     } finally {

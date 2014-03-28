@@ -27,7 +27,7 @@ import org.scalatest._
  * you can access the <code>FakeApplication</code> via the <code>app</code> field and the port used by the <code>TestServer</code>
  * via the <code>port</code>field. In nested suites,
  * you can access the <code>FakeApplication</code> and port number from the <code>args.configMap</code>, where they are associated
- * with keys <code>"app"</code> and <code>"port"</code>, respectively.
+ * with keys <code>"org.scalatestplus.play.app"</code> and <code>"org.scalatestplus.play.port"</code>, respectively.
  */
 trait OneServerPerSuite extends SuiteMixin { this: Suite =>
 
@@ -44,7 +44,7 @@ trait OneServerPerSuite extends SuiteMixin { this: Suite =>
 
   /**
    * Overriden to start <code>TestServer</code> before running the tests, pass a <code>FakeApplication</code> into the tests in 
-   * <code>args.configMap</code> via "app" key and port used by the started <code>TestServer</code> via "port"key.  It then calls 
+   * <code>args.configMap</code> via "org.scalatestplus.play.app" key and port used by the started <code>TestServer</code> via the "org.scalatestplus.play.port" key.  It then calls 
    * <code>super.run</code> to execute the tests and stop <code>TestServer</code> automatically after test executions.
    *
    * @param testName an optional name of one test to run. If <code>None</code>, all relevant tests should be run.
@@ -56,7 +56,7 @@ trait OneServerPerSuite extends SuiteMixin { this: Suite =>
     val testServer = TestServer(port, app)
     try {
       testServer.start()
-      val newConfigMap = args.configMap + ("app" -> app) + ("port" -> port)
+      val newConfigMap = args.configMap + ("org.scalatestplus.play.app" -> app) + ("org.scalatestplus.play.port" -> port)
       val newArgs = args.copy(configMap = newConfigMap)
       super.run(testName, newArgs)
     } finally testServer.stop()

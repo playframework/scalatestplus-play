@@ -34,11 +34,11 @@ trait ConfiguredApp extends SuiteMixin { this: Suite =>
   implicit final def app: FakeApplication = synchronized { configuredApp }
 
   /**
-   * Overriden run method that read the <code>FakeApplication</code> passed in from <code>args.configMap</code> as "app", 
+   * Overriden run method that read the <code>FakeApplication</code> passed in from <code>args.configMap</code> as "org.scalatestplus.play.app", 
    * and set it as the instance of <code>FakeApplication</code> that will be returned from <code>app</code> method.  It 
    * then proceed to call <code>super.run</code>.
    *
-   * If no <code>FakeApplication</code> or object passed in as "app" in <code>args.configMap</code> is not a <code>FakeApplication</code>, 
+   * If no <code>FakeApplication</code> or object passed in as "org.scalatestplus.play.app" in <code>args.configMap</code> is not a <code>FakeApplication</code>, 
    * <code>IllegalArgumentException</code> will be thrown.
    *
    * @param testName an optional name of one test to run. If <code>None</code>, all relevant tests should be run.
@@ -46,12 +46,12 @@ trait ConfiguredApp extends SuiteMixin { this: Suite =>
    * @param args the <code>Args</code> for this run
    * @return a <code>Status</code> object that indicates when all tests and nested suites started by this method have completed, and whether or not a failure occurred.
    *         
-   * @throws IllegalArgumentException no <code>FakeApplication</code> or object passed in as "app" in <code>args.configMap</code> is not a <code>FakeApplication</code>
+   * @throws IllegalArgumentException no <code>FakeApplication</code> or object passed in as "org.scalatestplus.play.app" in <code>args.configMap</code> is not a <code>FakeApplication</code>
    */
   abstract override def run(testName: Option[String], args: Args): Status = {
-    args.configMap.getOptional[FakeApplication]("app") match {
+    args.configMap.getOptional[FakeApplication]("org.scalatestplus.play.app") match {
       case Some(ca) => synchronized { configuredApp = ca }
-      case None => throw new IllegalArgumentException("ConfiguredApp needs a FakeApplication value associated with key \"app\" in the config map")
+      case None => throw new IllegalArgumentException("ConfiguredApp needs a FakeApplication value associated with key \"org.scalatestplus.play.app\" in the config map. Did you forget to annotate a nested suite with @DoNotDiscover?")
     }
     super.run(testName, args)
   }

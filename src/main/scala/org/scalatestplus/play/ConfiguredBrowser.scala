@@ -35,17 +35,17 @@ trait ConfiguredBrowser extends SuiteMixin with WebBrowser with Eventually with 
   implicit def webDriver: WebDriver = synchronized { configuredWebDriver } 
 
   abstract override def run(testName: Option[String], args: Args): Status = {
-    args.configMap.getOptional[FakeApplication]("app") match {
+    args.configMap.getOptional[FakeApplication]("org.scalatestplus.play.app") match {
       case Some(ca) => synchronized { configuredApp = ca }
-      case None => throw new Exception("ConfiguredBrowser needs a FakeApplication value associated with key \"app\" in the config map")
+      case None => throw new Exception("ConfiguredBrowser needs a FakeApplication value associated with key \"org.scalatestplus.play.app\" in the config map. Did you forget to annotate a nested suite with @DoNotDiscover?")
     }
-    args.configMap.getOptional[Int]("port") match {
+    args.configMap.getOptional[Int]("org.scalatestplus.play.port") match {
       case Some(cp) => synchronized { configuredPort = cp }
-      case None => throw new Exception("ConfiguredBrowser needs an Int value associated with key \"port\" in the config map")
+      case None => throw new Exception("ConfiguredBrowser needs an Int value associated with key \"org.scalatestplus.play.port\" in the config map. Did you forget to annotate a nested suite with @DoNotDiscover?")
     }
-    args.configMap.getOptional[WebDriver]("webDriver") match {
+    args.configMap.getOptional[WebDriver]("org.scalatestplus.play.webDriver") match {
       case Some(cwd) => synchronized { configuredWebDriver = cwd }
-      case None => throw new Exception("ConfiguredBrowser needs a WebDriver value associated with key \"webDriver\" in the config map")
+      case None => throw new Exception("ConfiguredBrowser needs a WebDriver value associated with key \"org.scalatestplus.play.webDriver\" in the config map. Did you forget to annotate a nested suite with @DoNotDiscover?")
     }
     super.run(testName, args)
   }
