@@ -20,7 +20,7 @@ import org.scalatest._
 import play.api.{Play, Application}
 import org.openqa.selenium.WebDriver
 
-class SafariBrowserSpec extends UnitSpec with OneBrowserPerSuite with SafariFactory {
+class SafariFactorySpec extends UnitSpec with OneBrowserPerSuite with SafariFactory {
 
   implicit override val app: FakeApplication = 
     FakeApplication(
