@@ -22,9 +22,9 @@ import java.lang.annotation.Target;
 import org.scalatest.TagAnnotation;
 
 /**
- * Tag for InternetExplorer browser test.
+ * Tag for Firefox browser test.
  */
-@TagAnnotation("org.scalatest.tags.InternetExplorer")
+@TagAnnotation("org.scalatest.tags.FirefoxTag")
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
-public @interface InternetExplorer {}
+public @interface FirefoxTag {}

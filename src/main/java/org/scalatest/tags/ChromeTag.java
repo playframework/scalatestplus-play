@@ -24,7 +24,7 @@ import org.scalatest.TagAnnotation;
 /**
  * Tag for Chrome browser test.
  */
-@TagAnnotation("org.scalatest.tags.Chrome")
+@TagAnnotation("org.scalatest.tags.ChromeTag")
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
-public @interface Chrome {}
+public @interface ChromeTag {}

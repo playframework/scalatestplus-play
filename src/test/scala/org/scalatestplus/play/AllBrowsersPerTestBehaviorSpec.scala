@@ -110,7 +110,7 @@ class AllBrowsersPerTestBehaviorSpec extends WordSpec {
 
       val rep = new EventRecordingReporter
       val spec = new TestSpec
-      spec.run(None, Args(reporter = rep, filter = Filter.apply(Some(Set("org.scalatest.tags.Firefox")))))
+      spec.run(None, Args(reporter = rep, filter = Filter.apply(Some(Set("org.scalatest.tags.FirefoxTag")))))
       val testStartingEventsReceived = rep.testStartingEventsReceived
       assert(testStartingEventsReceived.length == expectedTestStartingCount)
       assert(rep.testSucceededEventsReceived.length == expectedTestSucceededCount)
@@ -127,7 +127,7 @@ class AllBrowsersPerTestBehaviorSpec extends WordSpec {
 
       val rep = new EventRecordingReporter
       val spec = new TestSpec
-      spec.run(None, Args(reporter = rep, filter = Filter.apply(Some(Set("org.scalatest.tags.Safari")))))
+      spec.run(None, Args(reporter = rep, filter = Filter.apply(Some(Set("org.scalatest.tags.SafariTag")))))
       val testStartingEventsReceived = rep.testStartingEventsReceived
       assert(testStartingEventsReceived.length == expectedTestStartingCount)
       assert(rep.testSucceededEventsReceived.length == expectedTestSucceededCount)
@@ -144,7 +144,7 @@ class AllBrowsersPerTestBehaviorSpec extends WordSpec {
 
       val rep = new EventRecordingReporter
       val spec = new TestSpec
-      spec.run(None, Args(reporter = rep, filter = Filter.apply(Some(Set("org.scalatest.tags.InternetExplorer")))))
+      spec.run(None, Args(reporter = rep, filter = Filter.apply(Some(Set("org.scalatest.tags.InternetExplorerTag")))))
       val testStartingEventsReceived = rep.testStartingEventsReceived
       assert(testStartingEventsReceived.length == expectedTestStartingCount)
       assert(rep.testSucceededEventsReceived.length == expectedTestSucceededCount)
@@ -161,7 +161,7 @@ class AllBrowsersPerTestBehaviorSpec extends WordSpec {
 
       val rep = new EventRecordingReporter
       val spec = new TestSpec
-      spec.run(None, Args(reporter = rep, filter = Filter.apply(Some(Set("org.scalatest.tags.Chrome")))))
+      spec.run(None, Args(reporter = rep, filter = Filter.apply(Some(Set("org.scalatest.tags.ChromeTag")))))
       val testStartingEventsReceived = rep.testStartingEventsReceived
       assert(testStartingEventsReceived.length == expectedTestStartingCount)
       assert(rep.testSucceededEventsReceived.length == expectedTestSucceededCount)
@@ -178,7 +178,7 @@ class AllBrowsersPerTestBehaviorSpec extends WordSpec {
 
       val rep = new EventRecordingReporter
       val spec = new TestSpec
-      spec.run(None, Args(reporter = rep, filter = Filter.apply(Some(Set("org.scalatest.tags.HtmlUnit")))))
+      spec.run(None, Args(reporter = rep, filter = Filter.apply(Some(Set("org.scalatest.tags.HtmlUnitTag")))))
       val testStartingEventsReceived = rep.testStartingEventsReceived
       assert(testStartingEventsReceived.length == expectedTestStartingCount)
       assert(rep.testSucceededEventsReceived.length == expectedTestSucceededCount)
@@ -195,7 +195,7 @@ class AllBrowsersPerTestBehaviorSpec extends WordSpec {
 
       val rep = new EventRecordingReporter
       val spec = new TestSpec
-      spec.run(None, Args(reporter = rep, filter = Filter.apply(Some(Set("org.scalatest.tags.Firefox", "org.scalatest.tags.HtmlUnit")))))
+      spec.run(None, Args(reporter = rep, filter = Filter.apply(Some(Set("org.scalatest.tags.FirefoxTag", "org.scalatest.tags.HtmlUnitTag")))))
       val testStartingEventsReceived = rep.testStartingEventsReceived
       assert(testStartingEventsReceived.length == expectedTestStartingCount)
       assert(rep.testSucceededEventsReceived.length == expectedTestSucceededCount)
@@ -214,7 +214,7 @@ class AllBrowsersPerTestBehaviorSpec extends WordSpec {
 
       val rep = new EventRecordingReporter
       val spec = new TestSpec
-      spec.run(None, Args(reporter = rep, filter = Filter.apply(Some(Set("org.scalatest.tags.HtmlUnit", "ChosenTest")))))
+      spec.run(None, Args(reporter = rep, filter = Filter.apply(Some(Set("org.scalatest.tags.HtmlUnitTag", "ChosenTest")))))
       val testStartingEventsReceived = rep.testStartingEventsReceived
       assert(testStartingEventsReceived.length == expectedTestStartingCount)
       assert(rep.testSucceededEventsReceived.length == expectedTestSucceededCount)

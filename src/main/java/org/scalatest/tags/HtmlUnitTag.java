@@ -24,7 +24,7 @@ import org.scalatest.TagAnnotation;
 /**
  * Tag for HtmlUnit browser test.
  */
-@TagAnnotation("org.scalatest.tags.HtmlUnit")
+@TagAnnotation("org.scalatest.tags.HtmlUnitTag")
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
-public @interface HtmlUnit {}
+public @interface HtmlUnitTag {}

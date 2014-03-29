@@ -24,7 +24,7 @@ import org.scalatest.TagAnnotation;
 /**
  * Tag for Safari browser test.
  */
-@TagAnnotation("org.scalatest.tags.Safari")
+@TagAnnotation("org.scalatest.tags.SafariTag")
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
-public @interface Safari {}
+public @interface SafariTag {}

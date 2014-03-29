@@ -38,7 +38,7 @@ import org.openqa.selenium.chrome.ChromeDriver
  * to the test name.  All tests registered under <code>registerSharedTests</code> will be provided with real <code>WebDriver</code> available on the system.
  * For unavailable <code>WebDriver</code> on the running platform, the test will be canceled.  All tests registered under <code>registerSharedTests</code> will be
  * tagged automatically, when the test name ends with [Firefox] (returned from <code>forBrowser.name</code> when <code>WebDriver</code> is <code>FirefoxDriver</code>),
- * the test will be automatically tagged with "org.scalatest.tags.Firefox".  This means that you can include/exclude tests using ScalaTest's tagging feature.
+ * the test will be automatically tagged with "org.scalatest.tags.FirefoxTag".  This means that you can include/exclude tests using ScalaTest's tagging feature.
  *
  */
 trait AllBrowsersPerTest extends SuiteMixin with WebBrowser with Eventually with IntegrationPatience { this: Suite =>
@@ -102,7 +102,7 @@ trait AllBrowsersPerTest extends SuiteMixin with WebBrowser with Eventually with
   /**
    * Case object for Firefox browser.
    */
-  case object ForFirefox extends ForBrowser(" [Firefox]", "org.scalatest.tags.Firefox") {
+  case object ForFirefox extends ForBrowser(" [Firefox]", "org.scalatest.tags.FirefoxTag") {
     /**
      * Create <code>FirefoxDriver</code> instance.
      *
@@ -114,7 +114,7 @@ trait AllBrowsersPerTest extends SuiteMixin with WebBrowser with Eventually with
   /**
    * Case object for Safari browser.
    */
-  case object ForSafari extends ForBrowser(" [Safari]", "org.scalatest.tags.Safari") {
+  case object ForSafari extends ForBrowser(" [Safari]", "org.scalatest.tags.SafariTag") {
     /**
      * Create <code>SafariDriver</code> instance.
      *
@@ -126,7 +126,7 @@ trait AllBrowsersPerTest extends SuiteMixin with WebBrowser with Eventually with
   /**
    * Case object for Internet Explorer browser.
    */
-  case object ForInternetExplorer extends ForBrowser(" [InternetExplorer]", "org.scalatest.tags.InternetExplorer") {
+  case object ForInternetExplorer extends ForBrowser(" [InternetExplorer]", "org.scalatest.tags.InternetExplorerTag") {
     /**
      * Create <code>InternetExplorerDriver</code> instance.
      *
@@ -138,7 +138,7 @@ trait AllBrowsersPerTest extends SuiteMixin with WebBrowser with Eventually with
   /**
    * Case object for Chrome browser.
    */
-  case object ForChrome extends ForBrowser(" [Chrome]", "org.scalatest.tags.Chrome") {
+  case object ForChrome extends ForBrowser(" [Chrome]", "org.scalatest.tags.ChromeTag") {
     /**
      * Create <code>ChromeDriver</code> instance.
      *
@@ -150,7 +150,7 @@ trait AllBrowsersPerTest extends SuiteMixin with WebBrowser with Eventually with
   /**
    * Case object for HtmlUnit browser.
    */
-  case object ForHtmlUnit extends ForBrowser(" [HtmlUnit]", "org.scalatest.tags.HtmlUnit") {
+  case object ForHtmlUnit extends ForBrowser(" [HtmlUnit]", "org.scalatest.tags.HtmlUnitTag") {
     /**
      * Create <code>HtmlUnitDriver</code> instance.
      *
