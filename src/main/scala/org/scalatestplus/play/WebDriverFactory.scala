@@ -21,7 +21,7 @@ import org.openqa.selenium.firefox.{FirefoxDriver, FirefoxProfile}
 import org.openqa.selenium.ie.InternetExplorerDriver
 import org.openqa.selenium.safari.SafariDriver
 import org.openqa.selenium.htmlunit.HtmlUnitDriver
-import org.scalatestplus.play.BrowserDriver.NoDriver
+import org.scalatestplus.play.BrowserFactory.NoDriver
 
 /**
  * Factory to create different types of <code>WebDriver</code>

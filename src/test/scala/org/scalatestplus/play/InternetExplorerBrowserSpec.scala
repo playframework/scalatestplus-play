@@ -20,7 +20,7 @@ import org.scalatest._
 import play.api.{Play, Application}
 import org.openqa.selenium.WebDriver
 
-class InternetExplorerBrowserSpec extends UnitSpec with OneBrowserPerSuite with InternetExplorerBrowser {
+class InternetExplorerFactorySpec extends UnitSpec with OneBrowserPerSuite with InternetExplorerFactory {
 
   implicit override val app: FakeApplication = 
     FakeApplication(
@@ -38,7 +38,7 @@ class InternetExplorerBrowserSpec extends UnitSpec with OneBrowserPerSuite with 
     super.withFixture(test)
   }
 
-  "The InternetExplorerBrowser trait" must {
+  "The InternetExplorerFactory trait" must {
     "provide a FakeApplication" in {
       app.configuration.getString("foo") mustBe Some("bar")
     }

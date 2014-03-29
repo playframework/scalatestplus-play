@@ -21,7 +21,7 @@ import events._
 import play.api.{Play, Application}
 import scala.collection.mutable.ListBuffer
 
-class ConfiguredBrowserSpec extends UnitSpec with SequentialNestedSuiteExecution with OneBrowserPerSuite with HtmlUnitBrowser {
+class ConfiguredBrowserSpec extends UnitSpec with SequentialNestedSuiteExecution with OneBrowserPerSuite with HtmlUnitFactory {
 
   override def nestedSuites = Vector(new ConfiguredBrowserNestedSuite)
 

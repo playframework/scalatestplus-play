@@ -21,7 +21,7 @@ import org.openqa.selenium.WebDriver
 /**
  * Trait that defines an abstract <code>createNewDriver</code>  method for creating a new Selenium <code>WebDriver</code>.
  */
-trait BrowserDriver {
+trait BrowserFactory {
 
   /**
    * Create an new instance of Selenium <code>WebDriver</code>.
@@ -39,15 +39,15 @@ trait BrowserDriver {
 import org.openqa.selenium._
 
 /**
- * Companion object to trait <code>BrowserDriver</code> that holds a <code>NoDriver</code> object that implements 
+ * Companion object to trait <code>BrowserFactory</code> that holds a <code>NoDriver</code> object that implements 
  * the Selenium <code>WebDriver</code> interface by throwing <code>UnuspportedOperationException</code>. This is
  * used as a placeholder when canceling tests because a web driver does not work on the host platform (such
  * as the driver for Internet Explorer on a Mac).
  */
-object BrowserDriver {
+object BrowserFactory {
 
   /**
-   * An implementation of <code>BrowserDriver</code> that does nothing, used when a requested Selenium <code>WebDriver</code> is unavailable.
+   * An implementation of <code>BrowserFactory</code> that does nothing, used when a requested Selenium <code>WebDriver</code> is unavailable.
    * Traits <code>OneBrowserPerSuite</code>, <code>OneBrowserPerTest</code>, and <code>MixedFixtures</code> check
    * if the requested <code>WebDriver</code> is available, and if not installs this driver (to avoid initializing with <code>null</code>),
    * and cancels the tests.
@@ -139,7 +139,7 @@ object BrowserDriver {
   }
 
   /**
-   * An implementation of <code>BrowserDriver</code> that does nothing, used when a test in <code>AllBrowsersPerTest</code>
+   * An implementation of <code>BrowserFactory</code> that does nothing, used when a test in <code>AllBrowsersPerTest</code>
    * does not require a <code>WebDriver</code>.
    *
    */

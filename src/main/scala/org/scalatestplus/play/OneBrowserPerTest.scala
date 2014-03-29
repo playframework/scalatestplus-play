@@ -21,7 +21,7 @@ import selenium.WebBrowser
 import concurrent.Eventually
 import concurrent.IntegrationPatience
 import org.openqa.selenium.WebDriver
-import BrowserDriver.NoDriver
+import BrowserFactory.NoDriver
 import org.openqa.selenium.safari.SafariDriver
 import org.openqa.selenium.chrome.ChromeDriver
 
@@ -31,7 +31,7 @@ import org.openqa.selenium.chrome.ChromeDriver
  * It overrides ScalaTest's <code>withFixture</code> method to create new <code>WebDriver</code> instance 
  * before executing each test.
  */
-trait OneBrowserPerTest extends SuiteMixin with WebBrowser with Eventually with IntegrationPatience with BrowserDriver { this: Suite =>
+trait OneBrowserPerTest extends SuiteMixin with WebBrowser with Eventually with IntegrationPatience with BrowserFactory { this: Suite =>
 
   private var privateApp: FakeApplication = _
 

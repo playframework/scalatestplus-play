@@ -21,19 +21,23 @@ import selenium.WebBrowser
 import concurrent.Eventually
 import concurrent.IntegrationPatience
 import org.openqa.selenium.WebDriver
-import org.openqa.selenium.safari.SafariDriver
+import org.openqa.selenium.htmlunit.HtmlUnitDriver
 
 /**
- * Trait providing a <code>createNewDriver</code> method that creates a new Selenium <code>SafariDriver</code>.
+ * Trait providing a <code>createNewDriver</code> method that creates a new Selenium <code>HtmlUnitDriver</code>.
  */
-trait SafariBrowser extends BrowserDriver {
+trait HtmlUnitFactory extends BrowserFactory {
 
   /**
-   * Creates a new instance of <code>SafariDriver</code>.
+   * Creates a new instance of <code>HtmlUnitDriver</code>.
    */
-  def createNewDriver: WebDriver = new SafariDriver()
-
+  def createNewDriver: WebDriver = {
+    val htmlUnitDriver = new HtmlUnitDriver()
+    htmlUnitDriver.setJavascriptEnabled(true)
+    htmlUnitDriver
+  }
+    
   // Use inherited Scaladoc message
-  def cantCreateRequestedDriver: String = Resources("cantCreateSafariDriver")
+  def cantCreateRequestedDriver: String = Resources("cantCreateHtmlUnitDriver")
 }
 

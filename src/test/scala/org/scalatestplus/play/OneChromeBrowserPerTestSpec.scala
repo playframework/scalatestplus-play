@@ -19,7 +19,7 @@ import play.api.test._
 import org.scalatest._
 import play.api.{Play, Application}
 
-class OneChromeBrowserPerTestSpec extends UnitSpec with OneBrowserPerTest with ChromeBrowser {
+class OneChromeFactoryPerTestSpec extends UnitSpec with OneBrowserPerTest with ChromeFactory {
 
   implicit override def app: FakeApplication = 
     FakeApplication(

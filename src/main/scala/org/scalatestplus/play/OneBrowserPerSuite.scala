@@ -21,7 +21,7 @@ import selenium.WebBrowser
 import concurrent.Eventually
 import concurrent.IntegrationPatience
 import org.openqa.selenium.WebDriver
-import BrowserDriver.NoDriver
+import BrowserFactory.NoDriver
 import org.openqa.selenium.safari.SafariDriver
 import org.openqa.selenium.chrome.ChromeDriver
 
@@ -34,7 +34,7 @@ import org.openqa.selenium.chrome.ChromeDriver
  * the <code>WebDriver</code> instance using <code>"org.scalatestplus.play.webDriver"</code> key.  This traits also overrides <code>Suite.withFixture</code> 
  * to cancel all the tests automatically if the related <code>WebDriver</code> is not available in the running system.
  */
-trait OneBrowserPerSuite extends SuiteMixin with WebBrowser with Eventually with IntegrationPatience with BrowserDriver { this: Suite =>
+trait OneBrowserPerSuite extends SuiteMixin with WebBrowser with Eventually with IntegrationPatience with BrowserFactory { this: Suite =>
 
   /**
    * An implicit instance of <code>FakeApplication</code>.

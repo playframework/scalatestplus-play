@@ -22,7 +22,7 @@ import org.openqa.selenium.WebDriver
 
 
 // Can't get this one to work either on my Mac, even with the system property set
-class ChromeBrowserSpec extends UnitSpec with OneBrowserPerSuite with ChromeBrowser {
+class ChromeFactorySpec extends UnitSpec with OneBrowserPerSuite with ChromeFactory {
 
   implicit override val app: FakeApplication = 
     FakeApplication(
@@ -40,7 +40,7 @@ class ChromeBrowserSpec extends UnitSpec with OneBrowserPerSuite with ChromeBrow
     super.withFixture(test)
   }
 
-  "The ChromeBrowser trait" must {
+  "The ChromeFactory trait" must {
     "provide a FakeApplication" in {
       app.configuration.getString("foo") mustBe Some("bar")
     }

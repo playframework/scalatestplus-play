@@ -21,19 +21,19 @@ import selenium.WebBrowser
 import concurrent.Eventually
 import concurrent.IntegrationPatience
 import org.openqa.selenium.WebDriver
-import org.openqa.selenium.chrome.ChromeDriver
+import org.openqa.selenium.safari.SafariDriver
 
 /**
- * Trait providing a <code>createNewDriver</code> method that creates a new Selenium <code>ChromeDriver</code>.
+ * Trait providing a <code>createNewDriver</code> method that creates a new Selenium <code>SafariDriver</code>.
  */
-trait ChromeBrowser extends BrowserDriver {
+trait SafariFactory extends BrowserFactory {
 
   /**
-   * Creates a new instance of <code>ChromeDriver</code>.
+   * Creates a new instance of <code>SafariDriver</code>.
    */
-  def createNewDriver: WebDriver = new ChromeDriver()
+  def createNewDriver: WebDriver = new SafariDriver()
 
   // Use inherited Scaladoc message
-  def cantCreateRequestedDriver: String = Resources("cantCreateChromeDriver")
+  def cantCreateRequestedDriver: String = Resources("cantCreateSafariDriver")
 }
 

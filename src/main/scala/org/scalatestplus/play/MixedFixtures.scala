@@ -26,7 +26,7 @@ import org.openqa.selenium.htmlunit.HtmlUnitDriver
 import org.openqa.selenium.safari.SafariDriver
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.ie.InternetExplorerDriver
-import BrowserDriver.NoDriver
+import BrowserFactory.NoDriver
 import org.openqa.selenium.safari.SafariDriver
 
 /**
