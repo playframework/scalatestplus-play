@@ -22,19 +22,19 @@ import org.openqa.selenium.ie.InternetExplorerDriver
 import org.openqa.selenium.safari.SafariDriver
 import org.openqa.selenium.htmlunit.HtmlUnitDriver
 
-class AllBrowsersPerTestBehaviorSpec extends WordSpec {
+class AllBrowsersPerSharedTestBehaviorSpec extends WordSpec {
 
   object ChosenTest extends Tag("ChosenTest")
 
-  class TestSpec extends UnitSpec with AllBrowsersPerTest {
-    def registerSharedTests(forBrowser: ForBrowser) {
-      "test 1" + forBrowser.name in {}
-      "test 2" + forBrowser.name taggedAs(ChosenTest) in {}
+  class TestSpec extends UnitSpec with AllBrowsersPerSharedTest {
+    def registerSharedTests(browser: BrowserInfo) {
+      "test 1" + browser.name in {}
+      "test 2" + browser.name taggedAs(ChosenTest) in {}
     }
     "test 3" taggedAs(ChosenTest) in {}
   }
 
-  "The AllBrowsersPerTest trait" must {
+  "The AllBrowsersPerSharedTest trait" must {
 
     val chrome = try { val d = new ChromeDriver(); d.quit(); 1 } catch { case ex: Throwable => 0 }
     val firefox = try { val d = new FirefoxDriver(new FirefoxProfile); d.close(); 1 } catch { case ex: Throwable => 0 }

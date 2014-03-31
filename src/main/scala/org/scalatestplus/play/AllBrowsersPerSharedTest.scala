@@ -29,55 +29,68 @@ import org.openqa.selenium.safari.SafariDriver
 import org.openqa.selenium.chrome.ChromeDriver
 
 /**
- * Trait that provides new browser instances (for all browsers available on the running platform) for each test executed in a ScalaTest <code>Suite</code>.
+ * Trait that uses a "shared test" approach to enable you to run the same tests on multiple browsers in a ScalaTest `Suite` with minimal boilerplate.
  *
- * It overrides ScalaTest's <code>withFixture</code> and <code>runTest</code> method to create new <code>WebDriver</code>, <code>TestServer</code> and
- * <code>FakeApplication</code> instance before executing each test.
+ * This trait overrides `Suite`'s `withFixture` and `runTest` lifecycle methods to create a new `WebDriver`, `TestServer`, and
+ * `FakeApplication` instance before executing each test, and overrides the `tags` lifecycle method to tag the shared tests so you can
+ * filter them by browser type.
  *
- * For tests that need to be shared between multiple browsers, you'll need to put them in <code>registerSharedTests</code> and append <code>forBrowser.name</code>
- * to the test name.  All tests registered under <code>registerSharedTests</code> will be provided with real <code>WebDriver</code> available on the system.
- * For unavailable <code>WebDriver</code> on the running platform, the test will be canceled.  All tests registered under <code>registerSharedTests</code> will be
- * tagged automatically, when the test name ends with [Firefox] (returned from <code>forBrowser.name</code> when <code>WebDriver</code> is <code>FirefoxDriver</code>),
+ * You'll need to place any tests that you want executed by multiple browsers in a `registerSharedTests` method and, since all tests in a ScalaTest `Suite`
+ * must have unique names, append the browser name (passed into `registerSharedTests`) to each test name:
+ * 
+ * <pre class="stHighlight">
+ * def registerSharedTests(browser: BrowserInfo) {
+ *   "The AllBrowsersPerSharedTest trait" must {
+ *     "put the webDriver in the configMap" + browser.name in {
+ *       val configuredWebDriver = configMap.getOptional[WebDriver]("org.scalatestplus.play.webDriver")
+ *       configuredWebDriver mustBe defined
+ *     } 
+ * </pre>
+ * 
+ * All tests registered via `registerSharedTests` will be registered for each possible `WebDriver`. When running, any tests for browser drivers that are unavailable
+ * on the current platform will be canceled. The tests/t
+ * All tests registered under `registerSharedTests` will be
+ * tagged automatically, when the test name ends with [Firefox] (returned from `browser.name` when `WebDriver` is `FirefoxDriver`),
  * the test will be automatically tagged with "org.scalatest.tags.FirefoxTag".  This means that you can include/exclude tests using ScalaTest's tagging feature.
  *
  */
-trait AllBrowsersPerTest extends SuiteMixin with WebBrowser with Eventually with IntegrationPatience { this: Suite =>
+trait AllBrowsersPerSharedTest extends SuiteMixin with WebBrowser with Eventually with IntegrationPatience { this: Suite =>
 
   /**
-   * Indicate whether to register tests for Firefox, by default returns <code>true</code>.  You can override it to return <code>false</code>
+   * Indicate whether to register tests for Firefox, by default returns `true`.  You can override it to return `false`
    * to always disable tests for Firefox.
    */
   lazy val registerSharedTestsForFirefox = true
 
   /**
-   * Indicate whether to register tests for Safari, by default returns <code>true</code>.  You can override it to return <code>false</code>
+   * Indicate whether to register tests for Safari, by default returns `true`.  You can override it to return `false`
    * to always disable tests for Safari.
    */
   lazy val registerSharedTestsForSafari = true
 
   /**
-   * Indicate whether to register tests for Internet Explorer, by default returns <code>true</code>.  You can override it to return <code>false</code>
+   * Indicate whether to register tests for Internet Explorer, by default returns `true`.  You can override it to return `false`
    * to always disable tests for Internet Explorer.
    */
   lazy val registerSharedTestsForInternetExplorer = true
 
   /**
-   * Indicate whether to register tests for Chrome, by default returns <code>true</code>.  You can override it to return <code>false</code>
+   * Indicate whether to register tests for Chrome, by default returns `true`.  You can override it to return `false`
    * to always disable tests for Chrome.
    */
   lazy val registerSharedTestsForChrome = true
 
   /**
-   * Indicate whether to register tests for HtmlUnit, by default returns <code>true</code>.  You can override it to return <code>false</code>
+   * Indicate whether to register tests for HtmlUnit, by default returns `true`.  You can override it to return `false`
    * to always disable tests for HtmlUnit.
    */
   lazy val registerSharedTestsForHtmlUnit = true
 
   /**
-   * Method to provide <code>FirefoxProfile</code> for creating <code>FirefoxDriver</code>, you can override this method to
-   * provide a customized instance of <code>FirefoxProfile</code>
+   * Method to provide `FirefoxProfile` for creating `FirefoxDriver`, you can override this method to
+   * provide a customized instance of `FirefoxProfile`
    *
-   * @return an instance of <code>FirefoxProfile</code>
+   * @return an instance of `FirefoxProfile`
    */
   protected lazy val firefoxProfile: FirefoxProfile = new FirefoxProfile
 
@@ -90,11 +103,11 @@ trait AllBrowsersPerTest extends SuiteMixin with WebBrowser with Eventually with
    * @param name the browser name
    * @param tagName the browser tag name
    */
-  abstract class ForBrowser(val name: String, val tagName: String) {
+  abstract class BrowserInfo(val name: String, val tagName: String) {
     /**
-     * Create <code>WebDriver</code> instance for the represented browser.
+     * Create `WebDriver` instance for the represented browser.
      *
-     * @return <code>WebDriver</code> instance for the represented browser
+     * @return `WebDriver` instance for the represented browser
      */
     def createWebDriver: WebDriver
   }
@@ -102,11 +115,11 @@ trait AllBrowsersPerTest extends SuiteMixin with WebBrowser with Eventually with
   /**
    * Case object for Firefox browser.
    */
-  case object ForFirefox extends ForBrowser(" [Firefox]", "org.scalatest.tags.FirefoxTag") {
+  case object ForFirefox extends BrowserInfo(" [Firefox]", "org.scalatest.tags.FirefoxTag") {
     /**
-     * Create <code>FirefoxDriver</code> instance.
+     * Create `FirefoxDriver` instance.
      *
-     * @return <code>FirefoxDriver</code> instance
+     * @return `FirefoxDriver` instance
      */
     def createWebDriver: WebDriver = WebDriverFactory.createFirefoxDriver(firefoxProfile)
   }
@@ -114,11 +127,11 @@ trait AllBrowsersPerTest extends SuiteMixin with WebBrowser with Eventually with
   /**
    * Case object for Safari browser.
    */
-  case object ForSafari extends ForBrowser(" [Safari]", "org.scalatest.tags.SafariTag") {
+  case object ForSafari extends BrowserInfo(" [Safari]", "org.scalatest.tags.SafariTag") {
     /**
-     * Create <code>SafariDriver</code> instance.
+     * Create `SafariDriver` instance.
      *
-     * @return <code>SafariDriver</code> instance
+     * @return `SafariDriver` instance
      */
     def createWebDriver: WebDriver = WebDriverFactory.createSafariDriver
   }
@@ -126,11 +139,11 @@ trait AllBrowsersPerTest extends SuiteMixin with WebBrowser with Eventually with
   /**
    * Case object for Internet Explorer browser.
    */
-  case object ForInternetExplorer extends ForBrowser(" [InternetExplorer]", "org.scalatest.tags.InternetExplorerTag") {
+  case object ForInternetExplorer extends BrowserInfo(" [InternetExplorer]", "org.scalatest.tags.InternetExplorerTag") {
     /**
-     * Create <code>InternetExplorerDriver</code> instance.
+     * Create `InternetExplorerDriver` instance.
      *
-     * @return <code>InternetExplorerDriver</code> instance
+     * @return `InternetExplorerDriver` instance
      */
     def createWebDriver: WebDriver = WebDriverFactory.createInternetExplorerDriver
   }
@@ -138,11 +151,11 @@ trait AllBrowsersPerTest extends SuiteMixin with WebBrowser with Eventually with
   /**
    * Case object for Chrome browser.
    */
-  case object ForChrome extends ForBrowser(" [Chrome]", "org.scalatest.tags.ChromeTag") {
+  case object ForChrome extends BrowserInfo(" [Chrome]", "org.scalatest.tags.ChromeTag") {
     /**
-     * Create <code>ChromeDriver</code> instance.
+     * Create `ChromeDriver` instance.
      *
-     * @return <code>ChromeDriver</code> instance
+     * @return `ChromeDriver` instance
      */
     def createWebDriver: WebDriver = WebDriverFactory.createChromeDriver
   }
@@ -150,19 +163,19 @@ trait AllBrowsersPerTest extends SuiteMixin with WebBrowser with Eventually with
   /**
    * Case object for HtmlUnit browser.
    */
-  case object ForHtmlUnit extends ForBrowser(" [HtmlUnit]", "org.scalatest.tags.HtmlUnitTag") {
+  case object ForHtmlUnit extends BrowserInfo(" [HtmlUnit]", "org.scalatest.tags.HtmlUnitTag") {
     /**
-     * Create <code>HtmlUnitDriver</code> instance.
+     * Create `HtmlUnitDriver` instance.
      *
-     * @return <code>HtmlUnitDriver</code> instance
+     * @return `HtmlUnitDriver` instance
      */
     def createWebDriver: WebDriver = WebDriverFactory.createHtmlUnitDriver
   }
 
   /**
-   * Available browsers, you can override to add in your custom <code>ForBrowser</code> implementation.
+   * Available browsers, you can override to add in your custom `BrowserInfo` implementation.
    */
-  protected val browsers: IndexedSeq[ForBrowser] =
+  protected val browsers: IndexedSeq[BrowserInfo] =
     Vector(
       ForFirefox,
       ForSafari,
@@ -174,13 +187,13 @@ trait AllBrowsersPerTest extends SuiteMixin with WebBrowser with Eventually with
   private var privateApp: FakeApplication = _
 
   /**
-   * Method to create new instance of <code>FakeApplication</code>
+   * Method to create new instance of `FakeApplication`
    */
   implicit def app: FakeApplication = synchronized { privateApp }
 
   /**
-   * The port used by the <code>TestServer</code>.  By default this will be set to the result return from
-   * <code>Helpers.testServerPort</code>, user can override this to provide their own port number.
+   * The port used by the `TestServer`.  By default this will be set to the result return from
+   * `Helpers.testServerPort`, user can override this to provide their own port number.
    */
   val port: Int = Helpers.testServerPort
 
@@ -189,16 +202,16 @@ trait AllBrowsersPerTest extends SuiteMixin with WebBrowser with Eventually with
   private var privateWebDriverName: String = _
 
   /**
-   * Implicit method to get the <code>WebDriver</code> for the current test.
+   * Implicit method to get the `WebDriver` for the current test.
    */
   implicit def webDriver: WebDriver = synchronized { privateWebDriver }
 
   /**
    * Register shared tests.
    *
-   * @param forBrowser the passed in <code>ForBrowser</code> instance, you must append <code>forBrowser.name</code> to all tests register here.
+   * @param browser the passed in `BrowserInfo` instance, you must append `browser.name` to all tests register here.
    */
-  def registerSharedTests(forBrowser: ForBrowser): Unit
+  def registerSharedTests(browser: BrowserInfo): Unit
 
   if (registerSharedTestsForFirefox) registerSharedTests(ForFirefox)
   if (registerSharedTestsForSafari) registerSharedTests(ForSafari)
@@ -213,9 +226,9 @@ trait AllBrowsersPerTest extends SuiteMixin with WebBrowser with Eventually with
 
   /**
    * Overriden to automatically tag browser tests with browser tags.  Note that the browser tags will be merged with result returned from
-   * <code>super.tags</code>.
+   * `super.tags`.
    *
-   * @return <code>super.tags</code> with additional browser tags automatically
+   * @return `super.tags` with additional browser tags automatically
    */
   abstract override def tags: Map[String, Set[String]] = {
     val generatedBrowserTags: Map[String, Set[String]] = Map.empty ++ testNames.map { tn =>
@@ -230,12 +243,12 @@ trait AllBrowsersPerTest extends SuiteMixin with WebBrowser with Eventually with
   }
 
   /**
-   * Override <code>withFixture</code> to check <code>WebDriver</code> before running each test.  If it is a
-   * <code>NoDriver</code> all tests will be canceled automatically.  If valid <code>WebDriver</code> is available,
-   * a new instance of <code>TestServer</code> will be started for each test before they are executed.
+   * Override `withFixture` to check `WebDriver` before running each test.  If it is a
+   * `NoDriver` all tests will be canceled automatically.  If valid `WebDriver` is available,
+   * a new instance of `TestServer` will be started for each test before they are executed.
    *
    * @param test the no-arg test function to run with a fixture
-   * @return the <code>Outcome</code> of the test execution
+   * @return the `Outcome` of the test execution
    */
   abstract override def withFixture(test: NoArgTest): Outcome =
     webDriver match {
@@ -253,12 +266,12 @@ trait AllBrowsersPerTest extends SuiteMixin with WebBrowser with Eventually with
     }
 
   /**
-   * Override <code>runTest</code> to create <code>WebDriver</code> and <code>FakeApplication</code> before executing the test, and close the
-   * <code>WebDriver</code> instance after the test is run.
+   * Override `runTest` to create `WebDriver` and `FakeApplication` before executing the test, and close the
+   * `WebDriver` instance after the test is run.
    *
    * @param testName the name of one test to run.
-   * @param args the <code>Args</code> for this run
-   * @return a <code>Status</code> object that indicates when the test started by this method has completed, and whether or not it failed .
+   * @param args the `Args` for this run
+   * @return a `Status` object that indicates when the test started by this method has completed, and whether or not it failed .
    */
   abstract override def runTest(testName: String, args: Args): Status = {
     // looks at the end of the test name, and if it is one of the blessed ones,

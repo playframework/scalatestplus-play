@@ -21,7 +21,7 @@ import play.api.{Play, Application}
 import play.api.mvc.{Action, Results}
 import org.openqa.selenium.WebDriver
 
-class AllBrowsersPerTestSpec extends UnitSpec with AllBrowsersPerTest {
+class AllBrowsersPerSharedTestSpec extends UnitSpec with AllBrowsersPerSharedTest {
 
   implicit override def app: FakeApplication =
     FakeApplication(
@@ -39,17 +39,17 @@ class AllBrowsersPerTestSpec extends UnitSpec with AllBrowsersPerTest {
     super.withFixture(test)
   }
 
-  def registerSharedTests(forBrowser: ForBrowser) {
-    "The AllBrowsersPerTest trait" must {
-      "put the webDriver in the configMap" + forBrowser.name in {
+  def registerSharedTests(browser: BrowserInfo) {
+    "The AllBrowsersPerSharedTest trait" must {
+      "put the webDriver in the configMap" + browser.name in {
         val configuredWebDriver = configMap.getOptional[WebDriver]("org.scalatestplus.play.webDriver")
         configuredWebDriver mustBe defined
       }
-      "put the webDriverName in the configMap" + forBrowser.name in {
+      "put the webDriverName in the configMap" + browser.name in {
         val configuredWebDriverName = configMap.getOptional[String]("org.scalatestplus.play.webDriverName")
         configuredWebDriverName mustBe defined
       }
-      "provide a web driver" + forBrowser.name in {
+      "provide a web driver" + browser.name in {
         go to ("http://localhost:" + port + "/testing")
         pageTitle mustBe "Test Page"
         click on find(name("b")).value
@@ -58,7 +58,7 @@ class AllBrowsersPerTestSpec extends UnitSpec with AllBrowsersPerTest {
     }
   }
 
-  "The AllBrowsersPerTest trait" must {
+  "The AllBrowsersPerSharedTest trait" must {
     "provide a FakeApplication" in {
       app.configuration.getString("foo") mustBe Some("bar")
     }
