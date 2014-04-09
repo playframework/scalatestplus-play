@@ -113,17 +113,14 @@ object ScalaTestPlusPlayBuild extends Build {
         <developer>
           <id>bvenners</id>
           <name>Bill Venners</name>
-          <email>bill@artima.com</email>
         </developer>
         <developer>
           <id>gcberger</id>
           <name>George Berger</name>
-          <email>george.berger@gmail.com</email>
         </developer>
         <developer>
           <id>cheeseng</id>
           <name>Chua Chee Seng</name>
-          <email>cheeseng@amaseng.com</email>
         </developer>
       </developers>
       ))
