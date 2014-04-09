@@ -110,7 +110,7 @@ class AllBrowsersPerSharedTestBehaviorSpec extends WordSpec {
 
       val rep = new EventRecordingReporter
       val spec = new TestSpec
-      spec.run(None, Args(reporter = rep, filter = Filter.apply(Some(Set("org.scalatest.tags.FirefoxTag")))))
+      spec.run(None, Args(reporter = rep, filter = Filter.apply(Some(Set("org.scalatest.tags.FirefoxBrowser")))))
       val testStartingEventsReceived = rep.testStartingEventsReceived
       assert(testStartingEventsReceived.length == expectedTestStartingCount)
       assert(rep.testSucceededEventsReceived.length == expectedTestSucceededCount)
@@ -127,7 +127,7 @@ class AllBrowsersPerSharedTestBehaviorSpec extends WordSpec {
 
       val rep = new EventRecordingReporter
       val spec = new TestSpec
-      spec.run(None, Args(reporter = rep, filter = Filter.apply(Some(Set("org.scalatest.tags.SafariTag")))))
+      spec.run(None, Args(reporter = rep, filter = Filter.apply(Some(Set("org.scalatest.tags.SafariBrowser")))))
       val testStartingEventsReceived = rep.testStartingEventsReceived
       assert(testStartingEventsReceived.length == expectedTestStartingCount)
       assert(rep.testSucceededEventsReceived.length == expectedTestSucceededCount)
@@ -144,7 +144,7 @@ class AllBrowsersPerSharedTestBehaviorSpec extends WordSpec {
 
       val rep = new EventRecordingReporter
       val spec = new TestSpec
-      spec.run(None, Args(reporter = rep, filter = Filter.apply(Some(Set("org.scalatest.tags.InternetExplorerTag")))))
+      spec.run(None, Args(reporter = rep, filter = Filter.apply(Some(Set("org.scalatest.tags.InternetExplorerBrowser")))))
       val testStartingEventsReceived = rep.testStartingEventsReceived
       assert(testStartingEventsReceived.length == expectedTestStartingCount)
       assert(rep.testSucceededEventsReceived.length == expectedTestSucceededCount)
@@ -161,7 +161,7 @@ class AllBrowsersPerSharedTestBehaviorSpec extends WordSpec {
 
       val rep = new EventRecordingReporter
       val spec = new TestSpec
-      spec.run(None, Args(reporter = rep, filter = Filter.apply(Some(Set("org.scalatest.tags.ChromeTag")))))
+      spec.run(None, Args(reporter = rep, filter = Filter.apply(Some(Set("org.scalatest.tags.ChromeBrowser")))))
       val testStartingEventsReceived = rep.testStartingEventsReceived
       assert(testStartingEventsReceived.length == expectedTestStartingCount)
       assert(rep.testSucceededEventsReceived.length == expectedTestSucceededCount)
@@ -178,7 +178,7 @@ class AllBrowsersPerSharedTestBehaviorSpec extends WordSpec {
 
       val rep = new EventRecordingReporter
       val spec = new TestSpec
-      spec.run(None, Args(reporter = rep, filter = Filter.apply(Some(Set("org.scalatest.tags.HtmlUnitTag")))))
+      spec.run(None, Args(reporter = rep, filter = Filter.apply(Some(Set("org.scalatest.tags.HtmlUnitBrowser")))))
       val testStartingEventsReceived = rep.testStartingEventsReceived
       assert(testStartingEventsReceived.length == expectedTestStartingCount)
       assert(rep.testSucceededEventsReceived.length == expectedTestSucceededCount)
@@ -195,7 +195,7 @@ class AllBrowsersPerSharedTestBehaviorSpec extends WordSpec {
 
       val rep = new EventRecordingReporter
       val spec = new TestSpec
-      spec.run(None, Args(reporter = rep, filter = Filter.apply(Some(Set("org.scalatest.tags.FirefoxTag", "org.scalatest.tags.HtmlUnitTag")))))
+      spec.run(None, Args(reporter = rep, filter = Filter.apply(Some(Set("org.scalatest.tags.FirefoxBrowser", "org.scalatest.tags.HtmlUnitBrowser")))))
       val testStartingEventsReceived = rep.testStartingEventsReceived
       assert(testStartingEventsReceived.length == expectedTestStartingCount)
       assert(rep.testSucceededEventsReceived.length == expectedTestSucceededCount)
@@ -214,7 +214,7 @@ class AllBrowsersPerSharedTestBehaviorSpec extends WordSpec {
 
       val rep = new EventRecordingReporter
       val spec = new TestSpec
-      spec.run(None, Args(reporter = rep, filter = Filter.apply(Some(Set("org.scalatest.tags.HtmlUnitTag", "ChosenTest")))))
+      spec.run(None, Args(reporter = rep, filter = Filter.apply(Some(Set("org.scalatest.tags.HtmlUnitBrowser", "ChosenTest")))))
       val testStartingEventsReceived = rep.testStartingEventsReceived
       assert(testStartingEventsReceived.length == expectedTestStartingCount)
       assert(rep.testSucceededEventsReceived.length == expectedTestSucceededCount)
