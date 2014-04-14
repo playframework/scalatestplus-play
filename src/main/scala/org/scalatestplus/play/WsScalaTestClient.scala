@@ -15,18 +15,24 @@
  */
 package org.scalatestplus.play
 
-import play.api.test._
-import org.scalatest._
-import selenium.WebBrowser
-import concurrent.Eventually
-import concurrent.IntegrationPatience
-import org.openqa.selenium.WebDriver
-import org.openqa.selenium.firefox.FirefoxDriver
-import org.openqa.selenium.firefox.FirefoxProfile
-import play.api.http.{ HttpProtocol, Status, HeaderNames }
+import play.api._
+import libs.ws.WS
+import play.api.mvc.Call
 
-/**
- * Convenience "super Suite" base class for Play tests.
- */
-abstract class PlaySpec extends WordSpec with MustMatchers with OptionValues with WsScalaTestClient
+trait WsScalaTestClient {
 
+  /**
+   * Construct a WS request for the given reverse route.
+   *
+   * For example:
+   * {{{
+   *   wsCall(controllers.routes.Application.index()).get()
+   * }}}
+   */
+  def wsCall(call: Call)(implicit portNumber: PortNumber): WS.WSRequestHolder = wsUrl(call.url)
+
+  /**
+   * Construct a WS request for the given relative URL.
+   */
+  def wsUrl(url: String)(implicit portNumber: PortNumber): WS.WSRequestHolder = WS.url("http://localhost:" + portNumber.value + url)
+}

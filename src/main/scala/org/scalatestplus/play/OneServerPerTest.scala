@@ -43,6 +43,12 @@ trait OneServerPerTest extends SuiteMixin { this: Suite =>
   val port: Int = Helpers.testServerPort
 
   /**
+   * Implicit <code>PortNumber</code> instance that wraps <code>port</code>, the value returned from <code>portNumber.value</code>
+   * will be same as value of <code>port</code>.
+   */
+  implicit lazy val portNumber: PortNumber = PortNumber(port)
+
+  /**
    * Overriden to create new <code>TestServer</code> instance and run it before executing each test.
    *
    * @param test the no-arg test function to run with a fixture

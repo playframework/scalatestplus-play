@@ -25,7 +25,13 @@ trait ConfiguredServer extends SuiteMixin { this: Suite =>
   implicit final def app: FakeApplication = synchronized { configuredApp }
 
   private var configuredPort: Int = -1
-  def port: Int = synchronized { configuredPort } 
+  def port: Int = synchronized { configuredPort }
+
+  /**
+   * Implicit <code>PortNumber</code> instance that wraps <code>port</code>, the value returned from <code>portNumber.value</code>
+   * will be same as value of <code>port</code>.
+   */
+  implicit lazy val portNumber: PortNumber = PortNumber(port)
 
   abstract override def run(testName: Option[String], args: Args): Status = {
     args.configMap.getOptional[FakeApplication]("org.scalatestplus.play.app") match {

@@ -28,5 +28,5 @@ import play.api.http.{ HttpProtocol, Status, HeaderNames }
 /**
  * Convenience "super Suite" class for "mixed fixture" Play tests.
  */
-abstract class MixedPlaySpec extends fixture.WordSpec with MustMatchers with OptionValues with MixedFixtures with Eventually with IntegrationPatience
+abstract class MixedPlaySpec extends fixture.WordSpec with MustMatchers with OptionValues with MixedFixtures with Eventually with IntegrationPatience with WsScalaTestClient
 

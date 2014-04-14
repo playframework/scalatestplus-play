@@ -43,6 +43,12 @@ trait OneServerPerSuite extends SuiteMixin { this: Suite =>
   val port: Int = Helpers.testServerPort
 
   /**
+   * Implicit <code>PortNumber</code> instance that wraps <code>port</code>, the value returned from <code>portNumber.value</code>
+   * will be same as value of <code>port</code>.
+   */
+  implicit lazy val portNumber: PortNumber = PortNumber(port)
+
+  /**
    * Overriden to start <code>TestServer</code> before running the tests, pass a <code>FakeApplication</code> into the tests in 
    * <code>args.configMap</code> via "org.scalatestplus.play.app" key and port used by the started <code>TestServer</code> via the "org.scalatestplus.play.port" key.  It then calls 
    * <code>super.run</code> to execute the tests and stop <code>TestServer</code> automatically after test executions.
