@@ -48,6 +48,12 @@ trait OneBrowserPerSuite extends SuiteMixin with WebBrowser with Eventually with
   val port: Int = Helpers.testServerPort
 
   /**
+   * Implicit <code>PortNumber</code> instance that wraps <code>port</code>, the value returned from <code>portNumber.value</code>
+   * will be same as value of <code>port</code>.
+   */
+  implicit lazy val portNumber: PortNumber = PortNumber(port)
+
+  /**
    * An implicit instance of <code>WebDriver</code>, created by calling <code>createNewDriver</code>.  
    * If there is error when creating the <code>WebDriver</code>, <code>NoDriver</code> will be assigned 
    * instead.

@@ -29,7 +29,13 @@ trait ConfiguredBrowser extends SuiteMixin with WebBrowser with Eventually with 
   implicit final def app: FakeApplication = synchronized { configuredApp }
 
   private var configuredPort: Int = -1
-  def port: Int = synchronized { configuredPort } 
+  def port: Int = synchronized { configuredPort }
+
+  /**
+   * Implicit <code>PortNumber</code> instance that wraps <code>port</code>, the value returned from <code>portNumber.value</code>
+   * will be same as value of <code>port</code>.
+   */
+  implicit lazy val portNumber: PortNumber = PortNumber(port)
 
   private var configuredWebDriver: WebDriver = _
   implicit def webDriver: WebDriver = synchronized { configuredWebDriver } 
