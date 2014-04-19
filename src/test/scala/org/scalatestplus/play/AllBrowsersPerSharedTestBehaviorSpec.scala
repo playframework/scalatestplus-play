@@ -28,8 +28,8 @@ class AllBrowsersPerSharedTestBehaviorSpec extends WordSpec {
 
   class TestSpec extends UnitSpec with AllBrowsersPerSharedTest {
     def registerSharedTests(browser: BrowserInfo) {
-      "test 1" + browser.name in {}
-      "test 2" + browser.name taggedAs(ChosenTest) in {}
+      "test 1 " + browser.name in {}
+      "test 2 " + browser.name taggedAs(ChosenTest) in {}
     }
     "test 3" taggedAs(ChosenTest) in {}
   }

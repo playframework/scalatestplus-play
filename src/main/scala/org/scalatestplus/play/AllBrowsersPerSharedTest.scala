@@ -35,13 +35,13 @@ import org.openqa.selenium.chrome.ChromeDriver
  * `FakeApplication` instance before executing each test, and overrides the `tags` lifecycle method to tag the shared tests so you can
  * filter them by browser type.
  *
- * You'll need to place any tests that you want executed by multiple browsers in a `registerSharedTests` method and, since all tests in a ScalaTest `Suite`
- * must have unique names, append the browser name (passed into `registerSharedTests`) to each test name:
+ * You'll need to place any tests that you want executed by multiple browsers in a `registerSharedTests` method. Because all tests in a ScalaTest `Suite`
+ * must have unique names, you'll need to append the browser name (passed into `registerSharedTests`) to each test name:
  * 
  * <pre class="stHighlight">
  * def registerSharedTests(browser: BrowserInfo) {
  *   "The AllBrowsersPerSharedTest trait" must {
- *     "put the webDriver in the configMap" + browser.name in {
+ *     "put the webDriver in the configMap " + browser.name in {
  *       val configuredWebDriver = configMap.getOptional[WebDriver]("org.scalatestplus.play.webDriver")
  *       configuredWebDriver mustBe defined
  *     } 
@@ -115,7 +115,7 @@ trait AllBrowsersPerSharedTest extends SuiteMixin with WebBrowser with Eventuall
   /**
    * Case object for Firefox browser.
    */
-  case object ForFirefox extends BrowserInfo(" [Firefox]", "org.scalatest.tags.FirefoxBrowser") {
+  case object ForFirefox extends BrowserInfo("[Firefox]", "org.scalatest.tags.FirefoxBrowser") {
     /**
      * Create `FirefoxDriver` instance.
      *
@@ -127,7 +127,7 @@ trait AllBrowsersPerSharedTest extends SuiteMixin with WebBrowser with Eventuall
   /**
    * Case object for Safari browser.
    */
-  case object ForSafari extends BrowserInfo(" [Safari]", "org.scalatest.tags.SafariBrowser") {
+  case object ForSafari extends BrowserInfo("[Safari]", "org.scalatest.tags.SafariBrowser") {
     /**
      * Create `SafariDriver` instance.
      *
@@ -139,7 +139,7 @@ trait AllBrowsersPerSharedTest extends SuiteMixin with WebBrowser with Eventuall
   /**
    * Case object for Internet Explorer browser.
    */
-  case object ForInternetExplorer extends BrowserInfo(" [InternetExplorer]", "org.scalatest.tags.InternetExplorerBrowser") {
+  case object ForInternetExplorer extends BrowserInfo("[InternetExplorer]", "org.scalatest.tags.InternetExplorerBrowser") {
     /**
      * Create `InternetExplorerDriver` instance.
      *
@@ -151,7 +151,7 @@ trait AllBrowsersPerSharedTest extends SuiteMixin with WebBrowser with Eventuall
   /**
    * Case object for Chrome browser.
    */
-  case object ForChrome extends BrowserInfo(" [Chrome]", "org.scalatest.tags.ChromeBrowser") {
+  case object ForChrome extends BrowserInfo("[Chrome]", "org.scalatest.tags.ChromeBrowser") {
     /**
      * Create `ChromeDriver` instance.
      *
@@ -163,7 +163,7 @@ trait AllBrowsersPerSharedTest extends SuiteMixin with WebBrowser with Eventuall
   /**
    * Case object for HtmlUnit browser.
    */
-  case object ForHtmlUnit extends BrowserInfo(" [HtmlUnit]", "org.scalatest.tags.HtmlUnitBrowser") {
+  case object ForHtmlUnit extends BrowserInfo("[HtmlUnit]", "org.scalatest.tags.HtmlUnitBrowser") {
     /**
      * Create `HtmlUnitDriver` instance.
      *
@@ -198,8 +198,8 @@ trait AllBrowsersPerSharedTest extends SuiteMixin with WebBrowser with Eventuall
   val port: Int = Helpers.testServerPort
 
   /**
-   * Implicit <code>PortNumber</code> instance that wraps <code>port</code>, the value returned from <code>portNumber.value</code>
-   * will be same as value of <code>port</code>.
+   * Implicit <code>PortNumber</code> instance that wraps <code>port</code>. The value returned from <code>portNumber.value</code>
+   * will be same as the value of <code>port</code>.
    */
   implicit lazy val portNumber: PortNumber = PortNumber(port)
 

@@ -28,8 +28,8 @@ trait ConfiguredServer extends SuiteMixin { this: Suite =>
   def port: Int = synchronized { configuredPort }
 
   /**
-   * Implicit <code>PortNumber</code> instance that wraps <code>port</code>, the value returned from <code>portNumber.value</code>
-   * will be same as value of <code>port</code>.
+   * Implicit <code>PortNumber</code> instance that wraps <code>port</code>. The value returned from <code>portNumber.value</code>
+   * will be same as the value of <code>port</code>.
    */
   implicit lazy val portNumber: PortNumber = PortNumber(port)
 
