@@ -68,36 +68,6 @@ import org.openqa.selenium.chrome.ChromeDriver
 trait AllBrowsersPerSharedTest extends SuiteMixin with WebBrowser with Eventually with IntegrationPatience { this: Suite =>
 
   /**
-   * Indicates whether to register tests for Firefox, by default returns `true`.  You can override it to return `false`
-   * to always disable tests for Firefox.
-   */
-  lazy val registerSharedTestsForFirefox = true
-
-  /**
-   * Indicates whether to register tests for Safari, by default returns `true`.  You can override it to return `false`
-   * to always disable tests for Safari.
-   */
-  lazy val registerSharedTestsForSafari = true
-
-  /**
-   * Indicates whether to register tests for Internet Explorer, by default returns `true`.  You can override it to return `false`
-   * to always disable tests for Internet Explorer.
-   */
-  lazy val registerSharedTestsForInternetExplorer = true
-
-  /**
-   * Indicates whether to register tests for Chrome, by default returns `true`.  You can override it to return `false`
-   * to always disable tests for Chrome.
-   */
-  lazy val registerSharedTestsForChrome = true
-
-  /**
-   * Indicates whether to register tests for HtmlUnit, by default returns `true`.  You can override it to return `false`
-   * to always disable tests for HtmlUnit.
-   */
-  lazy val registerSharedTestsForHtmlUnit = true
-
-  /**
    * Method to provide `FirefoxProfile` for creating `FirefoxDriver`, you can override this method to
    * provide a customized instance of `FirefoxProfile`
    *
@@ -198,13 +168,13 @@ trait AllBrowsersPerSharedTest extends SuiteMixin with WebBrowser with Eventuall
   private var privateApp: FakeApplication = _
 
   /**
-   * Method to create new instance of `FakeApplication`
+   * Implicit method that returns the <code>FakeApplication</code> instance for the current test.
    */
   implicit def app: FakeApplication = synchronized { privateApp }
 
   /**
-   * The port used by the `TestServer`.  By default this will be set to the result return from
-   * `Helpers.testServerPort`, user can override this to provide their own port number.
+   * The port used by the `TestServer`.  By default this will be set to the result returned from
+   * `Helpers.testServerPort`. You can override this to provide a different port number.
    */
   val port: Int = Helpers.testServerPort
 
@@ -224,17 +194,18 @@ trait AllBrowsersPerSharedTest extends SuiteMixin with WebBrowser with Eventuall
   implicit def webDriver: WebDriver = synchronized { privateWebDriver }
 
   /**
-   * Register shared tests.
+   * Registers tests "shared" by multiple browsers.
+   *
+   * Implement this method by placing tests you wish to run for multiple browsers. This method
+   * will be called during the initialization of this trait once for each browser whos
    *
    * @param browser the passed in `BrowserInfo` instance, you must append `browser.name` to all tests register here.
    */
   def registerSharedTests(browser: BrowserInfo): Unit
 
-  if (registerSharedTestsForFirefox) registerSharedTests(FirefoxInfo)
-  if (registerSharedTestsForSafari) registerSharedTests(SafariInfo)
-  if (registerSharedTestsForInternetExplorer) registerSharedTests(InternetExplorerInfo)
-  if (registerSharedTestsForChrome) registerSharedTests(ChromeInfo)
-  if (registerSharedTestsForHtmlUnit) registerSharedTests(HtmlUnitInfo)
+  for (browser <- browsers) {
+    registerSharedTests(browser)
+  }
 
   private def mergeMap[A, B](ms: List[Map[A, B]])(f: (B, B) => B): Map[A, B] =
     (Map[A, B]() /: (for (m <- ms; kv <- m) yield kv)) { (a, kv) =>

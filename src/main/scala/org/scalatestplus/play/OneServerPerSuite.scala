@@ -37,8 +37,8 @@ trait OneServerPerSuite extends SuiteMixin { this: Suite =>
   implicit val app: FakeApplication = new FakeApplication()
 
   /**
-   * The port used by the <code>TestServer</code>.  By default this will be set to the result return from 
-   * <code>Helpers.testServerPort</code>, user can override this to provide their own port number.
+   * The port used by the `TestServer`.  By default this will be set to the result returned from
+   * `Helpers.testServerPort`. You can override this to provide a different port number.
    */
   val port: Int = Helpers.testServerPort
 
