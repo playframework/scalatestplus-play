@@ -58,11 +58,17 @@ import org.openqa.selenium.chrome.ChromeDriver
  *
  * Use tagging to include or exclude browsers that you sometimes want to test with, but not always. If you
  * ''never'' want to test with a particular browser, you can prevent tests for it from being registered at all
- * by overriding one of the `registerSharedTestsFor...` fields. For example, to disable registration of
- * tests for HtmlUnit, you'd write:
+ * by overriding `browsers` and excluding its `BrowserInfo` in the returned `Seq`. For example, to disable registration of
+ * tests for `HtmlUnit`, you'd write:
  *
  * <pre class="stHighlight">
- * override lazy val registerSharedTestsForHtmlUnit = false
+ * override val browsers: IndexedSeq[BrowserInfo] =
+ *   Vector(
+ *     FirefoxInfo,
+ *     SafariInfo,
+ *     InternetExplorerInfo,
+ *     ChromeInfo
+ *   )
  * </pre>
  */
 trait AllBrowsersPerSharedTest extends SuiteMixin with WebBrowser with Eventually with IntegrationPatience { this: Suite =>
@@ -213,10 +219,11 @@ trait AllBrowsersPerSharedTest extends SuiteMixin with WebBrowser with Eventuall
     }
 
   /**
-   * Automatically tag browser tests with browser tags.  Note that the browser tags will be merged with result returned from
-   * `super.tags`.
+   * Automatically tag browser tests with browser tags based on the test name: if a test ends in a browser
+   * name in square brackets, it will be tagged as using that browser. The browser tags will be merged with
+   * tags returned from `super.tags`, so no existing tags will be lost when the browser tags are added.
    *
-   * @return `super.tags` with additional browser tags automatically
+   * @return `super.tags` with additional browser tags added for any browser-specific tests 
    */
   abstract override def tags: Map[String, Set[String]] = {
     val generatedBrowserTags: Map[String, Set[String]] = Map.empty ++ testNames.map { tn =>
@@ -231,9 +238,10 @@ trait AllBrowsersPerSharedTest extends SuiteMixin with WebBrowser with Eventuall
   }
 
   /**
-   * Override `withFixture` to check `WebDriver` before running each test.  If it is a
-   * `NoDriver` all tests will be canceled automatically.  If valid `WebDriver` is available,
-   * a new instance of `TestServer` will be started for each test before they are executed.
+   * Checks the result of the `webDriver` method before running each test, canceling the
+   * test if it is a `NoDriver` (which means the driver was not available on the current platform).
+   * Otherwise, creates a new instance of `TestServer` for the test and ensures it is cleaned up
+   * after the test completes.
    *
    * @param test the no-arg test function to run with a fixture
    * @return the `Outcome` of the test execution
@@ -254,8 +262,10 @@ trait AllBrowsersPerSharedTest extends SuiteMixin with WebBrowser with Eventuall
     }
 
   /**
-   * Override `runTest` to create `WebDriver` and `FakeApplication` before executing the test, and close the
-   * `WebDriver` instance after the test is run.
+   * Creates a `WebDriver` and `FakeApplication` and adds entries
+   * to the config map for the app, port number, web driver, and the web driver's name before
+   * executing the specified test. After the test
+   * completes, ensures the `WebDriver` instance is closed.
    *
    * @param testName the name of one test to run.
    * @param args the `Args` for this run
@@ -275,7 +285,11 @@ trait AllBrowsersPerSharedTest extends SuiteMixin with WebBrowser with Eventuall
       privateWebDriverName = theWebDriverName
     }
     try {
-      val newConfigMap = args.configMap + ("org.scalatestplus.play.app" -> app) + ("org.scalatestplus.play.port" -> port) + ("org.scalatestplus.play.webDriver" -> webDriver) + ("org.scalatestplus.play.webDriverName" -> privateWebDriverName)
+      val newConfigMap = args.configMap +
+        ("org.scalatestplus.play.app" -> app) +
+        ("org.scalatestplus.play.port" -> port) +
+        ("org.scalatestplus.play.webDriver" -> webDriver) +
+        ("org.scalatestplus.play.webDriverName" -> privateWebDriverName)
       val newArgs = args.copy(configMap = newConfigMap)
       super.runTest(testName, newArgs)
     }
@@ -289,5 +303,5 @@ trait AllBrowsersPerSharedTest extends SuiteMixin with WebBrowser with Eventuall
       }
     }
   }
-
 }
+
