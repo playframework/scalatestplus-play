@@ -19,19 +19,21 @@ import play.api.test._
 import org.openqa.selenium.WebDriver
 
 /**
- * Trait that defines an abstract <code>createNewDriver</code>  method for creating a new Selenium <code>WebDriver</code>.
+ * Trait that defines an abstract `createNewDriver`  method for creating a new Selenium `WebDriver`
+ * and an abstract `unableToCreateDriverErrorMessage` method that provides an appropriate error message if the driver
+ * is not available on the current platform.
  */
 trait BrowserFactory {
 
   /**
-   * Create an new instance of Selenium <code>WebDriver</code>.
+   * Create an new instance of Selenium `WebDriver`.
    *
-   * @return an new instance of Selenium <code>WebDriver</code>
+   * @return an new instance of Selenium `WebDriver`
    */
   def createNewDriver: WebDriver
 
   /**
-   * Error message to use if <code>createNewDriver</code> completes abruptly with an exception.
+   * Error message to use if `createNewDriver` completes abruptly with an exception.
    */
   def unableToCreateDriverErrorMessage: String
 }
@@ -39,189 +41,190 @@ trait BrowserFactory {
 import org.openqa.selenium._
 
 /**
- * Companion object to trait <code>BrowserFactory</code> that holds a <code>NoDriver</code> object that implements 
- * the Selenium <code>WebDriver</code> interface by throwing <code>UnuspportedOperationException</code>. This is
- * used as a placeholder when canceling tests because a web driver does not work on the host platform (such
- * as the driver for Internet Explorer on a Mac).
+ * Companion object to trait `BrowserFactory` that holds a `NoDriver` object that implements 
+ * the Selenium `WebDriver` interface by throwing `UnuspportedOperationException`. This is
+ * used as a placeholder when a driver is not available on the host platform.
  */
 object BrowserFactory {
 
   /**
-   * An implementation of <code>BrowserFactory</code> that does nothing, used when a requested Selenium <code>WebDriver</code> is unavailable.
-   * Traits <code>OneBrowserPerSuite</code>, <code>OneBrowserPerTest</code>, and <code>MixedFixtures</code> check
-   * if the requested <code>WebDriver</code> is available, and if not installs this driver (to avoid initializing with <code>null</code>),
+   * An implementation of `BrowserFactory` that does nothing, used when a requested Selenium `WebDriver` is unavailable
+   * on the host platform.
+   *
+   * Traits `OneBrowserPerSuite`, `OneBrowserPerTest`, `AllBrowsersPerSharedTest`, and `MixedFixtures` check
+   * if the requested `WebDriver` is available, and if not, installs this driver (to avoid initializing with `null`)
    * and cancels the tests.
    *
-   * @param ex: the <code>Throwable</code>, if any, that was thrown when attempting to use the requested driver
+   * @param ex: the `Throwable`, if any, that was thrown when attempting to use the requested driver
    */
   case class NoDriver(ex: Option[Throwable]) extends WebDriver {
   
     /**
-     * Throws <code>UnsupportedOperationException</code>.
+     * Throws `UnsupportedOperationException`.
      */
     def close() {
       throw new UnsupportedOperationException("close not supported")
     }
   
     /**
-     * Throws <code>UnsupportedOperationException</code>.
+     * Throws `UnsupportedOperationException`.
      */
     def findElement(by: By): WebElement = 
       throw new UnsupportedOperationException("findElement not supported")
   
     /**
-     * Throws <code>UnsupportedOperationException</code>.
+     * Throws `UnsupportedOperationException`.
      */
     def findElements(by: By): java.util.List[WebElement] = 
       throw new UnsupportedOperationException("findElements not supported")
   
     /**
-     * Throws <code>UnsupportedOperationException</code>.
+     * Throws `UnsupportedOperationException`.
      */
     def get(url: String) {
       throw new UnsupportedOperationException("get not supported")
     }
   
     /**
-     * Throws <code>UnsupportedOperationException</code>.
+     * Throws `UnsupportedOperationException`.
      */
     def getCurrentUrl(): String = 
       throw new UnsupportedOperationException("getCurrentUrl not supported")
   
     /**
-     * Throws <code>UnsupportedOperationException</code>.
+     * Throws `UnsupportedOperationException`.
      */
     def getPageSource(): String = 
       throw new UnsupportedOperationException("getCurrentUrl not supported")
   
     /**
-     * Throws <code>UnsupportedOperationException</code>.
+     * Throws `UnsupportedOperationException`.
      */
     def getTitle(): String = 
       throw new UnsupportedOperationException("getCurrentUrl not supported")
   
     /**
-     * Throws <code>UnsupportedOperationException</code>.
+     * Throws `UnsupportedOperationException`.
      */
     def getWindowHandle(): String = 
       throw new UnsupportedOperationException("getWindowHandle not supported")
   
     /**
-     * Throws <code>UnsupportedOperationException</code>.
+     * Throws `UnsupportedOperationException`.
      */
     def getWindowHandles(): java.util.Set[java.lang.String] = 
       throw new UnsupportedOperationException("getWindowHandles not supported")
   
     /**
-     * Throws <code>UnsupportedOperationException</code>.
+     * Throws `UnsupportedOperationException`.
      */
     def manage(): WebDriver.Options = 
       throw new UnsupportedOperationException("manage not supported")
   
     /**
-     * Throws <code>UnsupportedOperationException</code>.
+     * Throws `UnsupportedOperationException`.
      */
     def navigate(): WebDriver.Navigation = 
       throw new UnsupportedOperationException("navigate not supported")
   
     /**
-     * Throws <code>UnsupportedOperationException</code>.
+     * Throws `UnsupportedOperationException`.
      */
     def quit() {
       throw new UnsupportedOperationException("quit not supported")
     }
   
     /**
-     * Throws <code>UnsupportedOperationException</code>.
+     * Throws `UnsupportedOperationException`.
      */
     def switchTo(): WebDriver.TargetLocator = 
       throw new UnsupportedOperationException("switchTo not supported")
   }
 
   /**
-   * An implementation of <code>BrowserFactory</code> that does nothing, used when a test in <code>AllBrowsersPerTest</code>
-   * does not require a <code>WebDriver</code>.
+   * An implementation of `BrowserFactory` that does nothing, used when a test in `AllBrowsersPerTest`
+   * does not require a `WebDriver`.
    *
    */
   object WithoutDriver extends WebDriver {
 
     /**
-     * Throws <code>UnsupportedOperationException</code>.
+     * Throws `UnsupportedOperationException`.
      */
     def close() {
       throw new UnsupportedOperationException("This test is expected to work without any WebDriver, did you forget to register this test under registerSharedTests?")
     }
 
     /**
-     * Throws <code>UnsupportedOperationException</code>.
+     * Throws `UnsupportedOperationException`.
      */
     def findElement(by: By): WebElement =
       throw new UnsupportedOperationException("This test is expected to work without any WebDriver, did you forget to register this test under registerSharedTests?")
 
     /**
-     * Throws <code>UnsupportedOperationException</code>.
+     * Throws `UnsupportedOperationException`.
      */
     def findElements(by: By): java.util.List[WebElement] =
       throw new UnsupportedOperationException("This test is expected to work without any WebDriver, did you forget to register this test under registerSharedTests?")
 
     /**
-     * Throws <code>UnsupportedOperationException</code>.
+     * Throws `UnsupportedOperationException`.
      */
     def get(url: String) {
       throw new UnsupportedOperationException("This test is expected to work without any WebDriver, did you forget to register this test under registerSharedTests?")
     }
 
     /**
-     * Throws <code>UnsupportedOperationException</code>.
+     * Throws `UnsupportedOperationException`.
      */
     def getCurrentUrl(): String =
       throw new UnsupportedOperationException("This test is expected to work without any WebDriver, did you forget to register this test under registerSharedTests?")
 
     /**
-     * Throws <code>UnsupportedOperationException</code>.
+     * Throws `UnsupportedOperationException`.
      */
     def getPageSource(): String =
       throw new UnsupportedOperationException("This test is expected to work without any WebDriver, did you forget to register this test under registerSharedTests?")
 
     /**
-     * Throws <code>UnsupportedOperationException</code>.
+     * Throws `UnsupportedOperationException`.
      */
     def getTitle(): String =
       throw new UnsupportedOperationException("This test is expected to work without any WebDriver, did you forget to register this test under registerSharedTests?")
 
     /**
-     * Throws <code>UnsupportedOperationException</code>.
+     * Throws `UnsupportedOperationException`.
      */
     def getWindowHandle(): String =
       throw new UnsupportedOperationException("This test is expected to work without any WebDriver, did you forget to register this test under registerSharedTests?")
 
     /**
-     * Throws <code>UnsupportedOperationException</code>.
+     * Throws `UnsupportedOperationException`.
      */
     def getWindowHandles(): java.util.Set[java.lang.String] =
       throw new UnsupportedOperationException("This test is expected to work without any WebDriver, did you forget to register this test under registerSharedTests?")
 
     /**
-     * Throws <code>UnsupportedOperationException</code>.
+     * Throws `UnsupportedOperationException`.
      */
     def manage(): WebDriver.Options =
       throw new UnsupportedOperationException("This test is expected to work without any WebDriver, did you forget to register this test under registerSharedTests?")
 
     /**
-     * Throws <code>UnsupportedOperationException</code>.
+     * Throws `UnsupportedOperationException`.
      */
     def navigate(): WebDriver.Navigation =
       throw new UnsupportedOperationException("This test is expected to work without any WebDriver, did you forget to register this test under registerSharedTests?")
 
     /**
-     * Throws <code>UnsupportedOperationException</code>.
+     * Throws `UnsupportedOperationException`.
      */
     def quit() {
       throw new UnsupportedOperationException("This test is expected to work without any WebDriver, did you forget to register this test under registerSharedTests?")
     }
 
     /**
-     * Throws <code>UnsupportedOperationException</code>.
+     * Throws `UnsupportedOperationException`.
      */
     def switchTo(): WebDriver.TargetLocator =
       throw new UnsupportedOperationException("This test is expected to work without any WebDriver, did you forget to register this test under registerSharedTests?")
