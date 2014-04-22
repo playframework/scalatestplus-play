@@ -39,7 +39,8 @@ class AllBrowsersPerSharedTestSpec extends UnitSpec with AllBrowsersPerSharedTes
     super.withFixture(test)
   }
 
-  def registerSharedTests(browser: BrowserInfo) {
+  def sharedTests(browser: BrowserInfo) = {
+
     "The AllBrowsersPerSharedTest trait" must {
       "put the webDriver in the configMap " + browser.name in {
         val configuredWebDriver = configMap.getOptional[WebDriver]("org.scalatestplus.play.webDriver")
@@ -94,5 +95,6 @@ class AllBrowsersPerSharedTestSpec extends UnitSpec with AllBrowsersPerSharedTes
       val configuredWebDriverName = configMap.getOptional[String]("org.scalatestplus.play.webDriverName")
       configuredWebDriverName mustBe None
     }
+
   }
 }

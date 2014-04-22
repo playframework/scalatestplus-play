@@ -35,12 +35,12 @@ import org.openqa.selenium.chrome.ChromeDriver
  * `FakeApplication` instance before executing each test, and overrides the `tags` lifecycle method to tag the shared tests so you can
  * filter them by browser type.
  *
- * You'll need to place any tests that you want executed by multiple browsers in a `registerSharedTests` method. Because all tests in a ScalaTest `Suite`
+ * You'll need to place any tests that you want executed by multiple browsers in a `sharedTests` method. Because all tests in a ScalaTest `Suite`
  * must have unique names, you'll need to append the browser name (available from the `BrowserInfo` passed
- * to `registerSharedTests`) to each test name:
+ * to `sharedTests`) to each test name:
  * 
  * <pre class="stHighlight">
- * def registerSharedTests(browser: BrowserInfo) {
+ * def sharedTests(browser: BrowserInfo) {
  *   "The blog app home page" must {
  *     "have the correct title " + browser.name in {
  *        go to (host + "index.html")
@@ -48,10 +48,10 @@ import org.openqa.selenium.chrome.ChromeDriver
  *     } 
  * </pre>
  * 
- * All tests registered via `registerSharedTests` will be registered for each possible `WebDriver`. When
+ * All tests registered via `sharedTests` will be registered for each possible `WebDriver`. When
  * running, any tests for browser drivers that are unavailable
  * on the current platform will be canceled.
- * All tests registered under `registerSharedTests` will be
+ * All tests registered under `sharedTests` will be
  * tagged automatically if they end with a browser name in square brackets. For example, if a test name ends
  * with `[Firefox]`, it will be automatically tagged with `"org.scalatest.tags.FirefoxBrowser"`. This will
  * allow you can include or exclude the shared tests by browser type using ScalaTest's regular tagging feature.
@@ -205,10 +205,10 @@ trait AllBrowsersPerSharedTest extends SuiteMixin with WebBrowser with Eventuall
    *
    * @param browser the passed in `BrowserInfo` instance, you must append `browser.name` to all tests register here.
    */
-  def registerSharedTests(browser: BrowserInfo): Unit
+  def sharedTests(browser: BrowserInfo): Unit
 
   for (browser <- browsers) {
-    registerSharedTests(browser)
+    sharedTests(browser)
   }
 
   private def mergeMap[A, B](ms: List[Map[A, B]])(f: (B, B) => B): Map[A, B] =

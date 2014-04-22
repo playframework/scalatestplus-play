@@ -27,7 +27,7 @@ class AllBrowsersPerSharedTestBehaviorSpec extends WordSpec {
   object ChosenTest extends Tag("ChosenTest")
 
   class TestSpec extends UnitSpec with AllBrowsersPerSharedTest {
-    def registerSharedTests(browser: BrowserInfo) {
+    def sharedTests(browser: BrowserInfo) = {
       "test 1 " + browser.name in {}
       "test 2 " + browser.name taggedAs(ChosenTest) in {}
     }
