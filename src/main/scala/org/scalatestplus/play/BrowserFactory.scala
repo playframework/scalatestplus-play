@@ -33,7 +33,7 @@ trait BrowserFactory {
   /**
    * Error message to use if <code>createNewDriver</code> completes abruptly with an exception.
    */
-  def cantCreateRequestedDriver: String
+  def unableToCreateDriverErrorMessage: String
 }
 
 import org.openqa.selenium._

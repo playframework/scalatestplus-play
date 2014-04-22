@@ -34,6 +34,6 @@ trait SafariFactory extends BrowserFactory {
   def createNewDriver: WebDriver = new SafariDriver()
 
   // Use inherited Scaladoc message
-  def cantCreateRequestedDriver: String = Resources("cantCreateSafariDriver")
+  def unableToCreateDriverErrorMessage: String = Resources("cantCreateSafariDriver")
 }
 

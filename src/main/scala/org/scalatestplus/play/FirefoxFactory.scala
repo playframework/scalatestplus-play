@@ -40,6 +40,6 @@ trait FirefoxFactory extends BrowserFactory {
   def createNewDriver: WebDriver = new FirefoxDriver(firefoxProfile)
     
   // Use inherited Scaladoc message
-  def cantCreateRequestedDriver: String = Resources("cantCreateFirefoxDriver")
+  def unableToCreateDriverErrorMessage: String = Resources("cantCreateFirefoxDriver")
 }
 

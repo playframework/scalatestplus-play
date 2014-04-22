@@ -34,6 +34,6 @@ trait InternetExplorerFactory extends BrowserFactory {
   def createNewDriver: WebDriver = new InternetExplorerDriver()
 
   // Use inherited Scaladoc message
-  def cantCreateRequestedDriver: String = Resources("cantCreateInternetExplorerDriver")
+  def unableToCreateDriverErrorMessage: String = Resources("cantCreateInternetExplorerDriver")
 }
 

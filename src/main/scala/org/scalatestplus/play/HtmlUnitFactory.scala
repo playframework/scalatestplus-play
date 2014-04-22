@@ -38,6 +38,6 @@ trait HtmlUnitFactory extends BrowserFactory {
   }
     
   // Use inherited Scaladoc message
-  def cantCreateRequestedDriver: String = Resources("cantCreateHtmlUnitDriver")
+  def unableToCreateDriverErrorMessage: String = Resources("cantCreateHtmlUnitDriver")
 }
 

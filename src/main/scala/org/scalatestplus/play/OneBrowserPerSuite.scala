@@ -67,8 +67,8 @@ trait OneBrowserPerSuite extends SuiteMixin with WebBrowser with Eventually with
     webDriver match {
       case NoDriver(ex) =>
           ex match {
-            case Some(e) => cancel(cantCreateRequestedDriver, e)
-            case None => cancel(cantCreateRequestedDriver)
+            case Some(e) => cancel(unableToCreateDriverErrorMessage, e)
+            case None => cancel(unableToCreateDriverErrorMessage)
           }
       case _ => super.withFixture(test)
     }

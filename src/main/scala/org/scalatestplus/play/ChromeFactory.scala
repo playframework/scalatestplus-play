@@ -34,6 +34,6 @@ trait ChromeFactory extends BrowserFactory {
   def createNewDriver: WebDriver = new ChromeDriver()
 
   // Use inherited Scaladoc message
-  def cantCreateRequestedDriver: String = Resources("cantCreateChromeDriver")
+  def unableToCreateDriverErrorMessage: String = Resources("cantCreateChromeDriver")
 }
 
