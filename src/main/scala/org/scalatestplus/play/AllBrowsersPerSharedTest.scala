@@ -23,7 +23,7 @@ import selenium.WebBrowser
 import concurrent.Eventually
 import concurrent.IntegrationPatience
 import org.openqa.selenium.WebDriver
-import BrowserFactory.{NoDriver, WithoutDriver}
+import BrowserFactory.NoDriver
 import org.openqa.selenium.firefox.FirefoxProfile
 import org.openqa.selenium.safari.SafariDriver
 import org.openqa.selenium.chrome.ChromeDriver
@@ -192,8 +192,6 @@ trait AllBrowsersPerSharedTest extends SuiteMixin with WebBrowser with Eventuall
 
   private var privateWebDriver: WebDriver = _
 
-  private var privateWebDriverName: String = _
-
   /**
    * Implicit method to get the `WebDriver` for the current test.
    */
@@ -248,7 +246,7 @@ trait AllBrowsersPerSharedTest extends SuiteMixin with WebBrowser with Eventuall
    */
   abstract override def withFixture(test: NoArgTest): Outcome =
     webDriver match {
-      case NoDriver(ex) =>
+      case NoDriver(ex) if test.configMap.getOptional[WebDriver]("org.scalatestplus.play.webDriver").isDefined =>
         val name = test.configMap.getRequired[String]("org.scalatestplus.play.webDriverName")
         val message = Resources("cantCreateDriver", name.trim)
         ex match {
@@ -274,29 +272,37 @@ trait AllBrowsersPerSharedTest extends SuiteMixin with WebBrowser with Eventuall
   abstract override def runTest(testName: String, args: Args): Status = {
     // looks at the end of the test name, and if it is one of the blessed ones,
     // sets the port, driver, etc., before, and cleans up after, calling super.runTest
+    val NoDriverNeededByTest = "No driver needed by this test"
+    val (localWebDriver, localWebDriverName): (WebDriver, String) =
+      browsers.find(b => testName.endsWith(b.name)) match {
+        case Some(b) => (b.createWebDriver, b.name)
+        case None => (NoDriver(None), NoDriverNeededByTest)
+      }
     synchronized {
       privateApp = new FakeApplication()
-      val (theWebDriver, theWebDriverName) =
-        browsers.find(b => testName.endsWith(b.name)) match {
-          case Some(b) => (b.createWebDriver, b.name)
-          case None => (WithoutDriver, "WithoutDriver")
-        }
-      privateWebDriver = theWebDriver
-      privateWebDriverName = theWebDriverName
+      privateWebDriver = localWebDriver
     }
     try {
-      val newConfigMap = args.configMap +
-        ("org.scalatestplus.play.app" -> app) +
-        ("org.scalatestplus.play.port" -> port) +
-        ("org.scalatestplus.play.webDriver" -> webDriver) +
-        ("org.scalatestplus.play.webDriverName" -> privateWebDriverName)
+      val appAndPortBindings: ConfigMap =
+        ConfigMap(
+          "org.scalatestplus.play.app" -> app,
+          "org.scalatestplus.play.port" -> port
+        )
+      val optionalDriverBindings: ConfigMap =
+        if (localWebDriverName != NoDriverNeededByTest)
+          ConfigMap(
+            "org.scalatestplus.play.webDriver" -> localWebDriver,
+            "org.scalatestplus.play.webDriverName" -> localWebDriverName
+          )
+        else
+          ConfigMap.empty
+      val newConfigMap: ConfigMap = new ConfigMap(args.configMap ++ appAndPortBindings ++ optionalDriverBindings)
       val newArgs = args.copy(configMap = newConfigMap)
       super.runTest(testName, newArgs)
     }
     finally {
       webDriver match {
         case NoDriver(_) => // do nothing
-        case WithoutDriver => // do nothing
         case safariDriver: SafariDriver => safariDriver.quit()
         case chromeDriver: ChromeDriver => chromeDriver.quit()
         case theDriver => theDriver.close()

@@ -86,13 +86,13 @@ class AllBrowsersPerSharedTestSpec extends UnitSpec with AllBrowsersPerSharedTes
       val configuredPort = configMap.getOptional[Int]("org.scalatestplus.play.port")
       configuredPort.value mustEqual port
     }
-    "put the webDriver in the configMap" in {
+    "not put the webDriver in the configMap" in {
       val configuredWebDriver = configMap.getOptional[WebDriver]("org.scalatestplus.play.webDriver")
-      configuredWebDriver mustBe defined
+      configuredWebDriver mustBe None
     }
-    "put the webDriverName in the configMap" in {
+    "not put the webDriverName in the configMap" in {
       val configuredWebDriverName = configMap.getOptional[String]("org.scalatestplus.play.webDriverName")
-      configuredWebDriverName mustBe defined
+      configuredWebDriverName mustBe None
     }
   }
 
