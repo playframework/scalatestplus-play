@@ -162,9 +162,9 @@ trait AllBrowsersPerSharedTest extends SuiteMixin with WebBrowser with Eventuall
   /**
    * Info for available browsers. Override to add in custom `BrowserInfo` implementations.
    */
-  protected val browsers: IndexedSeq[BrowserInfo] =
+  protected lazy val browsers: IndexedSeq[BrowserInfo] =
     Vector(
-      new FirefoxInfo(firefoxProfile),
+      FirefoxInfo(firefoxProfile),
       SafariInfo,
       InternetExplorerInfo,
       ChromeInfo,
