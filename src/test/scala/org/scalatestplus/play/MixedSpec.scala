@@ -25,5 +25,5 @@ import concurrent.IntegrationPatience
  * Browser) in different tests.
 */
 abstract class MixedSpec extends fixture.WordSpec with MustMatchers with OptionValues with Inside with MixedFixtures with
-    Eventually with IntegrationPatience
+    Eventually with IntegrationPatience with WsScalaTestClient
 
