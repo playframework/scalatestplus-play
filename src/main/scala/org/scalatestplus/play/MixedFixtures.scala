@@ -64,6 +64,12 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
     implicit def implicitApp: FakeApplication = app
 
     /**
+     * Implicit <code>PortNumber</code> instance that wraps <code>port</code>. The value returned from <code>portNumber.value</code>
+     * will be same as the value of <code>port</code>.
+     */
+    implicit lazy val portNumber: PortNumber = PortNumber(port)
+
+    /**
      * Override to run a <code>TestServer</code> using the passed in <code>port</code> before running the test.
      */
     override def apply() {
@@ -85,6 +91,12 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
      * Make the passed in <code>FakeApplication</code> implicit.
      */
     implicit def implicitApp: FakeApplication = app
+
+    /**
+     * Implicit <code>PortNumber</code> instance that wraps <code>port</code>. The value returned from <code>portNumber.value</code>
+     * will be same as the value of <code>port</code>.
+     */
+    implicit lazy val portNumber: PortNumber = PortNumber(port)
 
     /**
      * Override to run a <code>TestServer</code> using the passed in <code>port</code> before running the test, 
@@ -121,6 +133,12 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
     implicit def implicitApp: FakeApplication = app
 
     /**
+     * Implicit <code>PortNumber</code> instance that wraps <code>port</code>. The value returned from <code>portNumber.value</code>
+     * will be same as the value of <code>port</code>.
+     */
+    implicit lazy val portNumber: PortNumber = PortNumber(port)
+
+    /**
      * Override to run a <code>TestServer</code> using the passed in <code>port</code> before running the test, 
      * and close the <code>FirefoxDriver</code> automatically after test execution.
      */
@@ -152,6 +170,12 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
      * Make the passed in <code>FakeApplication</code> implicit.
      */
     implicit def implicitApp: FakeApplication = app
+
+    /**
+     * Implicit <code>PortNumber</code> instance that wraps <code>port</code>. The value returned from <code>portNumber.value</code>
+     * will be same as the value of <code>port</code>.
+     */
+    implicit lazy val portNumber: PortNumber = PortNumber(port)
 
     /**
      * Override to run a <code>TestServer</code> using the passed in <code>port</code> before running the test, 
@@ -187,6 +211,12 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
     implicit def implicitApp: FakeApplication = app
 
     /**
+     * Implicit <code>PortNumber</code> instance that wraps <code>port</code>. The value returned from <code>portNumber.value</code>
+     * will be same as the value of <code>port</code>.
+     */
+    implicit lazy val portNumber: PortNumber = PortNumber(port)
+
+    /**
      * Override to run a <code>TestServer</code> using the passed in <code>port</code> before running the test, 
      * and close the <code>ChromeDriver</code> automatically after test execution.
      */
@@ -219,6 +249,12 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
      * Make the passed in <code>FakeApplication</code> implicit.
      */
     implicit def implicitApp: FakeApplication = app
+
+    /**
+     * Implicit <code>PortNumber</code> instance that wraps <code>port</code>. The value returned from <code>portNumber.value</code>
+     * will be same as the value of <code>port</code>.
+     */
+    implicit lazy val portNumber: PortNumber = PortNumber(port)
 
     /**
      * Override to run a <code>TestServer</code> using the passed in <code>port</code> before running the test, 
