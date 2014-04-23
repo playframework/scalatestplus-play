@@ -30,7 +30,12 @@ import BrowserFactory.NoDriver
 trait ChromeFactory extends BrowserFactory {
 
   /**
-   * Creates a new instance of <code>ChromeDriver</code>.
+   * Creates a new instance of a Selenium `ChromeDriver`, or returns a `BrowserFactory.NoDriver` that includes
+   * the exception that indicated the driver was not supported on the host platform and an appropriate
+   * error message.
+   *
+   * @return an new instance of a Selenium `ChromeDriver`, or a `BrowserFactory.NoDriver` if it is not 
+   * available on the host platform.
    */
   def createWebDriver(): WebDriver =
     try { 
@@ -39,10 +44,10 @@ trait ChromeFactory extends BrowserFactory {
     catch {
       case ex: Throwable => NoDriver(Some(ex), Resources("cantCreateChromeDriver"))
     }
-
-  // Use inherited Scaladoc message
-  // def unableToCreateDriverErrorMessage: String =
 }
 
+/**
+ * Companion object to trait `ChromeFactory` that mixes in the trait.
+ */
 object ChromeFactory extends ChromeFactory
 

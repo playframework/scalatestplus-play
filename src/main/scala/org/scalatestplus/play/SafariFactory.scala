@@ -30,7 +30,12 @@ import BrowserFactory.NoDriver
 trait SafariFactory extends BrowserFactory {
 
   /**
-   * Creates a new instance of <code>SafariDriver</code>.
+   * Creates a new instance of a Selenium `SafariDriver`, or returns a `BrowserFactory.NoDriver` that includes
+   * the exception that indicated the driver was not supported on the host platform and an appropriate
+   * error message.
+   *
+   * @return an new instance of a Selenium `SafariDriver`, or a `BrowserFactory.NoDriver` if a Safari driver is not 
+   * available on the host platform.
    */
   def createWebDriver(): WebDriver =
     try {
@@ -39,10 +44,10 @@ trait SafariFactory extends BrowserFactory {
     catch {
       case ex: Throwable => NoDriver(Some(ex), Resources("cantCreateSafariDriver"))
     }
-
-  // Use inherited Scaladoc message
-  // def unableToCreateDriverErrorMessage: String =
 }
 
+/**
+ * Companion object to trait `SafariFactory` that mixes in the trait.
+ */
 object SafariFactory extends SafariFactory
 

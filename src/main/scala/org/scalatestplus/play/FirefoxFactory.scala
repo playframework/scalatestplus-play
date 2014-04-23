@@ -34,10 +34,16 @@ trait FirefoxFactory extends BrowserFactory {
    * 'FirefoxProfile' that is used to create new instance of 'FirefoxDriver'.
    * Override to provide a different `FirefoxProfile`.
    */
-  val firefoxProfile = new FirefoxProfile()
+  lazy val firefoxProfile = new FirefoxProfile()
 
   /**
-   * Creates a new instance of 'FirefoxDriver'.
+   * Creates a new instance of a Selenium `FirefoxDriver` (using the `FirefoxProfile` provided by
+   * the `firefoxProfile` field), or returns a `BrowserFactory.NoDriver` that includes
+   * the exception that indicated the driver was not supported on the host platform and an appropriate
+   * error message.
+   *
+   * @return an new instance of a Selenium `FirefoxDriver` or a `BrowserFactory.NoDriver` if a Firefox
+   * driver is not available on the host platform.
    */
   def createWebDriver(): WebDriver =
     try {
@@ -46,14 +52,23 @@ trait FirefoxFactory extends BrowserFactory {
     catch {
       case ex: Throwable => NoDriver(Some(ex), Resources("cantCreateFirefoxDriver"))
     }
-    
-  // Use inherited Scaladoc message
-  // def unableToCreateDriverErrorMessage: String = 
 }
 
+/**
+ * Companion object to trait `FirefoxFactory` that mixes in the trait.
+ */
 object FirefoxFactory extends FirefoxFactory {
-  // This one uses the passed firefoxProfile instead of the field. It is used
-  // by FirefoxInfo in AllBrowsersPerSharedTest.
+
+  // This factory method is used by FirefoxInfo in AllBrowsersPerSharedTest.
+
+  /**
+   * Creates a new instance of a Selenium `FirefoxDriver`, using the specified `FirefoxProfile`,
+   * or returns a `BrowserFactory.NoDriver` that includes the exception that indicated the driver
+   * was not supported on the host platform and an appropriate error message.
+   *
+   * @return a new instance of a Selenium `FirefoxDriver`, using the specified `FirefoxProfile`,
+   *   or a `BrowserFactory.NoDriver` if a Firefox driver is not available on the host platform.
+   */
   def createWebDriver(firefoxProfile: FirefoxProfile): WebDriver =
     try {
       new FirefoxDriver(firefoxProfile)

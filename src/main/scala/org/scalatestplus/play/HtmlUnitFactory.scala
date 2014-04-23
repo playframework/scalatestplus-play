@@ -30,15 +30,29 @@ import BrowserFactory.NoDriver
 trait HtmlUnitFactory extends BrowserFactory {
 
   /**
-   * Creates a new instance of <code>HtmlUnitDriver</code>.
+   * Creates a new instance of a Selenium `HtmlUnitDriver`, with Javascript enabled, or returns a
+   * `BrowserFactory.NoDriver` that includes the exception that indicated the driver was not
+   * supported on the host platform and an appropriate error message.
+   *
+   * @return an new instance of a Selenium `HtmlUnitDriver`, or a `BrowserFactory.NoDriver` if an HtmlUnit driver is not 
+   * available on the host platform.
    */
   def createWebDriver(): WebDriver = HtmlUnitFactory.createWebDriver(true)
-    
-  // Use inherited Scaladoc message
-  // def unableToCreateDriverErrorMessage: String = 
 }
 
+/**
+ * Companion object to trait `HtmlUnitFactory` that mixes in the trait.
+ */
 object HtmlUnitFactory extends HtmlUnitFactory {
+
+  /**
+   * Creates a new instance of a Selenium `HtmlUnitDriver`, with Javascript enabled or disabled depending upon
+   * the passed flag, or returns a `BrowserFactory.NoDriver` that includes the exception that indicated the
+   * driver was not supported on the host platform and an appropriate error message.
+   *
+   * @return an new instance of a Selenium `HtmlUnitDriver`, or a `BrowserFactory.NoDriver` if an HtmlUnit driver is not 
+   * available on the host platform.
+   */
   def createWebDriver(enableJavascript: Boolean): WebDriver =
     try {
       val htmlUnitDriver = new HtmlUnitDriver()
@@ -48,5 +62,4 @@ object HtmlUnitFactory extends HtmlUnitFactory {
     catch {
       case ex: Throwable => NoDriver(Some(ex), Resources("cantCreateHtmlUnitDriver"))
     }
-    
 }

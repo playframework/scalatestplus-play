@@ -26,16 +26,14 @@ import org.openqa.selenium.WebDriver
 trait BrowserFactory {
 
   /**
-   * Create an new instance of Selenium `WebDriver`.
+   * Creates a new instance of a Selenium `WebDriver`, or returns a `BrowserFactory.NoDriver` that includes
+   * the exception that indicated the driver was not supported on the host platform and an appropriate
+   * error message.
    *
-   * @return an new instance of Selenium `WebDriver`
+   * @return an new instance of a Selenium `WebDriver`, or a `BrowserFactory.NoDriver` if the desired
+   * `WebDriver` is not available on the host platform.
    */
   def createWebDriver(): WebDriver
-
-  /**
-   * Error message to use if `createWebDriver` completes abruptly with an exception.
-   */
-  // def unableToCreateDriverErrorMessage: String
 }
 
 import org.openqa.selenium._
