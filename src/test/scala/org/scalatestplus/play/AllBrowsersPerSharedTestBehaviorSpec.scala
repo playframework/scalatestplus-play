@@ -242,5 +242,130 @@ class AllBrowsersPerSharedTestBehaviorSpec extends WordSpec {
       assert(rep.testSucceededEventsReceived.length == expectedTestSucceededCount)
       assert(rep.testCanceledEventsReceived.length == expectedTestCanceledCount)
     }
+
+    "run only Firefox and non-browser tests when browsers is overriden to include FirefoxInfo only" in {
+      class FirefoxTestSpec extends TestSpec {
+        override lazy val browsers: IndexedSeq[BrowserInfo] =
+          Vector(
+            FirefoxInfo(firefoxProfile)
+          )
+      }
+
+      val expectedTestStartingCount = 3
+      val expectedTestSucceededCount = firefox * 2 + 1
+      val expectedTestCanceledCount = expectedTestStartingCount - expectedTestSucceededCount
+
+      val rep = new EventRecordingReporter
+      val spec = new FirefoxTestSpec
+      spec.run(None, Args(reporter = rep))
+      val testStartingEventsReceived = rep.testStartingEventsReceived
+      assert(testStartingEventsReceived.length == expectedTestStartingCount)
+      assert(rep.testSucceededEventsReceived.length == expectedTestSucceededCount)
+      assert(rep.testCanceledEventsReceived.length == expectedTestCanceledCount)
+
+      assert(testStartingEventsReceived(0).testName == "test 1 [Firefox]")
+      assert(testStartingEventsReceived(1).testName == "test 2 [Firefox]")
+      assert(testStartingEventsReceived(2).testName == "test 3")
+    }
+
+    "run only Safari and non-browser tests when browsers is overriden to include SafariInfo only" in {
+      class SafariTestSpec extends TestSpec {
+        override lazy val browsers: IndexedSeq[BrowserInfo] =
+          Vector(
+            SafariInfo
+          )
+      }
+
+      val expectedTestStartingCount = 3
+      val expectedTestSucceededCount = safari * 2 + 1
+      val expectedTestCanceledCount = expectedTestStartingCount - expectedTestSucceededCount
+
+      val rep = new EventRecordingReporter
+      val spec = new SafariTestSpec
+      spec.run(None, Args(reporter = rep))
+      val testStartingEventsReceived = rep.testStartingEventsReceived
+      assert(testStartingEventsReceived.length == expectedTestStartingCount)
+      assert(rep.testSucceededEventsReceived.length == expectedTestSucceededCount)
+      assert(rep.testCanceledEventsReceived.length == expectedTestCanceledCount)
+
+      assert(testStartingEventsReceived(0).testName == "test 1 [Safari]")
+      assert(testStartingEventsReceived(1).testName == "test 2 [Safari]")
+      assert(testStartingEventsReceived(2).testName == "test 3")
+    }
+
+    "run only InternetExplorer and non-browser tests when browsers is overriden to include InternetExplorerInfo only" in {
+      class InternetExplorerTestSpec extends TestSpec {
+        override lazy val browsers: IndexedSeq[BrowserInfo] =
+          Vector(
+            InternetExplorerInfo
+          )
+      }
+
+      val expectedTestStartingCount = 3
+      val expectedTestSucceededCount = internetExplorer * 2 + 1
+      val expectedTestCanceledCount = expectedTestStartingCount - expectedTestSucceededCount
+
+      val rep = new EventRecordingReporter
+      val spec = new InternetExplorerTestSpec
+      spec.run(None, Args(reporter = rep))
+      val testStartingEventsReceived = rep.testStartingEventsReceived
+      assert(testStartingEventsReceived.length == expectedTestStartingCount)
+      assert(rep.testSucceededEventsReceived.length == expectedTestSucceededCount)
+      assert(rep.testCanceledEventsReceived.length == expectedTestCanceledCount)
+
+      assert(testStartingEventsReceived(0).testName == "test 1 [InternetExplorer]")
+      assert(testStartingEventsReceived(1).testName == "test 2 [InternetExplorer]")
+      assert(testStartingEventsReceived(2).testName == "test 3")
+    }
+
+    "run only Chrome and non-browser tests when browsers is overriden to include ChromeInfo only" in {
+      class ChromeTestSpec extends TestSpec {
+        override lazy val browsers: IndexedSeq[BrowserInfo] =
+          Vector(
+            ChromeInfo
+          )
+      }
+
+      val expectedTestStartingCount = 3
+      val expectedTestSucceededCount = chrome * 2 + 1
+      val expectedTestCanceledCount = expectedTestStartingCount - expectedTestSucceededCount
+
+      val rep = new EventRecordingReporter
+      val spec = new ChromeTestSpec
+      spec.run(None, Args(reporter = rep))
+      val testStartingEventsReceived = rep.testStartingEventsReceived
+      assert(testStartingEventsReceived.length == expectedTestStartingCount)
+      assert(rep.testSucceededEventsReceived.length == expectedTestSucceededCount)
+      assert(rep.testCanceledEventsReceived.length == expectedTestCanceledCount)
+
+      assert(testStartingEventsReceived(0).testName == "test 1 [Chrome]")
+      assert(testStartingEventsReceived(1).testName == "test 2 [Chrome]")
+      assert(testStartingEventsReceived(2).testName == "test 3")
+    }
+
+    "run only HtmlUnit and non-browser tests when browsers is overriden to include HtmlUnitInfo only" in {
+      class HtmlUnitTestSpec extends TestSpec {
+        override lazy val browsers: IndexedSeq[BrowserInfo] =
+          Vector(
+            HtmlUnitInfo(true)
+          )
+      }
+
+      val expectedTestStartingCount = 3
+      val expectedTestSucceededCount = htmlUnit * 2 + 1
+      val expectedTestCanceledCount = expectedTestStartingCount - expectedTestSucceededCount
+
+      val rep = new EventRecordingReporter
+      val spec = new HtmlUnitTestSpec
+      spec.run(None, Args(reporter = rep))
+      val testStartingEventsReceived = rep.testStartingEventsReceived
+      assert(testStartingEventsReceived.length == expectedTestStartingCount)
+      assert(rep.testSucceededEventsReceived.length == expectedTestSucceededCount)
+      assert(rep.testCanceledEventsReceived.length == expectedTestCanceledCount)
+
+      assert(testStartingEventsReceived(0).testName == "test 1 [HtmlUnit]")
+      assert(testStartingEventsReceived(1).testName == "test 2 [HtmlUnit]")
+      assert(testStartingEventsReceived(2).testName == "test 3")
+    }
   }
 }
