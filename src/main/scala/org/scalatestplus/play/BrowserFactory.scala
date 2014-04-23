@@ -19,7 +19,7 @@ import play.api.test._
 import org.openqa.selenium.WebDriver
 
 /**
- * Trait that defines an abstract `createNewDriver`  method for creating a new Selenium `WebDriver`
+ * Trait that defines an abstract `createWebDriver`  method for creating a new Selenium `WebDriver`
  * and an abstract `unableToCreateDriverErrorMessage` method that provides an appropriate error message if the driver
  * is not available on the current platform.
  */
@@ -30,12 +30,12 @@ trait BrowserFactory {
    *
    * @return an new instance of Selenium `WebDriver`
    */
-  def createNewDriver: WebDriver
+  def createWebDriver(): WebDriver
 
   /**
-   * Error message to use if `createNewDriver` completes abruptly with an exception.
+   * Error message to use if `createWebDriver` completes abruptly with an exception.
    */
-  def unableToCreateDriverErrorMessage: String
+  // def unableToCreateDriverErrorMessage: String
 }
 
 import org.openqa.selenium._
@@ -57,12 +57,12 @@ object BrowserFactory {
    *
    * @param ex: the `Throwable`, if any, that was thrown when attempting to use the requested driver
    */
-  case class NoDriver(ex: Option[Throwable]) extends WebDriver {
+  case class NoDriver(ex: Option[Throwable], errorMessage: String) extends WebDriver {
   
     /**
      * Throws `UnsupportedOperationException`.
      */
-    def close() {
+    def close() { // TODO: Change the error messages to errorMessage
       throw new UnsupportedOperationException("close not supported")
     }
   

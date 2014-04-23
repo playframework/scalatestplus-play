@@ -22,22 +22,31 @@ import concurrent.Eventually
 import concurrent.IntegrationPatience
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.htmlunit.HtmlUnitDriver
+import BrowserFactory.NoDriver
 
 /**
- * Trait providing a <code>createNewDriver</code> method that creates a new Selenium <code>HtmlUnitDriver</code>.
+ * Trait providing a <code>createWebDriver</code> method that creates a new Selenium <code>HtmlUnitDriver</code>.
  */
 trait HtmlUnitFactory extends BrowserFactory {
 
   /**
    * Creates a new instance of <code>HtmlUnitDriver</code>.
    */
-  def createNewDriver: WebDriver = {
-    val htmlUnitDriver = new HtmlUnitDriver()
-    htmlUnitDriver.setJavascriptEnabled(true)
-    htmlUnitDriver
-  }
+  def createWebDriver(): WebDriver = HtmlUnitFactory.createWebDriver(true)
     
   // Use inherited Scaladoc message
-  def unableToCreateDriverErrorMessage: String = Resources("cantCreateHtmlUnitDriver")
+  // def unableToCreateDriverErrorMessage: String = 
 }
 
+object HtmlUnitFactory extends HtmlUnitFactory {
+  def createWebDriver(enableJavascript: Boolean): WebDriver =
+    try {
+      val htmlUnitDriver = new HtmlUnitDriver()
+      htmlUnitDriver.setJavascriptEnabled(enableJavascript)
+      htmlUnitDriver
+    }
+    catch {
+      case ex: Throwable => NoDriver(Some(ex), Resources("cantCreateHtmlUnitDriver"))
+    }
+    
+}

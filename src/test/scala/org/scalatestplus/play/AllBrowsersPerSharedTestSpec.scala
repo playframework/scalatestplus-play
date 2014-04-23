@@ -20,6 +20,7 @@ import org.scalatest._
 import play.api.{Play, Application}
 import play.api.mvc.{Action, Results}
 import org.openqa.selenium.WebDriver
+import BrowserFactory.NoDriver
 
 class AllBrowsersPerSharedTestSpec extends UnitSpec with AllBrowsersPerSharedTest {
 
@@ -95,6 +96,10 @@ class AllBrowsersPerSharedTestSpec extends UnitSpec with AllBrowsersPerSharedTes
       val configuredWebDriverName = configMap.getOptional[String]("org.scalatestplus.play.webDriverName")
       configuredWebDriverName mustBe None
     }
-
+    "provide a NoDriver that provides an error message with a hint to put the test into the sharedTests method" in {
+      inside(webDriver) { case NoDriver(_, errorMessage) => 
+        errorMessage mustBe Resources("webDriverUsedFromUnsharedTest")
+      }
+    }
   }
 }

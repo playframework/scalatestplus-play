@@ -22,18 +22,26 @@ import concurrent.Eventually
 import concurrent.IntegrationPatience
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.ie.InternetExplorerDriver
+import BrowserFactory.NoDriver
 
 /**
- * Trait providing a <code>createNewDriver</code> method that creates a new Selenium <code>InternetExplorerDriver</code>.
+ * Trait providing a <code>createWebDriver</code> method that creates a new Selenium <code>InternetExplorerDriver</code>.
  */
 trait InternetExplorerFactory extends BrowserFactory {
 
   /**
    * Create a new instance of <code>InternetExplorerDriver</code>.
    */
-  def createNewDriver: WebDriver = new InternetExplorerDriver()
+  def createWebDriver(): WebDriver =
+    try {
+      new InternetExplorerDriver()
+    }
+    catch {
+      case ex: Throwable => NoDriver(Some(ex), Resources("cantCreateInternetExplorerDriver"))
+    }
 
   // Use inherited Scaladoc message
-  def unableToCreateDriverErrorMessage: String = Resources("cantCreateInternetExplorerDriver")
+  // def unableToCreateDriverErrorMessage: String =
 }
 
+object InternetExplorerFactory extends InternetExplorerFactory

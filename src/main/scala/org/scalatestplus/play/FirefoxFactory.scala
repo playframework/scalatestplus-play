@@ -23,23 +23,42 @@ import concurrent.IntegrationPatience
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.firefox.FirefoxDriver
 import org.openqa.selenium.firefox.FirefoxProfile
+import BrowserFactory.NoDriver
 
 /**
- * Trait providing a <code>createNewDriver</code> method that creates a new Selenium <code>FirefoxDriver</code>.
+ * Trait providing a 'createWebDriver' method that creates a new Selenium 'FirefoxDriver'.
  */
 trait FirefoxFactory extends BrowserFactory {
 
   /**
-   * <code>FirefoxProfile</code> that is used to create new instance of <code>FirefoxDriver</code>.
+   * 'FirefoxProfile' that is used to create new instance of 'FirefoxDriver'.
+   * Override to provide a different `FirefoxProfile`.
    */
   val firefoxProfile = new FirefoxProfile()
 
   /**
-   * Creates a new instance of <code>FirefoxDriver</code>.
+   * Creates a new instance of 'FirefoxDriver'.
    */
-  def createNewDriver: WebDriver = new FirefoxDriver(firefoxProfile)
+  def createWebDriver(): WebDriver =
+    try {
+      new FirefoxDriver(firefoxProfile)
+    }
+    catch {
+      case ex: Throwable => NoDriver(Some(ex), Resources("cantCreateFirefoxDriver"))
+    }
     
   // Use inherited Scaladoc message
-  def unableToCreateDriverErrorMessage: String = Resources("cantCreateFirefoxDriver")
+  // def unableToCreateDriverErrorMessage: String = 
 }
 
+object FirefoxFactory extends FirefoxFactory {
+  // This one uses the passed firefoxProfile instead of the field. It is used
+  // by FirefoxInfo in AllBrowsersPerSharedTest.
+  def createWebDriver(firefoxProfile: FirefoxProfile): WebDriver =
+    try {
+      new FirefoxDriver(firefoxProfile)
+    }
+    catch {
+      case ex: Throwable => NoDriver(Some(ex), Resources("cantCreateFirefoxDriver"))
+    }
+}

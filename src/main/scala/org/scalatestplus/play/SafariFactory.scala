@@ -22,18 +22,27 @@ import concurrent.Eventually
 import concurrent.IntegrationPatience
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.safari.SafariDriver
+import BrowserFactory.NoDriver
 
 /**
- * Trait providing a <code>createNewDriver</code> method that creates a new Selenium <code>SafariDriver</code>.
+ * Trait providing a <code>createWebDriver</code> method that creates a new Selenium <code>SafariDriver</code>.
  */
 trait SafariFactory extends BrowserFactory {
 
   /**
    * Creates a new instance of <code>SafariDriver</code>.
    */
-  def createNewDriver: WebDriver = new SafariDriver()
+  def createWebDriver(): WebDriver =
+    try {
+      new SafariDriver()
+    }
+    catch {
+      case ex: Throwable => NoDriver(Some(ex), Resources("cantCreateSafariDriver"))
+    }
 
   // Use inherited Scaladoc message
-  def unableToCreateDriverErrorMessage: String = Resources("cantCreateSafariDriver")
+  // def unableToCreateDriverErrorMessage: String =
 }
+
+object SafariFactory extends SafariFactory
 

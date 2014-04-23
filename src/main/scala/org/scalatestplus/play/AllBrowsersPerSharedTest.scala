@@ -96,19 +96,19 @@ trait AllBrowsersPerSharedTest extends SuiteMixin with WebBrowser with Eventuall
      *
      * @return `WebDriver` instance for the represented browser
      */
-    def createWebDriver: WebDriver
+    def createWebDriver(): WebDriver
   }
 
   /**
    * Case object for Firefox browser info.
    */
-  case object FirefoxInfo extends BrowserInfo("[Firefox]", "org.scalatest.tags.FirefoxBrowser") {
+  case class FirefoxInfo(firefoxProfile: FirefoxProfile) extends BrowserInfo("[Firefox]", "org.scalatest.tags.FirefoxBrowser") {
     /**
      * Creates a `WebDriver` instance for Firefox.
      *
      * @return a Firefox `WebDriver` instance
      */
-    def createWebDriver: WebDriver = WebDriverFactory.createFirefoxDriver(firefoxProfile)
+    def createWebDriver(): WebDriver = FirefoxFactory.createWebDriver(firefoxProfile)
   }
 
   /**
@@ -120,7 +120,7 @@ trait AllBrowsersPerSharedTest extends SuiteMixin with WebBrowser with Eventuall
      *
      * @return a Safari `WebDriver` instance
      */
-    def createWebDriver: WebDriver = WebDriverFactory.createSafariDriver
+    def createWebDriver(): WebDriver = SafariFactory.createWebDriver()
   }
 
   /**
@@ -132,7 +132,7 @@ trait AllBrowsersPerSharedTest extends SuiteMixin with WebBrowser with Eventuall
      *
      * @return an Internet Explorer `WebDriver` instance
      */
-    def createWebDriver: WebDriver = WebDriverFactory.createInternetExplorerDriver
+    def createWebDriver(): WebDriver = InternetExplorerFactory.createWebDriver()
   }
 
   /**
@@ -144,19 +144,19 @@ trait AllBrowsersPerSharedTest extends SuiteMixin with WebBrowser with Eventuall
      *
      * @return a Chrome `WebDriver` instance
      */
-    def createWebDriver: WebDriver = WebDriverFactory.createChromeDriver
+    def createWebDriver(): WebDriver = ChromeFactory.createWebDriver()
   }
 
   /**
    * Case object for `HtmlUnit` browser info.
    */
-  case object HtmlUnitInfo extends BrowserInfo("[HtmlUnit]", "org.scalatest.tags.HtmlUnitBrowser") {
+  case class HtmlUnitInfo(enableJavascript: Boolean) extends BrowserInfo("[HtmlUnit]", "org.scalatest.tags.HtmlUnitBrowser") {
     /**
      * Creates an `HtmlUnit` `WebDriver` instance.
      *
      * @return an `HtmlUnit` `WebDriver` instance
      */
-    def createWebDriver: WebDriver = WebDriverFactory.createHtmlUnitDriver
+    def createWebDriver(): WebDriver = HtmlUnitFactory.createWebDriver(enableJavascript)
   }
 
   /**
@@ -164,11 +164,11 @@ trait AllBrowsersPerSharedTest extends SuiteMixin with WebBrowser with Eventuall
    */
   protected val browsers: IndexedSeq[BrowserInfo] =
     Vector(
-      FirefoxInfo,
+      new FirefoxInfo(firefoxProfile),
       SafariInfo,
       InternetExplorerInfo,
       ChromeInfo,
-      HtmlUnitInfo
+      HtmlUnitInfo(true)
     )
 
   private var privateApp: FakeApplication = _
@@ -246,9 +246,9 @@ trait AllBrowsersPerSharedTest extends SuiteMixin with WebBrowser with Eventuall
    */
   abstract override def withFixture(test: NoArgTest): Outcome =
     webDriver match {
-      case NoDriver(ex) if test.configMap.getOptional[WebDriver]("org.scalatestplus.play.webDriver").isDefined =>
+      case NoDriver(ex, errorMessage) if test.configMap.getOptional[WebDriver]("org.scalatestplus.play.webDriver").isDefined =>
         val name = test.configMap.getRequired[String]("org.scalatestplus.play.webDriverName")
-        val message = Resources("cantCreateDriver", name.trim)
+        val message = errorMessage // Resources("cantCreateDriver", name.trim)
         ex match {
           case Some(e) => Canceled(message, e)
           case None => Canceled(message)
@@ -275,8 +275,8 @@ trait AllBrowsersPerSharedTest extends SuiteMixin with WebBrowser with Eventuall
     val NoDriverNeededByTest = "No driver needed by this test"
     val (localWebDriver, localWebDriverName): (WebDriver, String) =
       browsers.find(b => testName.endsWith(b.name)) match {
-        case Some(b) => (b.createWebDriver, b.name)
-        case None => (NoDriver(None), NoDriverNeededByTest)
+        case Some(b) => (b.createWebDriver(), b.name)
+        case None => (NoDriver(None, Resources("webDriverUsedFromUnsharedTest")), NoDriverNeededByTest)
       }
     synchronized {
       privateApp = new FakeApplication()
@@ -302,7 +302,7 @@ trait AllBrowsersPerSharedTest extends SuiteMixin with WebBrowser with Eventuall
     }
     finally {
       webDriver match {
-        case NoDriver(_) => // do nothing
+        case _: NoDriver => // do nothing
         case safariDriver: SafariDriver => safariDriver.quit()
         case chromeDriver: ChromeDriver => chromeDriver.quit()
         case theDriver => theDriver.close()

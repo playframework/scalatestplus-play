@@ -22,18 +22,27 @@ import concurrent.Eventually
 import concurrent.IntegrationPatience
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.chrome.ChromeDriver
+import BrowserFactory.NoDriver
 
 /**
- * Trait providing a <code>createNewDriver</code> method that creates a new Selenium <code>ChromeDriver</code>.
+ * Trait providing a <code>createWebDriver</code> method that creates a new Selenium <code>ChromeDriver</code>.
  */
 trait ChromeFactory extends BrowserFactory {
 
   /**
    * Creates a new instance of <code>ChromeDriver</code>.
    */
-  def createNewDriver: WebDriver = new ChromeDriver()
+  def createWebDriver(): WebDriver =
+    try { 
+      new ChromeDriver()
+    }
+    catch {
+      case ex: Throwable => NoDriver(Some(ex), Resources("cantCreateChromeDriver"))
+    }
 
   // Use inherited Scaladoc message
-  def unableToCreateDriverErrorMessage: String = Resources("cantCreateChromeDriver")
+  // def unableToCreateDriverErrorMessage: String =
 }
+
+object ChromeFactory extends ChromeFactory
 

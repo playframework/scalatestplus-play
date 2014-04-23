@@ -54,21 +54,22 @@ trait OneBrowserPerSuite extends SuiteMixin with WebBrowser with Eventually with
   implicit lazy val portNumber: PortNumber = PortNumber(port)
 
   /**
-   * An implicit instance of <code>WebDriver</code>, created by calling <code>createNewDriver</code>.  
+   * An implicit instance of <code>WebDriver</code>, created by calling <code>createWebDriver</code>.  
    * If there is error when creating the <code>WebDriver</code>, <code>NoDriver</code> will be assigned 
    * instead.
    */
-  implicit val webDriver: WebDriver = try { createNewDriver } catch { case ex: Throwable => NoDriver(Some(ex)) }
+  implicit val webDriver: WebDriver = createWebDriver()
+  // try { createNewDriver } catch { case ex: Throwable => NoDriver(Some(ex)) }
 
   /**
    * Override to cancel tests automatically when <code>webDriver</code> resolve to <code>NoDriver</code>
    */
   abstract override def withFixture(test: NoArgTest): Outcome = {
     webDriver match {
-      case NoDriver(ex) =>
+      case NoDriver(ex, errorMessage) =>
           ex match {
-            case Some(e) => cancel(unableToCreateDriverErrorMessage, e)
-            case None => cancel(unableToCreateDriverErrorMessage)
+            case Some(e) => cancel(errorMessage, e)
+            case None => cancel(errorMessage)
           }
       case _ => super.withFixture(test)
     }
@@ -95,7 +96,7 @@ trait OneBrowserPerSuite extends SuiteMixin with WebBrowser with Eventually with
     } finally {
       testServer.stop()
       webDriver match {
-        case NoDriver(_) => // do nothing for NoDriver
+        case _: NoDriver => // do nothing for NoDriver
         case safariDriver: SafariDriver => safariDriver.quit()
         case chromeDriver: ChromeDriver => chromeDriver.quit()
         case _ => webDriver.close()
