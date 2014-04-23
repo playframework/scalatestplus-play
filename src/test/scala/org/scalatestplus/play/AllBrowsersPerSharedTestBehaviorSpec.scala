@@ -247,7 +247,7 @@ class AllBrowsersPerSharedTestBehaviorSpec extends WordSpec {
       class FirefoxTestSpec extends TestSpec {
         override lazy val browsers: IndexedSeq[BrowserInfo] =
           Vector(
-            new FirefoxInfo(firefoxProfile)
+            FirefoxInfo(firefoxProfile)
           )
       }
 
