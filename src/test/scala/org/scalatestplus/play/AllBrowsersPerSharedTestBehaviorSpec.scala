@@ -242,7 +242,5 @@ class AllBrowsersPerSharedTestBehaviorSpec extends WordSpec {
       assert(rep.testSucceededEventsReceived.length == expectedTestSucceededCount)
       assert(rep.testCanceledEventsReceived.length == expectedTestCanceledCount)
     }
-
   }
-
 }
