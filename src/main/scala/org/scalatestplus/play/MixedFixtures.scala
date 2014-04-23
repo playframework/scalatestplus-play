@@ -30,23 +30,23 @@ import BrowserFactory.NoDriver
 import org.openqa.selenium.safari.SafariDriver
 
 /**
- * Trait that helps you provide different fixtures to each test: a <code>FakeApplication</code>, a <code>TestServer</code>, or one
- * of the Selenium <code>WebBrowser</code>s.
+ * Trait that helps you provide different fixtures to each test: a `FakeApplication`, a `TestServer`, or one
+ * of the Selenium `WebBrowser`s.
  */
 trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
 
   /**
-   * Class that provides fixture for <code>FakeApplication</code>, it will run the passed in <code>FakeApplication</code> 
+   * Class that provides fixture for `FakeApplication`, it will run the passed in `FakeApplication` 
    * before running the test.
    */
   abstract class App(val app: FakeApplication = FakeApplication()) extends NoArg {
     /**
-     * Make the passed in <code>FakeApplication</code> implicit.
+     * Make the passed in `FakeApplication` implicit.
      */
     implicit def implicitApp: FakeApplication = app
 
     /**
-     * Override to run the passed in <code>FakeApplication</code> first before running the test.
+     * Override to run the passed in `FakeApplication` first before running the test.
      */
     override def apply() {
       Helpers.running(app)(super.apply())
@@ -54,17 +54,17 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
   }
 
   /**
-   * Class that provides fixture for <code>TestServer</code> and <code>FakeApplication</code>, 
-   * it will run the passed in <code>TestServer</code> before running the test.
+   * Class that provides fixture for `TestServer` and `FakeApplication`, 
+   * it will run the passed in `TestServer` before running the test.
    */
   abstract class Server(val app: FakeApplication = FakeApplication(), val port: Int = Helpers.testServerPort) extends NoArg {
     /**
-     * Make the passed in <code>FakeApplication</code> implicit.
+     * Make the passed in `FakeApplication` implicit.
      */
     implicit def implicitApp: FakeApplication = app
 
     /**
-     * Override to run a <code>TestServer</code> using the passed in <code>port</code> before running the test.
+     * Override to run a `TestServer` using the passed in `port` before running the test.
      */
     override def apply() {
       Helpers.running(TestServer(port, app))(super.apply())
@@ -72,23 +72,23 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
   }
 
   /**
-   * Class that provides fixture for <code>HtmlUnit</code> browser.
+   * Class that provides fixture for `HtmlUnit` browser.
    */
   abstract class HtmlUnit(val app: FakeApplication = FakeApplication(), val port: Int = Helpers.testServerPort) extends WebBrowser with NoArg with HtmlUnitFactory {
     /**
-     * A lazy implicit instance of <code>HtmlUnitDriver</code>, it will hold <code>NoDriver</code> if <code>HtmlUnitDriver</code> 
+     * A lazy implicit instance of `HtmlUnitDriver`, it will hold `NoDriver` if `HtmlUnitDriver` 
      * is not available in the running machine.
      */
     implicit lazy val webDriver: WebDriver = createWebDriver()
 
     /**
-     * Make the passed in <code>FakeApplication</code> implicit.
+     * Make the passed in `FakeApplication` implicit.
      */
     implicit def implicitApp: FakeApplication = app
 
     /**
-     * Override to run a <code>TestServer</code> using the passed in <code>port</code> before running the test, 
-     * and close the <code>HtmlUnitDriver</code> automatically after test execution.
+     * Override to run a `TestServer` using the passed in `port` before running the test, 
+     * and close the `HtmlUnitDriver` automatically after test execution.
      */
     override def apply() {
       webDriver match {
@@ -105,24 +105,24 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
   }
 
   /**
-   * Class that provides fixture for <code>Firefox</code> browser.
+   * Class that provides fixture for `Firefox` browser.
    */
   abstract class Firefox(val app: FakeApplication = FakeApplication(), val port: Int = Helpers.testServerPort) extends WebBrowser with NoArg with FirefoxFactory {
 
     /**
-     * A lazy implicit instance of <code>FirefoxDriver</code>, it will hold <code>NoDriver</code> if <code>FirefoxDriver</code> 
+     * A lazy implicit instance of `FirefoxDriver`, it will hold `NoDriver` if `FirefoxDriver` 
      * is not available in the running machine.
      */
     implicit lazy val webDriver: WebDriver = createWebDriver()
 
     /**
-     * Make the passed in <code>FakeApplication</code> implicit.
+     * Make the passed in `FakeApplication` implicit.
      */
     implicit def implicitApp: FakeApplication = app
 
     /**
-     * Override to run a <code>TestServer</code> using the passed in <code>port</code> before running the test, 
-     * and close the <code>FirefoxDriver</code> automatically after test execution.
+     * Override to run a `TestServer` using the passed in `port` before running the test, 
+     * and close the `FirefoxDriver` automatically after test execution.
      */
     override def apply() {
       webDriver match {
@@ -139,23 +139,23 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
   }
 
   /**
-   * Class that provides fixture for <code>Safari</code> browser.
+   * Class that provides fixture for `Safari` browser.
    */
   abstract class Safari(val app: FakeApplication = FakeApplication(), val port: Int = Helpers.testServerPort) extends WebBrowser with NoArg with SafariFactory {
     /**
-     * A lazy implicit instance of <code>SafariDriver</code>, it will hold <code>NoDriver</code> if <code>SafariDriver</code> 
+     * A lazy implicit instance of `SafariDriver`, it will hold `NoDriver` if `SafariDriver` 
      * is not available in the running machine.
      */
     implicit lazy val webDriver: WebDriver = createWebDriver()
 
     /**
-     * Make the passed in <code>FakeApplication</code> implicit.
+     * Make the passed in `FakeApplication` implicit.
      */
     implicit def implicitApp: FakeApplication = app
 
     /**
-     * Override to run a <code>TestServer</code> using the passed in <code>port</code> before running the test, 
-     * and close the <code>SafariDriver</code> automatically after test execution.
+     * Override to run a `TestServer` using the passed in `port` before running the test, 
+     * and close the `SafariDriver` automatically after test execution.
      */
     override def apply() {
       webDriver match {
@@ -172,23 +172,23 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
   }
 
   /**
-   * Class that provides fixture for <code>Chrome</code> browser.
+   * Class that provides fixture for `Chrome` browser.
    */
   abstract class Chrome(val app: FakeApplication = FakeApplication(), val port: Int = Helpers.testServerPort) extends WebBrowser with NoArg with ChromeFactory {
     /**
-     * A lazy implicit instance of <code>ChromeDriver</code>, it will hold <code>NoDriver</code> if <code>ChromeDriver</code> 
+     * A lazy implicit instance of `ChromeDriver`, it will hold `NoDriver` if `ChromeDriver` 
      * is not available in the running machine.
      */
     implicit lazy val webDriver: WebDriver = createWebDriver()
 
     /**
-     * Make the passed in <code>FakeApplication</code> implicit.
+     * Make the passed in `FakeApplication` implicit.
      */
     implicit def implicitApp: FakeApplication = app
 
     /**
-     * Override to run a <code>TestServer</code> using the passed in <code>port</code> before running the test, 
-     * and close the <code>ChromeDriver</code> automatically after test execution.
+     * Override to run a `TestServer` using the passed in `port` before running the test, 
+     * and close the `ChromeDriver` automatically after test execution.
      */
     override def apply() {
       webDriver match {
@@ -206,23 +206,23 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
   }
 
   /**
-   * Class that provides fixture for <code>InternetExplorer</code> browser.
+   * Class that provides fixture for `InternetExplorer` browser.
    */
   abstract class InternetExplorer(val app: FakeApplication = FakeApplication(), val port: Int = Helpers.testServerPort) extends WebBrowser with NoArg with InternetExplorerFactory {
     /**
-     * A lazy implicit instance of <code>InternetExplorerDriver</code>, it will hold <code>NoDriver</code> if <code>InternetExplorerDriver</code> 
+     * A lazy implicit instance of `InternetExplorerDriver`, it will hold `NoDriver` if `InternetExplorerDriver` 
      * is not available in the running machine.
      */
     implicit lazy val webDriver: WebDriver = createWebDriver()
 
     /**
-     * Make the passed in <code>FakeApplication</code> implicit.
+     * Make the passed in `FakeApplication` implicit.
      */
     implicit def implicitApp: FakeApplication = app
 
     /**
-     * Override to run a <code>TestServer</code> using the passed in <code>port</code> before running the test, 
-     * and close the <code>InternetExplorerDriver</code> automatically after test execution.
+     * Override to run a `TestServer` using the passed in `port` before running the test, 
+     * and close the `InternetExplorerDriver` automatically after test execution.
      */
     override def apply() {
       webDriver match {

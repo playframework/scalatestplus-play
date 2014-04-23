@@ -25,7 +25,7 @@ import org.openqa.selenium.chrome.ChromeDriver
 import BrowserFactory.NoDriver
 
 /**
- * Trait providing a <code>createWebDriver</code> method that creates a new Selenium <code>ChromeDriver</code>.
+ * Trait providing a `createWebDriver` method that creates a new Selenium `ChromeDriver`.
  */
 trait ChromeFactory extends BrowserFactory {
 

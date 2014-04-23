@@ -26,18 +26,18 @@ import org.openqa.selenium.safari.SafariDriver
 import org.openqa.selenium.chrome.ChromeDriver
 
 /**
- * Trait that provides one <code>WebBrowser</code> instance per ScalaTest <code>Suite</code>.
+ * Trait that provides one `WebBrowser` instance per ScalaTest `Suite`.
  * 
- * It overrides ScalaTest's <code>Suite.run</code> method to start a <code>TestServer</code> before test execution, 
- * and stop the <code>TestServer</code> after test execution has completed.  You can access the <code>FakeApplication</code>
- * in <code>args.configMap</code> using the <code>"org.scalatestplus.play.app"</code> key, the port number of the <code>TestServer</code> using the <code>"org.scalatestplus.play.port"</code> key and 
- * the <code>WebDriver</code> instance using <code>"org.scalatestplus.play.webDriver"</code> key.  This traits also overrides <code>Suite.withFixture</code> 
- * to cancel all the tests automatically if the related <code>WebDriver</code> is not available in the running system.
+ * It overrides ScalaTest's `Suite.run` method to start a `TestServer` before test execution, 
+ * and stop the `TestServer` after test execution has completed.  You can access the `FakeApplication`
+ * in `args.configMap` using the `"org.scalatestplus.play.app"` key, the port number of the `TestServer` using the `"org.scalatestplus.play.port"` key and 
+ * the `WebDriver` instance using `"org.scalatestplus.play.webDriver"` key.  This traits also overrides `Suite.withFixture` 
+ * to cancel all the tests automatically if the related `WebDriver` is not available in the running system.
  */
 trait OneBrowserPerSuite extends SuiteMixin with WebBrowser with Eventually with IntegrationPatience with BrowserFactory { this: Suite =>
 
   /**
-   * An implicit instance of <code>FakeApplication</code>.
+   * An implicit instance of `FakeApplication`.
    */
   implicit val app: FakeApplication = new FakeApplication()
 
@@ -48,21 +48,21 @@ trait OneBrowserPerSuite extends SuiteMixin with WebBrowser with Eventually with
   val port: Int = Helpers.testServerPort
 
   /**
-   * Implicit <code>PortNumber</code> instance that wraps <code>port</code>. The value returned from <code>portNumber.value</code>
-   * will be same as the value of <code>port</code>.
+   * Implicit `PortNumber` instance that wraps `port`. The value returned from `portNumber.value`
+   * will be same as the value of `port`.
    */
   implicit lazy val portNumber: PortNumber = PortNumber(port)
 
   /**
-   * An implicit instance of <code>WebDriver</code>, created by calling <code>createWebDriver</code>.  
-   * If there is error when creating the <code>WebDriver</code>, <code>NoDriver</code> will be assigned 
+   * An implicit instance of `WebDriver`, created by calling `createWebDriver`.  
+   * If there is error when creating the `WebDriver`, `NoDriver` will be assigned 
    * instead.
    */
   implicit val webDriver: WebDriver = createWebDriver()
   // try { createNewDriver } catch { case ex: Throwable => NoDriver(Some(ex)) }
 
   /**
-   * Override to cancel tests automatically when <code>webDriver</code> resolve to <code>NoDriver</code>
+   * Override to cancel tests automatically when `webDriver` resolve to `NoDriver`
    */
   abstract override def withFixture(test: NoArgTest): Outcome = {
     webDriver match {
@@ -76,15 +76,15 @@ trait OneBrowserPerSuite extends SuiteMixin with WebBrowser with Eventually with
   }
 
   /**
-   * Overriden to start <code>TestServer</code> before running the tests, pass a <code>FakeApplication</code> into the tests in 
-   * <code>args.configMap</code> via "org.scalatestplus.play.app" key, <code>TestServer</code>'s port number via "org.scalatestplus.play.port" and <code>WebDriver</code> 
-   * instance via "org.scalatestplus.play.webDriver" key.  It then calls <code>super.run</code> to execute the tests, and upon completion stops <code>TestServer</code> 
-   * and close the <code>WebDriver</code>.
+   * Overriden to start `TestServer` before running the tests, pass a `FakeApplication` into the tests in 
+   * `args.configMap` via "org.scalatestplus.play.app" key, `TestServer`'s port number via "org.scalatestplus.play.port" and `WebDriver` 
+   * instance via "org.scalatestplus.play.webDriver" key.  It then calls `super.run` to execute the tests, and upon completion stops `TestServer` 
+   * and close the `WebDriver`.
    *
-   * @param testName an optional name of one test to run. If <code>None</code>, all relevant tests should be run.
-   *                 I.e., <code>None</code> acts like a wildcard that means run all relevant tests in this <code>Suite</code>.
-   * @param args the <code>Args</code> for this run
-   * @return a <code>Status</code> object that indicates when all tests and nested suites started by this method have completed, and whether or not a failure occurred.
+   * @param testName an optional name of one test to run. If `None`, all relevant tests should be run.
+   *                 I.e., `None` acts like a wildcard that means run all relevant tests in this `Suite`.
+   * @param args the `Args` for this run
+   * @return a `Status` object that indicates when all tests and nested suites started by this method have completed, and whether or not a failure occurred.
    */
   abstract override def run(testName: Option[String], args: Args): Status = {
     val testServer = TestServer(port, app)

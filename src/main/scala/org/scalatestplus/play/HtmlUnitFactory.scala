@@ -25,7 +25,7 @@ import org.openqa.selenium.htmlunit.HtmlUnitDriver
 import BrowserFactory.NoDriver
 
 /**
- * Trait providing a <code>createWebDriver</code> method that creates a new Selenium <code>HtmlUnitDriver</code>.
+ * Trait providing a `createWebDriver` method that creates a new Selenium `HtmlUnitDriver`.
  */
 trait HtmlUnitFactory extends BrowserFactory {
 

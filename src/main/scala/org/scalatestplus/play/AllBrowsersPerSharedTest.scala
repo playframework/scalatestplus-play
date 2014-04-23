@@ -174,7 +174,7 @@ trait AllBrowsersPerSharedTest extends SuiteMixin with WebBrowser with Eventuall
   private var privateApp: FakeApplication = _
 
   /**
-   * Implicit method that returns the <code>FakeApplication</code> instance for the current test.
+   * Implicit method that returns the `FakeApplication` instance for the current test.
    */
   implicit def app: FakeApplication = synchronized { privateApp }
 
@@ -185,8 +185,8 @@ trait AllBrowsersPerSharedTest extends SuiteMixin with WebBrowser with Eventuall
   val port: Int = Helpers.testServerPort
 
   /**
-   * Implicit <code>PortNumber</code> instance that wraps <code>port</code>. The value returned from <code>portNumber.value</code>
-   * will be same as the value of <code>port</code>.
+   * Implicit `PortNumber` instance that wraps `port`. The value returned from `portNumber.value`
+   * will be same as the value of `port`.
    */
   implicit lazy val portNumber: PortNumber = PortNumber(port)
 

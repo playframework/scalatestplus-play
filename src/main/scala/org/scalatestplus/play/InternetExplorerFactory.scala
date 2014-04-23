@@ -25,7 +25,7 @@ import org.openqa.selenium.ie.InternetExplorerDriver
 import BrowserFactory.NoDriver
 
 /**
- * Trait providing a <code>createWebDriver</code> method that creates a new Selenium <code>InternetExplorerDriver</code>.
+ * Trait providing a `createWebDriver` method that creates a new Selenium `InternetExplorerDriver`.
  */
 trait InternetExplorerFactory extends BrowserFactory {
 

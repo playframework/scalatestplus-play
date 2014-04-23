@@ -19,6 +19,9 @@ import play.api.test._
 import org.scalatest._
 import play.api.Play
 
+/**
+ * Trait that provides a configured `FakeApplication` and server port number to the suite into which it is mixed.
+ */
 trait ConfiguredServer extends SuiteMixin { this: Suite => 
 
   private var configuredApp: FakeApplication = _
@@ -28,8 +31,8 @@ trait ConfiguredServer extends SuiteMixin { this: Suite =>
   def port: Int = synchronized { configuredPort }
 
   /**
-   * Implicit <code>PortNumber</code> instance that wraps <code>port</code>. The value returned from <code>portNumber.value</code>
-   * will be same as the value of <code>port</code>.
+   * Implicit `PortNumber` instance that wraps `port`. The value returned from `portNumber.value`
+   * will be same as the value of `port`.
    */
   implicit lazy val portNumber: PortNumber = PortNumber(port)
 

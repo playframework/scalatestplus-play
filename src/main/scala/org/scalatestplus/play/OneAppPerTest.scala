@@ -19,30 +19,30 @@ import play.api.test._
 import org.scalatest._
 
 /**
- * Trait that provides new <code>FakeApplication</code> instance for each test.
+ * Trait that provides new `FakeApplication` instance for each test.
  * 
- * It overrides ScalaTest's <code>withFixture</code> method to create new <code>FakeApplication</code> instance,
- * make it available from method <code>app</code>, and execute the test surrounded by a call to <code>Helpers.running(app)</code>.
- * In the tests you can access the <code>FakeApplication</code> using the <code>app</code> parameterless method.
+ * It overrides ScalaTest's `withFixture` method to create new `FakeApplication` instance,
+ * make it available from method `app`, and execute the test surrounded by a call to `Helpers.running(app)`.
+ * In the tests you can access the `FakeApplication` using the `app` parameterless method.
  */
 trait OneAppPerTest extends SuiteMixin { this: Suite => 
 
   /**
-   * Method to create new instance of <code>FakeApplication</code>
+   * Method to create new instance of `FakeApplication`
    */
   def newApp: FakeApplication = new FakeApplication()
   private var appPerTest: FakeApplication = _
 
   /**
-   * Implicit method that returns the <code>FakeApplication</code> instance for the current test.
+   * Implicit method that returns the `FakeApplication` instance for the current test.
    */
   implicit final def app: FakeApplication = synchronized { appPerTest }
 
   /**
-   * Overriden to create new <code>FakeApplication</code> instance and run it before executing each test.
+   * Overriden to create new `FakeApplication` instance and run it before executing each test.
    *
    * @param test the no-arg test function to run with a fixture
-   * @return the <code>Outcome</code> of the test execution
+   * @return the `Outcome` of the test execution
    */
   abstract override def withFixture(test: NoArgTest) = {
     synchronized { appPerTest = newApp }

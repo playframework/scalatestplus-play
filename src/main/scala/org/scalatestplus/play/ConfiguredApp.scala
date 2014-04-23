@@ -20,33 +20,33 @@ import org.scalatest._
 import play.api.Play
 
 /**
- * Trait that provides a configured <code>FakeApplication</code> to the running suite.
+ * Trait that provides a configured `FakeApplication` to the suite into which it is mixed.
  */
 trait ConfiguredApp extends SuiteMixin { this: Suite => 
 
   private var configuredApp: FakeApplication = _
 
   /**
-   * Method that provides the instance of configured <code>FakeApplication</code>
+   * Method that provides the configured `FakeApplication`, which is set by the overridden `run` method.
    *
-   * @return the instance of configured <code>FakeApplication</code>
+   * @return the configured `FakeApplication`
    */
   implicit final def app: FakeApplication = synchronized { configuredApp }
 
   /**
-   * Overriden run method that read the <code>FakeApplication</code> passed in from <code>args.configMap</code> as "org.scalatestplus.play.app", 
-   * and set it as the instance of <code>FakeApplication</code> that will be returned from <code>app</code> method.  It 
-   * then proceed to call <code>super.run</code>.
+   * Looks in `args.configMap` for a key named "org.scalatestplus.play.app" whose value is a `FakeApplication`, 
+   * and if it exists, sets it as the `FakeApplication` that will be returned from `app` method, then calls
+   * `super.run`.
    *
-   * If no <code>FakeApplication</code> or object passed in as "org.scalatestplus.play.app" in <code>args.configMap</code> is not a <code>FakeApplication</code>, 
-   * <code>IllegalArgumentException</code> will be thrown.
+   * If no key matches "org.scalatestplus.play.app" in `args.configMap`, or the associated value is
+   * not a `FakeApplication`, throws `IllegalArgumentException`.
    *
-   * @param testName an optional name of one test to run. If <code>None</code>, all relevant tests should be run.
-   *                 I.e., <code>None</code> acts like a wildcard that means run all relevant tests in this <code>Suite</code>.
-   * @param args the <code>Args</code> for this run
-   * @return a <code>Status</code> object that indicates when all tests and nested suites started by this method have completed, and whether or not a failure occurred.
+   * @param testName an optional name of one test to run. If `None`, all relevant tests should be run.
+   *                 I.e., `None` acts like a wildcard that means run all relevant tests in this `Suite`.
+   * @param args the `Args` for this run
+   * @return a `Status` object that indicates when all tests and nested suites started by this method have completed, and whether or not a failure occurred.
    *         
-   * @throws IllegalArgumentException no <code>FakeApplication</code> or object passed in as "org.scalatestplus.play.app" in <code>args.configMap</code> is not a <code>FakeApplication</code>
+   * @throws IllegalArgumentException no `FakeApplication` or object passed in as "org.scalatestplus.play.app" in `args.configMap` is not a `FakeApplication`
    */
   abstract override def run(testName: Option[String], args: Args): Status = {
     args.configMap.getOptional[FakeApplication]("org.scalatestplus.play.app") match {
@@ -55,5 +55,5 @@ trait ConfiguredApp extends SuiteMixin { this: Suite =>
     }
     super.run(testName, args)
   }
-}   
+}
 

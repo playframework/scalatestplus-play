@@ -25,7 +25,7 @@ import org.openqa.selenium.safari.SafariDriver
 import BrowserFactory.NoDriver
 
 /**
- * Trait providing a <code>createWebDriver</code> method that creates a new Selenium <code>SafariDriver</code>.
+ * Trait providing a `createWebDriver` method that creates a new Selenium `SafariDriver`.
  */
 trait SafariFactory extends BrowserFactory {
 

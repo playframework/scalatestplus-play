@@ -19,20 +19,20 @@ import play.api.test._
 import org.scalatest._
 
 /**
- * Trait that provides one <code>TestServer</code> and <code>FakeApplication</code> instance per ScalaTest <code>Suite</code>.
+ * Trait that provides one `TestServer` and `FakeApplication` instance per ScalaTest `Suite`.
  * 
- * It overrides ScalaTest's <code>Suite.run</code> method to start a <code>TestServer</code> before test execution, 
- * and stop the <code>TestServer</code> automatically after test execution has completed. 
- * In the suite that mixes in <code>OneServerPerSuite</code>,
- * you can access the <code>FakeApplication</code> via the <code>app</code> field and the port used by the <code>TestServer</code>
- * via the <code>port</code>field. In nested suites,
- * you can access the <code>FakeApplication</code> and port number from the <code>args.configMap</code>, where they are associated
- * with keys <code>"org.scalatestplus.play.app"</code> and <code>"org.scalatestplus.play.port"</code>, respectively.
+ * It overrides ScalaTest's `Suite.run` method to start a `TestServer` before test execution, 
+ * and stop the `TestServer` automatically after test execution has completed. 
+ * In the suite that mixes in `OneServerPerSuite`,
+ * you can access the `FakeApplication` via the `app` field and the port used by the `TestServer`
+ * via the `port`field. In nested suites,
+ * you can access the `FakeApplication` and port number from the `args.configMap`, where they are associated
+ * with keys `"org.scalatestplus.play.app"` and `"org.scalatestplus.play.port"`, respectively.
  */
 trait OneServerPerSuite extends SuiteMixin { this: Suite =>
 
   /**
-   * An implicit instance of <code>FakeApplication</code>.
+   * An implicit instance of `FakeApplication`.
    */
   implicit val app: FakeApplication = new FakeApplication()
 
@@ -43,20 +43,20 @@ trait OneServerPerSuite extends SuiteMixin { this: Suite =>
   val port: Int = Helpers.testServerPort
 
   /**
-   * Implicit <code>PortNumber</code> instance that wraps <code>port</code>. The value returned from <code>portNumber.value</code>
-   * will be same as the value of <code>port</code>.
+   * Implicit `PortNumber` instance that wraps `port`. The value returned from `portNumber.value`
+   * will be same as the value of `port`.
    */
   implicit lazy val portNumber: PortNumber = PortNumber(port)
 
   /**
-   * Overriden to start <code>TestServer</code> before running the tests, pass a <code>FakeApplication</code> into the tests in 
-   * <code>args.configMap</code> via "org.scalatestplus.play.app" key and port used by the started <code>TestServer</code> via the "org.scalatestplus.play.port" key.  It then calls 
-   * <code>super.run</code> to execute the tests and stop <code>TestServer</code> automatically after test executions.
+   * Overriden to start `TestServer` before running the tests, pass a `FakeApplication` into the tests in 
+   * `args.configMap` via "org.scalatestplus.play.app" key and port used by the started `TestServer` via the "org.scalatestplus.play.port" key.  It then calls 
+   * `super.run` to execute the tests and stop `TestServer` automatically after test executions.
    *
-   * @param testName an optional name of one test to run. If <code>None</code>, all relevant tests should be run.
-   *                 I.e., <code>None</code> acts like a wildcard that means run all relevant tests in this <code>Suite</code>.
-   * @param args the <code>Args</code> for this run
-   * @return a <code>Status</code> object that indicates when all tests and nested suites started by this method have completed, and whether or not a failure occurred.
+   * @param testName an optional name of one test to run. If `None`, all relevant tests should be run.
+   *                 I.e., `None` acts like a wildcard that means run all relevant tests in this `Suite`.
+   * @param args the `Args` for this run
+   * @return a `Status` object that indicates when all tests and nested suites started by this method have completed, and whether or not a failure occurred.
    */
   abstract override def run(testName: Option[String], args: Args): Status = {
     val testServer = TestServer(port, app)

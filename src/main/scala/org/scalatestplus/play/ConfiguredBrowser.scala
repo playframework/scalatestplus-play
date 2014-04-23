@@ -23,6 +23,10 @@ import org.openqa.selenium.WebDriver
 import concurrent.Eventually
 import concurrent.IntegrationPatience
 
+/**
+ * Trait that provides a configured `FakeApplication`, server port number, and Selenium `WebDriver` to the suite
+ * into which it is mixed.
+ */
 trait ConfiguredBrowser extends SuiteMixin with WebBrowser with Eventually with IntegrationPatience { this: Suite => 
 
   private var configuredApp: FakeApplication = _
@@ -32,8 +36,8 @@ trait ConfiguredBrowser extends SuiteMixin with WebBrowser with Eventually with 
   def port: Int = synchronized { configuredPort }
 
   /**
-   * Implicit <code>PortNumber</code> instance that wraps <code>port</code>. The value returned from <code>portNumber.value</code>
-   * will be same as the value of <code>port</code>.
+   * Implicit `PortNumber` instance that wraps `port`. The value returned from `portNumber.value`
+   * will be same as the value of `port`.
    */
   implicit lazy val portNumber: PortNumber = PortNumber(port)
 
