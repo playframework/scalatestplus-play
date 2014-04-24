@@ -19,7 +19,7 @@ import play.api.test._
 import org.scalatest._
 
 /**
- * Trait that provides new `FakeApplication` instance for each test.
+ * Trait that provides a new `FakeApplication` instance for each test.
  * 
  * It overrides ScalaTest's `withFixture` method to create new `FakeApplication` instance,
  * make it available from method `app`, and execute the test surrounded by a call to `Helpers.running(app)`.

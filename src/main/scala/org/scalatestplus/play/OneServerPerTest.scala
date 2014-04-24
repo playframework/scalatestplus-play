@@ -19,13 +19,11 @@ import play.api.test._
 import org.scalatest._
 
 /**
- * Trait that provides a new running `TestServer` instance for each test executed in a ScalaTest `Suite`.
+ * Trait that provides a new `FakeApplication` and running `TestServer` instance for each test executed in a ScalaTest `Suite`.
  * 
- * It overrides ScalaTest's `withFixture` method to create new `FakeApplication` instance,
- * make it available from method `app`, create a new `TestServer` instance, and execute the
- * test surrounded by a call to `Helpers.running(TestServer(port, app))`.
- * In the tests you can access the `FakeApplication` using the `app` parameterless method and
- * the port used by the `TestServer` via the `port`field.
+ * This trait overrides ScalaTest's `withFixture` method to create a new `FakeApplication` and `TestServer`
+ * before each test, and ensure they are cleaned up after the test has completed. The `FakeApplication` is available (implicitly) from
+ * method `app`. The `TestServer`'s port number is available as `port` (and implicitly available as `portNumber`, wrapped in a [[org.scalatestplus.play.PortNumber PortNumber]]).
  */
 trait OneServerPerTest extends SuiteMixin { this: Suite =>
 
@@ -49,7 +47,9 @@ trait OneServerPerTest extends SuiteMixin { this: Suite =>
   implicit lazy val portNumber: PortNumber = PortNumber(port)
 
   /**
-   * Overriden to create new `TestServer` instance and run it before executing each test.
+   * Creates a new `FakeApplication` and running `TestServer` instance before executing each test, and 
+   * ensure they are cleaned up after the test completes. You can access the `FakeApplication` from
+   * your tests via `app` and the `TestServer`'s port number via `port`.
    *
    * @param test the no-arg test function to run with a fixture
    * @return the `Outcome` of the test execution
