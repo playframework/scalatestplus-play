@@ -15,4 +15,17 @@
  */
 package org.scalatestplus.play
 
+/**
+ * Wraps a port number of a provided `TestServer` so that it can be made available as an implicit without making an `Int` implicit.
+ *
+ * An implicit `PortNumber` is made available by traits that provide a `play.api.test.TestServer`: [[org.scalatestplus.play.MixedFixtures MixedFixtures]],
+ * [[org.scalatestplus.play.OneBrowserPerSuite OneBrowserPerSuite]],
+ * [[org.scalatestplus.play.OneBrowserPerTest OneBrowserPerTest]],   [[org.scalatestplus.play.OneServerPerSuite OneServerPerSuite]], 
+ * and [[org.scalatestplus.play.OneServerPerTest OneServerPerTest]].
+ *
+ * The implicit `PortNumber` is taken by the methods of [[org.scalatestplus.play.WsScalaTestClient WsScalaTestClient]].
+ *
+ * @param the port number of a provided `play.api.test.TestServer`
+ */
 case class PortNumber(value: Int)
+
