@@ -19,6 +19,9 @@ import play.api._
 import libs.ws.WS
 import play.api.mvc.Call
 
+/**
+ * Trait providing convenience methods to create WS requests in tests.
+ */
 trait WsScalaTestClient {
 
   /**
@@ -28,11 +31,17 @@ trait WsScalaTestClient {
    * {{{
    *   wsCall(controllers.routes.Application.index()).get()
    * }}}
+   *
+   * @param call the `Call` describing the request
+   * @param portNumber the port number of the `TestServer`
    */
   def wsCall(call: Call)(implicit portNumber: PortNumber): WS.WSRequestHolder = wsUrl(call.url)
 
   /**
    * Construct a WS request for the given relative URL.
+   *
+   * @param url the URL of the request
+   * @param portNumber the port number of the `TestServer`
    */
   def wsUrl(url: String)(implicit portNumber: PortNumber): WS.WSRequestHolder = WS.url("http://localhost:" + portNumber.value + url)
 }
