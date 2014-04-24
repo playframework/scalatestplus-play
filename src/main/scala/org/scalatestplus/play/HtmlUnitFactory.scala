@@ -31,7 +31,7 @@ trait HtmlUnitFactory extends BrowserFactory {
 
   /**
    * Creates a new instance of a Selenium `HtmlUnitDriver`, with Javascript enabled, or returns a
-   * `BrowserFactory.NoDriver` that includes the exception that indicated the driver was not
+   * [[org.scalatestplus.play.BrowserFactory.NoDriver BrowserFactory.NoDriver]] that includes the exception that indicated the driver was not
    * supported on the host platform and an appropriate error message.
    *
    * @return an new instance of a Selenium `HtmlUnitDriver`, or a `BrowserFactory.NoDriver` if an HtmlUnit driver is not 

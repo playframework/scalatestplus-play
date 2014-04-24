@@ -46,17 +46,23 @@ import org.openqa.selenium._
 object BrowserFactory {
 
   /**
-   * An implementation of `BrowserFactory` that does nothing, used when a requested Selenium `WebDriver` is unavailable
-   * on the host platform.
+   * An implementation of `WebDriver` that provides an optional exception and an error message and throws `UnsupportedOperationException` from
+   * all of its other methods, used when a requested Selenium `WebDriver` is unavailable on the host platform.
    *
-   * Traits `OneBrowserPerSuite`, `OneBrowserPerTest`, `AllBrowsersPerSharedTest`, and `MixedFixtures` check
+   * Traits [[org.scalatestplus.play.OneBrowserPerSuite OneBrowserPerSuite]], [[org.scalatestplus.play.OneBrowserPerTest OneBrowserPerTest]],
+   * [[org.scalatestplus.play.AllBrowsersPerSharedTest AllBrowsersPerSharedTest]], and [[org.scalatestplus.play.MixedFixtures MixedFixtures]] check
    * if the requested `WebDriver` is available, and if not, installs this driver (to avoid initializing with `null`)
    * and cancels the tests.
    *
+   * This is an example of the "Null Object Pattern." We use this pattern to avoid initializing with `null` instead of making the driver type
+   * an `Option[WebDriver]` for two reasons: 1) the type of the implicit needed by Selenium is `WebDriver`, not `Option[WebDriver]`, and 2) 
+   * the Null Object we provide also carries an optional exception and user-friendly error message.
+   *
    * @param ex: the `Throwable`, if any, that was thrown when attempting to use the requested driver
+   * @param errorMessage: a user-friendly error message that mentions the specific driver that was unavailable on the host platform
    */
   case class NoDriver(ex: Option[Throwable], errorMessage: String) extends WebDriver {
-  
+
     /**
      * Throws `UnsupportedOperationException`.
      */

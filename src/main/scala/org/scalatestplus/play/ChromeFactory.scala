@@ -30,7 +30,7 @@ import BrowserFactory.NoDriver
 trait ChromeFactory extends BrowserFactory {
 
   /**
-   * Creates a new instance of a Selenium `ChromeDriver`, or returns a `BrowserFactory.NoDriver` that includes
+   * Creates a new instance of a Selenium `ChromeDriver`, or returns a [[org.scalatestplus.play.BrowserFactory.NoDriver BrowserFactory.NoDriver]] that includes
    * the exception that indicated the driver was not supported on the host platform and an appropriate
    * error message.
    *

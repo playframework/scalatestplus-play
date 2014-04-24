@@ -38,7 +38,7 @@ trait FirefoxFactory extends BrowserFactory {
 
   /**
    * Creates a new instance of a Selenium `FirefoxDriver` (using the `FirefoxProfile` provided by
-   * the `firefoxProfile` field), or returns a `BrowserFactory.NoDriver` that includes
+   * the `firefoxProfile` field), or returns a [[org.scalatestplus.play.BrowserFactory.NoDriver BrowserFactory.NoDriver]] that includes
    * the exception that indicated the driver was not supported on the host platform and an appropriate
    * error message.
    *
