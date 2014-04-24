@@ -26,24 +26,76 @@ import concurrent.IntegrationPatience
 /**
  * Trait that provides a configured `FakeApplication`, server port number, and Selenium `WebDriver` to the suite
  * into which it is mixed.
+ *
+ * The purpose of this trait is to allow nested suites of an enclosing suite that extends [[org.scalatestplus.play.OneBrowserPerSuite OneBrowserPerSuite]]
+ * to make use of the `FakeApplication`, port number, and `WebDriver` provided by `OneBrowserPerSuite`. Trait `OneBrowserPerSuite` will ensure
+ * the `FakeApplication` is placed in the `ConfigMap` under the key `org.scalatestplus.play.app`, the port number
+ * under the key `org.scalatestplus.play.port`, and the `WebDriver` under the key `org.scalatestplus.play.webDriver` before nested suites are invoked. This
+ * information represents the "configured browser" that is passed from the enclosing suite to the nested suites. Trait `ConfiguredBrowser` extracts this information from
+ * from the `ConfigMap` and makes the `FakeApplication` available via the `app` method, the port number available as an `Int` from
+ * the `port` method, and also the port number wrapped in a [[org.scalatestplus.play.PortNumber PortNumber]] available as implicit method `portNumber` (for use
+ * with trait [[org.scalatestplus.play.WsScalaTestClient WsScalaTestClient]]), and the `WebDriver` available implicitly from the `webDriver` method.
+ *
+ * To prevent discovery of nested suites you can annotate them with `@DoNotDiscover`.
  */
 trait ConfiguredBrowser extends SuiteMixin with WebBrowser with Eventually with IntegrationPatience { this: Suite => 
 
   private var configuredApp: FakeApplication = _
+
+  /**
+   * The "configured" `FakeApplication` instance that was passed into `run` via the `ConfigMap`.
+   *
+   * @return the configured `FakeApplication`
+   */
   implicit final def app: FakeApplication = synchronized { configuredApp }
 
   private var configuredPort: Int = -1
+
+  /**
+   * The "configured" port number, passed into `run` via the `ConfigMap`, at which the `TestServer` is running.
+   *
+   * @return the configured port number
+   */
   def port: Int = synchronized { configuredPort }
 
   /**
    * Implicit `PortNumber` instance that wraps `port`. The value returned from `portNumber.value`
    * will be same as the value of `port`.
+   *
+   * @return the configured port number, wrapped in a `PortNumber`
    */
   implicit lazy val portNumber: PortNumber = PortNumber(port)
 
   private var configuredWebDriver: WebDriver = _
+
+  /**
+   * The "configured" Selenium `WebDriver`, passed into `run` via the `ConfigMap`.
+   *
+   * @return the configured port number
+   */
   implicit def webDriver: WebDriver = synchronized { configuredWebDriver } 
 
+  /**
+   * Looks in `args.configMap` for a key named "org.scalatestplus.play.app" whose value is a `FakeApplication`, 
+   * a key named "org.scalatestplus.play.port" whose value is an `Int`,
+   * and a key named "org.scalatestplus.play.webDriver" whose value is a `WebDriver`,
+   * and if they exist, sets the `FakeApplication` as the value that will be returned from the `app` method,
+   * the `Int` as the value that will be returned from the `port` method, and the `WebDriver` as
+   * the value that will be returned from the `webDriver` method, then calls
+   * `super.run`.
+   *
+   * If no key matches "org.scalatestplus.play.app" in `args.configMap`, or the associated value is
+   * not a `FakeApplication`, or if no key matches "org.scalatestplus.play.port" in `args.configMap`,
+   * or the associated value is not an `Int`, or if no key matches "org.scalatestplus.play.webDriver" in `args.configMap`,
+   * or the associated value is not a `WebDriver`, throws `IllegalArgumentException`.
+   *
+   * @param testName an optional name of one test to run. If `None`, all relevant tests should be run.
+   *                 I.e., `None` acts like a wildcard that means run all relevant tests in this `Suite`.
+   * @param args the `Args` for this run
+   * @return a `Status` object that indicates when all tests and nested suites started by this method have completed, and whether or not a failure occurred.
+   *         
+   * @throws IllegalArgumentException if the `FakeApplication` and/or port number does not appear in `args.configMap` under the expected keys
+   */
   abstract override def run(testName: Option[String], args: Args): Status = {
     args.configMap.getOptional[FakeApplication]("org.scalatestplus.play.app") match {
       case Some(ca) => synchronized { configuredApp = ca }
