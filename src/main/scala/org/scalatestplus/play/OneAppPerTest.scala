@@ -18,8 +18,8 @@ package org.scalatestplus.play
 import play.api.test._
 import org.scalatest._
 
-// Write a test for passing in the TestData to newApp.
-// Think about doing that for port. 
+// Think about doing one port number per test to enable parallel test execution if the day
+// arrives that Play can do that. 
 
 /**
  * Trait that provides a new `FakeApplication` instance for each test.

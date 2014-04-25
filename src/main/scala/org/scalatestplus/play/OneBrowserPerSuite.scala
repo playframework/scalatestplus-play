@@ -33,6 +33,10 @@ import org.openqa.selenium.chrome.ChromeDriver
  * in `args.configMap` using the `"org.scalatestplus.play.app"` key, the port number of the `TestServer` using the `"org.scalatestplus.play.port"` key and 
  * the `WebDriver` instance using `"org.scalatestplus.play.webDriver"` key.  This traits also overrides `Suite.withFixture` 
  * to cancel all the tests automatically if the related `WebDriver` is not available in the running system.
+ *
+ * By default, this trait creates a new `FakeApplication` for the `Suite` using default parameter values, which
+ * is made available via the `app` field defined in this trait. If your `Suite` needs a `FakeApplication` with non-default 
+ * parameters, override `app` to create it.
  */
 trait OneBrowserPerSuite extends SuiteMixin with WebBrowser with Eventually with IntegrationPatience with BrowserFactory { this: Suite =>
 

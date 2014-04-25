@@ -28,6 +28,10 @@ import org.scalatest._
  * via the `port`field. In nested suites,
  * you can access the `FakeApplication` and port number from the `args.configMap`, where they are associated
  * with keys `"org.scalatestplus.play.app"` and `"org.scalatestplus.play.port"`, respectively.
+ *
+ * By default, this trait creates a new `FakeApplication` for the `Suite` using default parameter values, which
+ * is made available via the `app` field defined in this trait. If your `Suite` needs a `FakeApplication` with non-default 
+ * parameters, override `app` to create it.
  */
 trait OneServerPerSuite extends SuiteMixin { this: Suite =>
 

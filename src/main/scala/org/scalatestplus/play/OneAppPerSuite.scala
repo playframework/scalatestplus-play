@@ -20,15 +20,46 @@ import org.scalatest._
 import play.api.Play
 
 /**
- * Trait that provides one `FakeApplication` instance per ScalaTest `Suite`.
- * 
- * <p>
- * It overrides ScalaTest's `Suite.run` method to call `Play.start()` before, 
- * and `Play.stop()` after, executing the tests. In the suite that mixes in `OneAppPerSuite`,
- * you can access the `FakeApplication` using the `app` field. In nested suites,
- * you can access the `FakeApplication` from the `args.configMap`, where it is associated
- * with key `"org.scalatestplus.play.app"`.
- * </p>
+ * Trait that provides a new `FakeApplication` instance per ScalaTest `Suite`.
+ *
+ * By default, this trait creates a new `FakeApplication` for the `Suite` using default parameter values, which
+ * is made available via the `app` field defined in this trait. If your `Suite` needs a `FakeApplication` with non-default 
+ * parameters, override `app` to create it.
+
+ * This `SuiteMixin` trait's overridden `run` method calls `Play.start`, passing in the
+ * `FakeApplication` provided by `app`, before executing the `Suite` via a call to `super.run`.
+ * In addition, it places a reference to the `FakeApplication` provided by `app` into the `ConfigMap`
+ * under the key `org.scalatestplus.play.app`.  This allows any nested `Suite`s to access the `Suite`'s 
+ * `FakeApplication` as well, most easily by having the nested `Suite`s mix in the
+ * [[org.scalatestplus.play.ConfiguredApp ConfiguredApp]] trait.  Once `super.run` completes, this
+ * trait's overriden `run` method calls `Play.stop`.
+ *
+ * If you have many tests that can share the same `FakeApplication`, and you don't want to put them all into one
+ * test class, you can place them into different `Suite` classes.
+ * These will be your nested suites. Create a master suite that extends `OneAppPerSuite` and declares the nested 
+ * `Suite`s. Annotate the nested suites with `@DoNotDiscover` and have them extend `ConfiguredApp`. Here's an example:
+ *
+ * <pre class="stHighlight">
+ * import org.scalatest._
+ * import org.scalatestplus.play._
+ *
+ * // You can organize your tests that can share the same FakeApplication
+ * // into different Suite classes that extend ConfiguredApp
+ * // and are annotated with @DoNotDiscover:
+ * @DoNotDiscover class OneSpec extends PlaySpec with ConfiguredApp
+ * @DoNotDiscover class TwoSpec extends PlaySpec with ConfiguredApp
+ * @DoNotDiscover class RedSpec extends PlaySpec with ConfiguredApp
+ * @DoNotDiscover class BlueSpec extends PlaySpec with ConfiguredApp
+ *
+ * // Then declare them as nested Suites in a "master" Suite that
+ * // extends OneAppPerSuite:
+ * class OneAppPerSuiteExampleSpec extends Suites(
+ *   new OneSpec,
+ *   new TwoSpec,
+ *   new RedSpec,
+ *   new BlueSpec
+ * ) with OneAppPerSuite
+ * </pre>
  */
 trait OneAppPerSuite extends SuiteMixin { this: Suite => 
 
@@ -41,8 +72,9 @@ trait OneAppPerSuite extends SuiteMixin { this: Suite =>
   implicit lazy val app: FakeApplication = new FakeApplication()
   
   /**
-   * Overriden to start `Play` before running the tests, pass a `FakeApplication` into the tests in 
-   * `args.configMap` via "org.scalatestplus.play.app" key, call `super.run` and stop `Play` after test executions.
+   * Invokes `Play.start`, passing in the `FakeApplication` provided by `app`, and places
+   * that same `FakeApplication` into the `ConfigMap` under the key `"org.scalatestplus.play.app"` to make it available
+   * to nested suites; calls `super.run`; and finally calls `Play.stop`.
    *
    * @param testName an optional name of one test to run. If `None`, all relevant tests should be run.
    *                 I.e., `None` acts like a wildcard that means run all relevant tests in this `Suite`.

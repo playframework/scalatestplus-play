@@ -24,6 +24,10 @@ import org.scalatest._
  * This `SuiteMixin` trait overrides ScalaTest's `withFixture` method to create a new `FakeApplication` and `TestServer`
  * before each test, and ensure they are cleaned up after the test has completed. The `FakeApplication` is available (implicitly) from
  * method `app`. The `TestServer`'s port number is available as `port` (and implicitly available as `portNumber`, wrapped in a [[org.scalatestplus.play.PortNumber PortNumber]]).
+ *
+ * By default, this trait creates a new `FakeApplication` for each test using default parameter values, which
+ * is returned by the `newAppForTest` method defined in this trait. If your tests need a `FakeApplication` with non-default 
+ * parameters, override `newAppForTest` to return it.
  */
 trait OneServerPerTest extends SuiteMixin { this: Suite =>
 
