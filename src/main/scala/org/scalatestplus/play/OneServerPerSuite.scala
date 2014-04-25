@@ -19,8 +19,48 @@ import play.api.test._
 import org.scalatest._
 
 /**
- * Trait that provides one `TestServer` and `FakeApplication` instance per ScalaTest `Suite`.
+ * Trait that provides a new `FakeApplication` and running `TestServer` instance per ScalaTest `Suite`.
  * 
+ * By default, this trait creates a new `TestServer` for the `Suite` using the port number provided by
+ * its `port` field and the `FakeApplication` provided by its `app` field.  By default, this trait's `app` field is
+ * initialized with a new `FakeApplication` using default parameter values.  If your `Suite` needs a
+ * `FakeApplication` with non-default parameters, override `app` to create it.
+ *
+ * This `SuiteMixin` trait's overridden `run` method calls `start` on the `TestServer`
+ * before executing the `Suite` via a call to `super.run`.
+ * In addition, it places a reference to the `FakeApplication` provided by `app` into the `ConfigMap`
+ * under the key `org.scalatestplus.play.app` and to the port number provided by `port` under the key
+ * `org.scalatestplus.play.port`.  This allows any nested `Suite`s to access the `Suite`'s 
+ * `FakeApplication` and port number as well, most easily by having the nested `Suite`s mix in the
+ * [[org.scalatestplus.play.ConfiguredServer ConfiguredServer]] trait.  Once `super.run` completes, this
+ * trait's overriden `run` method calls `stop` on the `TestServer`.
+ *
+ * If you have many tests that can share the same `FakeApplication`, and you don't want to put them all into one
+ * test class, you can place them into different `Suite` classes.
+ * These will be your nested suites. Create a master suite that extends `OneAppPerSuite` and declares the nested 
+ * `Suite`s. Annotate the nested suites with `@DoNotDiscover` and have them extend `ConfiguredApp`. Here's an example:
+ *
+ * <pre class="stHighlight">
+ * import org.scalatest._
+ * import org.scalatestplus.play._
+ *
+ * // You can organize your tests that can share the same FakeApplication
+ * // into different Suite classes that extend ConfiguredApp
+ * // and are annotated with @DoNotDiscover:
+ * @DoNotDiscover class OneSpec extends PlaySpec with ConfiguredApp
+ * @DoNotDiscover class TwoSpec extends PlaySpec with ConfiguredApp
+ * @DoNotDiscover class RedSpec extends PlaySpec with ConfiguredApp
+ * @DoNotDiscover class BlueSpec extends PlaySpec with ConfiguredApp
+ *
+ * // Then declare them as nested Suites in a "master" Suite that
+ * // extends OneAppPerSuite:
+ * class OneAppPerSuiteExampleSpec extends Suites(
+ *   new OneSpec,
+ *   new TwoSpec,
+ *   new RedSpec,
+ *   new BlueSpec
+ * ) with OneAppPerSuite
+ * </pre>
  * It overrides ScalaTest's `Suite.run` method to start a `TestServer` before test execution, 
  * and stop the `TestServer` automatically after test execution has completed. 
  * In the suite that mixes in `OneServerPerSuite`,

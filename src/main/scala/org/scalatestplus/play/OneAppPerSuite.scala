@@ -25,7 +25,7 @@ import play.api.Play
  * By default, this trait creates a new `FakeApplication` for the `Suite` using default parameter values, which
  * is made available via the `app` field defined in this trait. If your `Suite` needs a `FakeApplication` with non-default 
  * parameters, override `app` to create it.
-
+ *
  * This `SuiteMixin` trait's overridden `run` method calls `Play.start`, passing in the
  * `FakeApplication` provided by `app`, before executing the `Suite` via a call to `super.run`.
  * In addition, it places a reference to the `FakeApplication` provided by `app` into the `ConfigMap`
