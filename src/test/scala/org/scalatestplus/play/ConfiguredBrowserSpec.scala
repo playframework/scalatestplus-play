@@ -25,7 +25,7 @@ class ConfiguredBrowserSpec extends UnitSpec with SequentialNestedSuiteExecution
 
   override def nestedSuites = Vector(new ConfiguredBrowserNestedSuite)
 
-  implicit override val app: FakeApplication = FakeApplication(additionalConfiguration = Map("foo" -> "bar", "ehcacheplugin" -> "disabled"),
+  implicit override lazy val app: FakeApplication = FakeApplication(additionalConfiguration = Map("foo" -> "bar", "ehcacheplugin" -> "disabled"),
       withRoutes = TestRoute)
   def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
 }

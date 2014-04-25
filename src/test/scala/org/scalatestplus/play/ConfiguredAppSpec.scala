@@ -53,7 +53,7 @@ class ConfiguredAppSpec extends UnitSpec with SequentialNestedSuiteExecution wit
 
   override def nestedSuites = Vector(new NestedSuite)
 
-  implicit override val app: FakeApplication = FakeApplication(additionalConfiguration = Map("foo" -> "bar", "ehcacheplugin" -> "disabled"))
+  implicit override lazy val app: FakeApplication = FakeApplication(additionalConfiguration = Map("foo" -> "bar", "ehcacheplugin" -> "disabled"))
   def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
 }
 

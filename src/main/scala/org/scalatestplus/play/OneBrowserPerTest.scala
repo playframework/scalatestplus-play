@@ -40,19 +40,25 @@ trait OneBrowserPerTest extends SuiteMixin with WebBrowser with Eventually with 
   /**
    * Implicit method that returns the `FakeApplication` instance for the current test.
    */
-  implicit def app: FakeApplication = synchronized { privateApp }
+  implicit final def app: FakeApplication = synchronized { privateApp }
+
+  /**
+   * Creates new instance of `FakeApplication` with parameters set to their defaults. Override this method if you
+   * need a `FakeApplication` created with non-default parameter values.
+   */
+  def newApp: FakeApplication = new FakeApplication()
 
   /**
    * The port used by the `TestServer`.  By default this will be set to the result returned from
    * `Helpers.testServerPort`. You can override this to provide a different port number.
    */
-  val port: Int = Helpers.testServerPort
+  lazy val port: Int = Helpers.testServerPort
 
   /**
    * Implicit `PortNumber` instance that wraps `port`. The value returned from `portNumber.value`
    * will be same as the value of `port`.
    */
-  implicit lazy val portNumber: PortNumber = PortNumber(port)
+  implicit final lazy val portNumber: PortNumber = PortNumber(port)
 
   private var privateWebDriver: WebDriver = _
 
@@ -73,7 +79,7 @@ trait OneBrowserPerTest extends SuiteMixin with WebBrowser with Eventually with 
    */
   abstract override def withFixture(test: NoArgTest) = {
     synchronized {
-      privateApp = new FakeApplication()
+      privateApp = newApp
       privateWebDriver = createWebDriver()
     }
     try {

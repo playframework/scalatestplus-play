@@ -24,7 +24,7 @@ import org.openqa.selenium.WebDriver
 // Can't get this one to work either on my Mac, even with the system property set
 class ChromeFactorySpec extends UnitSpec with OneBrowserPerSuite with ChromeFactory {
 
-  implicit override val app: FakeApplication = 
+  implicit override lazy val app: FakeApplication = 
     FakeApplication(
       additionalConfiguration = Map("foo" -> "bar", "ehcacheplugin" -> "disabled"), 
       withRoutes = TestRoute

@@ -21,7 +21,7 @@ import play.api.{Play, Application}
 
 class ServerSpecSpec extends ServerSpec {
 
-  implicit override def app: FakeApplication = FakeApplication(additionalConfiguration = Map("foo" -> "bar", "ehcacheplugin" -> "disabled"))
+  implicit override def newApp: FakeApplication = FakeApplication(additionalConfiguration = Map("foo" -> "bar", "ehcacheplugin" -> "disabled"))
   def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
 
   "The ServerFixture" must {

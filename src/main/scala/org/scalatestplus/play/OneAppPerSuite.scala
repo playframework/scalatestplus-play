@@ -34,8 +34,11 @@ trait OneAppPerSuite extends SuiteMixin { this: Suite =>
 
   /**
    * An implicit instance of `FakeApplication`.
+   *
+   * This trait's implementation initializes this `lazy` `val` with a new instance of `FakeApplication` with
+   * parameters set to their defaults. Override this `lazy` `val` if you need a `FakeApplication` created with non-default parameter values.
    */
-  implicit val app: FakeApplication = new FakeApplication()
+  implicit lazy val app: FakeApplication = new FakeApplication()
   
   /**
    * Overriden to start `Play` before running the tests, pass a `FakeApplication` into the tests in 

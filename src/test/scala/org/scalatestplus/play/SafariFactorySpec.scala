@@ -22,7 +22,7 @@ import org.openqa.selenium.WebDriver
 
 class SafariFactorySpec extends UnitSpec with OneBrowserPerSuite with SafariFactory {
 
-  implicit override val app: FakeApplication = 
+  implicit override lazy val app: FakeApplication = 
     FakeApplication(
       additionalConfiguration = Map("foo" -> "bar", "ehcacheplugin" -> "disabled"), 
       withRoutes = TestRoute

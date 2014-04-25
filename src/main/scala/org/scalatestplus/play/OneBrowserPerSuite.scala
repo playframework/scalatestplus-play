@@ -38,20 +38,23 @@ trait OneBrowserPerSuite extends SuiteMixin with WebBrowser with Eventually with
 
   /**
    * An implicit instance of `FakeApplication`.
+   *
+   * This trait's implementation initializes this `lazy` `val` with a new instance of `FakeApplication` with
+   * parameters set to their defaults. Override this `lazy` `val` if you need a `FakeApplication` created with non-default parameter values.
    */
-  implicit val app: FakeApplication = new FakeApplication()
+  implicit lazy val app: FakeApplication = new FakeApplication()
 
   /**
    * The port used by the `TestServer`.  By default this will be set to the result returned from
    * `Helpers.testServerPort`. You can override this to provide a different port number.
    */
-  val port: Int = Helpers.testServerPort
+  lazy val port: Int = Helpers.testServerPort
 
   /**
    * Implicit `PortNumber` instance that wraps `port`. The value returned from `portNumber.value`
    * will be same as the value of `port`.
    */
-  implicit lazy val portNumber: PortNumber = PortNumber(port)
+  implicit final lazy val portNumber: PortNumber = PortNumber(port)
 
   /**
    * An implicit instance of `WebDriver`, created by calling `createWebDriver`.  

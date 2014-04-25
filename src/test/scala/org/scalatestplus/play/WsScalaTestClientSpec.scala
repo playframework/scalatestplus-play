@@ -22,7 +22,7 @@ import play.api.mvc.Call
 
 class WsScalaTestClientSpec extends UnitSpec with OneServerPerSuite with ScalaFutures with IntegrationPatience {
 
-  implicit override val app: FakeApplication =
+  implicit override lazy val app: FakeApplication =
     FakeApplication(
       additionalConfiguration = Map("foo" -> "bar", "ehcacheplugin" -> "disabled"),
       withRoutes = TestRoute

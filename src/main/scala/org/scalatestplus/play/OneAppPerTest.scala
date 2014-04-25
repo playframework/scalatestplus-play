@@ -21,14 +21,15 @@ import org.scalatest._
 /**
  * Trait that provides a new `FakeApplication` instance for each test.
  * 
- * It overrides ScalaTest's `withFixture` method to create new `FakeApplication` instance,
- * make it available from method `app`, and execute the test surrounded by a call to `Helpers.running(app)`.
- * In the tests you can access the `FakeApplication` using the `app` parameterless method.
+ * This `SuiteMixin` trait's overridden `withFixture` method creates a new `FakeApplication` 
+ * before each test and ensures it is cleaned up after the test has completed. You can
+ * access the `FakeApplication` from your tests as method `app` (which is marked implicit).
  */
 trait OneAppPerTest extends SuiteMixin { this: Suite => 
 
   /**
-   * Method to create new instance of `FakeApplication`
+   * Creates new instance of `FakeApplication` with parameters set to their defaults. Override this method if you
+   * need a `FakeApplication` created with non-default parameter values.
    */
   def newApp: FakeApplication = new FakeApplication()
   private var appPerTest: FakeApplication = _
@@ -39,7 +40,9 @@ trait OneAppPerTest extends SuiteMixin { this: Suite =>
   implicit final def app: FakeApplication = synchronized { appPerTest }
 
   /**
-   * Overriden to create new `FakeApplication` instance and run it before executing each test.
+   * Creates a new `FakeApplication` instance before executing each test, and 
+   * ensure they are cleaned up after the test completes. You can access the `FakeApplication` from
+   * your tests via `app`.
    *
    * @param test the no-arg test function to run with a fixture
    * @return the `Outcome` of the test execution

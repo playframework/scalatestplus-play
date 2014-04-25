@@ -21,7 +21,7 @@ import play.api.{Play, Application}
 
 class OneChromeFactoryPerTestSpec extends UnitSpec with OneBrowserPerTest with ChromeFactory {
 
-  implicit override def app: FakeApplication = 
+  implicit override def newApp: FakeApplication = 
     FakeApplication(
       additionalConfiguration = Map("foo" -> "bar", "ehcacheplugin" -> "disabled"), 
       withRoutes = TestRoute
