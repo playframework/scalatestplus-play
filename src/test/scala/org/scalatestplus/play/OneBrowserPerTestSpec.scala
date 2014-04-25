@@ -22,7 +22,7 @@ import play.api.mvc.{Action, Results}
 
 class OneBrowserPerTestSpec extends UnitSpec with OneBrowserPerTest with FirefoxFactory {
 
-  implicit override def newApp: FakeApplication = 
+  implicit override def newAppForTest(testData: TestData): FakeApplication = 
     FakeApplication(
       additionalConfiguration = Map("foo" -> "bar", "ehcacheplugin" -> "disabled"), 
       withRoutes = TestRoute

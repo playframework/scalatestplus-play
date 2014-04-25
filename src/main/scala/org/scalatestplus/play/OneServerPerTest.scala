@@ -18,8 +18,6 @@ package org.scalatestplus.play
 import play.api.test._
 import org.scalatest._
 
-// TODO: Does creating a FakeApplication involve a side-effect? If so, I'd make the newApp method empty-paren.
-
 /**
  * Trait that provides a new `FakeApplication` and running `TestServer` instance for each test executed in a ScalaTest `Suite`.
  * 
@@ -40,7 +38,7 @@ trait OneServerPerTest extends SuiteMixin { this: Suite =>
    * Creates new instance of `FakeApplication` with parameters set to their defaults. Override this method if you
    * need a `FakeApplication` created with non-default parameter values.
    */
-  def newApp: FakeApplication = new FakeApplication()
+  def newAppForTest(testData: TestData): FakeApplication = new FakeApplication()
 
   /**
    * The port used by the `TestServer`.  By default this will be set to the result returned from
@@ -63,7 +61,7 @@ trait OneServerPerTest extends SuiteMixin { this: Suite =>
    * @return the `Outcome` of the test execution
    */
   abstract override def withFixture(test: NoArgTest) = {
-    synchronized { privateApp = newApp }
+    synchronized { privateApp = newAppForTest(test) }
     Helpers.running(TestServer(port, app)) {
       super.withFixture(test)
     }

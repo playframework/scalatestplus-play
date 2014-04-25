@@ -46,7 +46,7 @@ trait OneBrowserPerTest extends SuiteMixin with WebBrowser with Eventually with 
    * Creates new instance of `FakeApplication` with parameters set to their defaults. Override this method if you
    * need a `FakeApplication` created with non-default parameter values.
    */
-  def newApp: FakeApplication = new FakeApplication()
+  def newAppForTest(testData: TestData): FakeApplication = new FakeApplication()
 
   /**
    * The port used by the `TestServer`.  By default this will be set to the result returned from
@@ -79,7 +79,7 @@ trait OneBrowserPerTest extends SuiteMixin with WebBrowser with Eventually with 
    */
   abstract override def withFixture(test: NoArgTest) = {
     synchronized {
-      privateApp = newApp
+      privateApp = newAppForTest(test)
       privateWebDriver = createWebDriver()
     }
     try {

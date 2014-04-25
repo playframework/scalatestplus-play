@@ -18,12 +18,19 @@ package org.scalatestplus.play
 import play.api.test._
 import org.scalatest._
 
+// Write a test for passing in the TestData to newApp.
+// Think about doing that for port. 
+
 /**
  * Trait that provides a new `FakeApplication` instance for each test.
  * 
  * This `SuiteMixin` trait's overridden `withFixture` method creates a new `FakeApplication` 
  * before each test and ensures it is cleaned up after the test has completed. You can
  * access the `FakeApplication` from your tests as method `app` (which is marked implicit).
+ *
+ * By default, this trait creates a new `FakeApplication` for each test using default parameter values, which
+ * is returned by the `newAppForTest` method defined in this trait. If your tests need a `FakeApplication` with non-default 
+ * parameters, override `newAppForTest` to return it.
  */
 trait OneAppPerTest extends SuiteMixin { this: Suite => 
 
@@ -31,7 +38,7 @@ trait OneAppPerTest extends SuiteMixin { this: Suite =>
    * Creates new instance of `FakeApplication` with parameters set to their defaults. Override this method if you
    * need a `FakeApplication` created with non-default parameter values.
    */
-  def newApp: FakeApplication = new FakeApplication()
+  def newAppForTest(testData: TestData): FakeApplication = new FakeApplication()
   private var appPerTest: FakeApplication = _
 
   /**
@@ -48,10 +55,10 @@ trait OneAppPerTest extends SuiteMixin { this: Suite =>
    * @return the `Outcome` of the test execution
    */
   abstract override def withFixture(test: NoArgTest) = {
-    synchronized { appPerTest = newApp }
+    synchronized { appPerTest = newAppForTest(test) }
     Helpers.running(app) {
       super.withFixture(test)
     } 
   } 
-}   
+}
 

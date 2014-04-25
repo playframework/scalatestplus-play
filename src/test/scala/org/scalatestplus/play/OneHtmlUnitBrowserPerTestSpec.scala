@@ -21,7 +21,7 @@ import play.api.{Play, Application}
 
 class OneHtmlUnitFactoryPerTestSpec extends UnitSpec with OneBrowserPerTest with HtmlUnitFactory {
 
-  implicit override def newApp: FakeApplication = 
+  implicit override def newAppForTest(testData: TestData): FakeApplication = 
     FakeApplication(
       additionalConfiguration = Map("foo" -> "bar", "ehcacheplugin" -> "disabled"), 
       withRoutes = TestRoute

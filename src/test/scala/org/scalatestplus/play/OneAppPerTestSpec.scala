@@ -21,7 +21,7 @@ import play.api.{Play, Application}
 
 class OneAppPerTestSpec extends UnitSpec with OneAppPerTest {
 
-  override def newApp: FakeApplication = FakeApplication(additionalConfiguration = Map("foo" -> "bar", "ehcacheplugin" -> "disabled"))
+  override def newAppForTest(testData: TestData): FakeApplication = FakeApplication(additionalConfiguration = Map("foo" -> "bar", "ehcacheplugin" -> "disabled"))
   def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
 
   "The OneAppPerTest trait" must {
