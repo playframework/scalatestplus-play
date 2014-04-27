@@ -74,6 +74,107 @@ import org.openqa.selenium.chrome.ChromeDriver
  * Note that this trait can only be mixed into traits that register tests as functions, as the shared tests technique
  * is not possible in style traits that declare tests as methods, such as `org.scalatest.Spec`. Attempting to do so
  * will become a type error once we release ScalaTest 2.2.0.
+ *
+ * <pre class="stHighlight">
+ * package org.scalatestplus.play.examples.allbrowserspersharedtest
+ * 
+ * import play.api.test._
+ * import org.scalatest._
+ * import org.scalatestplus.play._
+ * import play.api.{Play, Application}
+ * import play.api.mvc.{Action, Results}
+ * import org.openqa.selenium.WebDriver
+ * import BrowserFactory.NoDriver
+ * 
+ * class ExampleSpec extends PlaySpec with AllBrowsersPerSharedTest {
+ * 
+ *   // Override app if you need a FakeApplication with other than non-default parameters.
+ *   implicit override def app: FakeApplication =
+ *     FakeApplication(
+ *       additionalConfiguration = Map("foo" -> "bar", "ehcacheplugin" -> "disabled"),
+ *       withRoutes = TestRoute
+ *     )
+ * 
+ *   // Place tests you want run in different browsers in the `sharedTests` method:
+ *   def sharedTests(browser: BrowserInfo) = {
+ * 
+ *     "The AllBrowsersPerSharedTest trait" must {
+ *       "provide a web driver " + browser.name in {
+ *         go to ("http://localhost:" + port + "/testing")
+ *         pageTitle mustBe "Test Page"
+ *         click on find(name("b")).value
+ *         eventually { pageTitle mustBe "scalatest" }
+ *       }
+ *     }
+ *   }
+ * 
+ *   // Place tests you want run just once outside the `sharedTests` method
+ *   // in the constructor, the usual place for tests in a `PlaySpec`
+ *   "The AllBrowsersPerSharedTest trait" must {
+ *     "provide a FakeApplication" in {
+ *       app.configuration.getString("foo") mustBe Some("bar")
+ *     }
+ *     "make the FakeApplication available implicitly" in {
+ *        def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
+ *       getConfig("foo") mustBe Some("bar")
+ *     }
+ *     "start the FakeApplication" in {
+ *       Play.maybeApplication mustBe Some(app)
+ *     }
+ *     "provide the port" in {
+ *       port mustBe Helpers.testServerPort
+ *     }
+ *     "provide an actual running server" in {
+ *       import java.net._
+ *       val url = new URL("http://localhost:" + port + "/boum")
+ *       val con = url.openConnection().asInstanceOf[HttpURLConnection]
+ *       try con.getResponseCode mustBe 404
+ *       finally con.disconnect()
+ *     }
+ *   }
+ * }
+ * </pre>
+ *
+ * Here's how the output would look if you ran the above test class in sbt on a platform that
+ * did not support Selenium drivers for Internet Explorer or Chrome:
+ *
+ * <pre class="stREPL">
+ * &gt; test-only *allbrowserspersharedtest*
+ * [info] <span class="stGreen">ExampleSpec:</span>
+ * [info] <span class="stGreen">The AllBrowsersPerSharedTest trait</span>
+ * [info] <span class="stGreen">- must provide a web driver [Firefox]</span>
+ * [info] <span class="stGreen">The AllBrowsersPerSharedTest trait</span>
+ * [info] <span class="stGreen">- must provide a web driver [Safari]</span>
+ * [info] <span class="stGreen">The AllBrowsersPerSharedTest trait</span>
+ * [info] <span class="stYellow">- must provide a web driver [InternetExplorer] !!! CANCELED !!!</span>
+ * [info]   <span class="stYellow">Was unable to create a Selenium InternetExplorerDriver on this platform. (AllBrowsersPerSharedTest.scala:257)</span>
+ * [info] <span class="stGreen">The AllBrowsersPerSharedTest trait</span>
+ * [info] <span class="stYellow">- must provide a web driver [Chrome] !!! CANCELED !!!</span>
+ * [info]   <span class="stYellow">Was unable to create a Selenium ChromeDriver on this platform. (AllBrowsersPerSharedTest.scala:257)</span>
+ * [info] <span class="stGreen">The AllBrowsersPerSharedTest trait</span>
+ * [info] <span class="stGreen">- must provide a web driver [HtmlUnit]</span>
+ * [info] <span class="stGreen">The AllBrowsersPerSharedTest trait</span>
+ * [info] <span class="stGreen">- must provide a FakeApplication</span>
+ * [info] <span class="stGreen">- must make the FakeApplication available implicitly</span>
+ * [info] <span class="stGreen">- must start the FakeApplication</span>
+ * [info] <span class="stGreen">- must provide the port</span>
+ * [info] <span class="stGreen">- must provide an actual running server</span>
+ * </pre>
+ *
+ * Because the shared tests will be tagged according to browser, you can include or exclude tests based
+ * on the browser they use. For example, here's how the output would look if you ran the above test class
+ * with sbt and ask to include only Firefox:
+ * <pre>
+ * &gt; test-only *allbrowserspersharedtest* -- -n org.scalatest.tags.FirefoxBrowser
+ * [info] <span class="stGreen">ExampleSpec:</span>
+ * [info] <span class="stGreen">The AllBrowsersPerSharedTest trait</span>
+ * [info] <span class="stGreen">- must provide a web driver [Firefox]</span>
+ * [info] <span class="stGreen">The AllBrowsersPerSharedTest trait</span>
+ * [info] <span class="stGreen">The AllBrowsersPerSharedTest trait</span>
+ * [info] <span class="stGreen">The AllBrowsersPerSharedTest trait</span>
+ * [info] <span class="stGreen">The AllBrowsersPerSharedTest trait</span>
+ * [info] <span class="stGreen">The AllBrowsersPerSharedTest trait</span>
+ * </pre>
  */
 trait AllBrowsersPerSharedTest extends SuiteMixin with WebBrowser with Eventually with IntegrationPatience { this: Suite =>
 
