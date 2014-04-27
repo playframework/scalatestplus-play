@@ -70,6 +70,10 @@ import org.openqa.selenium.chrome.ChromeDriver
  *     ChromeInfo
  *   )
  * </pre>
+ *
+ * Note that this trait can only be mixed into traits that register tests as functions, as the shared tests technique
+ * is not possible in style traits that declare tests as methods, such as `org.scalatest.Spec`. Attempting to do so
+ * will become a type error once we release ScalaTest 2.2.0.
  */
 trait AllBrowsersPerSharedTest extends SuiteMixin with WebBrowser with Eventually with IntegrationPatience { this: Suite =>
 
