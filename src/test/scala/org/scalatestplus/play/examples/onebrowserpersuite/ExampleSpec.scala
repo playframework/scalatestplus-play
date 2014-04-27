@@ -17,9 +17,11 @@ package org.scalatestplus.play.examples.onebrowserpersuite
 
 import play.api.test._
 import org.scalatest._
+import org.scalatest.tags.FirefoxBrowser
 import org.scalatestplus.play._
 import play.api.{Play, Application}
 
+@FirefoxBrowser
 class ExampleSpec extends PlaySpec with OneBrowserPerSuite with FirefoxFactory {
 
   // Override app if you need a FakeApplication with other than non-default parameters.

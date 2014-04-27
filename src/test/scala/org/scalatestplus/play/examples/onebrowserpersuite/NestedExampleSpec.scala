@@ -17,10 +17,11 @@ package org.scalatestplus.play.examples.onebrowserpersuite
 
 import play.api.test._
 import org.scalatest._
+import tags.FirefoxBrowser
 import org.scalatestplus.play._
 import play.api.{Play, Application}
 
- // This is the "master" suite
+// This is the "master" suite
 class NestedExampleSpec extends Suites(
   new OneSpec,
   new TwoSpec,
@@ -43,7 +44,7 @@ class NestedExampleSpec extends Suites(
 @DoNotDiscover
 class BlueSpec extends PlaySpec with ConfiguredBrowser {
 
-  "The OneAppPerSuite trait" must {
+  "The OneBrowserPerSuite trait" must {
     "provide a FakeApplication" in { 
       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
     }

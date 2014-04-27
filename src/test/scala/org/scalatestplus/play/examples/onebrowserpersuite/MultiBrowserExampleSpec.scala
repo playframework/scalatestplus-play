@@ -13,35 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.scalatestplus.play.examples.oneserverpersuite
+package org.scalatestplus.play.examples.onebrowserpersuite
 
 import play.api.test._
 import org.scalatest._
+import tags._
 import org.scalatestplus.play._
 import play.api.{Play, Application}
 
- // This is the "master" suite
-class NestedExampleSpec extends Suites(
-  new OneSpec,
-  new TwoSpec,
-  new RedSpec,
-  new BlueSpec
-) with OneServerPerSuite {
+// Place your tests in an abstract class
+abstract class MultiBrowserExampleSpec extends PlaySpec with OneBrowserPerSuite {
+
   // Override app if you need a FakeApplication with other than non-default parameters.
   implicit override lazy val app: FakeApplication =
-    FakeApplication(additionalConfiguration = Map("ehcacheplugin" -> "disabled"))
-}
- 
-// These are the nested suites
-@DoNotDiscover class OneSpec extends PlaySpec with ConfiguredServer
-@DoNotDiscover class TwoSpec extends PlaySpec with ConfiguredServer
-@DoNotDiscover class RedSpec extends PlaySpec with ConfiguredServer
+    FakeApplication(
+      additionalConfiguration = Map("ehcacheplugin" -> "disabled"),
+      withRoutes = TestRoute
+    )
 
-@DoNotDiscover
-class BlueSpec extends PlaySpec with ConfiguredServer {
-
-  "The OneServerPerSuite trait" must {
-    "provide a FakeApplication" in { 
+  "The OneBrowserPerSuite trait" must {
+    "provide a FakeApplication" in {
       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
     }
     "make the FakeApplication available implicitly" in {
@@ -62,8 +53,20 @@ class BlueSpec extends PlaySpec with ConfiguredServer {
       try con.getResponseCode mustBe 404
       finally con.disconnect()
     }
+    "provide a web driver" in {
+      go to ("http://localhost:" + port + "/testing")
+      pageTitle mustBe "Test Page"
+      click on find(name("b")).value
+      eventually { pageTitle mustBe "scalatest" }
+    }
   }
 }
 
-
+// Then make a subclass that mixes in the factory for each
+// Selenium driver you want to test with.
+@FirefoxBrowser class FirefoxExampleSpec extends MultiBrowserExampleSpec with FirefoxFactory
+@SafariBrowser class SafariExampleSpec extends MultiBrowserExampleSpec with SafariFactory
+@InternetExplorerBrowser class InternetExplorerExampleSpec extends MultiBrowserExampleSpec with InternetExplorerFactory
+@ChromeBrowser class ChromeExampleSpec extends MultiBrowserExampleSpec with ChromeFactory
+@HtmlUnitBrowser class HtmlUnitExampleSpec extends MultiBrowserExampleSpec with HtmlUnitFactory
 
