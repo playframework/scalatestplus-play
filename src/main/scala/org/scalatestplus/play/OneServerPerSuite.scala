@@ -21,11 +21,12 @@ import org.scalatest._
 /**
  * Trait that provides a new `FakeApplication` and running `TestServer` instance per ScalaTest `Suite`.
  * 
- * By default, this trait creates a new `TestServer` for the `Suite` using the port number provided by
- * its `port` field and the `FakeApplication` provided by its `app` field.  By default, this trait's `app` field is
- * initialized with a new `FakeApplication` using default parameter values.  If your `Suite` needs a
+ * By default, this trait creates a new `FakeApplication` for the `Suite` using default parameter values, which
+ * is made available via the `app` field defined in this trait and a new `TestServer` for the `Suite` using the port number provided by
+ * its `port` field and the `FakeApplication` provided by its `app` field. If your `Suite` needs a
  * `FakeApplication` with non-default parameters, override `app`. If it needs a different port number,
  * override `port`.
+ *
  *
  * This `SuiteMixin` trait's overridden `run` method calls `start` on the `TestServer`
  * before executing the `Suite` via a call to `super.run`.
@@ -41,7 +42,6 @@ import org.scalatest._
  * Here's an example that shows demonstrates of the services provided by this trait:
  *
  * <pre class="stHighlight">
- * 
  * package org.scalatestplus.play.examples.oneserverpersuite
  * 
  * import play.api.test._
@@ -163,9 +163,11 @@ trait OneServerPerSuite extends SuiteMixin { this: Suite =>
   implicit final lazy val portNumber: PortNumber = PortNumber(port)
 
   /**
-   * Overriden to start `TestServer` before running the tests, pass a `FakeApplication` into the tests in 
-   * `args.configMap` via "org.scalatestplus.play.app" key and port used by the started `TestServer` via the "org.scalatestplus.play.port" key.  It then calls 
-   * `super.run` to execute the tests and stop `TestServer` automatically after test executions.
+   * Invokes `start` on a new `TestServer` created with the `FakeApplication` provided by `app` and the
+   * port number defined by `port`, places the `FakeApplication` and port number into the `ConfigMap` under the keys
+   * `org.scalatestplus.play.app` and `org.scalatestplus.play.port`, respectively, to make
+   * them available to nested suites; calls `super.run`; and lastly ensures the `FakeApplication and test server are stopped after
+   * all tests and nested suites have completed.
    *
    * @param testName an optional name of one test to run. If `None`, all relevant tests should be run.
    *                 I.e., `None` acts like a wildcard that means run all relevant tests in this `Suite`.

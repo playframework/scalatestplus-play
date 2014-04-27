@@ -127,8 +127,8 @@ trait OneAppPerSuite extends SuiteMixin { this: Suite =>
 
   /**
    * Invokes `Play.start`, passing in the `FakeApplication` provided by `app`, and places
-   * that same `FakeApplication` into the `ConfigMap` under the key `"org.scalatestplus.play.app"` to make it available
-   * to nested suites; calls `super.run`; and finally calls `Play.stop`.
+   * that same `FakeApplication` into the `ConfigMap` under the key `org.scalatestplus.play.app` to make it available
+   * to nested suites; calls `super.run`; and lastly ensures `Play.stop` is invoked after all tests and nested suites have completed.
    *
    * @param testName an optional name of one test to run. If `None`, all relevant tests should be run.
    *                 I.e., `None` acts like a wildcard that means run all relevant tests in this `Suite`.

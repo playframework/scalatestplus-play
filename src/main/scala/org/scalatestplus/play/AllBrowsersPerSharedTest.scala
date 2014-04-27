@@ -44,7 +44,7 @@ import org.openqa.selenium.chrome.ChromeDriver
  *   "The blog app home page" must {
  *     "have the correct title " + browser.name in {
  *        go to (host + "index.html")
- *        pageTitle should be ("Awesome Blog")
+ *        pageTitle must be ("Awesome Blog")
  *     } 
  * </pre>
  * 
@@ -62,7 +62,7 @@ import org.openqa.selenium.chrome.ChromeDriver
  * tests for `HtmlUnit`, you'd write:
  *
  * <pre class="stHighlight">
- * override val browsers: IndexedSeq[BrowserInfo] =
+ * override lazy val browsers: IndexedSeq[BrowserInfo] =
  *   Vector(
  *     FirefoxInfo,
  *     SafariInfo,
