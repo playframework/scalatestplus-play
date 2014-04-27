@@ -36,6 +36,8 @@ import play.api.Play
  * completes, and returns the same `Status`. This ensure the `FakeApplication` will continue to execute until
  * all nested suites have completed, after which the `FakeApplication` will be stopped.
  *
+ * Here's an example that shows demonstrates of the services provided by this trait:
+ *
  * <pre class="stHighlight">
  * package org.scalatestplus.play.examples.oneapppersuite
  * 
@@ -135,11 +137,18 @@ trait OneAppPerSuite extends SuiteMixin { this: Suite =>
    */
   abstract override def run(testName: Option[String], args: Args): Status = {
     Play.start(app)
-    val newConfigMap = args.configMap + ("org.scalatestplus.play.app" -> app)
-    val newArgs = args.copy(configMap = newConfigMap)
-    val status = super.run(testName, newArgs)
-    status.whenCompleted { _ => Play.stop() }
-    status
+    try {
+      val newConfigMap = args.configMap + ("org.scalatestplus.play.app" -> app)
+      val newArgs = args.copy(configMap = newConfigMap)
+      val status = super.run(testName, newArgs)
+      status.whenCompleted { _ => Play.stop() }
+      status
+    }
+    catch { // In case the suite aborts, ensure the app is stopped
+      case ex: Throwable =>
+        Play.stop()
+        throw ex
+    }
   }
 }   
 

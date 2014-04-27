@@ -24,7 +24,8 @@ import org.scalatest._
  * By default, this trait creates a new `TestServer` for the `Suite` using the port number provided by
  * its `port` field and the `FakeApplication` provided by its `app` field.  By default, this trait's `app` field is
  * initialized with a new `FakeApplication` using default parameter values.  If your `Suite` needs a
- * `FakeApplication` with non-default parameters, override `app` to create it.
+ * `FakeApplication` with non-default parameters, override `app`. If it needs a different port number,
+ * override `port`.
  *
  * This `SuiteMixin` trait's overridden `run` method calls `start` on the `TestServer`
  * before executing the `Suite` via a call to `super.run`.
@@ -32,46 +33,112 @@ import org.scalatest._
  * under the key `org.scalatestplus.play.app` and to the port number provided by `port` under the key
  * `org.scalatestplus.play.port`.  This allows any nested `Suite`s to access the `Suite`'s 
  * `FakeApplication` and port number as well, most easily by having the nested `Suite`s mix in the
- * [[org.scalatestplus.play.ConfiguredServer ConfiguredServer]] trait.  Once `super.run` completes, this
- * trait's overriden `run` method calls `stop` on the `TestServer`.
+ * [[org.scalatestplus.play.ConfiguredServer ConfiguredServer]] trait. On the status returned by `super.run`, this
+ * trait's overridden `run` method registers a call to `stop` on the `TestServer` to be executed when the `Status`
+ * completes, and returns the same `Status`. This ensure the `TestServer` will continue to execute until
+ * all nested suites have completed, after which the `TestServer` will be stopped.
  *
- * If you have many tests that can share the same `FakeApplication`, and you don't want to put them all into one
- * test class, you can place them into different `Suite` classes.
- * These will be your nested suites. Create a master suite that extends `OneAppPerSuite` and declares the nested 
- * `Suite`s. Annotate the nested suites with `@DoNotDiscover` and have them extend `ConfiguredApp`. Here's an example:
+ * Here's an example that shows demonstrates of the services provided by this trait:
  *
  * <pre class="stHighlight">
+ * 
+ * package org.scalatestplus.play.examples.oneserverpersuite
+ * 
+ * import play.api.test._
  * import org.scalatest._
  * import org.scalatestplus.play._
+ * import play.api.{Play, Application}
+ * 
+ * class ExampleSpec extends PlaySpec with OneServerPerSuite {
+ * 
+ *   // Override app if you need a FakeApplication with other than non-default parameters.
+ *   implicit override lazy val app: FakeApplication =
+ *     FakeApplication(additionalConfiguration = Map("ehcacheplugin" -> "disabled"))
+ * 
+ *   "The OneServerPerSuite trait" must {
+ *     "provide a FakeApplication" in {
+ *       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
+ *     }
+ *     "make the FakeApplication available implicitly" in {
+ *       def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
+ *       getConfig("ehcacheplugin") mustBe Some("disabled")
+ *     }
+ *     "start the FakeApplication" in {
+ *       Play.maybeApplication mustBe Some(app)
+ *     }
+ *     "provide the port number" in {
+ *       port mustBe Helpers.testServerPort
+ *     }
+ *     "provide an actual running server" in {
+ *       import Helpers._
+ *       import java.net._
+ *       val url = new URL("http://localhost:" + port + "/boum")
+ *       val con = url.openConnection().asInstanceOf[HttpURLConnection]
+ *       try con.getResponseCode mustBe 404
+ *       finally con.disconnect()
+ *     }
+ *   }
+ * }
+ * </pre>
  *
- * // You can organize your tests that can share the same FakeApplication
- * // into different Suite classes that extend ConfiguredApp
- * // and are annotated with @DoNotDiscover:
- * @DoNotDiscover class OneSpec extends PlaySpec with ConfiguredApp
- * @DoNotDiscover class TwoSpec extends PlaySpec with ConfiguredApp
- * @DoNotDiscover class RedSpec extends PlaySpec with ConfiguredApp
- * @DoNotDiscover class BlueSpec extends PlaySpec with ConfiguredApp
+ * If you have many tests that can share the same `FakeApplication` and `TestServer`, and you don't want to put them all into one
+ * test class, you can place them into different `Suite` classes.
+ * These will be your nested suites. Create a master suite that extends `OneServerPerSuite` and declares the nested 
+ * `Suite`s. Annotate the nested suites with `@DoNotDiscover` and have them extend `ConfiguredServer`. Here's an example:
  *
- * // Then declare them as nested Suites in a "master" Suite that
- * // extends OneAppPerSuite:
- * class OneAppPerSuiteExampleSpec extends Suites(
+ * <pre class="stHighlight">
+ * package org.scalatestplus.play.examples.oneserverpersuite
+ * 
+ * import play.api.test._
+ * import org.scalatest._
+ * import org.scalatestplus.play._
+ * import play.api.{Play, Application}
+ * 
+ *  // This is the "master" suite
+ * class NestedExampleSpec extends Suites(
  *   new OneSpec,
  *   new TwoSpec,
  *   new RedSpec,
  *   new BlueSpec
- * ) with OneAppPerSuite
+ * ) with OneServerPerSuite {
+ *   // Override app if you need a FakeApplication with other than non-default parameters.
+ *   implicit override lazy val app: FakeApplication =
+ *     FakeApplication(additionalConfiguration = Map("ehcacheplugin" -> "disabled"))
+ * }
+ *  
+ * // These are the nested suites
+ * @DoNotDiscover class OneSpec extends PlaySpec with ConfiguredServer
+ * @DoNotDiscover class TwoSpec extends PlaySpec with ConfiguredServer
+ * @DoNotDiscover class RedSpec extends PlaySpec with ConfiguredServer
+ * 
+ * @DoNotDiscover
+ * class BlueSpec extends PlaySpec with ConfiguredServer {
+ * 
+ *   "The OneAppPerSuite trait" must {
+ *     "provide a FakeApplication" in { 
+ *       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
+ *     }
+ *     "make the FakeApplication available implicitly" in {
+ *       def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
+ *       getConfig("ehcacheplugin") mustBe Some("disabled")
+ *     }
+ *     "start the FakeApplication" in {
+ *       Play.maybeApplication mustBe Some(app)
+ *     }
+ *     "provide the port number" in {
+ *       port mustBe Helpers.testServerPort
+ *     }
+ *     "provide an actual running server" in {
+ *       import Helpers._
+ *       import java.net._
+ *       val url = new URL("http://localhost:" + port + "/boum")
+ *       val con = url.openConnection().asInstanceOf[HttpURLConnection]
+ *       try con.getResponseCode mustBe 404
+ *       finally con.disconnect()
+ *     }
+ *   }
+ * }
  * </pre>
- * It overrides ScalaTest's `Suite.run` method to start a `TestServer` before test execution, 
- * and stop the `TestServer` automatically after test execution has completed. 
- * In the suite that mixes in `OneServerPerSuite`,
- * you can access the `FakeApplication` via the `app` field and the port used by the `TestServer`
- * via the `port`field. In nested suites,
- * you can access the `FakeApplication` and port number from the `args.configMap`, where they are associated
- * with keys `"org.scalatestplus.play.app"` and `"org.scalatestplus.play.port"`, respectively.
- *
- * By default, this trait creates a new `FakeApplication` for the `Suite` using default parameter values, which
- * is made available via the `app` field defined in this trait. If your `Suite` needs a `FakeApplication` with non-default 
- * parameters, override `app` to create it.
  */
 trait OneServerPerSuite extends SuiteMixin { this: Suite =>
 
@@ -107,12 +174,19 @@ trait OneServerPerSuite extends SuiteMixin { this: Suite =>
    */
   abstract override def run(testName: Option[String], args: Args): Status = {
     val testServer = TestServer(port, app)
+    testServer.start()
     try {
-      testServer.start()
       val newConfigMap = args.configMap + ("org.scalatestplus.play.app" -> app) + ("org.scalatestplus.play.port" -> port)
       val newArgs = args.copy(configMap = newConfigMap)
-      super.run(testName, newArgs)
-    } finally testServer.stop()
+      val status = super.run(testName, newArgs)
+      status.whenCompleted { _ => testServer.stop() }
+      status
+    }
+    catch { // In case the suite aborts, ensure the server is stopped
+      case ex: Throwable =>
+        testServer.stop()
+        throw ex
+    }
   }
 }
 
