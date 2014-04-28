@@ -30,8 +30,245 @@ import BrowserFactory.NoDriver
 import org.openqa.selenium.safari.SafariDriver
 
 /**
- * Trait that helps you provide different fixtures to each test: a `FakeApplication`, a `TestServer`, or one
+ * Trait that helps you provide different fixtures to different tests: a `FakeApplication`, a `TestServer`, or one
  * of the Selenium `WebBrowser`s.
+ *
+ * Trait `MixedFixtures` can be mixed into any `fixture.Suite`. For convenience it is
+ * mixed into [[org.scalatestplus.play.MixedPlaySpec MixedPlaySpec]]. In a `fixture.Suite`, tests can
+ * take a no-arg function. `MixedFixtures` provides several no-arg function classes (classes extending `Function0`) that 
+ * can be used to provide different fixtures for different tests.
+ *
+ * If a test needs a `FakeApplication`, use the `App` function, like this:
+ *
+ * <pre class="stHighlight">
+ * "provide a FakeApplication" in new App(fakeApp("ehcacheplugin" -&gt; "disabled")) {
+ *   app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
+ * }
+ * </pre>
+ *
+ * If a test needs a `FakeApplication` and running `TestServer`, use the `Server` function, like this:
+ *
+ * <pre class="stHighlight">
+ * "send 404 on a bad request" in new Server {
+ *   import java.net._
+ *   val url = new URL("http://localhost:" + port + "/boom")
+ *   val con = url.openConnection().asInstanceOf[HttpURLConnection]
+ *   try con.getResponseCode mustBe 404
+ *   finally con.disconnect()
+ * }
+ * </pre>
+ * 
+ * If a test needs a `FakeApplication`, running `TestServer`, and Selenium driver, use
+ * one of functions `Chrome`, `Firefox`, `HtmlUnit`, `InternetExplorer`, or `Safari`:
+ * 
+ * <pre class="stHighlight">
+ * "provide a web driver" in new Safari(fakeApp()) {
+ *   go to ("http://localhost:" + port + "/testing")
+ *   pageTitle mustBe "Test Page"
+ *   click on find(name("b")).value
+ *   eventually { pageTitle mustBe "scalatest" }
+ * }
+ * </pre>
+ * 
+ * Here's a complete example:
+ *
+ * <pre class="stHighlight">
+ * package org.scalatestplus.play.examples.mixedfixtures
+ * 
+ * import play.api.test._
+ * import org.scalatest._
+ * import org.scalatestplus.play._
+ * import play.api.{Play, Application}
+ * 
+ * class ExampleSpec extends MixedPlaySpec {
+ * 
+ *   // Some helper methods
+ *   def fakeApp[A](elems: (String, String)*) = FakeApplication(additionalConfiguration = Map(elems:_*), withRoutes = TestRoute)
+ *   def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
+ * 
+ *   // If a test just needs a <code>FakeApplication</code>, use "<code>new App</code>":
+ *   "The App function" must {
+ *     "provide a FakeApplication" in new App(fakeApp("ehcacheplugin" -&gt; "disabled")) {
+ *       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
+ *     }
+ *     "make the FakeApplication available implicitly" in new App(fakeApp("ehcacheplugin" -&gt; "disabled")) {
+ *       getConfig("ehcacheplugin") mustBe Some("disabled")
+ *     }
+ *     "start the FakeApplication" in new App(fakeApp("ehcacheplugin" -&gt; "disabled")) {
+ *       Play.maybeApplication mustBe Some(app)
+ *     }
+ *   }
+ *
+ *   // If a test needs a <code>FakeApplication</code> and running <code>TestServer</code>, use "<code>new Server</code>":
+ *   "The Server function" must {
+ *     "provide a FakeApplication" in new Server(fakeApp("ehcacheplugin" -&gt; "disabled")) {
+ *       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
+ *     }
+ *     "make the FakeApplication available implicitly" in new Server(fakeApp("ehcacheplugin" -&gt; "disabled")) {
+ *       getConfig("ehcacheplugin") mustBe Some("disabled")
+ *     }
+ *     "start the FakeApplication" in new Server(fakeApp("ehcacheplugin" -&gt; "disabled")) {
+ *       Play.maybeApplication mustBe Some(app)
+ *     }
+ *     import Helpers._
+ *     "send 404 on a bad request" in new Server {
+ *       import java.net._
+ *       val url = new URL("http://localhost:" + port + "/boom")
+ *       val con = url.openConnection().asInstanceOf[HttpURLConnection]
+ *       try con.getResponseCode mustBe 404
+ *       finally con.disconnect()
+ *     }
+ *   }
+ *
+ *   // If a test needs a <code>FakeApplication</code>, running <code>TestServer</code>, and Selenium
+ *   // <code>HtmlUnit</code> driver use "<code>new HtmlUnit</code>":
+ *   "The HtmlUnit function" must {
+ *     "provide a FakeApplication" in new HtmlUnit(fakeApp("ehcacheplugin" -&gt; "disabled")) {
+ *       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
+ *     }
+ *     "make the FakeApplication available implicitly" in new HtmlUnit(fakeApp("ehcacheplugin" -&gt; "disabled")) {
+ *       getConfig("ehcacheplugin") mustBe Some("disabled")
+ *     }
+ *     "start the FakeApplication" in new HtmlUnit(fakeApp("ehcacheplugin" -&gt; "disabled")) {
+ *       Play.maybeApplication mustBe Some(app)
+ *     }
+ *     import Helpers._
+ *     "send 404 on a bad request" in new HtmlUnit {
+ *       import java.net._
+ *       val url = new URL("http://localhost:" + port + "/boom")
+ *       val con = url.openConnection().asInstanceOf[HttpURLConnection]
+ *       try con.getResponseCode mustBe 404
+ *       finally con.disconnect()
+ *     }
+ *     "provide a web driver" in new HtmlUnit(fakeApp()) {
+ *       go to ("http://localhost:" + port + "/testing")
+ *       pageTitle mustBe "Test Page"
+ *       click on find(name("b")).value
+ *       eventually { pageTitle mustBe "scalatest" }
+ *     }
+ *   }
+ *
+ *   // If a test needs a <code>FakeApplication</code>, running <code>TestServer</code>, and Selenium
+ *   // <code>Firefox</code> driver use "<code>new Firefox</code>":
+ *   "The Firefox function" must {
+ *     "provide a FakeApplication" in new Firefox(fakeApp("ehcacheplugin" -&gt; "disabled")) {
+ *       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
+ *     }
+ *     "make the FakeApplication available implicitly" in new Firefox(fakeApp("ehcacheplugin" -&gt; "disabled")) {
+ *       getConfig("ehcacheplugin") mustBe Some("disabled")
+ *     }
+ *     "start the FakeApplication" in new Firefox(fakeApp("ehcacheplugin" -&gt; "disabled")) {
+ *       Play.maybeApplication mustBe Some(app)
+ *     }
+ *     import Helpers._
+ *     "send 404 on a bad request" in new Firefox {
+ *       import java.net._
+ *       val url = new URL("http://localhost:" + port + "/boom")
+ *       val con = url.openConnection().asInstanceOf[HttpURLConnection]
+ *       try con.getResponseCode mustBe 404
+ *       finally con.disconnect()
+ *     }
+ *     "provide a web driver" in new Firefox(fakeApp()) {
+ *       go to ("http://localhost:" + port + "/testing")
+ *       pageTitle mustBe "Test Page"
+ *       click on find(name("b")).value
+ *       eventually { pageTitle mustBe "scalatest" }
+ *     }
+ *   }
+ *
+ *   // If a test needs a <code>FakeApplication</code>, running <code>TestServer</code>, and Selenium
+ *   // <code>Safari</code> driver use "<code>new Safari</code>":
+ *   "The Safari function" must {
+ *     "provide a FakeApplication" in new Safari(fakeApp("ehcacheplugin" -&gt; "disabled")) {
+ *       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
+ *     }
+ *     "make the FakeApplication available implicitly" in new Safari(fakeApp("ehcacheplugin" -&gt; "disabled")) {
+ *       getConfig("ehcacheplugin") mustBe Some("disabled")
+ *     }
+ *     "start the FakeApplication" in new Safari(fakeApp("ehcacheplugin" -&gt; "disabled")) {
+ *       Play.maybeApplication mustBe Some(app)
+ *     }
+ *     import Helpers._
+ *     "send 404 on a bad request" in new Safari {
+ *       import java.net._
+ *       val url = new URL("http://localhost:" + port + "/boom")
+ *       val con = url.openConnection().asInstanceOf[HttpURLConnection]
+ *       try con.getResponseCode mustBe 404
+ *       finally con.disconnect()
+ *     }
+ *     "provide a web driver" in new Safari(fakeApp()) {
+ *       go to ("http://localhost:" + port + "/testing")
+ *       pageTitle mustBe "Test Page"
+ *       click on find(name("b")).value
+ *       eventually { pageTitle mustBe "scalatest" }
+ *     }
+ *   }
+ *
+ *   // If a test needs a <code>FakeApplication</code>, running <code>TestServer</code>, and Selenium
+ *   // <code>Chrome</code> driver use "<code>new Chrome</code>":
+ *   "The Chrome function" must {
+ *     "provide a FakeApplication" in new Chrome(fakeApp("ehcacheplugin" -&gt; "disabled")) {
+ *       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
+ *     }
+ *     "make the FakeApplication available implicitly" in new Chrome(fakeApp("ehcacheplugin" -&gt; "disabled")) {
+ *       getConfig("ehcacheplugin") mustBe Some("disabled")
+ *     }
+ *     "start the FakeApplication" in new Chrome(fakeApp("ehcacheplugin" -&gt; "disabled")) {
+ *       Play.maybeApplication mustBe Some(app)
+ *     }
+ *     import Helpers._
+ *     "send 404 on a bad request" in new Chrome {
+ *       import java.net._
+ *       val url = new URL("http://localhost:" + port + "/boom")
+ *       val con = url.openConnection().asInstanceOf[HttpURLConnection]
+ *       try con.getResponseCode mustBe 404
+ *       finally con.disconnect()
+ *     }
+ *     "provide a web driver" in new Chrome(fakeApp()) {
+ *       go to ("http://localhost:" + port + "/testing")
+ *       pageTitle mustBe "Test Page"
+ *       click on find(name("b")).value
+ *       eventually { pageTitle mustBe "scalatest" }
+ *     }
+ *   }
+ *
+ *   // If a test needs a <code>FakeApplication</code>, running <code>TestServer</code>, and Selenium
+ *   // <code>InternetExplorer</code> driver use "<code>new InternetExplorer</code>":
+ *   "The InternetExplorer function" must {
+ *     "provide a FakeApplication" in new InternetExplorer(fakeApp("ehcacheplugin" -&gt; "disabled")) {
+ *       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
+ *     }
+ *     "make the FakeApplication available implicitly" in new InternetExplorer(fakeApp("ehcacheplugin" -&gt; "disabled")) {
+ *       getConfig("ehcacheplugin") mustBe Some("disabled")
+ *     }
+ *     "start the FakeApplication" in new InternetExplorer(fakeApp("ehcacheplugin" -&gt; "disabled")) {
+ *       Play.maybeApplication mustBe Some(app)
+ *     }
+ *     import Helpers._
+ *     "send 404 on a bad request" in new InternetExplorer {
+ *       import java.net._
+ *       val url = new URL("http://localhost:" + port + "/boom")
+ *       val con = url.openConnection().asInstanceOf[HttpURLConnection]
+ *       try con.getResponseCode mustBe 404
+ *       finally con.disconnect()
+ *     }
+ *     "provide a web driver" in new InternetExplorer(fakeApp()) {
+ *       go to ("http://localhost:" + port + "/testing")
+ *       pageTitle mustBe "Test Page"
+ *       click on find(name("b")).value
+ *       eventually { pageTitle mustBe "scalatest" }
+ *     }
+ *   }
+ *
+ *   // If a test does not need any special fixtures, just 
+ *   // write <code>"in { () => ..."</code>
+ *   "Any old thing" must {
+ *     "be doable without much boilerplate" in { () =>
+ *        1 + 1 mustEqual 2
+ *      }
+ *   }
+ * }
+ * </pre>
  */
 trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
 
