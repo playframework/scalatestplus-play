@@ -164,8 +164,8 @@ import org.openqa.selenium.chrome.ChromeDriver
  * </pre>
  *
  * It is possible to use `OneBrowserPerSuite` to run the same tests in more than one browser. Nevertheless,
- * you should consider the approaches taken by [[org.scalatestplus.play.AllBrowsersPerSharedTest AllBrowsersPerSharedTest]] or `AllBrowsersPerNestedSuite` (which
- * does not yet exist.) instead, as they require less boilerplate code than `OneBrowserPerSuite` to test in multiple browsers. 
+ * you should consider the approach taken by [[org.scalatestplus.play.AllBrowsersPerSharedTest AllBrowsersPerSharedTest]]
+ * instead, as it requires less boilerplate code than `OneBrowserPerSuite` to test in multiple browsers. 
  * If you prefer to use `OneBrowserPerSuite`, simply place your tests in an abstract superclass, then define concrete subclasses
  * for each browser you wish to test against. Here's an example:
  * 
