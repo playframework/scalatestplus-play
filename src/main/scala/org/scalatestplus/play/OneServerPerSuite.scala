@@ -39,7 +39,7 @@ import org.scalatest._
  * completes, and returns the same `Status`. This ensure the `TestServer` will continue to execute until
  * all nested suites have completed, after which the `TestServer` will be stopped.
  *
- * Here's an example that shows demonstrates of the services provided by this trait:
+ * Here's an example that demonstrates some of the services provided by this trait:
  *
  * <pre class="stHighlight">
  * package org.scalatestplus.play.examples.oneserverpersuite

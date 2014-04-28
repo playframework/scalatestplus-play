@@ -48,7 +48,9 @@ import org.openqa.selenium.chrome.ChromeDriver
  * This trait also overrides `Suite.withFixture` to cancel tests automatically if the related
  * `WebDriver` is not available on the host platform.
  *
- * Here's an example that shows demonstrates of the services provided by this trait:
+ * Here's an example that shows demonstrates of the services provided by this trait. Note that
+ * to use this trait, you must mix in one of the driver factories (this example
+ * mixes in [[org.scalatestplus.play.FirefoxFactory FirefoxFactory]]):
  *
  * <pre class="stHighlight">
  * package org.scalatestplus.play.examples.onebrowserpersuite

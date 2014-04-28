@@ -36,7 +36,7 @@ import play.api.Play
  * completes, and returns the same `Status`. This ensure the `FakeApplication` will continue to execute until
  * all nested suites have completed, after which the `FakeApplication` will be stopped.
  *
- * Here's an example that shows demonstrates of the services provided by this trait:
+ * Here's an example that demonstrates some of the services provided by this trait:
  *
  * <pre class="stHighlight">
  * package org.scalatestplus.play.examples.oneapppersuite

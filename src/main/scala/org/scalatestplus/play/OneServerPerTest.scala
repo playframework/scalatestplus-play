@@ -23,11 +23,54 @@ import org.scalatest._
  * 
  * This `SuiteMixin` trait overrides ScalaTest's `withFixture` method to create a new `FakeApplication` and `TestServer`
  * before each test, and ensure they are cleaned up after the test has completed. The `FakeApplication` is available (implicitly) from
- * method `app`. The `TestServer`'s port number is available as `port` (and implicitly available as `portNumber`, wrapped in a [[org.scalatestplus.play.PortNumber PortNumber]]).
+ * method `app`. The `TestServer`'s port number is available as `port` (and implicitly available as `portNumber`, wrapped
+ * in a [[org.scalatestplus.play.PortNumber PortNumber]]).
  *
  * By default, this trait creates a new `FakeApplication` for each test using default parameter values, which
  * is returned by the `newAppForTest` method defined in this trait. If your tests need a `FakeApplication` with non-default 
  * parameters, override `newAppForTest` to return it.
+ *
+ * Here's an example that demonstrates some of the services provided by this trait:
+ *
+ * <pre class="stHighlight">
+ * package org.scalatestplus.play.examples.oneserverpertest
+ * 
+ * import play.api.test._
+ * import org.scalatest._
+ * import org.scalatestplus.play._
+ * import play.api.{Play, Application}
+ * 
+ * class ExampleSpec extends PlaySpec with OneServerPerTest {
+ * 
+ *   // Override newAppForTest if you need a FakeApplication with other than non-default parameters.
+ *   implicit override def newAppForTest(testData: TestData): FakeApplication =
+ *     FakeApplication(additionalConfiguration = Map("ehcacheplugin" -> "disabled"))
+ * 
+ *   "The OneServerPerTest trait" must {
+ *     "provide a FakeApplication" in {
+ *       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
+ *     }
+ *     "make the FakeApplication available implicitly" in {
+ *       def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
+ *       getConfig("ehcacheplugin") mustBe Some("disabled")
+ *     }
+ *     "start the FakeApplication" in {
+ *       Play.maybeApplication mustBe Some(app)
+ *     }
+ *     "provide the port number" in {
+ *       port mustBe Helpers.testServerPort
+ *     }
+ *     "provide an actual running server" in {
+ *       import Helpers._
+ *       import java.net._
+ *       val url = new URL("http://localhost:" + port + "/boum")
+ *       val con = url.openConnection().asInstanceOf[HttpURLConnection]
+ *       try con.getResponseCode mustBe 404
+ *       finally con.disconnect()
+ *     }
+ *   }
+ * }
+ * </pre>
  */
 trait OneServerPerTest extends SuiteMixin { this: Suite =>
 
@@ -58,7 +101,7 @@ trait OneServerPerTest extends SuiteMixin { this: Suite =>
 
   /**
    * Creates new `FakeApplication` and running `TestServer` instances before executing each test, and 
-   * ensure they are cleaned up after the test completes. You can access the `FakeApplication` from
+   * ensures they are cleaned up after the test completes. You can access the `FakeApplication` from
    * your tests as `app` and the `TestServer`'s port number as `port`.
    *
    * @param test the no-arg test function to run with a fixture
