@@ -59,7 +59,9 @@ import org.openqa.selenium.safari.SafariDriver
  * </pre>
  * 
  * If a test needs a `FakeApplication`, running `TestServer`, and Selenium driver, use
- * one of functions `Chrome`, `Firefox`, `HtmlUnit`, `InternetExplorer`, or `Safari`:
+ * one of functions `Chrome`, `Firefox`, `HtmlUnit`, `InternetExplorer`, or `Safari`.
+ * If the chosen Selenium driver is unavailable on the host platform, the test will
+ * be automatically canceled. Her'es an example that uses the `Safari` function:
  * 
  * <pre class="stHighlight">
  * "provide a web driver" in new Safari(fakeApp()) {
@@ -273,17 +275,16 @@ import org.openqa.selenium.safari.SafariDriver
 trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
 
   /**
-   * Class that provides fixture for `FakeApplication`, it will run the passed in `FakeApplication` 
-   * before running the test.
+   * `NoArg` subclass that provides a `FakeApplication` fixture.
    */
   abstract class App(val app: FakeApplication = FakeApplication()) extends NoArg {
     /**
-     * Make the passed in `FakeApplication` implicit.
+     * Makes the passed-in `FakeApplication` implicit.
      */
     implicit def implicitApp: FakeApplication = app
 
     /**
-     * Override to run the passed in `FakeApplication` first before running the test.
+     * Runs the passed in `FakeApplication` before executing the test body, ensuring it is closed after the test body completes.
      */
     override def apply() {
       Helpers.running(app)(super.apply())
@@ -291,12 +292,11 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
   }
 
   /**
-   * Class that provides fixture for `TestServer` and `FakeApplication`, 
-   * it will run the passed in `TestServer` before running the test.
+   * `NoArg` subclass that provides a fixture composed of a `FakeApplication` and running `TestServer`. 
    */
   abstract class Server(val app: FakeApplication = FakeApplication(), val port: Int = Helpers.testServerPort) extends NoArg {
     /**
-     * Make the passed in `FakeApplication` implicit.
+     * Makes the passed in `FakeApplication` implicit.
      */
     implicit def implicitApp: FakeApplication = app
 
@@ -307,7 +307,8 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
     implicit lazy val portNumber: PortNumber = PortNumber(port)
 
     /**
-     * Override to run a `TestServer` using the passed in `port` before running the test.
+     * Runs a `TestServer` using the passed-in `FakeApplication` and  port before executing the
+     * test body, ensuring both are stopped after the test body completes.
      */
     override def apply() {
       Helpers.running(TestServer(port, app))(super.apply())
@@ -315,17 +316,18 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
   }
 
   /**
-   * Class that provides fixture for `HtmlUnit` browser.
+   * `NoArg` subclass that provides a fixture composed of a `FakeApplication`, running `TestServer`, and
+   * Selenium `HtmlUnitDriver`.
    */
   abstract class HtmlUnit(val app: FakeApplication = FakeApplication(), val port: Int = Helpers.testServerPort) extends WebBrowser with NoArg with HtmlUnitFactory {
     /**
-     * A lazy implicit instance of `HtmlUnitDriver`, it will hold `NoDriver` if `HtmlUnitDriver` 
+     * A lazy implicit instance of `HtmlUnitDriver`. It will hold `NoDriver` if `HtmlUnitDriver` 
      * is not available in the running machine.
      */
     implicit lazy val webDriver: WebDriver = createWebDriver()
 
     /**
-     * Make the passed in `FakeApplication` implicit.
+     * Makes the passed in `FakeApplication` implicit.
      */
     implicit def implicitApp: FakeApplication = app
 
@@ -336,8 +338,9 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
     implicit lazy val portNumber: PortNumber = PortNumber(port)
 
     /**
-     * Override to run a `TestServer` using the passed in `port` before running the test, 
-     * and close the `HtmlUnitDriver` automatically after test execution.
+     * Runs a `TestServer` using the passed-in `FakeApplication` and port before executing the
+     * test body, which can use the `HtmlUnitDriver` provided by `webDriver`, ensuring all
+     * are are stopped after the test body completes.
      */
     override def apply() {
       webDriver match {
@@ -354,7 +357,8 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
   }
 
   /**
-   * Class that provides fixture for `Firefox` browser.
+   * `NoArg` subclass that provides a fixture composed of a `FakeApplication`, running `TestServer`, and
+   * Selenium `FirefoxDriver`.
    */
   abstract class Firefox(val app: FakeApplication = FakeApplication(), val port: Int = Helpers.testServerPort) extends WebBrowser with NoArg with FirefoxFactory {
 
@@ -365,7 +369,7 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
     implicit lazy val webDriver: WebDriver = createWebDriver()
 
     /**
-     * Make the passed in `FakeApplication` implicit.
+     * Makes the passed in `FakeApplication` implicit.
      */
     implicit def implicitApp: FakeApplication = app
 
@@ -376,8 +380,9 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
     implicit lazy val portNumber: PortNumber = PortNumber(port)
 
     /**
-     * Override to run a `TestServer` using the passed in `port` before running the test, 
-     * and close the `FirefoxDriver` automatically after test execution.
+     * Runs a `TestServer` using the passed-in `FakeApplication` and port before executing the
+     * test body, which can use the `FirefoxDriver` provided by `webDriver`, ensuring all
+     * are are stopped after the test body completes.
      */
     override def apply() {
       webDriver match {
@@ -394,7 +399,8 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
   }
 
   /**
-   * Class that provides fixture for `Safari` browser.
+   * `NoArg` subclass that provides a fixture composed of a `FakeApplication`, running `TestServer`, and
+   * Selenium `SafariDriver`.
    */
   abstract class Safari(val app: FakeApplication = FakeApplication(), val port: Int = Helpers.testServerPort) extends WebBrowser with NoArg with SafariFactory {
     /**
@@ -404,7 +410,7 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
     implicit lazy val webDriver: WebDriver = createWebDriver()
 
     /**
-     * Make the passed in `FakeApplication` implicit.
+     * Makes the passed in `FakeApplication` implicit.
      */
     implicit def implicitApp: FakeApplication = app
 
@@ -415,8 +421,9 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
     implicit lazy val portNumber: PortNumber = PortNumber(port)
 
     /**
-     * Override to run a `TestServer` using the passed in `port` before running the test, 
-     * and close the `SafariDriver` automatically after test execution.
+     * Runs a `TestServer` using the passed-in `FakeApplication` and port before executing the
+     * test body, which can use the `SafariDriver` provided by `webDriver`, ensuring all
+     * are are stopped after the test body completes.
      */
     override def apply() {
       webDriver match {
@@ -433,7 +440,8 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
   }
 
   /**
-   * Class that provides fixture for `Chrome` browser.
+   * `NoArg` subclass that provides a fixture composed of a `FakeApplication`, running `TestServer`, and
+   * Selenium `ChromeDriver`.
    */
   abstract class Chrome(val app: FakeApplication = FakeApplication(), val port: Int = Helpers.testServerPort) extends WebBrowser with NoArg with ChromeFactory {
     /**
@@ -443,7 +451,7 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
     implicit lazy val webDriver: WebDriver = createWebDriver()
 
     /**
-     * Make the passed in `FakeApplication` implicit.
+     * Makes the passed in `FakeApplication` implicit.
      */
     implicit def implicitApp: FakeApplication = app
 
@@ -454,8 +462,9 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
     implicit lazy val portNumber: PortNumber = PortNumber(port)
 
     /**
-     * Override to run a `TestServer` using the passed in `port` before running the test, 
-     * and close the `ChromeDriver` automatically after test execution.
+     * Runs a `TestServer` using the passed-in `FakeApplication` and port before executing the
+     * test body, which can use the `ChromeDriver` provided by `webDriver`, ensuring all
+     * are are stopped after the test body completes.
      */
     override def apply() {
       webDriver match {
@@ -473,7 +482,8 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
   }
 
   /**
-   * Class that provides fixture for `InternetExplorer` browser.
+   * `NoArg` subclass that provides a fixture composed of a `FakeApplication`, running `TestServer`, and
+   * Selenium `InternetExplorerDriver`.
    */
   abstract class InternetExplorer(val app: FakeApplication = FakeApplication(), val port: Int = Helpers.testServerPort) extends WebBrowser with NoArg with InternetExplorerFactory {
     /**
@@ -483,7 +493,7 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
     implicit lazy val webDriver: WebDriver = createWebDriver()
 
     /**
-     * Make the passed in `FakeApplication` implicit.
+     * Makes the passed in `FakeApplication` implicit.
      */
     implicit def implicitApp: FakeApplication = app
 
@@ -494,8 +504,9 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
     implicit lazy val portNumber: PortNumber = PortNumber(port)
 
     /**
-     * Override to run a `TestServer` using the passed in `port` before running the test, 
-     * and close the `InternetExplorerDriver` automatically after test execution.
+     * Runs a `TestServer` using the passed-in `FakeApplication` and port before executing the
+     * test body, which can use the `InternetExplorerDriver` provided by `webDriver`, ensuring all
+     * are are stopped after the test body completes.
      */
     override def apply() {
       webDriver match {
