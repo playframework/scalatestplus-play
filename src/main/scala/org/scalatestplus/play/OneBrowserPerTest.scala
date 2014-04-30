@@ -28,15 +28,15 @@ import org.openqa.selenium.chrome.ChromeDriver
 /**
  * Trait that provides a new `FakeApplication`, running `TestServer`, and Selenium `WebDriver` instance for each test executed in a ScalaTest `Suite`.
  * 
- * This trait overrides ScalaTest's `withFixture` method to create a new `FakeApplication`, `TestServer`, and `WebDriver` instance 
- * before each test, and ensure they are cleaned up after the test has completed. The `FakeApplication` is available (implicitly) from
- * method `app`. The `TestServer`'s port number is available as `port` (and implicitly available as `portNumber`, wrapped
- * in a [[org.scalatestplus.play.PortNumber PortNumber]]).
+ * This trait overrides ScalaTest's `withFixture` method to create a new `WebDriver` instance 
+ * before each test, and ensure it is closed after the test has completed.
  * The `WebDriver` is available (implicitly) from method `webDriver`.
  *
- * By default, this trait creates a new `FakeApplication` for each test using default parameter values, which
- * is returned by the `newAppForTest` method defined in this trait. If your tests need a `FakeApplication` with non-default 
- * parameters, override `newAppForTest` to return it.
+ * This trait's self-type, [[org.scalatestplus.play.ServerProvider ServerProvider]],  will ensure 
+ * a `TestServer` and `FakeApplication` are available to each test. The self-type will require that you mix in either
+ * [[org.scalatestplus.play.OneServerPerSuite OneServerPerSuite]], [[org.scalatestplus.play.OneServerPerTest OneServerPerTest]], 
+ * [[org.scalatestplus.play.ConfiguredServer ConfiguredServer]] before you mix in this trait. Your choice among these three
+ * `ServerProvider`s will determine the extent to which one or more `TestServer`s are shared by multiple tests.
  *
  * Here's an example that shows demonstrates of the services provided by this trait. Note that
  * to use this trait, you must mix in one of the driver factories (this example
@@ -105,9 +105,7 @@ trait OneBrowserPerTest extends SuiteMixin with WebBrowser with Eventually with 
   /**
    * Override `withFixture` to create new instance of `WebDriver` before 
    * running each test.  If there is error when creating `WebDriver`, `NoDriver` 
-   * will be used and all tests will be canceled automatically.  If `WebDirver` creation 
-   * is successful, a new instance of `TestServer` will be started for each test before they 
-   * are executed.
+   * will be used and all tests will be canceled automatically.
    *
    * @param test the no-arg test function to run with a fixture
    * @return the `Outcome` of the test execution

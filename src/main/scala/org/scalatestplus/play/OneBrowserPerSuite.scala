@@ -25,28 +25,27 @@ import BrowserFactory.NoDriver
 import org.openqa.selenium.safari.SafariDriver
 import org.openqa.selenium.chrome.ChromeDriver
 
+/* TODO: Make ConfiguredBrowser require a ServerProvider also, I think. */
+
 /**
- * Trait that provides a new `FakeApplication`, running `TestServer`, and Selenium `WebBrowser` instance per ScalaTest `Suite`.
+ * Trait that provides a new Selenium `WebBrowser` instance per ScalaTest `Suite`.
  * 
- * By default, this trait creates a new `FakeApplication` for the `Suite` using default parameter values, which
- * is made available via the `app` field defined in this trait and a new `TestServer` for the `Suite` using the port number provided by
- * its `port` field and the `FakeApplication` provided by its `app` field. If your `Suite` needs a
- * `FakeApplication` with non-default parameters, override `app`. If it needs a different port number,
- * override `port`.
- *
- * This `SuiteMixin` trait's overridden `run` method calls `start` on the `TestServer`
- * before executing the `Suite` via a call to `super.run`.
- * In addition, it places a reference to the `FakeApplication` provided by `app` into the `ConfigMap`
- * under the key `org.scalatestplus.play.app`, the port number provided by `port` under the key
- * `org.scalatestplus.play.port`, and the `WebDriver` provided by `webDriver` under the key `org.scalatestplus.play.webDriver`.
+ * This `SuiteMixin` trait's overridden `run` method 
+ * places a reference to the `WebDriver` provided by `webDriver` under the key `org.scalatestplus.play.webDriver`.
  * This allows any nested `Suite`s to access the `Suite`'s 
- * `FakeApplication`, port number, and `WebDriver` as well, most easily by having the nested `Suite`s mix in the
- * [[org.scalatestplus.play.ConfiguredServer ConfiguredServer]] trait. On the status returned by `super.run`, this
- * trait's overridden `run` method registers a call to `stop` on the `TestServer` to be executed when the `Status`
- * completes, and returns the same `Status`. This ensure the `TestServer` will continue to execute until
- * all nested suites have completed, after which the `TestServer` will be stopped.
+ * `WebDriver` as well, most easily by having the nested `Suite`s mix in the
+ * [[org.scalatestplus.play.ConfiguredServer ConfiguredBrowser]] trait. On the status returned by `super.run`, this
+ * trait's overridden `run` method registers a block of code to close the `WebDriver` to be executed when the `Status`
+ * completes, and returns the same `Status`. This ensure the `WebDriver` will continue to execute until
+ * all nested suites have completed, after which the `WebDriver` will be closed.
  * This trait also overrides `Suite.withFixture` to cancel tests automatically if the related
  * `WebDriver` is not available on the host platform.
+ *
+ * This trait's self-type, [[org.scalatestplus.play.ServerProvider ServerProvider]],  will ensure 
+ * a `TestServer` and `FakeApplication` are available to each test. The self-type will require that you mix in either
+ * [[org.scalatestplus.play.OneServerPerSuite OneServerPerSuite]], [[org.scalatestplus.play.OneServerPerTest OneServerPerTest]], 
+ * [[org.scalatestplus.play.ConfiguredServer ConfiguredServer]] before you mix in this trait. Your choice among these three
+ * `ServerProvider`s will determine the extent to which one or more `TestServer`s are shared by multiple tests.
  *
  * Here's an example that shows demonstrates of the services provided by this trait. Note that
  * to use this trait, you must mix in one of the driver factories (this example
@@ -60,12 +59,12 @@ import org.openqa.selenium.chrome.ChromeDriver
  * import org.scalatestplus.play._
  * import play.api.{Play, Application}
  * 
- * class ExampleSpec extends PlaySpec with OneBrowserPerSuite with FirefoxFactory {
+ * class ExampleSpec extends PlaySpec with OneServerPerSuite with OneBrowserPerSuite with FirefoxFactory {
  * 
  *   // Override app if you need a FakeApplication with other than non-default parameters.
  *   implicit override lazy val app: FakeApplication =
  *     FakeApplication(
- *       additionalConfiguration = Map("ehcacheplugin" -> "disabled"),
+ *       additionalConfiguration = Map("ehcacheplugin" -&gt; "disabled"),
  *       withRoutes = TestRoute
  *     )
  * 
@@ -120,11 +119,11 @@ import org.openqa.selenium.chrome.ChromeDriver
  *   new TwoSpec,
  *   new RedSpec,
  *   new BlueSpec
- * ) with OneBrowserPerSuite with FirefoxFactory {
+ * ) with OneServerPerSuite with OneBrowserPerSuite with FirefoxFactory {
  *   // Override app if you need a FakeApplication with other than non-default parameters.
  *   implicit override lazy val app: FakeApplication =
  *     FakeApplication(
- *       additionalConfiguration = Map("ehcacheplugin" -> "disabled"),
+ *       additionalConfiguration = Map("ehcacheplugin" -&gt; "disabled"),
  *       withRoutes = TestRoute
  *     )
  * }
@@ -337,10 +336,9 @@ trait OneBrowserPerSuite extends SuiteMixin with WebBrowser with Eventually with
   }
 
   /**
-   * Invokes `start` on a new `TestServer` created with the `FakeApplication` provided by `app` and the
-   * port number defined by `port`, places the `FakeApplication`, port number, and `WebDriver` into the `ConfigMap` under the keys
-   * `org.scalatestplus.play.app`, `org.scalatestplus.play.port`, and `org.scalatestplus.play.webDriver` respectively, to make
-   * them available to nested suites; calls `super.run`; and lastly ensures the `FakeApplication`, test server, and `WebDriver` are stopped after
+   * Places the `WebDriver` provided by `webDriver` into the `ConfigMap` under the key
+   * `org.scalatestplus.play.webDriver` to make
+   * it available to nested suites; calls `super.run`; and lastly ensures the `WebDriver` is stopped after
    * all tests and nested suites have completed.
    *
    * @param testName an optional name of one test to run. If `None`, all relevant tests should be run.

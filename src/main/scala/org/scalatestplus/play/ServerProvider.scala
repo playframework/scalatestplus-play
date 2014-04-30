@@ -25,6 +25,20 @@ import BrowserFactory.NoDriver
 import org.openqa.selenium.safari.SafariDriver
 import org.openqa.selenium.chrome.ChromeDriver
 
+/**
+ * Trait that defines abstract methods that providing a port number and implicit `FakeApplication` and a concrete
+ * method that provides an implicit [[org.scalatestplus.play.PortNumber PortNumber]] that wraps the port number.
+ *
+ * This trait is implemented by [[org.scalatestplus.play.OneServerPerSuite OneServerPerSuite]], 
+ * [[org.scalatestplus.play.OneServerPerTest OneServerPerTest]], and
+ * [[org.scalatestplus.play.ConfiguredServer ConfiguredServer]], each of which use a different strategy to
+ * provide `TestServer`s to tests. This trait is included in the self-type of 
+ * [[org.scalatestplus.play.OneBrowserPerSuite OneBrowserPerSuite]], and
+ * [[org.scalatestplus.play.OneBrowserPerTest OneBrowserPerTest]], and
+ * [[org.scalatestplus.play.AllBrowsersPerSharedTest AllBrowsersPerSharedTest]], allowing you to select
+ * the `WebDriver` strategy (i.e., the extent to which `WebDriver`s are shared between tests) independently from the 
+ * `TestServer` strategy (the extent to which `TestServer`s are shared between tests).
+ */
 trait ServerProvider {
 
   /**
