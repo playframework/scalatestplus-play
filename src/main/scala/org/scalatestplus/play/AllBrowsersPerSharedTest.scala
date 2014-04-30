@@ -287,7 +287,7 @@ trait AllBrowsersPerSharedTest extends SuiteMixin with WebBrowser with Eventuall
    * The port used by the `TestServer`.  By default this will be set to the result returned from
    * `Helpers.testServerPort`. You can override this to provide a different port number.
    */
-  val port: Int = Helpers.testServerPort
+  lazy val port: Int = Helpers.testServerPort
 
   /**
    * Implicit `PortNumber` instance that wraps `port`. The value returned from `portNumber.value`
