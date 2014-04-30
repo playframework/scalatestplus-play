@@ -20,9 +20,9 @@ import org.scalatest._
 import play.api.{Play, Application}
 import org.openqa.selenium.WebDriver
 
-class SafariFactorySpec extends UnitSpec with OneServerPerSuite with OneBrowserPerSuite with SafariFactory {
+class OneServerPerTestWithOneBrowserPerSuiteSpec extends UnitSpec with OneServerPerTest with OneBrowserPerSuite with FirefoxFactory {
 
-  implicit override lazy val app: FakeApplication = 
+  override def newAppForTest(testData: TestData): FakeApplication = 
     FakeApplication(
       additionalConfiguration = Map("foo" -> "bar", "ehcacheplugin" -> "disabled"), 
       withRoutes = TestRoute
@@ -38,7 +38,7 @@ class SafariFactorySpec extends UnitSpec with OneServerPerSuite with OneBrowserP
     super.withFixture(test)
   }
 
-  "The SafariFactory trait" must {
+  "The OneBrowserPerSuite trait" must {
     "provide a FakeApplication" in {
       app.configuration.getString("foo") mustBe Some("bar")
     }
@@ -58,14 +58,6 @@ class SafariFactorySpec extends UnitSpec with OneServerPerSuite with OneBrowserP
       val con = url.openConnection().asInstanceOf[HttpURLConnection]
       try con.getResponseCode mustBe 404
       finally con.disconnect()
-    }
-    "put the app in the configMap" in {
-      val configuredApp = configMap.getOptional[FakeApplication]("org.scalatestplus.play.app")
-      configuredApp.value must be theSameInstanceAs app
-    }
-    "put the port in the configMap" in {
-      val configuredPort = configMap.getOptional[Int]("org.scalatestplus.play.port")
-      configuredPort.value mustEqual port
     }
     "put the webDriver in the configMap" in {
       val configuredApp = configMap.getOptional[WebDriver]("org.scalatestplus.play.webDriver")

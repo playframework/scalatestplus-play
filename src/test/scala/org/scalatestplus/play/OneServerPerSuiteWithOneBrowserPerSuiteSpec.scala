@@ -20,7 +20,7 @@ import org.scalatest._
 import play.api.{Play, Application}
 import org.openqa.selenium.WebDriver
 
-class OneBrowserPerSuiteSpec extends UnitSpec with OneBrowserPerSuite with FirefoxFactory {
+class OneServerPerSuiteWithOneBrowserPerSuiteSpec extends UnitSpec with OneServerPerSuite with OneBrowserPerSuite with FirefoxFactory {
 
   implicit override lazy val app: FakeApplication = 
     FakeApplication(

@@ -312,27 +312,7 @@ import org.openqa.selenium.chrome.ChromeDriver
  * [info] <span class="stGreen">The OneBrowserPerSuite trait</span>
  * </pre>
  */
-trait OneBrowserPerSuite extends SuiteMixin with WebBrowser with Eventually with IntegrationPatience with BrowserFactory { this: Suite =>
-
-  /**
-   * An implicit instance of `FakeApplication`.
-   *
-   * This trait's implementation initializes this `lazy` `val` with a new instance of `FakeApplication` with
-   * parameters set to their defaults. Override this `lazy` `val` if you need a `FakeApplication` created with non-default parameter values.
-   */
-  implicit lazy val app: FakeApplication = new FakeApplication()
-
-  /**
-   * The port used by the `TestServer`.  By default this will be set to the result returned from
-   * `Helpers.testServerPort`. You can override this to provide a different port number.
-   */
-  lazy val port: Int = Helpers.testServerPort
-
-  /**
-   * Implicit `PortNumber` instance that wraps `port`. The value returned from `portNumber.value`
-   * will be same as the value of `port`.
-   */
-  implicit final lazy val portNumber: PortNumber = PortNumber(port)
+trait OneBrowserPerSuite extends SuiteMixin with WebBrowser with Eventually with IntegrationPatience with BrowserFactory { this: Suite with ServerProvider =>
 
   /**
    * An implicit instance of `WebDriver`, created by calling `createWebDriver`.  
@@ -359,7 +339,7 @@ trait OneBrowserPerSuite extends SuiteMixin with WebBrowser with Eventually with
   /**
    * Invokes `start` on a new `TestServer` created with the `FakeApplication` provided by `app` and the
    * port number defined by `port`, places the `FakeApplication`, port number, and `WebDriver` into the `ConfigMap` under the keys
-   *  `org.scalatestplus.play.app`, `org.scalatestplus.play.port`, and `org.scalatestplus.play.webDriver` respectively, to make
+   * `org.scalatestplus.play.app`, `org.scalatestplus.play.port`, and `org.scalatestplus.play.webDriver` respectively, to make
    * them available to nested suites; calls `super.run`; and lastly ensures the `FakeApplication`, test server, and `WebDriver` are stopped after
    * all tests and nested suites have completed.
    *
@@ -369,9 +349,7 @@ trait OneBrowserPerSuite extends SuiteMixin with WebBrowser with Eventually with
    * @return a `Status` object that indicates when all tests and nested suites started by this method have completed, and whether or not a failure occurred.
    */
   abstract override def run(testName: Option[String], args: Args): Status = {
-    val testServer = TestServer(port, app)
     val cleanup: Boolean => Unit = { _ =>
-      testServer.stop()
       webDriver match {
         case _: NoDriver => // do nothing for NoDriver
         case safariDriver: SafariDriver => safariDriver.quit()
@@ -380,8 +358,7 @@ trait OneBrowserPerSuite extends SuiteMixin with WebBrowser with Eventually with
       }
     }
     try {
-      testServer.start()
-      val newConfigMap = args.configMap + ("org.scalatestplus.play.app" -> app) + ("org.scalatestplus.play.port" -> port) + ("org.scalatestplus.play.webDriver" -> webDriver)
+      val newConfigMap = args.configMap + ("org.scalatestplus.play.webDriver" -> webDriver)
       val newArgs = args.copy(configMap = newConfigMap)
       val status = super.run(testName, newArgs)
       status.whenCompleted(cleanup)

@@ -27,7 +27,7 @@ class NestedExampleSpec extends Suites(
   new TwoSpec,
   new RedSpec,
   new BlueSpec
-) with OneBrowserPerSuite with FirefoxFactory {
+) with OneServerPerSuite with OneBrowserPerSuite with FirefoxFactory {
   // Override app if you need a FakeApplication with other than non-default parameters.
   implicit override lazy val app: FakeApplication =
     FakeApplication(

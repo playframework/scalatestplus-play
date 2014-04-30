@@ -20,13 +20,19 @@ import org.scalatest._
 import play.api.{Play, Application}
 import org.openqa.selenium.WebDriver
 
-class SafariFactorySpec extends UnitSpec with OneServerPerSuite with OneBrowserPerSuite with SafariFactory {
-
+class ConfiguredServerWithOneBrowserPerSuiteSpec extends Suites(
+  new ConfiguredServerWithOneBrowserPerSuiteNestedSpec 
+) with OneServerPerSuite {
   implicit override lazy val app: FakeApplication = 
     FakeApplication(
       additionalConfiguration = Map("foo" -> "bar", "ehcacheplugin" -> "disabled"), 
       withRoutes = TestRoute
     )
+}
+
+@DoNotDiscover
+class ConfiguredServerWithOneBrowserPerSuiteNestedSpec extends UnitSpec with ConfiguredServer with OneBrowserPerSuite with FirefoxFactory {
+
   def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
 
   // Doesn't need synchronization because set by withFixture and checked by the test
@@ -38,7 +44,7 @@ class SafariFactorySpec extends UnitSpec with OneServerPerSuite with OneBrowserP
     super.withFixture(test)
   }
 
-  "The SafariFactory trait" must {
+  "The OneBrowserPerSuite trait" must {
     "provide a FakeApplication" in {
       app.configuration.getString("foo") mustBe Some("bar")
     }

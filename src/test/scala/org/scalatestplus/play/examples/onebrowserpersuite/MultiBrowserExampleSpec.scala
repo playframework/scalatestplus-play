@@ -22,7 +22,7 @@ import org.scalatestplus.play._
 import play.api.{Play, Application}
 
 // Place your tests in an abstract class
-abstract class MultiBrowserExampleSpec extends PlaySpec with OneBrowserPerSuite {
+abstract class MultiBrowserExampleSpec extends PlaySpec with OneServerPerSuite with OneBrowserPerSuite {
 
   // Override app if you need a FakeApplication with other than non-default parameters.
   implicit override lazy val app: FakeApplication =

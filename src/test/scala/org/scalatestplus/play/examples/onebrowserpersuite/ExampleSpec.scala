@@ -22,7 +22,7 @@ import org.scalatestplus.play._
 import play.api.{Play, Application}
 
 @FirefoxBrowser
-class ExampleSpec extends PlaySpec with OneBrowserPerSuite with FirefoxFactory {
+class ExampleSpec extends PlaySpec with OneServerPerSuite with OneBrowserPerSuite with FirefoxFactory {
 
   // Override app if you need a FakeApplication with other than non-default parameters.
   implicit override lazy val app: FakeApplication =
