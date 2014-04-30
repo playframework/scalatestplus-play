@@ -37,12 +37,12 @@ class NestedExampleSpec extends Suites(
 }
  
 // These are the nested suites
-@DoNotDiscover class OneSpec extends PlaySpec with ConfiguredBrowser
-@DoNotDiscover class TwoSpec extends PlaySpec with ConfiguredBrowser
-@DoNotDiscover class RedSpec extends PlaySpec with ConfiguredBrowser
+@DoNotDiscover class OneSpec extends PlaySpec with ConfiguredServer with ConfiguredBrowser
+@DoNotDiscover class TwoSpec extends PlaySpec with ConfiguredServer with ConfiguredBrowser
+@DoNotDiscover class RedSpec extends PlaySpec with ConfiguredServer with ConfiguredBrowser
 
 @DoNotDiscover
-class BlueSpec extends PlaySpec with ConfiguredBrowser {
+class BlueSpec extends PlaySpec with ConfiguredServer with ConfiguredBrowser {
 
   "The OneBrowserPerSuite trait" must {
     "provide a FakeApplication" in { 

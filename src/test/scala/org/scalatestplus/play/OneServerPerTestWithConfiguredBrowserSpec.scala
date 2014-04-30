@@ -22,8 +22,17 @@ import play.api.{Play, Application}
 import scala.collection.mutable.ListBuffer
 import org.openqa.selenium.WebDriver
 
+class OneServerPerTestWithConfiguredBrowserSpec extends UnitSpec with SequentialNestedSuiteExecution with OneServerPerSuite with OneBrowserPerSuite with HtmlUnitFactory {
+
+  override def nestedSuites = Vector(new OneServerPerTestWithConfiguredBrowserNestedSpec)
+
+  implicit override lazy val app: FakeApplication = FakeApplication(additionalConfiguration = Map("foo" -> "bar", "ehcacheplugin" -> "disabled"),
+      withRoutes = TestRoute)
+  def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
+}
+
 @DoNotDiscover
-class ConfiguredBrowserNestedSuite extends UnitSpec with ConfiguredServer with ConfiguredBrowser {
+class OneServerPerTestWithConfiguredBrowserNestedSpec extends UnitSpec with ConfiguredServer with ConfiguredBrowser {
 
   def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
 

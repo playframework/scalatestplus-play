@@ -38,33 +38,7 @@ import concurrent.IntegrationPatience
  *
  * To prevent discovery of nested suites you can annotate them with `@DoNotDiscover`.
  */
-trait ConfiguredBrowser extends SuiteMixin with WebBrowser with Eventually with IntegrationPatience { this: Suite => 
-
-  private var configuredApp: FakeApplication = _
-
-  /**
-   * The "configured" `FakeApplication` instance that was passed into `run` via the `ConfigMap`.
-   *
-   * @return the configured `FakeApplication`
-   */
-  implicit final def app: FakeApplication = synchronized { configuredApp }
-
-  private var configuredPort: Int = -1
-
-  /**
-   * The "configured" port number, passed into `run` via the `ConfigMap`, at which the `TestServer` is running.
-   *
-   * @return the configured port number
-   */
-  def port: Int = synchronized { configuredPort }
-
-  /**
-   * Implicit `PortNumber` instance that wraps `port`. The value returned from `portNumber.value`
-   * will be same as the value of `port`.
-   *
-   * @return the configured port number, wrapped in a `PortNumber`
-   */
-  implicit lazy val portNumber: PortNumber = PortNumber(port)
+trait ConfiguredBrowser extends SuiteMixin with WebBrowser with Eventually with IntegrationPatience { this: Suite with ServerProvider => 
 
   private var configuredWebDriver: WebDriver = _
 
@@ -97,14 +71,6 @@ trait ConfiguredBrowser extends SuiteMixin with WebBrowser with Eventually with 
    * @throws IllegalArgumentException if the `FakeApplication` and/or port number does not appear in `args.configMap` under the expected keys
    */
   abstract override def run(testName: Option[String], args: Args): Status = {
-    args.configMap.getOptional[FakeApplication]("org.scalatestplus.play.app") match {
-      case Some(ca) => synchronized { configuredApp = ca }
-      case None => throw new Exception("ConfiguredBrowser needs a FakeApplication value associated with key \"org.scalatestplus.play.app\" in the config map. Did you forget to annotate a nested suite with @DoNotDiscover?")
-    }
-    args.configMap.getOptional[Int]("org.scalatestplus.play.port") match {
-      case Some(cp) => synchronized { configuredPort = cp }
-      case None => throw new Exception("ConfiguredBrowser needs an Int value associated with key \"org.scalatestplus.play.port\" in the config map. Did you forget to annotate a nested suite with @DoNotDiscover?")
-    }
     args.configMap.getOptional[WebDriver]("org.scalatestplus.play.webDriver") match {
       case Some(cwd) => synchronized { configuredWebDriver = cwd }
       case None => throw new Exception("ConfiguredBrowser needs a WebDriver value associated with key \"org.scalatestplus.play.webDriver\" in the config map. Did you forget to annotate a nested suite with @DoNotDiscover?")
