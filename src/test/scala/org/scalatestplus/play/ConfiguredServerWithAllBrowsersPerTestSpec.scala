@@ -22,13 +22,20 @@ import play.api.mvc.{Action, Results}
 import org.openqa.selenium.WebDriver
 import BrowserFactory.NoDriver
 
-class AllBrowsersPerSharedTestSpec extends UnitSpec with AllBrowsersPerSharedTest {
-
-  implicit override def app: FakeApplication =
+class ConfiguredServerWithAllBrowsersPerSharedTestSpec extends Suites(
+  new ConfiguredServerWithAllBrowsersPerSharedTestNestedSpec 
+)
+with OneServerPerSuite {
+  override lazy val app: FakeApplication =
     FakeApplication(
       additionalConfiguration = Map("foo" -> "bar", "ehcacheplugin" -> "disabled"),
       withRoutes = TestRoute
     )
+}
+
+@DoNotDiscover
+class ConfiguredServerWithAllBrowsersPerSharedTestNestedSpec extends UnitSpec with ConfiguredServer with AllBrowsersPerSharedTest {
+
   def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
 
   // Doesn't need synchronization because set by withFixture and checked by the test
@@ -80,14 +87,7 @@ class AllBrowsersPerSharedTestSpec extends UnitSpec with AllBrowsersPerSharedTes
       try con.getResponseCode mustBe 404
       finally con.disconnect()
     }
-    "put the app in the configMap" in {
-      val configuredApp = configMap.getOptional[FakeApplication]("org.scalatestplus.play.app")
-      configuredApp mustBe defined
-    }
-    "put the port in the configMap" in {
-      val configuredPort = configMap.getOptional[Int]("org.scalatestplus.play.port")
-      configuredPort.value mustEqual port
-    }
+    // TODO: I don't see why we'd need the webDriver in the ConfigMap. I think we can stop doing that and remove these tests.
     "not put the webDriver in the configMap" in {
       val configuredWebDriver = configMap.getOptional[WebDriver]("org.scalatestplus.play.webDriver")
       configuredWebDriver mustBe None

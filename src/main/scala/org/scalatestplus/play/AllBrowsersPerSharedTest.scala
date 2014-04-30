@@ -29,11 +29,16 @@ import org.openqa.selenium.safari.SafariDriver
 import org.openqa.selenium.chrome.ChromeDriver
 
 /**
- * Trait that uses a [[http://doc.scalatest.org/2.1.3/index.html#org.scalatest.FlatSpec@sharedTests ''shared test'']] approach to enable you to run the same tests on multiple browsers in a ScalaTest `Suite` with minimal boilerplate.
+ * Trait that uses a [[http://doc.scalatest.org/2.1.3/index.html#org.scalatest.FlatSpec@sharedTests ''shared test'']] approach to enable
+ * you to run the same tests on multiple browsers in a ScalaTest `Suite` with minimal boilerplate.
  *
- * This trait overrides `Suite`'s `withFixture` and `runTest` lifecycle methods to create a new `WebDriver`, `TestServer`, and
- * `FakeApplication` instance before executing each test, and overrides the `tags` lifecycle method to tag the shared tests so you can
- * filter them by browser type.
+ * This trait overrides `Suite`'s `withFixture` and `runTest` lifecycle methods to create a new `WebDriver`
+ * instance before executing each test, and overrides the `tags` lifecycle method to tag the shared tests so you can
+ * filter them by browser type.  This trait's self-type, [[org.scalatestplus.play.ServerProvider ServerProvider]],  will ensure 
+ * a `TestServer` and `FakeApplication` are available to each test. The self-type will require that you mix in either
+ * [[org.scalatestplus.play.OneServerPerSuite OneServerPerSuite]], [[org.scalatestplus.play.OneServerPerTest OneServerPerTest]], 
+ * [[org.scalatestplus.play.ConfiguredServer ConfiguredServer]] before you mix in this trait. Your choice among these three
+ * `ServerProvider`s will determine the extent to which a `TestServer` is shared by multiple tests.
  *
  * You'll need to place any tests that you want executed by multiple browsers in a `sharedTests` method. Because all tests in a ScalaTest `Suite`
  * must have unique names, you'll need to append the browser name (available from the `BrowserInfo` passed
@@ -56,7 +61,7 @@ import org.openqa.selenium.chrome.ChromeDriver
  * with `[Firefox]`, it will be automatically tagged with `"org.scalatest.tags.FirefoxBrowser"`. This will
  * allow you can include or exclude the shared tests by browser type using ScalaTest's regular tagging feature.
  *
- * Use tagging to include or exclude browsers that you sometimes want to test with, but not always. If you
+ * You can use tagging to include or exclude browsers that you sometimes want to test with, but not always. If you
  * ''never'' want to test with a particular browser, you can prevent tests for it from being registered at all
  * by overriding `browsers` and excluding its `BrowserInfo` in the returned `Seq`. For example, to disable registration of
  * tests for `HtmlUnit`, you'd write:
@@ -86,12 +91,12 @@ import org.openqa.selenium.chrome.ChromeDriver
  * import org.openqa.selenium.WebDriver
  * import BrowserFactory.NoDriver
  * 
- * class ExampleSpec extends PlaySpec with AllBrowsersPerSharedTest {
+ * class ExampleSpec extends PlaySpec with OneServerPerSuite with AllBrowsersPerSharedTest {
  * 
  *   // Override app if you need a FakeApplication with other than non-default parameters.
  *   implicit override def app: FakeApplication =
  *     FakeApplication(
- *       additionalConfiguration = Map("foo" -> "bar", "ehcacheplugin" -> "disabled"),
+ *       additionalConfiguration = Map("foo" -&gt; "bar", "ehcacheplugin" -&gt; "disabled"),
  *       withRoutes = TestRoute
  *     )
  * 
@@ -164,6 +169,7 @@ import org.openqa.selenium.chrome.ChromeDriver
  * Because the shared tests will be tagged according to browser, you can include or exclude tests based
  * on the browser they use. For example, here's how the output would look if you ran the above test class
  * with sbt and ask to include only Firefox:
+ *
  * <pre>
  * &gt; test-only *allbrowserspersharedtest* -- -n org.scalatest.tags.FirefoxBrowser
  * [info] <span class="stGreen">ExampleSpec:</span>
@@ -176,7 +182,7 @@ import org.openqa.selenium.chrome.ChromeDriver
  * [info] <span class="stGreen">The AllBrowsersPerSharedTest trait</span>
  * </pre>
  */
-trait AllBrowsersPerSharedTest extends SuiteMixin with WebBrowser with Eventually with IntegrationPatience { this: Suite =>
+trait AllBrowsersPerSharedTest extends SuiteMixin with WebBrowser with Eventually with IntegrationPatience { this: Suite with ServerProvider =>
 
   /**
    * Method to provide `FirefoxProfile` for creating `FirefoxDriver`, you can override this method to
@@ -278,23 +284,6 @@ trait AllBrowsersPerSharedTest extends SuiteMixin with WebBrowser with Eventuall
 
   private var privateApp: FakeApplication = _
 
-  /**
-   * Implicit method that returns the `FakeApplication` instance for the current test.
-   */
-  implicit def app: FakeApplication = synchronized { privateApp }
-
-  /**
-   * The port used by the `TestServer`.  By default this will be set to the result returned from
-   * `Helpers.testServerPort`. You can override this to provide a different port number.
-   */
-  lazy val port: Int = Helpers.testServerPort
-
-  /**
-   * Implicit `PortNumber` instance that wraps `port`. The value returned from `portNumber.value`
-   * will be same as the value of `port`.
-   */
-  implicit lazy val portNumber: PortNumber = PortNumber(port)
-
   private var privateWebDriver: WebDriver = _
 
   /**
@@ -358,14 +347,11 @@ trait AllBrowsersPerSharedTest extends SuiteMixin with WebBrowser with Eventuall
           case Some(e) => Canceled(message, e)
           case None => Canceled(message)
         }
-      case _ =>
-        Helpers.running(TestServer(port, app)) {
-          super.withFixture(test)
-        }
+      case _ => super.withFixture(test)
     }
 
   /**
-   * Creates a `WebDriver` and `FakeApplication` and adds entries
+   * Creates a `WebDriver` and adds entries
    * to the config map for the app, port number, web driver, and the web driver's name before
    * executing the specified test. After the test
    * completes, ensures the `WebDriver` instance is closed.
@@ -384,15 +370,9 @@ trait AllBrowsersPerSharedTest extends SuiteMixin with WebBrowser with Eventuall
         case None => (NoDriver(None, Resources("webDriverUsedFromUnsharedTest")), NoDriverNeededByTest)
       }
     synchronized {
-      privateApp = new FakeApplication()
       privateWebDriver = localWebDriver
     }
     try {
-      val appAndPortBindings: ConfigMap =
-        ConfigMap(
-          "org.scalatestplus.play.app" -> app,
-          "org.scalatestplus.play.port" -> port
-        )
       val optionalDriverBindings: ConfigMap =
         if (localWebDriverName != NoDriverNeededByTest)
           ConfigMap(
@@ -401,7 +381,7 @@ trait AllBrowsersPerSharedTest extends SuiteMixin with WebBrowser with Eventuall
           )
         else
           ConfigMap.empty
-      val newConfigMap: ConfigMap = new ConfigMap(args.configMap ++ appAndPortBindings ++ optionalDriverBindings)
+      val newConfigMap: ConfigMap = new ConfigMap(args.configMap ++ optionalDriverBindings)
       val newArgs = args.copy(configMap = newConfigMap)
       super.runTest(testName, newArgs)
     }
