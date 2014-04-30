@@ -318,7 +318,7 @@ trait OneBrowserPerSuite extends SuiteMixin with WebBrowser with Eventually with
    * If there is an error when creating the `WebDriver`, `NoDriver` will be assigned 
    * instead.
    */
-  implicit val webDriver: WebDriver = createWebDriver()
+  implicit lazy val webDriver: WebDriver = createWebDriver()
 
   /**
    * Automatically cancels tests with an appropriate error message when the `webDriver` field is a `NoDriver`,
