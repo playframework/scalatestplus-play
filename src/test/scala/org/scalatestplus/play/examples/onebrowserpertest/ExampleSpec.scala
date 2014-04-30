@@ -25,7 +25,7 @@ import play.api.{Play, Application}
 class ExampleSpec extends PlaySpec with OneServerPerTest with OneBrowserPerTest with FirefoxFactory {
 
   // Override newAppForTest if you need a FakeApplication with other than non-default parameters.
-  implicit override def newAppForTest(testData: TestData): FakeApplication =
+  override def newAppForTest(testData: TestData): FakeApplication =
     FakeApplication(
       additionalConfiguration = Map("ehcacheplugin" -> "disabled"),
       withRoutes = TestRoute

@@ -52,12 +52,12 @@ import org.openqa.selenium.chrome.ChromeDriver
  * import play.api.{Play, Application}
  * 
  * @FirefoxBrowser
- * class ExampleSpec extends PlaySpec with OneBrowserPerTest with FirefoxFactory {
+ * class ExampleSpec extends PlaySpec with OneServerPerTest with OneBrowserPerTest with FirefoxFactory {
  * 
  *   // Override newAppForTest if you need a FakeApplication with other than non-default parameters.
- *   implicit override def newAppForTest(testData: TestData): FakeApplication =
+ *   override def newAppForTest(testData: TestData): FakeApplication =
  *     FakeApplication(
- *       additionalConfiguration = Map("ehcacheplugin" -> "disabled"),
+ *       additionalConfiguration = Map("ehcacheplugin" -&gt; "disabled"),
  *       withRoutes = TestRoute
  *     )
  * 
