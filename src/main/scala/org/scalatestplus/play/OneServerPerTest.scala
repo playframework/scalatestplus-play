@@ -72,7 +72,7 @@ import org.scalatest._
  * }
  * </pre>
  */
-trait OneServerPerTest extends SuiteMixin { this: Suite =>
+trait OneServerPerTest extends SuiteMixin with ServerProvider { this: Suite =>
 
   private var privateApp: FakeApplication = _
 
@@ -92,12 +92,6 @@ trait OneServerPerTest extends SuiteMixin { this: Suite =>
    * `Helpers.testServerPort`. You can override this to provide a different port number.
    */
   lazy val port: Int = Helpers.testServerPort
-
-  /**
-   * Implicit `PortNumber` instance that wraps `port`. The value returned from `portNumber.value`
-   * will be same as the value of `port`.
-   */
-  implicit final lazy val portNumber: PortNumber = PortNumber(port)
 
   /**
    * Creates new `FakeApplication` and running `TestServer` instances before executing each test, and 

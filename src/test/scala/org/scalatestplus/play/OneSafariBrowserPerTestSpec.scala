@@ -19,7 +19,7 @@ import play.api.test._
 import org.scalatest._
 import play.api.{Play, Application}
 
-class OneSafariBrowserPerTestSpec extends UnitSpec with OneBrowserPerTest with SafariFactory {
+class OneSafariBrowserPerTestSpec extends UnitSpec with OneServerPerTest with OneBrowserPerTest with SafariFactory {
 
   implicit override def newAppForTest(testData: TestData): FakeApplication = 
     FakeApplication(

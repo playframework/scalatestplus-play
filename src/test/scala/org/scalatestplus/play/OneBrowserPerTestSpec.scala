@@ -20,7 +20,7 @@ import org.scalatest._
 import play.api.{Play, Application}
 import play.api.mvc.{Action, Results}
 
-class OneBrowserPerTestSpec extends UnitSpec with OneBrowserPerTest with FirefoxFactory {
+class OneBrowserPerTestSpec extends UnitSpec with OneServerPerTest with OneBrowserPerTest with FirefoxFactory {
 
   implicit override def newAppForTest(testData: TestData): FakeApplication = 
     FakeApplication(

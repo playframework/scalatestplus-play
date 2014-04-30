@@ -19,7 +19,7 @@ import play.api.test._
 import org.scalatest._
 import play.api.{Play, Application}
 
-class OneHtmlUnitFactoryPerTestSpec extends UnitSpec with OneBrowserPerTest with HtmlUnitFactory {
+class OneHtmlUnitFactoryPerTestSpec extends UnitSpec with OneServerPerTest with OneBrowserPerTest with HtmlUnitFactory {
 
   implicit override def newAppForTest(testData: TestData): FakeApplication = 
     FakeApplication(

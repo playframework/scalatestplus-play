@@ -93,32 +93,7 @@ import org.openqa.selenium.chrome.ChromeDriver
  * }
  * </pre>
  */
-trait OneBrowserPerTest extends SuiteMixin with WebBrowser with Eventually with IntegrationPatience with BrowserFactory { this: Suite =>
-
-  private var privateApp: FakeApplication = _
-
-  /**
-   * Implicit method that returns the `FakeApplication` instance for the current test.
-   */
-  implicit final def app: FakeApplication = synchronized { privateApp }
-
-  /**
-   * Creates new instance of `FakeApplication` with parameters set to their defaults. Override this method if you
-   * need a `FakeApplication` created with non-default parameter values.
-   */
-  def newAppForTest(testData: TestData): FakeApplication = new FakeApplication()
-
-  /**
-   * The port used by the `TestServer`.  By default this will be set to the result returned from
-   * `Helpers.testServerPort`. You can override this to provide a different port number.
-   */
-  lazy val port: Int = Helpers.testServerPort
-
-  /**
-   * Implicit `PortNumber` instance that wraps `port`. The value returned from `portNumber.value`
-   * will be same as the value of `port`.
-   */
-  implicit final lazy val portNumber: PortNumber = PortNumber(port)
+trait OneBrowserPerTest extends SuiteMixin with WebBrowser with Eventually with IntegrationPatience with BrowserFactory { this: Suite with ServerProvider =>
 
   private var privateWebDriver: WebDriver = _
 
@@ -139,7 +114,6 @@ trait OneBrowserPerTest extends SuiteMixin with WebBrowser with Eventually with 
    */
   abstract override def withFixture(test: NoArgTest) = {
     synchronized {
-      privateApp = newAppForTest(test)
       privateWebDriver = createWebDriver()
     }
     try {
@@ -149,10 +123,7 @@ trait OneBrowserPerTest extends SuiteMixin with WebBrowser with Eventually with 
             case Some(e) => cancel(errorMessage, e)
             case None => cancel(errorMessage)
           }
-        case _ =>
-          Helpers.running(TestServer(port, app)) {
-            super.withFixture(test)
-          }
+        case _ => super.withFixture(test)
       }
     }
     finally {

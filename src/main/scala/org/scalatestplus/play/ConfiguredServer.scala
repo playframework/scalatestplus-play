@@ -33,7 +33,7 @@ import play.api.Play
  *
  * To prevent discovery of nested suites you can annotate them with `@DoNotDiscover`.
  */
-trait ConfiguredServer extends SuiteMixin { this: Suite => 
+trait ConfiguredServer extends SuiteMixin with ServerProvider { this: Suite => 
 
   private var configuredApp: FakeApplication = _
 
@@ -52,14 +52,6 @@ trait ConfiguredServer extends SuiteMixin { this: Suite =>
    * @return the configured port number
    */
   def port: Int = synchronized { configuredPort }
-
-  /**
-   * Implicit `PortNumber` instance that wraps `port`. The value returned from `portNumber.value`
-   * will be same as the value of `port`.
-   *
-   * @return the configured port number, wrapped in a `PortNumber`
-   */
-  implicit lazy val portNumber: PortNumber = PortNumber(port)
 
   /**
    * Looks in `args.configMap` for a key named "org.scalatestplus.play.app" whose value is a `FakeApplication`, 
