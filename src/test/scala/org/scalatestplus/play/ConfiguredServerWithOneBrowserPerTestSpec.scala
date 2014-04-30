@@ -20,13 +20,19 @@ import org.scalatest._
 import play.api.{Play, Application}
 import play.api.mvc.{Action, Results}
 
-class OneBrowserPerTestSpec extends UnitSpec with OneServerPerTest with OneBrowserPerTest with FirefoxFactory {
-
-  implicit override def newAppForTest(testData: TestData): FakeApplication = 
+class ConfiguredServerWithOneBrowserPerTestSpec extends Suites(
+  new ConfiguredServerWithOneBrowserPerTestNestedSpec 
+) with OneServerPerSuite {
+  implicit override lazy val app: FakeApplication = 
     FakeApplication(
       additionalConfiguration = Map("foo" -> "bar", "ehcacheplugin" -> "disabled"), 
       withRoutes = TestRoute
     )
+}
+
+@DoNotDiscover
+class ConfiguredServerWithOneBrowserPerTestNestedSpec extends UnitSpec with ConfiguredServer with OneBrowserPerTest with FirefoxFactory {
+
   def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
 
   "The OneBrowserPerTest trait" must {
