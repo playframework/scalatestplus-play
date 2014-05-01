@@ -26,7 +26,14 @@ import org.openqa.selenium.firefox.FirefoxProfile
 import BrowserFactory.UnavailableDriver
 
 /**
- * Trait providing a 'createWebDriver' method that creates a new Selenium 'FirefoxDriver'.
+ * Factory whose `createWebDriver` method will either return a new Selenium `FirefoxDriver` (created
+ * using the profile specified by `firefoxProfile`), or
+ * [[org.scalatestplus.play.BrowserFactory.UnavailableDriver UnavailableDriver]], if Firefox is not available on the host platform.
+ *
+ * Traits [[org.scalatestplus.play.OneBrowserPerSuite OneBrowserPerSuite]] and 
+ * [[org.scalatestplus.play.OneBrowserPerTest OneBrowserPerTest]] extend `BrowserFactory` and therefore require
+ * you to fill in the `createWebDriver` method, usually by mixing in one of the `BrowserFactory` subtraits such as
+ * `FirefoxFactory`.
  */
 trait FirefoxFactory extends BrowserFactory {
 
@@ -45,13 +52,7 @@ trait FirefoxFactory extends BrowserFactory {
    * @return an new instance of a Selenium `FirefoxDriver` or a `BrowserFactory.UnavailableDriver` if a Firefox
    * driver is not available on the host platform.
    */
-  def createWebDriver(): WebDriver =
-    try {
-      new FirefoxDriver(firefoxProfile)
-    }
-    catch {
-      case ex: Throwable => UnavailableDriver(Some(ex), Resources("cantCreateFirefoxDriver"))
-    }
+  def createWebDriver(): WebDriver = FirefoxFactory.createWebDriver(firefoxProfile)
 }
 
 /**

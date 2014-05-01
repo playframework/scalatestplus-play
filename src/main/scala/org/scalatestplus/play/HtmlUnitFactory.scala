@@ -25,7 +25,13 @@ import org.openqa.selenium.htmlunit.HtmlUnitDriver
 import BrowserFactory.UnavailableDriver
 
 /**
- * Trait providing a `createWebDriver` method that creates a new Selenium `HtmlUnitDriver`.
+ * Factory whose `createWebDriver` method will either return a new Selenium `HtmlUnitDriver`, or
+ * [[org.scalatestplus.play.BrowserFactory.UnavailableDriver UnavailableDriver]], if HtmlUnit is not available on the host platform.
+ *
+ * Traits [[org.scalatestplus.play.OneBrowserPerSuite OneBrowserPerSuite]] and 
+ * [[org.scalatestplus.play.OneBrowserPerTest OneBrowserPerTest]] extend `BrowserFactory` and therefore require
+ * you to fill in the `createWebDriver` method, usually by mixing in one of the `BrowserFactory` subtraits such as
+ * `HtmlUnitFactory`.
  */
 trait HtmlUnitFactory extends BrowserFactory {
 

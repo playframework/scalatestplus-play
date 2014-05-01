@@ -25,7 +25,13 @@ import org.openqa.selenium.chrome.ChromeDriver
 import BrowserFactory.UnavailableDriver
 
 /**
- * Trait providing a `createWebDriver` method that creates a new Selenium `ChromeDriver`.
+ * Factory whose `createWebDriver` method will either return a new Selenium `ChromeDriver`, or
+ * [[org.scalatestplus.play.BrowserFactory.UnavailableDriver UnavailableDriver]], if Chrome is not available on the host platform.
+ *
+ * Traits [[org.scalatestplus.play.OneBrowserPerSuite OneBrowserPerSuite]] and 
+ * [[org.scalatestplus.play.OneBrowserPerTest OneBrowserPerTest]] extend `BrowserFactory` and therefore require
+ * you to fill in the `createWebDriver` method, usually by mixing in one of the `BrowserFactory` subtraits such as
+ * `ChromeFactory`.
  */
 trait ChromeFactory extends BrowserFactory {
 

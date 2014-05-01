@@ -25,7 +25,13 @@ import org.openqa.selenium.safari.SafariDriver
 import BrowserFactory.UnavailableDriver
 
 /**
- * Trait providing a `createWebDriver` method that creates a new Selenium `SafariDriver`.
+ * Factory whose `createWebDriver` method will either return a new Selenium `SafariDriver`, or
+ * [[org.scalatestplus.play.BrowserFactory.UnavailableDriver UnavailableDriver]], if Safari is not available on the host platform.
+ *
+ * Traits [[org.scalatestplus.play.OneBrowserPerSuite OneBrowserPerSuite]] and 
+ * [[org.scalatestplus.play.OneBrowserPerTest OneBrowserPerTest]] extend `BrowserFactory` and therefore require
+ * you to fill in the `createWebDriver` method, usually by mixing in one of the `BrowserFactory` subtraits such as
+ * `SafariFactory`.
  */
 trait SafariFactory extends BrowserFactory {
 

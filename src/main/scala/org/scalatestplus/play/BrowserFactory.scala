@@ -22,16 +22,21 @@ import org.openqa.selenium.WebDriver
  * Trait that defines an abstract `createWebDriver`  method for creating a new Selenium `WebDriver`
  * and an abstract `unableToCreateDriverErrorMessage` method that provides an appropriate error message if the driver
  * is not available on the current platform.
+ *
+ * Traits [[org.scalatestplus.play.OneBrowserPerSuite OneBrowserPerSuite]] and 
+ * [[org.scalatestplus.play.OneBrowserPerTest OneBrowserPerTest]] extend `BrowserFactory` and therefore require
+ * you to fill in the `createWebDriver` method, usually by mixing in one of the `BrowserFactory` subtraits.
  */
 trait BrowserFactory {
 
   /**
-   * Creates a new instance of a Selenium `WebDriver`, or returns a `BrowserFactory.UnavailableDriver` that includes
+   * Creates a new instance of a valid Selenium `WebDriver`, or if a driver is unavailable on the host platform,
+   * returns a [[org.scalatestplus.play.BrowserFactory.UnavailableDriver BrowserFactory.UnavailableDriver]] that includes
    * the exception that indicated the driver was not supported on the host platform and an appropriate
    * error message.
    *
-   * @return an new instance of a Selenium `WebDriver`, or a `BrowserFactory.UnavailableDriver` if the desired
-   * `WebDriver` is not available on the host platform.
+   * @return an new instance of a Selenium `WebDriver`, or a [[org.scalatestplus.play.BrowserFactory.UnavailableDriver BrowserFactory.UnavailableDriver]]
+   * if the desired `WebDriver` is not available on the host platform.
    */
   def createWebDriver(): WebDriver
 }
@@ -47,8 +52,9 @@ object BrowserFactory {
 
   /**
    * A null-object implementation of the Selenium `WebDriver` interface that throws `UnsupportedOperationException` from
-   * all of its methods, used when either a requested Selenium `WebDriver` is unavailable on the host platform or
-   * a test that did not declare it needed a `WebDriver` attempts to use one.
+   * all of its methods, used when either 1) a `WebDriver` field has not yet been initialized, 2) a requested Selenium
+   * `WebDriver` is unavailable on the host platform, or 3) a test that did not declare it needed a `WebDriver` in
+   * [[org.scalatestplus.play.AllBrowsersPerSuite AllBrowserPerSuite]] or [[org.scalatestplus.play.AllBrowsersPerTest AllBrowserPerTest]] attempts to use one.
    *
    * This is named `GrumpyDriver` because all it does is complain. No matter what you ask of it, it throws an
    * `UnsupportedOperationException` back at you.
@@ -163,13 +169,24 @@ object BrowserFactory {
    *
    * This is an example of the "Null Object Pattern." We use this pattern to avoid initializing with `null` instead of making the driver type
    * an `Option[WebDriver]` for two reasons: 1) the type of the implicit needed by Selenium is `WebDriver`, not `Option[WebDriver]`, and 2) 
-   * the Null Object we provide also carries an optional exception and user-friendly error message.
-   *
+   * the `UnsupportedOperationException` thrown by the methods of the Null Object we provide carries a user-friendly error message.
    */
   case object UnneededDriver extends GrumpyDriver {
     protected def complain(): Nothing = throw new UnsupportedOperationException(Resources("webDriverUsedFromUnsharedTest"))
   }
 
+  /**
+   * An implementation of `WebDriver` that throws `UnsupportedOperationException` from
+   * all of its methods, used to initialize instance `var`s of type `WebDriver`.
+   *
+   * Traits [[org.scalatestplus.play.OneBrowserPerTest OneBrowserPerTest]], [[org.scalatestplus.play.ConfiguredBrowser ConfiguredBrowser]],
+   * [[org.scalatestplus.play.AllBrowsersPerSuite AllBrowsersPerSuite]], and [[org.scalatestplus.play.AllBrowsersPerTest AllBrowsersPerTest]] initialize
+   * their `webDriver` field with this value (to avoid initializing with `null`).
+   *
+   * This is an example of the "Null Object Pattern." We use this pattern to avoid initializing with `null` instead of making the driver type
+   * an `Option[WebDriver]` for two reasons: 1) the type of the implicit needed by Selenium is `WebDriver`, not `Option[WebDriver]`, and 2) 
+   * the `UnsupportedOperationException` thrown by the methods of the Null Object we provide carries a user-friendly error message.
+   */
   case object UninitializedDriver extends GrumpyDriver {
     protected def complain(): Nothing = throw new UnsupportedOperationException(Resources("webDriverUninitialized"))
   }
