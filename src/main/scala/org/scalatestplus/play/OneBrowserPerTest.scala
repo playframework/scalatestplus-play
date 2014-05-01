@@ -24,6 +24,7 @@ import org.openqa.selenium.WebDriver
 import BrowserFactory.UnavailableDriver
 import org.openqa.selenium.safari.SafariDriver
 import org.openqa.selenium.chrome.ChromeDriver
+import BrowserFactory.UninitializedDriver
 
 /**
  * Trait that provides a new `FakeApplication`, running `TestServer`, and Selenium `WebDriver` instance for each test executed in a ScalaTest `Suite`.
@@ -95,7 +96,7 @@ import org.openqa.selenium.chrome.ChromeDriver
  */
 trait OneBrowserPerTest extends SuiteMixin with WebBrowser with Eventually with IntegrationPatience with BrowserFactory { this: Suite with ServerProvider =>
 
-  private var privateWebDriver: WebDriver = _
+  private var privateWebDriver: WebDriver = UninitializedDriver
 
   /**
    * Implicit method to get the `WebDriver` for the current test.

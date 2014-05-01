@@ -169,4 +169,8 @@ object BrowserFactory {
   case object UnneededDriver extends GrumpyDriver {
     protected def complain(): Nothing = throw new UnsupportedOperationException(Resources("webDriverUsedFromUnsharedTest"))
   }
+
+  case object UninitializedDriver extends GrumpyDriver {
+    protected def complain(): Nothing = throw new UnsupportedOperationException(Resources("webDriverUninitialized"))
+  }
 }

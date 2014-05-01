@@ -22,6 +22,7 @@ import selenium.WebBrowser
 import org.openqa.selenium.WebDriver
 import concurrent.Eventually
 import concurrent.IntegrationPatience
+import BrowserFactory.UninitializedDriver
 
 /**
  * Trait that provides a configured `FakeApplication`, server port number, and Selenium `WebDriver` to the suite
@@ -40,7 +41,7 @@ import concurrent.IntegrationPatience
  */
 trait ConfiguredBrowser extends SuiteMixin with WebBrowser with Eventually with IntegrationPatience { this: Suite with ServerProvider => 
 
-  private var configuredWebDriver: WebDriver = _
+  private var configuredWebDriver: WebDriver = UninitializedDriver
 
   /**
    * The "configured" Selenium `WebDriver`, passed into `run` via the `ConfigMap`.

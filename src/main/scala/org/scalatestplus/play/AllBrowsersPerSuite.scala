@@ -185,7 +185,7 @@ import org.openqa.selenium.chrome.ChromeDriver
  * [info] <span class="stGreen">The AllBrowsersPerTest trait</span>
  * </pre>
  */
-trait AllBrowsersPerTest extends SuiteMixin with WebBrowser with Eventually with IntegrationPatience { this: Suite with ServerProvider =>
+trait AllBrowsersPerSuite extends SuiteMixin with WebBrowser with Eventually with IntegrationPatience { this: Suite with ServerProvider =>
 
   /**
    * Method to provide `FirefoxProfile` for creating `FirefoxDriver`, you can override this method to
@@ -215,6 +215,8 @@ trait AllBrowsersPerTest extends SuiteMixin with WebBrowser with Eventually with
    * Implicit method to get the `WebDriver` for the current test.
    */
   implicit def webDriver: WebDriver = synchronized { privateWebDriver }
+
+  private var currentWebDriverName: Option[String] = None
 
   /**
    * Registers tests "shared" by multiple browsers.
@@ -255,6 +257,15 @@ trait AllBrowsersPerTest extends SuiteMixin with WebBrowser with Eventually with
     }
   }
 
+  private def closeWebDriverIfNecessary(): Unit = {
+    webDriver match {
+      case _: GrumpyDriver => // do nothing
+      case safariDriver: SafariDriver => safariDriver.quit()
+      case chromeDriver: ChromeDriver => chromeDriver.quit()
+      case otherDriver => otherDriver.close()
+    }
+  }
+
   /**
    * Checks the result of the `webDriver` method before running each test, canceling the
    * test if it is a `UnavailableDriver` (which means the driver was not available on the current platform).
@@ -267,31 +278,39 @@ trait AllBrowsersPerTest extends SuiteMixin with WebBrowser with Eventually with
   abstract override def withFixture(test: NoArgTest): Outcome = {
     // looks at the end of the test name, and if it is one of the blessed ones,
     // sets the driver, before, and cleans up after, calling super.withFixture(test)
-    val localWebDriver: WebDriver =
+    val (localWebDriver, localWebDriverName): (WebDriver, Option[String]) =
       browsers.find(b => test.name.endsWith(b.name)) match {
-        case Some(b) => b.createWebDriver()
-        case None => UnneededDriver
+        case Some(b) =>
+          (
+            if (currentWebDriverName == Some(b.name))
+              webDriver // Reuse the current WebDriver
+            else {
+              closeWebDriverIfNecessary()
+              b.createWebDriver()
+            },
+            Some(b.name)
+          )
+        case None =>
+          closeWebDriverIfNecessary()
+          (UnneededDriver, None)
       }
+    synchronized {
+      privateWebDriver = localWebDriver
+      currentWebDriverName = localWebDriverName
+    }
     localWebDriver match {
       case UnavailableDriver(ex, errorMessage) =>
         ex match {
           case Some(e) => Canceled(errorMessage, e)
           case None => Canceled(errorMessage)
         }
-      case _ =>
-        synchronized {
-          privateWebDriver = localWebDriver
-        }
-        try super.withFixture(test)
-        finally {
-          localWebDriver match {
-            case _: GrumpyDriver => // do nothing
-            case safariDriver: SafariDriver => safariDriver.quit()
-            case chromeDriver: ChromeDriver => chromeDriver.quit()
-            case otherDriver => otherDriver.close()
-          }
-        }
+      case _ => super.withFixture(test)
     }
+  }
+
+  abstract override def runTests(testName: Option[String], args: Args): Status = {
+    try super.runTests(testName, args)
+    finally closeWebDriverIfNecessary()
   }
 }
 
