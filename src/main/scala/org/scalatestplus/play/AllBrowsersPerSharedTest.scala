@@ -23,7 +23,7 @@ import selenium.WebBrowser
 import concurrent.Eventually
 import concurrent.IntegrationPatience
 import org.openqa.selenium.WebDriver
-import BrowserFactory.NoDriver
+import BrowserFactory.UnavailableDriver
 import org.openqa.selenium.firefox.FirefoxProfile
 import org.openqa.selenium.safari.SafariDriver
 import org.openqa.selenium.chrome.ChromeDriver
@@ -89,7 +89,7 @@ import org.openqa.selenium.chrome.ChromeDriver
  * import play.api.{Play, Application}
  * import play.api.mvc.{Action, Results}
  * import org.openqa.selenium.WebDriver
- * import BrowserFactory.NoDriver
+ * import BrowserFactory.UnavailableDriver
  * 
  * class ExampleSpec extends PlaySpec with OneServerPerSuite with AllBrowsersPerSharedTest {
  * 
@@ -253,7 +253,7 @@ trait AllBrowsersPerSharedTest extends SuiteMixin with WebBrowser with Eventuall
 
   /**
    * Checks the result of the `webDriver` method before running each test, canceling the
-   * test if it is a `NoDriver` (which means the driver was not available on the current platform).
+   * test if it is a `UnavailableDriver` (which means the driver was not available on the current platform).
    * Otherwise, creates a new instance of `TestServer` for the test and ensures it is cleaned up
    * after the test completes.
    *
@@ -262,7 +262,7 @@ trait AllBrowsersPerSharedTest extends SuiteMixin with WebBrowser with Eventuall
    */
   abstract override def withFixture(test: NoArgTest): Outcome =
     webDriver match {
-      case NoDriver(ex, errorMessage) if test.configMap.getOptional[WebDriver]("org.scalatestplus.play.webDriver").isDefined =>
+      case UnavailableDriver(ex, errorMessage) if test.configMap.getOptional[WebDriver]("org.scalatestplus.play.webDriver").isDefined =>
         val name = test.configMap.getRequired[String]("org.scalatestplus.play.webDriverName")
         val message = errorMessage // Resources("cantCreateDriver", name.trim)
         ex match {
@@ -289,7 +289,7 @@ trait AllBrowsersPerSharedTest extends SuiteMixin with WebBrowser with Eventuall
     val (localWebDriver, localWebDriverName): (WebDriver, String) =
       browsers.find(b => testName.endsWith(b.name)) match {
         case Some(b) => (b.createWebDriver(), b.name)
-        case None => (NoDriver(None, Resources("webDriverUsedFromUnsharedTest")), NoDriverNeededByTest)
+        case None => (UnavailableDriver(None, Resources("webDriverUsedFromUnsharedTest")), NoDriverNeededByTest)
       }
     synchronized {
       privateWebDriver = localWebDriver
@@ -309,7 +309,7 @@ trait AllBrowsersPerSharedTest extends SuiteMixin with WebBrowser with Eventuall
     }
     finally {
       webDriver match {
-        case _: NoDriver => // do nothing
+        case _: UnavailableDriver => // do nothing
         case safariDriver: SafariDriver => safariDriver.quit()
         case chromeDriver: ChromeDriver => chromeDriver.quit()
         case theDriver => theDriver.close()

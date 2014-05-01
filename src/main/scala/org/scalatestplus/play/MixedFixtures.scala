@@ -26,7 +26,7 @@ import org.openqa.selenium.htmlunit.HtmlUnitDriver
 import org.openqa.selenium.safari.SafariDriver
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.ie.InternetExplorerDriver
-import BrowserFactory.NoDriver
+import BrowserFactory.UnavailableDriver
 import org.openqa.selenium.safari.SafariDriver
 
 /**
@@ -321,7 +321,7 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
    */
   abstract class HtmlUnit(val app: FakeApplication = FakeApplication(), val port: Int = Helpers.testServerPort) extends WebBrowser with NoArg with HtmlUnitFactory {
     /**
-     * A lazy implicit instance of `HtmlUnitDriver`. It will hold `NoDriver` if `HtmlUnitDriver` 
+     * A lazy implicit instance of `HtmlUnitDriver`. It will hold `UnavailableDriver` if `HtmlUnitDriver` 
      * is not available in the running machine.
      */
     implicit lazy val webDriver: WebDriver = createWebDriver()
@@ -344,7 +344,7 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
      */
     override def apply() {
       webDriver match {
-        case NoDriver(ex, errorMessage) =>
+        case UnavailableDriver(ex, errorMessage) =>
           ex match {
             case Some(e) => cancel(errorMessage, e)
             case None => cancel(errorMessage)
@@ -363,7 +363,7 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
   abstract class Firefox(val app: FakeApplication = FakeApplication(), val port: Int = Helpers.testServerPort) extends WebBrowser with NoArg with FirefoxFactory {
 
     /**
-     * A lazy implicit instance of `FirefoxDriver`, it will hold `NoDriver` if `FirefoxDriver` 
+     * A lazy implicit instance of `FirefoxDriver`, it will hold `UnavailableDriver` if `FirefoxDriver` 
      * is not available in the running machine.
      */
     implicit lazy val webDriver: WebDriver = createWebDriver()
@@ -386,7 +386,7 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
      */
     override def apply() {
       webDriver match {
-        case NoDriver(ex, errorMessage) =>
+        case UnavailableDriver(ex, errorMessage) =>
           ex match {
             case Some(e) => cancel(errorMessage, e)
             case None => cancel(errorMessage)
@@ -404,7 +404,7 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
    */
   abstract class Safari(val app: FakeApplication = FakeApplication(), val port: Int = Helpers.testServerPort) extends WebBrowser with NoArg with SafariFactory {
     /**
-     * A lazy implicit instance of `SafariDriver`, it will hold `NoDriver` if `SafariDriver` 
+     * A lazy implicit instance of `SafariDriver`, it will hold `UnavailableDriver` if `SafariDriver` 
      * is not available in the running machine.
      */
     implicit lazy val webDriver: WebDriver = createWebDriver()
@@ -427,7 +427,7 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
      */
     override def apply() {
       webDriver match {
-        case NoDriver(ex, errorMessage) =>
+        case UnavailableDriver(ex, errorMessage) =>
           ex match {
             case Some(e) => cancel(errorMessage, e)
             case None => cancel(errorMessage)
@@ -445,7 +445,7 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
    */
   abstract class Chrome(val app: FakeApplication = FakeApplication(), val port: Int = Helpers.testServerPort) extends WebBrowser with NoArg with ChromeFactory {
     /**
-     * A lazy implicit instance of `ChromeDriver`, it will hold `NoDriver` if `ChromeDriver` 
+     * A lazy implicit instance of `ChromeDriver`, it will hold `UnavailableDriver` if `ChromeDriver` 
      * is not available in the running machine.
      */
     implicit lazy val webDriver: WebDriver = createWebDriver()
@@ -468,7 +468,7 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
      */
     override def apply() {
       webDriver match {
-        case NoDriver(ex, errorMessage) =>
+        case UnavailableDriver(ex, errorMessage) =>
           val msg = Resources("cantCreateChromeDriver")
           ex match {
             case Some(e) => cancel(errorMessage, e)
@@ -487,7 +487,7 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
    */
   abstract class InternetExplorer(val app: FakeApplication = FakeApplication(), val port: Int = Helpers.testServerPort) extends WebBrowser with NoArg with InternetExplorerFactory {
     /**
-     * A lazy implicit instance of `InternetExplorerDriver`, it will hold `NoDriver` if `InternetExplorerDriver` 
+     * A lazy implicit instance of `InternetExplorerDriver`, it will hold `UnavailableDriver` if `InternetExplorerDriver` 
      * is not available in the running machine.
      */
     implicit lazy val webDriver: WebDriver = createWebDriver()
@@ -510,7 +510,7 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
      */
     override def apply() {
       webDriver match {
-        case NoDriver(ex, errorMessage) =>
+        case UnavailableDriver(ex, errorMessage) =>
           val msg = Resources("cantCreateInternetExplorerDriver")
           ex match {
             case Some(e) => cancel(errorMessage, e)

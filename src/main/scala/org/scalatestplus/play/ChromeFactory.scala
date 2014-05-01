@@ -22,7 +22,7 @@ import concurrent.Eventually
 import concurrent.IntegrationPatience
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.chrome.ChromeDriver
-import BrowserFactory.NoDriver
+import BrowserFactory.UnavailableDriver
 
 /**
  * Trait providing a `createWebDriver` method that creates a new Selenium `ChromeDriver`.
@@ -30,11 +30,11 @@ import BrowserFactory.NoDriver
 trait ChromeFactory extends BrowserFactory {
 
   /**
-   * Creates a new instance of a Selenium `ChromeDriver`, or returns a [[org.scalatestplus.play.BrowserFactory.NoDriver BrowserFactory.NoDriver]] that includes
+   * Creates a new instance of a Selenium `ChromeDriver`, or returns a [[org.scalatestplus.play.BrowserFactory.UnavailableDriver BrowserFactory.UnavailableDriver]] that includes
    * the exception that indicated the driver was not supported on the host platform and an appropriate
    * error message.
    *
-   * @return an new instance of a Selenium `ChromeDriver`, or a `BrowserFactory.NoDriver` if it is not 
+   * @return an new instance of a Selenium `ChromeDriver`, or a `BrowserFactory.UnavailableDriver` if it is not 
    * available on the host platform.
    */
   def createWebDriver(): WebDriver =
@@ -42,7 +42,7 @@ trait ChromeFactory extends BrowserFactory {
       new ChromeDriver()
     }
     catch {
-      case ex: Throwable => NoDriver(Some(ex), Resources("cantCreateChromeDriver"))
+      case ex: Throwable => UnavailableDriver(Some(ex), Resources("cantCreateChromeDriver"))
     }
 }
 

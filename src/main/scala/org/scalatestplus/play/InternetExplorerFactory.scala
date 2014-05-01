@@ -22,7 +22,7 @@ import concurrent.Eventually
 import concurrent.IntegrationPatience
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.ie.InternetExplorerDriver
-import BrowserFactory.NoDriver
+import BrowserFactory.UnavailableDriver
 
 /**
  * Trait providing a `createWebDriver` method that creates a new Selenium `InternetExplorerDriver`.
@@ -30,11 +30,11 @@ import BrowserFactory.NoDriver
 trait InternetExplorerFactory extends BrowserFactory {
 
   /**
-   * Creates a new instance of a Selenium `InternetExplorerDriver`, or returns a [[org.scalatestplus.play.BrowserFactory.NoDriver BrowserFactory.NoDriver]] that includes
+   * Creates a new instance of a Selenium `InternetExplorerDriver`, or returns a [[org.scalatestplus.play.BrowserFactory.UnavailableDriver BrowserFactory.UnavailableDriver]] that includes
    * the exception that indicated the driver was not supported on the host platform and an appropriate
    * error message.
    *
-   * @return an new instance of a Selenium `InternetExplorerDriver`, or a `BrowserFactory.NoDriver` if an Internet
+   * @return an new instance of a Selenium `InternetExplorerDriver`, or a `BrowserFactory.UnavailableDriver` if an Internet
    * Explorer driver is not available on the host platform.
    */
   def createWebDriver(): WebDriver =
@@ -42,7 +42,7 @@ trait InternetExplorerFactory extends BrowserFactory {
       new InternetExplorerDriver()
     }
     catch {
-      case ex: Throwable => NoDriver(Some(ex), Resources("cantCreateInternetExplorerDriver"))
+      case ex: Throwable => UnavailableDriver(Some(ex), Resources("cantCreateInternetExplorerDriver"))
     }
 }
 

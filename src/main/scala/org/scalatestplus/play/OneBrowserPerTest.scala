@@ -21,7 +21,7 @@ import selenium.WebBrowser
 import concurrent.Eventually
 import concurrent.IntegrationPatience
 import org.openqa.selenium.WebDriver
-import BrowserFactory.NoDriver
+import BrowserFactory.UnavailableDriver
 import org.openqa.selenium.safari.SafariDriver
 import org.openqa.selenium.chrome.ChromeDriver
 
@@ -104,7 +104,7 @@ trait OneBrowserPerTest extends SuiteMixin with WebBrowser with Eventually with 
 
   /**
    * Override `withFixture` to create new instance of `WebDriver` before 
-   * running each test.  If there is error when creating `WebDriver`, `NoDriver` 
+   * running each test.  If there is error when creating `WebDriver`, `UnavailableDriver` 
    * will be used and all tests will be canceled automatically.
    *
    * @param test the no-arg test function to run with a fixture
@@ -116,7 +116,7 @@ trait OneBrowserPerTest extends SuiteMixin with WebBrowser with Eventually with 
     }
     try {
       privateWebDriver match {
-        case NoDriver(ex, errorMessage) =>
+        case UnavailableDriver(ex, errorMessage) =>
           ex match {
             case Some(e) => cancel(errorMessage, e)
             case None => cancel(errorMessage)
@@ -126,7 +126,7 @@ trait OneBrowserPerTest extends SuiteMixin with WebBrowser with Eventually with 
     }
     finally {
       privateWebDriver match {
-        case _: NoDriver => // do nothing
+        case _: UnavailableDriver => // do nothing
         case safariDriver: SafariDriver => safariDriver.quit()
         case chromeDriver: ChromeDriver => chromeDriver.quit()
         case _ => privateWebDriver.close()

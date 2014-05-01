@@ -21,7 +21,6 @@ import org.scalatestplus.play._
 import play.api.{Play, Application}
 import play.api.mvc.{Action, Results}
 import org.openqa.selenium.WebDriver
-import BrowserFactory.NoDriver
 
 class ExampleSpec extends PlaySpec with OneServerPerTest with AllBrowsersPerSharedTest {
 

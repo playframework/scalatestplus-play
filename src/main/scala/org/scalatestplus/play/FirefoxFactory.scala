@@ -23,7 +23,7 @@ import concurrent.IntegrationPatience
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.firefox.FirefoxDriver
 import org.openqa.selenium.firefox.FirefoxProfile
-import BrowserFactory.NoDriver
+import BrowserFactory.UnavailableDriver
 
 /**
  * Trait providing a 'createWebDriver' method that creates a new Selenium 'FirefoxDriver'.
@@ -38,11 +38,11 @@ trait FirefoxFactory extends BrowserFactory {
 
   /**
    * Creates a new instance of a Selenium `FirefoxDriver` (using the `FirefoxProfile` provided by
-   * the `firefoxProfile` field), or returns a [[org.scalatestplus.play.BrowserFactory.NoDriver BrowserFactory.NoDriver]] that includes
+   * the `firefoxProfile` field), or returns a [[org.scalatestplus.play.BrowserFactory.UnavailableDriver BrowserFactory.UnavailableDriver]] that includes
    * the exception that indicated the driver was not supported on the host platform and an appropriate
    * error message.
    *
-   * @return an new instance of a Selenium `FirefoxDriver` or a `BrowserFactory.NoDriver` if a Firefox
+   * @return an new instance of a Selenium `FirefoxDriver` or a `BrowserFactory.UnavailableDriver` if a Firefox
    * driver is not available on the host platform.
    */
   def createWebDriver(): WebDriver =
@@ -50,7 +50,7 @@ trait FirefoxFactory extends BrowserFactory {
       new FirefoxDriver(firefoxProfile)
     }
     catch {
-      case ex: Throwable => NoDriver(Some(ex), Resources("cantCreateFirefoxDriver"))
+      case ex: Throwable => UnavailableDriver(Some(ex), Resources("cantCreateFirefoxDriver"))
     }
 }
 
@@ -63,17 +63,17 @@ object FirefoxFactory extends FirefoxFactory {
 
   /**
    * Creates a new instance of a Selenium `FirefoxDriver`, using the specified `FirefoxProfile`,
-   * or returns a `BrowserFactory.NoDriver` that includes the exception that indicated the driver
+   * or returns a `BrowserFactory.UnavailableDriver` that includes the exception that indicated the driver
    * was not supported on the host platform and an appropriate error message.
    *
    * @return a new instance of a Selenium `FirefoxDriver`, using the specified `FirefoxProfile`,
-   *   or a `BrowserFactory.NoDriver` if a Firefox driver is not available on the host platform.
+   *   or a `BrowserFactory.UnavailableDriver` if a Firefox driver is not available on the host platform.
    */
   def createWebDriver(firefoxProfile: FirefoxProfile): WebDriver =
     try {
       new FirefoxDriver(firefoxProfile)
     }
     catch {
-      case ex: Throwable => NoDriver(Some(ex), Resources("cantCreateFirefoxDriver"))
+      case ex: Throwable => UnavailableDriver(Some(ex), Resources("cantCreateFirefoxDriver"))
     }
 }

@@ -21,7 +21,7 @@ import selenium.WebBrowser
 import concurrent.Eventually
 import concurrent.IntegrationPatience
 import org.openqa.selenium.WebDriver
-import BrowserFactory.NoDriver
+import BrowserFactory.UnavailableDriver
 import org.openqa.selenium.safari.SafariDriver
 import org.openqa.selenium.chrome.ChromeDriver
 
@@ -315,18 +315,18 @@ trait OneBrowserPerSuite extends SuiteMixin with WebBrowser with Eventually with
 
   /**
    * An implicit instance of `WebDriver`, created by calling `createWebDriver`.  
-   * If there is an error when creating the `WebDriver`, `NoDriver` will be assigned 
+   * If there is an error when creating the `WebDriver`, `UnavailableDriver` will be assigned 
    * instead.
    */
   implicit lazy val webDriver: WebDriver = createWebDriver()
 
   /**
-   * Automatically cancels tests with an appropriate error message when the `webDriver` field is a `NoDriver`,
+   * Automatically cancels tests with an appropriate error message when the `webDriver` field is a `UnavailableDriver`,
    * else calls `super.withFixture(test)`
    */
   abstract override def withFixture(test: NoArgTest): Outcome = {
     webDriver match {
-      case NoDriver(ex, errorMessage) =>
+      case UnavailableDriver(ex, errorMessage) =>
           ex match {
             case Some(e) => cancel(errorMessage, e)
             case None => cancel(errorMessage)
@@ -349,7 +349,7 @@ trait OneBrowserPerSuite extends SuiteMixin with WebBrowser with Eventually with
   abstract override def run(testName: Option[String], args: Args): Status = {
     val cleanup: Boolean => Unit = { _ =>
       webDriver match {
-        case _: NoDriver => // do nothing for NoDriver
+        case _: UnavailableDriver => // do nothing for UnavailableDriver
         case safariDriver: SafariDriver => safariDriver.quit()
         case chromeDriver: ChromeDriver => chromeDriver.quit()
         case _ => webDriver.close()

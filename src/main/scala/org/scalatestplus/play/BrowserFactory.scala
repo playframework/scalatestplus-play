@@ -61,7 +61,7 @@ object BrowserFactory {
    * @param ex: the `Throwable`, if any, that was thrown when attempting to use the requested driver
    * @param errorMessage: a user-friendly error message that mentions the specific driver that was unavailable on the host platform
    */
-  case class NoDriver(ex: Option[Throwable], errorMessage: String) extends WebDriver {
+  case class UnavailableDriver(ex: Option[Throwable], errorMessage: String) extends WebDriver {
 
     /**
      * Throws `UnsupportedOperationException`.
