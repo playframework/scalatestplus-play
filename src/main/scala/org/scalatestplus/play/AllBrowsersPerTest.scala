@@ -33,10 +33,16 @@ import org.openqa.selenium.chrome.ChromeDriver
 
 /**
  * Trait that uses a [[http://doc.scalatest.org/2.1.3/index.html#org.scalatest.FlatSpec@sharedTests ''shared test'']] approach to enable
- * you to run the same tests on multiple browsers in a ScalaTest `Suite` with minimal boilerplate.
+ * you to run the same tests on multiple browsers in a ScalaTest `Suite`, where a new browser is started before each test
+ * that needs a browser, and stopped after. 
  *
- * This trait overrides `Suite`'s `withFixture` and `runTest` lifecycle methods to create a new `WebDriver`
- * instance before executing each test, and overrides the `tags` lifecycle method to tag the shared tests so you can
+ * Note: the difference between this trait and [[org.scalatestplus.play.AllBrowsersPerSuite AllBrowsersPerSuite]] is that
+ * `AllBrowsersPerSuite` will allow you to write tests that rely on maintaining browser state between the tests. Thus, `AllBrowsersPerSuite` is a good fit
+ * for integration tests in which each test builds on actions taken by the previous tests. This trait is good if your tests
+ * each need a brand new browser.
+ *
+ * This trait overrides `Suite`'s `withFixture` lifecycle method to create a new `WebDriver`
+ * instance before executing each test that needs a browser, closing it after the test completes, and overrides the `tags` lifecycle method to tag the shared tests so you can
  * filter them by browser type.  This trait's self-type, [[org.scalatestplus.play.ServerProvider ServerProvider]],  will ensure 
  * a `TestServer` and `FakeApplication` are available to each test. The self-type will require that you mix in either
  * [[org.scalatestplus.play.OneServerPerSuite OneServerPerSuite]], [[org.scalatestplus.play.OneServerPerTest OneServerPerTest]], 
@@ -56,7 +62,7 @@ import org.openqa.selenium.chrome.ChromeDriver
  *     } 
  * </pre>
  * 
- * All tests registered via `sharedTests` will be registered for each possible `WebDriver`. When
+ * All tests registered via `sharedTests` will be registered for each desired `WebDriver`, as specified by the `browsers` field. When
  * running, any tests for browser drivers that are unavailable
  * on the current platform will be canceled.
  * All tests registered under `sharedTests` will be
@@ -116,8 +122,8 @@ import org.openqa.selenium.chrome.ChromeDriver
  *     }
  *   }
  * 
- *   // Place tests you want run just once outside the `sharedTests` method
- *   // in the constructor, the usual place for tests in a `PlaySpec`
+ *   // Place tests that don't need a WebDriver outside the `sharedTests` method
+ *   // in the constructor, the usual place for tests in a `PlaySpec`.
  *   "The AllBrowsersPerTest trait" must {
  *     "provide a FakeApplication" in {
  *       app.configuration.getString("foo") mustBe Some("bar")
@@ -220,9 +226,25 @@ trait AllBrowsersPerTest extends SuiteMixin with WebBrowser with Eventually with
    * Registers tests "shared" by multiple browsers.
    *
    * Implement this method by placing tests you wish to run for multiple browsers. This method
-   * will be called during the initialization of this trait once for each browser whos
+   * will be called during the initialization of this trait once for each browser whose `BrowserInfo`
+   * appears in the `IndexedSeq` referenced from the `browsers` field.
    *
-   * @param browser the passed in `BrowserInfo` instance, you must append `browser.name` to all tests register here.
+   * Make sure you append `browser.name` to each test declared in `sharedTests`, to ensure they
+   * all have unique names. Here's an example:
+   *
+   * <pre class="stHighlight">
+   * def sharedTests(browser: BrowserInfo) {
+   *   "The blog app home page" must {
+   *     "have the correct title " + browser.name in {
+   *        go to (host + "index.html")
+   *        pageTitle must be ("Awesome Blog")
+   *     } 
+   * </pre>
+   * 
+   * If you don't append `browser.name` to each test name you'll likely be rewarded with
+   * a `DuplicateTestNameException` when you attempt to run the suite.
+   *
+   * @param browser the passed in `BrowserInfo` instance
    */
   def sharedTests(browser: BrowserInfo): Unit
 
@@ -232,7 +254,8 @@ trait AllBrowsersPerTest extends SuiteMixin with WebBrowser with Eventually with
 
   /**
    * Automatically tag browser tests with browser tags based on the test name: if a test ends in a browser
-   * name in square brackets, it will be tagged as using that browser. The browser tags will be merged with
+   * name in square brackets, it will be tagged as using that browser. For example, if a test name
+   * ends in `[Firefox]`, it will be tagged with `org.scalatest.tags.FirefoxBrowser`. The browser tags will be merged with
    * tags returned from `super.tags`, so no existing tags will be lost when the browser tags are added.
    *
    * @return `super.tags` with additional browser tags added for any browser-specific tests 
@@ -256,17 +279,20 @@ trait AllBrowsersPerTest extends SuiteMixin with WebBrowser with Eventually with
   }
 
   /**
-   * Checks the result of the `webDriver` method before running each test, canceling the
-   * test if it is a `UnavailableDriver` (which means the driver was not available on the current platform).
-   * Otherwise, creates a new instance of `TestServer` for the test and ensures it is cleaned up
-   * after the test completes.
+   * Inspects the current test name and if it ends with the name of one of the `BrowserInfo`s 
+   * mentioned in the `browsers` `IndexedSeq`, creates a new web driver by invoking `createWebDriver` on
+   * that `BrowserInfo` and, unless it is an `UnavailableDriver`, installs it so it will be returned by
+   * `webDriver` during the test. (If the driver is unavailable on the host platform, the `createWebDriver`
+   * method will return `UnavailableDriver`, and this `withFixture` implementation will cancel the test
+   * automatically.) If the current test name does not end in a browser name, this `withFixture` method
+   * installs `BrowserInfo.UnneededDriver` as the driver to be returned by `webDriver` during the test.
+   * If the test is not canceled because of an unavailable driver, this `withFixture` method invokes
+   * `super.withFixture` and ensures that the `WebDriver` is closed after `super.withFixture` returns.
    *
    * @param test the no-arg test function to run with a fixture
    * @return the `Outcome` of the test execution
    */
   abstract override def withFixture(test: NoArgTest): Outcome = {
-    // looks at the end of the test name, and if it is one of the blessed ones,
-    // sets the driver, before, and cleans up after, calling super.withFixture(test)
     val localWebDriver: WebDriver =
       browsers.find(b => test.name.endsWith(b.name)) match {
         case Some(b) => b.createWebDriver()
