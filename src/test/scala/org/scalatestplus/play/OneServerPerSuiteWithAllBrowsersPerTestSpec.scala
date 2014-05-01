@@ -22,7 +22,7 @@ import play.api.mvc.{Action, Results}
 import org.openqa.selenium.WebDriver
 import BrowserFactory.UnavailableDriver
 
-class OneServerPerSuiteWithAllBrowsersPerSharedTestSpec extends UnitSpec with OneServerPerSuite with AllBrowsersPerSharedTest {
+class OneServerPerSuiteWithAllBrowsersPerTestSpec extends UnitSpec with OneServerPerSuite with AllBrowsersPerSharedTest {
 
   implicit override lazy val app: FakeApplication =
     FakeApplication(
@@ -31,26 +31,9 @@ class OneServerPerSuiteWithAllBrowsersPerSharedTestSpec extends UnitSpec with On
     )
   def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
 
-  // Doesn't need synchronization because set by withFixture and checked by the test
-  // invoked inside same withFixture with super.withFixture(test)
-  var configMap: ConfigMap = _
-
-  override def withFixture(test: NoArgTest): Outcome = {
-    configMap = test.configMap
-    super.withFixture(test)
-  }
-
   def sharedTests(browser: BrowserInfo) = {
 
-    "The AllBrowsersPerSharedTest trait" must {
-      "put the webDriver in the configMap " + browser.name in {
-        val configuredWebDriver = configMap.getOptional[WebDriver]("org.scalatestplus.play.webDriver")
-        configuredWebDriver mustBe defined
-      }
-      "put the webDriverName in the configMap " + browser.name in {
-        val configuredWebDriverName = configMap.getOptional[String]("org.scalatestplus.play.webDriverName")
-        configuredWebDriverName mustBe defined
-      }
+    "The AllBrowsersPerTest trait" must {
       "provide a web driver " + browser.name in {
         go to ("http://localhost:" + port + "/testing")
         pageTitle mustBe "Test Page"
@@ -60,7 +43,7 @@ class OneServerPerSuiteWithAllBrowsersPerSharedTestSpec extends UnitSpec with On
     }
   }
 
-  "The AllBrowsersPerSharedTest trait" must {
+  "The AllBrowsersPerTest trait" must {
     "provide a FakeApplication" in {
       app.configuration.getString("foo") mustBe Some("bar")
     }
@@ -80,19 +63,8 @@ class OneServerPerSuiteWithAllBrowsersPerSharedTestSpec extends UnitSpec with On
       try con.getResponseCode mustBe 404
       finally con.disconnect()
     }
-    // TODO: I don't see why we'd need the webDriver in the ConfigMap. I think we can stop doing that and remove these tests.
-    "not put the webDriver in the configMap" in {
-      val configuredWebDriver = configMap.getOptional[WebDriver]("org.scalatestplus.play.webDriver")
-      configuredWebDriver mustBe None
-    }
-    "not put the webDriverName in the configMap" in {
-      val configuredWebDriverName = configMap.getOptional[String]("org.scalatestplus.play.webDriverName")
-      configuredWebDriverName mustBe None
-    }
-    "provide a UnavailableDriver that provides an error message with a hint to put the test into the sharedTests method" in {
-      inside(webDriver) { case UnavailableDriver(_, errorMessage) => 
-        errorMessage mustBe Resources("webDriverUsedFromUnsharedTest")
-      }
+    "provide an UnneededDriver to non-shared test whose methods throw UnsupportedOperationException with an error message that gives a hint to put the test into the sharedTests method" in {
+      the [UnsupportedOperationException] thrownBy webDriver.get("funky") must have message Resources("webDriverUsedFromUnsharedTest")
     }
   }
 }

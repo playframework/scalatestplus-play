@@ -48,7 +48,7 @@ object BrowserFactory {
   /**
    * A null-object implementation of the Selenium `WebDriver` interface that throws `UnsupportedOperationException` from
    * all of its methods, used when either a requested Selenium `WebDriver` is unavailable on the host platform or
-   * no `WebDriver` is needed by a test.
+   * a test that did not declare it needed a `WebDriver` attempts to use one.
    *
    * This is named `GrumpyDriver` because all it does is complain. No matter what you ask of it, it throws an
    * `UnsupportedOperationException` back at you.
@@ -56,85 +56,74 @@ object BrowserFactory {
   sealed abstract class GrumpyDriver extends WebDriver {
 
     /**
-     * Throws `UnsupportedOperationException`.
+     * Throws `UnsupportedOperationException` with an appropriate error message and, optionally, cause.
      */
-    def close() { // TODO: Change the error messages to errorMessage
-      throw new UnsupportedOperationException("close not supported")
-    }
+    protected def complain(): Nothing
 
     /**
      * Throws `UnsupportedOperationException`.
      */
-    def findElement(by: By): WebElement = 
-      throw new UnsupportedOperationException("findElement not supported")
+    final def close(): Unit = complain()
+
+    /**
+     * Throws `UnsupportedOperationException`.
+     */
+    final def findElement(by: By): WebElement = complain()
   
     /**
      * Throws `UnsupportedOperationException`.
      */
-    def findElements(by: By): java.util.List[WebElement] = 
-      throw new UnsupportedOperationException("findElements not supported")
+    final def findElements(by: By): java.util.List[WebElement] = complain()
   
     /**
      * Throws `UnsupportedOperationException`.
      */
-    def get(url: String) {
-      throw new UnsupportedOperationException("get not supported")
-    }
+    final def get(url: String): Unit = complain()
   
     /**
      * Throws `UnsupportedOperationException`.
      */
-    def getCurrentUrl(): String = 
-      throw new UnsupportedOperationException("getCurrentUrl not supported")
+    final def getCurrentUrl(): String = complain()
   
     /**
      * Throws `UnsupportedOperationException`.
      */
-    def getPageSource(): String = 
-      throw new UnsupportedOperationException("getCurrentUrl not supported")
+    final def getPageSource(): String = complain()
   
     /**
      * Throws `UnsupportedOperationException`.
      */
-    def getTitle(): String = 
-      throw new UnsupportedOperationException("getCurrentUrl not supported")
+    final def getTitle(): String = complain()
   
     /**
      * Throws `UnsupportedOperationException`.
      */
-    def getWindowHandle(): String = 
-      throw new UnsupportedOperationException("getWindowHandle not supported")
+    final def getWindowHandle(): String = complain()
   
     /**
      * Throws `UnsupportedOperationException`.
      */
-    def getWindowHandles(): java.util.Set[java.lang.String] = 
-      throw new UnsupportedOperationException("getWindowHandles not supported")
+    final def getWindowHandles(): java.util.Set[java.lang.String] = complain()
   
     /**
      * Throws `UnsupportedOperationException`.
      */
-    def manage(): WebDriver.Options = 
-      throw new UnsupportedOperationException("manage not supported")
+    final def manage(): WebDriver.Options = complain()
   
     /**
      * Throws `UnsupportedOperationException`.
      */
-    def navigate(): WebDriver.Navigation = 
-      throw new UnsupportedOperationException("navigate not supported")
+    final def navigate(): WebDriver.Navigation = complain()
   
     /**
      * Throws `UnsupportedOperationException`.
      */
-    def quit() {
-      throw new UnsupportedOperationException("quit not supported")
-    }
+    final def quit(): Unit = complain()
   
     /**
      * Throws `UnsupportedOperationException`.
      */
-    def switchTo(): WebDriver.TargetLocator = 
-      throw new UnsupportedOperationException("switchTo not supported")
+    final def switchTo(): WebDriver.TargetLocator = complain()
   }
 
   /**
@@ -153,7 +142,15 @@ object BrowserFactory {
    * @param ex: the `Throwable`, if any, that was thrown when attempting to use the requested driver
    * @param errorMessage: a user-friendly error message that mentions the specific driver that was unavailable on the host platform
    */
-  case class UnavailableDriver(ex: Option[Throwable], errorMessage: String) extends GrumpyDriver
+  case class UnavailableDriver(ex: Option[Throwable], errorMessage: String) extends GrumpyDriver {
+    protected def complain(): Nothing =
+      ex match {
+        case Some(cause) => 
+          throw new UnsupportedOperationException(errorMessage, cause)
+        case None =>
+          throw new UnsupportedOperationException(errorMessage)
+      }
+  }
 
   /**
    * An implementation of `WebDriver` that throws `UnsupportedOperationException` from
@@ -169,5 +166,7 @@ object BrowserFactory {
    * the Null Object we provide also carries an optional exception and user-friendly error message.
    *
    */
-  case object UnneededDriver extends GrumpyDriver
+  case object UnneededDriver extends GrumpyDriver {
+    protected def complain(): Nothing = throw new UnsupportedOperationException(Resources("webDriverUsedFromUnsharedTest"))
+  }
 }

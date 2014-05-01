@@ -23,7 +23,9 @@ import selenium.WebBrowser
 import concurrent.Eventually
 import concurrent.IntegrationPatience
 import org.openqa.selenium.WebDriver
+import BrowserFactory.GrumpyDriver
 import BrowserFactory.UnavailableDriver
+import BrowserFactory.UnneededDriver
 import org.openqa.selenium.firefox.FirefoxProfile
 import org.openqa.selenium.safari.SafariDriver
 import org.openqa.selenium.chrome.ChromeDriver
@@ -260,60 +262,33 @@ trait AllBrowsersPerSharedTest extends SuiteMixin with WebBrowser with Eventuall
    * @param test the no-arg test function to run with a fixture
    * @return the `Outcome` of the test execution
    */
-  abstract override def withFixture(test: NoArgTest): Outcome =
-    webDriver match {
-      case UnavailableDriver(ex, errorMessage) if test.configMap.getOptional[WebDriver]("org.scalatestplus.play.webDriver").isDefined =>
-        val name = test.configMap.getRequired[String]("org.scalatestplus.play.webDriverName")
-        val message = errorMessage // Resources("cantCreateDriver", name.trim)
-        ex match {
-          case Some(e) => Canceled(message, e)
-          case None => Canceled(message)
-        }
-      case _ => super.withFixture(test)
-    }
-
-  /**
-   * Creates a `WebDriver` and adds entries
-   * to the config map for the app, port number, web driver, and the web driver's name before
-   * executing the specified test. After the test
-   * completes, ensures the `WebDriver` instance is closed.
-   *
-   * @param testName the name of one test to run.
-   * @param args the `Args` for this run
-   * @return a `Status` object that indicates when the test started by this method has completed, and whether or not it failed .
-   */
-  abstract override def runTest(testName: String, args: Args): Status = {
+  abstract override def withFixture(test: NoArgTest): Outcome = {
     // looks at the end of the test name, and if it is one of the blessed ones,
-    // sets the port, driver, etc., before, and cleans up after, calling super.runTest
-    val NoDriverNeededByTest = "No driver needed by this test"
-    val (localWebDriver, localWebDriverName): (WebDriver, String) =
-      browsers.find(b => testName.endsWith(b.name)) match {
-        case Some(b) => (b.createWebDriver(), b.name)
-        case None => (UnavailableDriver(None, Resources("webDriverUsedFromUnsharedTest")), NoDriverNeededByTest)
+    // sets the driver, before, and cleans up after, calling super.withFixture(test)
+    val localWebDriver: WebDriver =
+      browsers.find(b => test.name.endsWith(b.name)) match {
+        case Some(b) => b.createWebDriver()
+        case None => UnneededDriver
       }
-    synchronized {
-      privateWebDriver = localWebDriver
-    }
-    try {
-      val optionalDriverBindings: ConfigMap =
-        if (localWebDriverName != NoDriverNeededByTest)
-          ConfigMap(
-            "org.scalatestplus.play.webDriver" -> localWebDriver,
-            "org.scalatestplus.play.webDriverName" -> localWebDriverName
-          )
-        else
-          ConfigMap.empty
-      val newConfigMap: ConfigMap = new ConfigMap(args.configMap ++ optionalDriverBindings)
-      val newArgs = args.copy(configMap = newConfigMap)
-      super.runTest(testName, newArgs)
-    }
-    finally {
-      webDriver match {
-        case _: UnavailableDriver => // do nothing
-        case safariDriver: SafariDriver => safariDriver.quit()
-        case chromeDriver: ChromeDriver => chromeDriver.quit()
-        case theDriver => theDriver.close()
-      }
+    localWebDriver match {
+      case UnavailableDriver(ex, errorMessage) =>
+        ex match {
+          case Some(e) => Canceled(errorMessage, e)
+          case None => Canceled(errorMessage)
+        }
+      case _ =>
+        synchronized {
+          privateWebDriver = localWebDriver
+        }
+        try super.withFixture(test)
+        finally {
+          localWebDriver match {
+            case _: GrumpyDriver => // do nothing
+            case safariDriver: SafariDriver => safariDriver.quit()
+            case chromeDriver: ChromeDriver => chromeDriver.quit()
+            case theDriver => theDriver.close()
+          }
+        }
     }
   }
 }
