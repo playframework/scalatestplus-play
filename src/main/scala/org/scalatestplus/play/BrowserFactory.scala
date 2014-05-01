@@ -131,7 +131,7 @@ object BrowserFactory {
    * all of its other methods, used when a requested Selenium `WebDriver` is unavailable on the host platform.
    *
    * Traits [[org.scalatestplus.play.OneBrowserPerSuite OneBrowserPerSuite]], [[org.scalatestplus.play.OneBrowserPerTest OneBrowserPerTest]],
-   * [[org.scalatestplus.play.AllBrowsersPerSharedTest AllBrowsersPerSharedTest]], and [[org.scalatestplus.play.MixedFixtures MixedFixtures]] check
+   * [[org.scalatestplus.play.AllBrowsersPerTest AllBrowsersPerTest]], and [[org.scalatestplus.play.MixedFixtures MixedFixtures]] check
    * if the requested `WebDriver` is available, and if not, installs this driver (to avoid initializing with `null`)
    * and cancels the tests.
    *
@@ -157,7 +157,7 @@ object BrowserFactory {
    * all of its methods, used when a test does not need a Selenium `WebDriver` at all.
    *
    * Traits [[org.scalatestplus.play.OneBrowserPerSuite OneBrowserPerSuite]], [[org.scalatestplus.play.OneBrowserPerTest OneBrowserPerTest]],
-   * [[org.scalatestplus.play.AllBrowsersPerSharedTest AllBrowsersPerSharedTest]], and [[org.scalatestplus.play.MixedFixtures MixedFixtures]] check
+   * [[org.scalatestplus.play.AllBrowsersPerTest AllBrowsersPerTest]], and [[org.scalatestplus.play.MixedFixtures MixedFixtures]] check
    * if the requested `WebDriver` is available, and if not, installs this driver (to avoid initializing with `null`)
    * and cancels the tests.
    *

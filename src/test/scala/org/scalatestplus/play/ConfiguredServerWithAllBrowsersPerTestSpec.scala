@@ -22,8 +22,8 @@ import play.api.mvc.{Action, Results}
 import org.openqa.selenium.WebDriver
 import BrowserFactory.UnavailableDriver
 
-class ConfiguredServerWithAllBrowsersPerSharedTestSpec extends Suites(
-  new ConfiguredServerWithAllBrowsersPerSharedTestNestedSpec 
+class ConfiguredServerWithAllBrowsersPerTestSpec extends Suites(
+  new ConfiguredServerWithAllBrowsersPerTestNestedSpec 
 )
 with OneServerPerSuite {
   override lazy val app: FakeApplication =
@@ -34,13 +34,13 @@ with OneServerPerSuite {
 }
 
 @DoNotDiscover
-class ConfiguredServerWithAllBrowsersPerSharedTestNestedSpec extends UnitSpec with ConfiguredServer with AllBrowsersPerSharedTest {
+class ConfiguredServerWithAllBrowsersPerTestNestedSpec extends UnitSpec with ConfiguredServer with AllBrowsersPerTest {
 
   def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
 
   def sharedTests(browser: BrowserInfo) = {
 
-    "The AllBrowsersPerSharedTest trait" must {
+    "The AllBrowsersPerTest trait" must {
       "provide a web driver " + browser.name in {
         go to ("http://localhost:" + port + "/testing")
         pageTitle mustBe "Test Page"
@@ -50,7 +50,7 @@ class ConfiguredServerWithAllBrowsersPerSharedTestNestedSpec extends UnitSpec wi
     }
   }
 
-  "The AllBrowsersPerSharedTest trait" must {
+  "The AllBrowsersPerTest trait" must {
     "provide a FakeApplication" in {
       app.configuration.getString("foo") mustBe Some("bar")
     }

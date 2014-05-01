@@ -22,7 +22,7 @@ import play.api.{Play, Application}
 import play.api.mvc.{Action, Results}
 import org.openqa.selenium.WebDriver
 
-class ExampleSpec extends PlaySpec with OneServerPerTest with AllBrowsersPerSharedTest {
+class ExampleSpec extends PlaySpec with OneServerPerTest with AllBrowsersPerTest {
 
    // Override newAppForTest if you need a FakeApplication with other than non-default parameters.
   override def newAppForTest(testData: TestData): FakeApplication =
@@ -34,7 +34,7 @@ class ExampleSpec extends PlaySpec with OneServerPerTest with AllBrowsersPerShar
   // Place tests you want run in different browsers in the `sharedTests` method:
   def sharedTests(browser: BrowserInfo) = {
 
-    "The AllBrowsersPerSharedTest trait" must {
+    "The AllBrowsersPerTest trait" must {
       "provide a web driver " + browser.name in {
         go to ("http://localhost:" + port + "/testing")
         pageTitle mustBe "Test Page"
@@ -46,7 +46,7 @@ class ExampleSpec extends PlaySpec with OneServerPerTest with AllBrowsersPerShar
 
   // Place tests you want run just once outside the `sharedTests` method
   // in the constructor, the usual place for tests in a `PlaySpec`
-  "The AllBrowsersPerSharedTest trait" must {
+  "The AllBrowsersPerTest trait" must {
     "provide a FakeApplication" in {
       app.configuration.getString("foo") mustBe Some("bar")
     }

@@ -22,7 +22,7 @@ import play.api.mvc.{Action, Results}
 import org.openqa.selenium.WebDriver
 import BrowserFactory.UnavailableDriver
 
-class OneServerPerSuiteWithAllBrowsersPerTestSpec extends UnitSpec with OneServerPerSuite with AllBrowsersPerSharedTest {
+class OneServerPerSuiteWithAllBrowsersPerTestSpec extends UnitSpec with OneServerPerSuite with AllBrowsersPerTest {
 
   implicit override lazy val app: FakeApplication =
     FakeApplication(

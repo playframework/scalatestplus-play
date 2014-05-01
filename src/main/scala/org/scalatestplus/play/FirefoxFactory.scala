@@ -59,7 +59,7 @@ trait FirefoxFactory extends BrowserFactory {
  */
 object FirefoxFactory extends FirefoxFactory {
 
-  // This factory method is used by FirefoxInfo in AllBrowsersPerSharedTest.
+  // This factory method is used by FirefoxInfo in AllBrowsersPerTest.
 
   /**
    * Creates a new instance of a Selenium `FirefoxDriver`, using the specified `FirefoxProfile`,

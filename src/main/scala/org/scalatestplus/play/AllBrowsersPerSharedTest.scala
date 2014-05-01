@@ -93,7 +93,7 @@ import org.openqa.selenium.chrome.ChromeDriver
  * import org.openqa.selenium.WebDriver
  * import BrowserFactory.UnavailableDriver
  * 
- * class ExampleSpec extends PlaySpec with OneServerPerSuite with AllBrowsersPerSharedTest {
+ * class ExampleSpec extends PlaySpec with OneServerPerSuite with AllBrowsersPerTest {
  * 
  *   // Override app if you need a FakeApplication with other than non-default parameters.
  *   implicit override def app: FakeApplication =
@@ -105,7 +105,7 @@ import org.openqa.selenium.chrome.ChromeDriver
  *   // Place tests you want run in different browsers in the `sharedTests` method:
  *   def sharedTests(browser: BrowserInfo) = {
  * 
- *     "The AllBrowsersPerSharedTest trait" must {
+ *     "The AllBrowsersPerTest trait" must {
  *       "provide a web driver " + browser.name in {
  *         go to ("http://localhost:" + port + "/testing")
  *         pageTitle mustBe "Test Page"
@@ -117,7 +117,7 @@ import org.openqa.selenium.chrome.ChromeDriver
  * 
  *   // Place tests you want run just once outside the `sharedTests` method
  *   // in the constructor, the usual place for tests in a `PlaySpec`
- *   "The AllBrowsersPerSharedTest trait" must {
+ *   "The AllBrowsersPerTest trait" must {
  *     "provide a FakeApplication" in {
  *       app.configuration.getString("foo") mustBe Some("bar")
  *     }
@@ -148,19 +148,19 @@ import org.openqa.selenium.chrome.ChromeDriver
  * <pre class="stREPL">
  * &gt; test-only *allbrowserspersharedtest*
  * [info] <span class="stGreen">ExampleSpec:</span>
- * [info] <span class="stGreen">The AllBrowsersPerSharedTest trait</span>
+ * [info] <span class="stGreen">The AllBrowsersPerTest trait</span>
  * [info] <span class="stGreen">- must provide a web driver [Firefox]</span>
- * [info] <span class="stGreen">The AllBrowsersPerSharedTest trait</span>
+ * [info] <span class="stGreen">The AllBrowsersPerTest trait</span>
  * [info] <span class="stGreen">- must provide a web driver [Safari]</span>
- * [info] <span class="stGreen">The AllBrowsersPerSharedTest trait</span>
+ * [info] <span class="stGreen">The AllBrowsersPerTest trait</span>
  * [info] <span class="stYellow">- must provide a web driver [InternetExplorer] !!! CANCELED !!!</span>
- * [info]   <span class="stYellow">Was unable to create a Selenium InternetExplorerDriver on this platform. (AllBrowsersPerSharedTest.scala:257)</span>
- * [info] <span class="stGreen">The AllBrowsersPerSharedTest trait</span>
+ * [info]   <span class="stYellow">Was unable to create a Selenium InternetExplorerDriver on this platform. (AllBrowsersPerTest.scala:257)</span>
+ * [info] <span class="stGreen">The AllBrowsersPerTest trait</span>
  * [info] <span class="stYellow">- must provide a web driver [Chrome] !!! CANCELED !!!</span>
- * [info]   <span class="stYellow">Was unable to create a Selenium ChromeDriver on this platform. (AllBrowsersPerSharedTest.scala:257)</span>
- * [info] <span class="stGreen">The AllBrowsersPerSharedTest trait</span>
+ * [info]   <span class="stYellow">Was unable to create a Selenium ChromeDriver on this platform. (AllBrowsersPerTest.scala:257)</span>
+ * [info] <span class="stGreen">The AllBrowsersPerTest trait</span>
  * [info] <span class="stGreen">- must provide a web driver [HtmlUnit]</span>
- * [info] <span class="stGreen">The AllBrowsersPerSharedTest trait</span>
+ * [info] <span class="stGreen">The AllBrowsersPerTest trait</span>
  * [info] <span class="stGreen">- must provide a FakeApplication</span>
  * [info] <span class="stGreen">- must make the FakeApplication available implicitly</span>
  * [info] <span class="stGreen">- must start the FakeApplication</span>
@@ -175,16 +175,16 @@ import org.openqa.selenium.chrome.ChromeDriver
  * <pre>
  * &gt; test-only *allbrowserspersharedtest* -- -n org.scalatest.tags.FirefoxBrowser
  * [info] <span class="stGreen">ExampleSpec:</span>
- * [info] <span class="stGreen">The AllBrowsersPerSharedTest trait</span>
+ * [info] <span class="stGreen">The AllBrowsersPerTest trait</span>
  * [info] <span class="stGreen">- must provide a web driver [Firefox]</span>
- * [info] <span class="stGreen">The AllBrowsersPerSharedTest trait</span>
- * [info] <span class="stGreen">The AllBrowsersPerSharedTest trait</span>
- * [info] <span class="stGreen">The AllBrowsersPerSharedTest trait</span>
- * [info] <span class="stGreen">The AllBrowsersPerSharedTest trait</span>
- * [info] <span class="stGreen">The AllBrowsersPerSharedTest trait</span>
+ * [info] <span class="stGreen">The AllBrowsersPerTest trait</span>
+ * [info] <span class="stGreen">The AllBrowsersPerTest trait</span>
+ * [info] <span class="stGreen">The AllBrowsersPerTest trait</span>
+ * [info] <span class="stGreen">The AllBrowsersPerTest trait</span>
+ * [info] <span class="stGreen">The AllBrowsersPerTest trait</span>
  * </pre>
  */
-trait AllBrowsersPerSharedTest extends SuiteMixin with WebBrowser with Eventually with IntegrationPatience { this: Suite with ServerProvider =>
+trait AllBrowsersPerTest extends SuiteMixin with WebBrowser with Eventually with IntegrationPatience { this: Suite with ServerProvider =>
 
   /**
    * Method to provide `FirefoxProfile` for creating `FirefoxDriver`, you can override this method to
@@ -229,11 +229,6 @@ trait AllBrowsersPerSharedTest extends SuiteMixin with WebBrowser with Eventuall
     sharedTests(browser)
   }
 
-  private def mergeMap[A, B](ms: List[Map[A, B]])(f: (B, B) => B): Map[A, B] =
-    (Map[A, B]() /: (for (m <- ms; kv <- m) yield kv)) { (a, kv) =>
-      a + (if (a.contains(kv._1)) kv._1 -> f(a(kv._1), kv._2) else kv)
-    }
-
   /**
    * Automatically tag browser tests with browser tags based on the test name: if a test ends in a browser
    * name in square brackets, it will be tagged as using that browser. The browser tags will be merged with
@@ -242,6 +237,12 @@ trait AllBrowsersPerSharedTest extends SuiteMixin with WebBrowser with Eventuall
    * @return `super.tags` with additional browser tags added for any browser-specific tests 
    */
   abstract override def tags: Map[String, Set[String]] = {
+
+    def mergeMap[A, B](ms: List[Map[A, B]])(f: (B, B) => B): Map[A, B] =
+      (for (m <- ms; kv <- m) yield kv).foldLeft(Map.empty[A, B]) { (a, kv) =>
+        a + (if (a.contains(kv._1)) kv._1 -> f(a(kv._1), kv._2) else kv)
+      }
+
     val generatedBrowserTags: Map[String, Set[String]] = Map.empty ++ testNames.map { tn =>
       browsers.find(b => tn.endsWith(b.name)) match {
         case Some(b) => (tn, Set(b.tagName))

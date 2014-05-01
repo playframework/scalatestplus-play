@@ -35,7 +35,7 @@ import org.openqa.selenium.chrome.ChromeDriver
  * provide `TestServer`s to tests. This trait is included in the self-type of 
  * [[org.scalatestplus.play.OneBrowserPerSuite OneBrowserPerSuite]], and
  * [[org.scalatestplus.play.OneBrowserPerTest OneBrowserPerTest]], and
- * [[org.scalatestplus.play.AllBrowsersPerSharedTest AllBrowsersPerSharedTest]], allowing you to select
+ * [[org.scalatestplus.play.AllBrowsersPerTest AllBrowsersPerTest]], allowing you to select
  * the `WebDriver` strategy (i.e., the extent to which `WebDriver`s are shared between tests) independently from the 
  * `TestServer` strategy (the extent to which `TestServer`s are shared between tests).
  */

@@ -22,7 +22,7 @@ import play.api.mvc.{Action, Results}
 import org.openqa.selenium.WebDriver
 import BrowserFactory.UnavailableDriver
 
-class OneServerPerTestWithAllBrowsersPerTestSpec extends UnitSpec with OneServerPerTest with AllBrowsersPerSharedTest {
+class OneServerPerTestWithAllBrowsersPerTestSpec extends UnitSpec with OneServerPerTest with AllBrowsersPerTest {
 
   override def newAppForTest(testData: TestData): FakeApplication =
     FakeApplication(
@@ -33,7 +33,7 @@ class OneServerPerTestWithAllBrowsersPerTestSpec extends UnitSpec with OneServer
 
   def sharedTests(browser: BrowserInfo) = {
 
-    "The AllBrowsersPerSharedTest trait" must {
+    "The AllBrowsersPerTest trait" must {
       "provide a web driver " + browser.name in {
         go to ("http://localhost:" + port + "/testing")
         pageTitle mustBe "Test Page"
@@ -43,7 +43,7 @@ class OneServerPerTestWithAllBrowsersPerTestSpec extends UnitSpec with OneServer
     }
   }
 
-  "The AllBrowsersPerSharedTest trait" must {
+  "The AllBrowsersPerTest trait" must {
     "provide a FakeApplication" in {
       app.configuration.getString("foo") mustBe Some("bar")
     }
