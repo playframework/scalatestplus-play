@@ -27,6 +27,10 @@ import play.api.http.{ HttpProtocol, Status, HeaderNames }
 
 /**
  * Convenience "super Suite" class for "mixed fixture" Play tests.
+ *
+ * This class mixes in trait [[org.scalatestplus.play.MixedFixtures MixedFixtures]], and is therefore convenient
+ * when different tests in the same test class need different kinds of fixtures. When different tests in the same class
+ * need the same fixture, you're probably better of extending [[org.scalatestplus.play.PlaySpec PlaySpec]] instead.
  */
 abstract class MixedPlaySpec extends fixture.WordSpec with MustMatchers with OptionValues with MixedFixtures with Eventually with IntegrationPatience with WsScalaTestClient
 

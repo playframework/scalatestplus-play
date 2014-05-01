@@ -36,7 +36,7 @@ import org.openqa.selenium.chrome.ChromeDriver
  * `WebDriver` as well, most easily by having the nested `Suite`s mix in the
  * [[org.scalatestplus.play.ConfiguredServer ConfiguredBrowser]] trait. On the status returned by `super.run`, this
  * trait's overridden `run` method registers a block of code to close the `WebDriver` to be executed when the `Status`
- * completes, and returns the same `Status`. This ensure the `WebDriver` will continue to execute until
+ * completes, and returns the same `Status`. This ensures the `WebDriver` will continue to be available until
  * all nested suites have completed, after which the `WebDriver` will be closed.
  * This trait also overrides `Suite.withFixture` to cancel tests automatically if the related
  * `WebDriver` is not available on the host platform.
@@ -101,8 +101,8 @@ import org.openqa.selenium.chrome.ChromeDriver
  * </pre>
  *
  * If you have many tests that can share the same `FakeApplication`, `TestServer`, and `WebDriver`, and you don't want to put them all into one
- * test class, you can place them into different `Suite` classes.
- * These will be your nested suites. Create a master suite that extends `OneServerPerSuite` and declares the nested 
+ * test class, you can place them into different "nested" `Suite` classes.
+ * Create a master suite that extends `OneServerPerSuite` and declares the nested 
  * `Suite`s. Annotate the nested suites with `@DoNotDiscover` and have them extend `ConfiguredBrowser`. Here's an example:
  *
  * <pre class="stHighlight">
@@ -110,10 +110,11 @@ import org.openqa.selenium.chrome.ChromeDriver
  * 
  * import play.api.test._
  * import org.scalatest._
+ * import tags.FirefoxBrowser
  * import org.scalatestplus.play._
  * import play.api.{Play, Application}
  * 
- *  // This is the "master" suite
+ * // This is the "master" suite
  * class NestedExampleSpec extends Suites(
  *   new OneSpec,
  *   new TwoSpec,
@@ -129,14 +130,14 @@ import org.openqa.selenium.chrome.ChromeDriver
  * }
  *  
  * // These are the nested suites
- * @DoNotDiscover class OneSpec extends PlaySpec with ConfiguredBrowser
- * @DoNotDiscover class TwoSpec extends PlaySpec with ConfiguredBrowser
- * @DoNotDiscover class RedSpec extends PlaySpec with ConfiguredBrowser
+ * @DoNotDiscover class OneSpec extends PlaySpec with ConfiguredServer with ConfiguredBrowser
+ * @DoNotDiscover class TwoSpec extends PlaySpec with ConfiguredServer with ConfiguredBrowser
+ * @DoNotDiscover class RedSpec extends PlaySpec with ConfiguredServer with ConfiguredBrowser
  * 
  * @DoNotDiscover
- * class BlueSpec extends PlaySpec with ConfiguredBrowser {
+ * class BlueSpec extends PlaySpec with ConfiguredServer with ConfiguredBrowser {
  * 
- *   "The OneAppPerSuite trait" must {
+ *   "The OneBrowserPerSuite trait" must {
  *     "provide a FakeApplication" in { 
  *       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
  *     }
@@ -163,9 +164,10 @@ import org.openqa.selenium.chrome.ChromeDriver
  * </pre>
  *
  * It is possible to use `OneBrowserPerSuite` to run the same tests in more than one browser. Nevertheless,
- * you should consider the approach taken by [[org.scalatestplus.play.AllBrowsersPerTest AllBrowsersPerTest]]
- * instead, as it requires less boilerplate code than `OneBrowserPerSuite` to test in multiple browsers. 
- * If you prefer to use `OneBrowserPerSuite`, simply place your tests in an abstract superclass, then define concrete subclasses
+ * you should consider the approach taken by [[org.scalatestplus.play.AllBrowsersPerSuite AllBrowsersPerSuite]]
+ * and [[org.scalatestplus.play.AllBrowsersPerTest AllBrowsersPerTest]]
+ * instead, as it requires a bit less boilerplate code than `OneBrowserPerSuite` to test in multiple browsers. 
+ * If you prefer to use `OneBrowserPerSuite`, however, simply place your tests in an abstract superclass, then define concrete subclasses
  * for each browser you wish to test against. Here's an example:
  * 
  * <pre class="stHighlight">
@@ -178,7 +180,7 @@ import org.openqa.selenium.chrome.ChromeDriver
  * import play.api.{Play, Application}
  * 
  * // Place your tests in an abstract class
- * abstract class MultiBrowserExampleSpec extends PlaySpec with OneBrowserPerSuite {
+ * abstract class MultiBrowserExampleSpec extends PlaySpec with OneServerPerSuite with OneBrowserPerSuite {
  * 
  *   // Override app if you need a FakeApplication with other than non-default parameters.
  *   implicit override lazy val app: FakeApplication =

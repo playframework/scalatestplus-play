@@ -29,15 +29,69 @@ import BrowserFactory.UninitializedDriver
  * into which it is mixed.
  *
  * The purpose of this trait is to allow nested suites of an enclosing suite that extends [[org.scalatestplus.play.OneBrowserPerSuite OneBrowserPerSuite]]
- * to make use of the `FakeApplication`, port number, and `WebDriver` provided by `OneBrowserPerSuite`. Trait `OneBrowserPerSuite` will ensure
- * the `FakeApplication` is placed in the `ConfigMap` under the key `org.scalatestplus.play.app`, the port number
- * under the key `org.scalatestplus.play.port`, and the `WebDriver` under the key `org.scalatestplus.play.webDriver` before nested suites are invoked. This
+ * to make use of the `WebDriver` provided by `OneBrowserPerSuite`. Trait `OneBrowserPerSuite` will ensure
+ * the `WebDriver` is placed in the `ConfigMap` under the key `org.scalatestplus.play.webDriver` before nested suites are invoked. This
  * information represents the "configured browser" that is passed from the enclosing suite to the nested suites. Trait `ConfiguredBrowser` extracts this information from
- * from the `ConfigMap` and makes the `FakeApplication` available via the `app` method, the port number available as an `Int` from
- * the `port` method, and also the port number wrapped in a [[org.scalatestplus.play.PortNumber PortNumber]] available as implicit method `portNumber` (for use
- * with trait [[org.scalatestplus.play.WsScalaTestClient WsScalaTestClient]]), and the `WebDriver` available implicitly from the `webDriver` method.
+ * from the `ConfigMap` and makes the `WebDriver` available implicitly from the `webDriver` method.
  *
- * To prevent discovery of nested suites you can annotate them with `@DoNotDiscover`.
+ * This trait's self-type, [[org.scalatestplus.play.ServerProvider ServerProvider]],  will ensure 
+ * a `TestServer` and `FakeApplication` are available to each test. The self-type will require that you mix in either
+ * [[org.scalatestplus.play.OneServerPerSuite OneServerPerSuite]], [[org.scalatestplus.play.OneServerPerTest OneServerPerTest]], 
+ * [[org.scalatestplus.play.ConfiguredServer ConfiguredServer]] before you mix in this trait. Your choice among these three
+ * `ServerProvider`s will determine the extent to which one or more `TestServer`s are shared by multiple tests.
+ *
+ * To prevent discovery of nested suites you can annotate them with `@DoNotDiscover`. Here's an example
+ * taken from the documentation for trait [[org.scalatestplus.play.OneBrowserPerSuite OneBrowserPerSuite]]:
+ *
+ * <pre class="stHighlight">
+ * package org.scalatestplus.play.examples.onebrowserpersuite
+ * 
+ * import play.api.test._
+ * import org.scalatest._
+ * import org.scalatestplus.play._
+ * import play.api.{Play, Application}
+ * 
+ * class ExampleSpec extends PlaySpec with OneServerPerSuite with OneBrowserPerSuite with FirefoxFactory {
+ * 
+ *   // Override app if you need a FakeApplication with other than non-default parameters.
+ *   implicit override lazy val app: FakeApplication =
+ *     FakeApplication(
+ *       additionalConfiguration = Map("ehcacheplugin" -&gt; "disabled"),
+ *       withRoutes = TestRoute
+ *     )
+ * 
+ *   "The OneBrowserPerSuite trait" must {
+ *     "provide a FakeApplication" in {
+ *       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
+ *     }
+ *     "make the FakeApplication available implicitly" in {
+ *       def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
+ *       getConfig("ehcacheplugin") mustBe Some("disabled")
+ *     }
+ *     "start the FakeApplication" in {
+ *       Play.maybeApplication mustBe Some(app)
+ *     }
+ *     "provide the port number" in {
+ *       port mustBe Helpers.testServerPort
+ *     }
+ *     "provide an actual running server" in {
+ *       import Helpers._
+ *       import java.net._
+ *       val url = new URL("http://localhost:" + port + "/boum")
+ *       val con = url.openConnection().asInstanceOf[HttpURLConnection]
+ *       try con.getResponseCode mustBe 404
+ *       finally con.disconnect()
+ *     }
+ *     "provide a web driver" in {
+ *       go to ("http://localhost:" + port + "/testing")
+ *       pageTitle mustBe "Test Page"
+ *       click on find(name("b")).value
+ *       eventually { pageTitle mustBe "scalatest" }
+ *     }
+ *   }
+ * }
+ * </pre>
+ *
  */
 trait ConfiguredBrowser extends SuiteMixin with WebBrowser with Eventually with IntegrationPatience { this: Suite with ServerProvider => 
 
@@ -51,17 +105,12 @@ trait ConfiguredBrowser extends SuiteMixin with WebBrowser with Eventually with 
   implicit def webDriver: WebDriver = synchronized { configuredWebDriver } 
 
   /**
-   * Looks in `args.configMap` for a key named "org.scalatestplus.play.app" whose value is a `FakeApplication`, 
-   * a key named "org.scalatestplus.play.port" whose value is an `Int`,
-   * and a key named "org.scalatestplus.play.webDriver" whose value is a `WebDriver`,
-   * and if they exist, sets the `FakeApplication` as the value that will be returned from the `app` method,
-   * the `Int` as the value that will be returned from the `port` method, and the `WebDriver` as
+   * Looks in `args.configMap` for a key named "org.scalatestplus.play.webDriver" whose value is a `WebDriver`,
+   * and if it exists, sets the `WebDriver` as
    * the value that will be returned from the `webDriver` method, then calls
    * `super.run`.
    *
-   * If no key matches "org.scalatestplus.play.app" in `args.configMap`, or the associated value is
-   * not a `FakeApplication`, or if no key matches "org.scalatestplus.play.port" in `args.configMap`,
-   * or the associated value is not an `Int`, or if no key matches "org.scalatestplus.play.webDriver" in `args.configMap`,
+   * If no key matches "org.scalatestplus.play.webDriver" in `args.configMap`,
    * or the associated value is not a `WebDriver`, throws `IllegalArgumentException`.
    *
    * @param testName an optional name of one test to run. If `None`, all relevant tests should be run.
@@ -69,7 +118,7 @@ trait ConfiguredBrowser extends SuiteMixin with WebBrowser with Eventually with 
    * @param args the `Args` for this run
    * @return a `Status` object that indicates when all tests and nested suites started by this method have completed, and whether or not a failure occurred.
    *         
-   * @throws IllegalArgumentException if the `FakeApplication` and/or port number does not appear in `args.configMap` under the expected keys
+   * @throws IllegalArgumentException if the `WebDriver` does not appear in `args.configMap` under the expected key
    */
   abstract override def run(testName: Option[String], args: Args): Status = {
     args.configMap.getOptional[WebDriver]("org.scalatestplus.play.webDriver") match {

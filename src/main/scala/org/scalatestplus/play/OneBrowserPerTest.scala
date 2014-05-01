@@ -27,7 +27,7 @@ import org.openqa.selenium.chrome.ChromeDriver
 import BrowserFactory.UninitializedDriver
 
 /**
- * Trait that provides a new `FakeApplication`, running `TestServer`, and Selenium `WebDriver` instance for each test executed in a ScalaTest `Suite`.
+ * Trait that provides a new Selenium `WebDriver` instance for each test executed in a ScalaTest `Suite`.
  * 
  * This trait overrides ScalaTest's `withFixture` method to create a new `WebDriver` instance 
  * before each test, and ensure it is closed after the test has completed.
@@ -104,9 +104,10 @@ trait OneBrowserPerTest extends SuiteMixin with WebBrowser with Eventually with 
   implicit def webDriver: WebDriver = synchronized { privateWebDriver }
 
   /**
-   * Override `withFixture` to create new instance of `WebDriver` before 
-   * running each test.  If there is error when creating `WebDriver`, `UnavailableDriver` 
-   * will be used and all tests will be canceled automatically.
+   * Creates a new instance of `WebDriver` before 
+   * running each test, ensuring it is closed after the test completes. 
+   * If an error occurs when attempting to creat the `WebDriver`, [[org.scalatestplus.play.BrowserFactory.UnavailableDriver BrowserFactory.UnavailableDriver]] 
+   * will be used instead and all tests will be canceled automatically.
    *
    * @param test the no-arg test function to run with a fixture
    * @return the `Outcome` of the test execution

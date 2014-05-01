@@ -31,7 +31,7 @@ import org.openqa.selenium.safari.SafariDriver
 
 /**
  * Trait that helps you provide different fixtures to different tests: a `FakeApplication`, a `TestServer`, or one
- * of the Selenium `WebBrowser`s.
+ * of the Selenium `WebDrivers`s.
  *
  * Trait `MixedFixtures` can be mixed into any `fixture.Suite`. For convenience it is
  * mixed into [[org.scalatestplus.play.MixedPlaySpec MixedPlaySpec]]. In a `fixture.Suite`, tests can
@@ -61,7 +61,7 @@ import org.openqa.selenium.safari.SafariDriver
  * If a test needs a `FakeApplication`, running `TestServer`, and Selenium driver, use
  * one of functions `Chrome`, `Firefox`, `HtmlUnit`, `InternetExplorer`, or `Safari`.
  * If the chosen Selenium driver is unavailable on the host platform, the test will
- * be automatically canceled. Her'es an example that uses the `Safari` function:
+ * be automatically canceled. Here's an example that uses the `Safari` function:
  * 
  * <pre class="stHighlight">
  * "provide a web driver" in new Safari(fakeApp()) {
