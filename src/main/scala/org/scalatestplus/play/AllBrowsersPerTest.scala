@@ -179,7 +179,7 @@ import org.openqa.selenium.chrome.ChromeDriver
  * on the browser they use. For example, here's how the output would look if you ran the above test class
  * with sbt and ask to include only Firefox:
  *
- * <pre>
+ * <pre class="stREPL">
  * &gt; test-only *allbrowserspersharedtest* -- -n org.scalatest.tags.FirefoxBrowser
  * [info] <span class="stGreen">ExampleSpec:</span>
  * [info] <span class="stGreen">The AllBrowsersPerTest trait</span>
