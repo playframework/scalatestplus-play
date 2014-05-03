@@ -48,20 +48,35 @@ import BrowserFactory.UninitializedDriver
  * 
  * import play.api.test._
  * import org.scalatest._
+ * import tags.FirefoxBrowser
  * import org.scalatestplus.play._
  * import play.api.{Play, Application}
  * 
- * class ExampleSpec extends PlaySpec with OneServerPerSuite with OneBrowserPerSuite with FirefoxFactory {
- * 
+ * // This is the "master" suite
+ * class NestedExampleSpec extends Suites(
+ *   new OneSpec,
+ *   new TwoSpec,
+ *   new RedSpec,
+ *   new BlueSpec
+ * ) with OneServerPerSuite with OneBrowserPerSuite with FirefoxFactory {
  *   // Override app if you need a FakeApplication with other than non-default parameters.
  *   implicit override lazy val app: FakeApplication =
  *     FakeApplication(
  *       additionalConfiguration = Map("ehcacheplugin" -&gt; "disabled"),
  *       withRoutes = TestRoute
  *     )
+ * }
+ *  
+ * // These are the nested suites
+ * @DoNotDiscover class OneSpec extends PlaySpec with ConfiguredServer with ConfiguredBrowser
+ * @DoNotDiscover class TwoSpec extends PlaySpec with ConfiguredServer with ConfiguredBrowser
+ * @DoNotDiscover class RedSpec extends PlaySpec with ConfiguredServer with ConfiguredBrowser
+ * 
+ * @DoNotDiscover
+ * class BlueSpec extends PlaySpec with ConfiguredServer with ConfiguredBrowser {
  * 
  *   "The OneBrowserPerSuite trait" must {
- *     "provide a FakeApplication" in {
+ *     "provide a FakeApplication" in { 
  *       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
  *     }
  *     "make the FakeApplication available implicitly" in {
@@ -82,16 +97,9 @@ import BrowserFactory.UninitializedDriver
  *       try con.getResponseCode mustBe 404
  *       finally con.disconnect()
  *     }
- *     "provide a web driver" in {
- *       go to ("http://localhost:" + port + "/testing")
- *       pageTitle mustBe "Test Page"
- *       click on find(name("b")).value
- *       eventually { pageTitle mustBe "scalatest" }
- *     }
  *   }
  * }
  * </pre>
- *
  */
 trait ConfiguredBrowser extends SuiteMixin with WebBrowser with Eventually with IntegrationPatience { this: Suite with ServerProvider => 
 
