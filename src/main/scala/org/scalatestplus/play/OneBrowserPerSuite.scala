@@ -28,7 +28,7 @@ import org.openqa.selenium.chrome.ChromeDriver
 /* TODO: Make ConfiguredBrowser require a ServerProvider also, I think. */
 
 /**
- * Trait that provides a new Selenium `WebBrowser` instance per ScalaTest `Suite`.
+ * Trait that provides a new Selenium `WebDriver` instance per ScalaTest `Suite`.
  * 
  * This `SuiteMixin` trait's overridden `run` method 
  * places a reference to the `WebDriver` provided by `webDriver` under the key `org.scalatestplus.play.webDriver`.
