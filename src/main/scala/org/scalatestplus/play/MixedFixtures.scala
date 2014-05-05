@@ -85,7 +85,21 @@ import org.openqa.selenium.safari.SafariDriver
  * class ExampleSpec extends MixedPlaySpec {
  * 
  *   // Some helper methods
- *   def fakeApp[A](elems: (String, String)*) = FakeApplication(additionalConfiguration = Map(elems:_*), withRoutes = TestRoute)
+ *   def fakeApp[A](elems: (String, String)*) = FakeApplication(additionalConfiguration = Map(elems:_*),
+ *     withRoutes = {
+ *       case ("GET", "/testing") =&gt;
+ *         Action(
+ *           Results.Ok(
+ *             "&lt;html&gt;" +
+ *             "&lt;head&gt;&lt;title&gt;Test Page&lt;/title&gt;&lt;/head&gt;" +
+ *             "&lt;body&gt;" +
+ *             "&lt;input type='button' name='b' value='Click Me' onclick='document.title=\"scalatest\"' /&gt;" +
+ *             "&lt;/body&gt;" +
+ *             "&lt;/html&gt;"
+ *           ).as("text/html")
+ *         )
+ *     }
+ *   )
  *   def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
  * 
  *   // If a test just needs a <code>FakeApplication</code>, use "<code>new App</code>":
