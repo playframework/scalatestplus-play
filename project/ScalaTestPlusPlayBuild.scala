@@ -19,7 +19,7 @@ import com.typesafe.sbt.SbtPgp._
 
 object ScalaTestPlusPlayBuild extends Build {
 
-  val releaseVersion = "1.0.0"
+  val releaseVersion = "1.0.1"
   val projectTitle = "ScalaTest + Play" // for scaladoc source urls
 
   def envVar(name: String): Option[String] =
@@ -63,7 +63,7 @@ object ScalaTestPlusPlayBuild extends Build {
     resolvers += "Local Maven" at Path.userHome.asFile.toURI.toURL + ".m2/repository",
 
     libraryDependencies ++= Seq(
-      "org.scalatest" %% "scalatest" % "2.1.5",
+      "org.scalatest" %% "scalatest" % "2.1.6",
       "com.typesafe.play" %% "play-test" % "2.2.0",
       "org.seleniumhq.selenium" % "selenium-java" % "2.38.0"
     ),
