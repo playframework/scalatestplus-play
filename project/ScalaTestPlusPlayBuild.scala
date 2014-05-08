@@ -56,7 +56,7 @@ object ScalaTestPlusPlayBuild extends Build {
 
     version := releaseVersion,
 
-    scalaVersion := "2.10.3",
+    scalaVersion := "2.11.0",
 
     resolvers += "Typesafe Releases" at "http://repo.typesafe.com/typesafe/releases",
 
@@ -72,6 +72,8 @@ object ScalaTestPlusPlayBuild extends Build {
     parallelExecution in Test := false,
 
     testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oTK"),
+
+    scalacOptions ++= Seq("-no-specialization"),
 
     scalacOptions in (Compile, doc) := Seq("-doc-title", projectTitle + ", " + releaseVersion)
   )
