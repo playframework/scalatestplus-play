@@ -18,6 +18,7 @@ package org.scalatestplus.play
 import play.api._
 import libs.ws.WS
 import play.api.mvc.Call
+import play.api.Play.current
 
 /**
  * Trait providing convenience methods to create WS requests in tests.
