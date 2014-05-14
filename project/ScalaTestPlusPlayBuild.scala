@@ -63,7 +63,7 @@ object ScalaTestPlusPlayBuild extends Build {
     resolvers += "Local Maven" at Path.userHome.asFile.toURI.toURL + ".m2/repository",
 
     libraryDependencies ++= Seq(
-      "org.scalatest" %% "scalatest" % "2.1.6",
+      "org.scalatest" %% "scalatest" % "2.1.7",
       "com.typesafe.play" %% "play-test" % "2.3.0-RC1",
       "org.seleniumhq.selenium" % "selenium-java" % "2.38.0",
       "com.typesafe.play" %% "play-ws" % "2.3.0-RC1"
@@ -72,8 +72,6 @@ object ScalaTestPlusPlayBuild extends Build {
     parallelExecution in Test := false,
 
     testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oTK"),
-
-    scalacOptions ++= Seq("-no-specialization"),
 
     scalacOptions in (Compile, doc) := Seq("-doc-title", projectTitle + ", " + releaseVersion)
   )
