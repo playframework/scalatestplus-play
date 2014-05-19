@@ -56,7 +56,8 @@ object ScalaTestPlusPlayBuild extends Build {
 
     version := releaseVersion,
 
-    scalaVersion := "2.11.0",
+    // scalaVersion := "2.11.0",
+    crossScalaVersions := Seq("2.10.3", "2.11.0"),
 
     resolvers += "Typesafe Releases" at "http://repo.typesafe.com/typesafe/releases",
 
