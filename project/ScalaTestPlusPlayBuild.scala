@@ -72,7 +72,7 @@ object ScalaTestPlusPlayBuild extends Build {
 
     parallelExecution in Test := false,
 
-    testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oTK"),
+    testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oFIK"),
 
     scalacOptions in (Compile, doc) := Seq("-doc-title", projectTitle + ", " + releaseVersion)
   )
