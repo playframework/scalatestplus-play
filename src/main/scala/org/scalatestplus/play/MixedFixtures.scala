@@ -334,8 +334,22 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
      * Runs a `TestServer` using the passed-in `FakeApplication` and  port before executing the
      * test body, ensuring both are stopped after the test body completes.
      */
+    // override def apply() {
+    //   Helpers.running(TestServer(port, app))(super.apply())
+    // }
     override def apply() {
-      Helpers.running(TestServer(port, app))(super.apply())
+      // manually inlining of `Helpers.running(app)(super.apply())`
+      // to sidestep SI-4996 in Scala 2.10.x
+      val testServer = TestServer(port, app)
+      import play.api.Play
+      Helpers.synchronized {
+        try {
+          testServer.start()
+          super.apply()
+        } finally {
+          testServer.stop()
+        }
+      }
     }
   }
 
@@ -374,7 +388,18 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
             case None => cancel(errorMessage)
           }
         case _ => 
-          try Helpers.running(TestServer(port, app))(super.apply())
+          try { // Helpers.running(TestServer(port, app))(super.apply())
+            val testServer = TestServer(port, app)
+            import play.api.Play
+            Helpers.synchronized {
+              try {
+                testServer.start()
+                super.apply()
+              } finally {
+                testServer.stop()
+              }
+            }
+          }
           finally webDriver.close()
       }
     }
@@ -416,7 +441,18 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
             case None => cancel(errorMessage)
           }
         case _ => 
-          try Helpers.running(TestServer(port, app))(super.apply())
+          try { // Helpers.running(TestServer(port, app))(super.apply())
+            val testServer = TestServer(port, app)
+            import play.api.Play
+            Helpers.synchronized {
+              try {
+                testServer.start()
+                super.apply()
+              } finally {
+                testServer.stop()
+              }
+            }
+          }
           finally webDriver.close()
       }
     }
@@ -457,7 +493,18 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
             case None => cancel(errorMessage)
           }
         case _ => 
-          try Helpers.running(TestServer(port, app))(super.apply())
+          try { // Helpers.running(TestServer(port, app))(super.apply())
+            val testServer = TestServer(port, app)
+            import play.api.Play
+            Helpers.synchronized {
+              try {
+                testServer.start()
+                super.apply()
+              } finally {
+                testServer.stop()
+              }
+            }
+          }
           finally webDriver.quit()
       }
     }
@@ -499,7 +546,18 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
             case None => cancel(errorMessage)
           }
         case _ => 
-          try Helpers.running(TestServer(port, app))(super.apply())
+          try { // Helpers.running(TestServer(port, app))(super.apply())
+            val testServer = TestServer(port, app)
+            import play.api.Play
+            Helpers.synchronized {
+              try {
+                testServer.start()
+                super.apply()
+              } finally {
+                testServer.stop()
+              }
+            }
+          }
           finally webDriver.quit()
       }
     }
@@ -541,7 +599,18 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
             case None => cancel(errorMessage)
           }
         case _ => 
-          try Helpers.running(TestServer(port, app))(super.apply())
+          try { // Helpers.running(TestServer(port, app))(super.apply())
+            val testServer = TestServer(port, app)
+            import play.api.Play
+            Helpers.synchronized {
+              try {
+                testServer.start()
+                super.apply()
+              } finally {
+                testServer.stop()
+              }
+            }
+          }
           finally webDriver.close()
       }
     }
