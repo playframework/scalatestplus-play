@@ -301,7 +301,17 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
      * Runs the passed in `FakeApplication` before executing the test body, ensuring it is closed after the test body completes.
      */
     override def apply() {
-      Helpers.running(app)(super.apply())
+      // manually inlining of `Helpers.running(app)(super.apply())`
+      // to sidestep SI-4996 in Scala 2.10.x
+      import play.api.Play
+      Helpers.synchronized {
+        try {
+          Play.start(app)
+          super.apply()
+        } finally {
+          Play.stop()
+        }
+      }
     }
   }
 
