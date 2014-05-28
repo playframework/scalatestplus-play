@@ -56,7 +56,9 @@ object ScalaTestPlusPlayBuild extends Build {
 
     version := releaseVersion,
 
-    scalaVersion := "2.11.0",
+    scalaVersion := "2.11.1",
+
+    crossScalaVersions := Seq("2.11.1", "2.10.4"),
 
     resolvers += "Typesafe Releases" at "http://repo.typesafe.com/typesafe/releases",
 
@@ -64,7 +66,7 @@ object ScalaTestPlusPlayBuild extends Build {
 
     libraryDependencies ++= Seq(
       "org.scalatest" %% "scalatest" % "2.1.7",
-      "com.typesafe.play" %% "play-test" % "2.3.0-RC1",
+      "com.typesafe.play" %% "play-test" % "2.3.0-RC2",
       "org.seleniumhq.selenium" % "selenium-java" % "2.38.0",
       "com.typesafe.play" %% "play-ws" % "2.3.0-RC1"
     ),
