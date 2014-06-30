@@ -301,7 +301,8 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
      * Runs the passed in `FakeApplication` before executing the test body, ensuring it is closed after the test body completes.
      */
     override def apply() {
-      Helpers.running(app)(super.apply())
+      def callSuper = super.apply()  // this is needed for Scala 2.10 to work
+      Helpers.running(app)(callSuper)
     }
   }
 
@@ -325,7 +326,8 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
      * test body, ensuring both are stopped after the test body completes.
      */
     override def apply() {
-      Helpers.running(TestServer(port, app))(super.apply())
+      def callSuper = super.apply()  // this is needed for Scala 2.10 to work
+      Helpers.running(TestServer(port, app))(callSuper)
     }
   }
 
@@ -363,8 +365,9 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
             case Some(e) => cancel(errorMessage, e)
             case None => cancel(errorMessage)
           }
-        case _ => 
-          try Helpers.running(TestServer(port, app))(super.apply())
+        case _ =>
+          def callSuper = super.apply()  // this is needed for Scala 2.10 to work
+          try Helpers.running(TestServer(port, app))(callSuper)
           finally webDriver.close()
       }
     }
@@ -405,8 +408,9 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
             case Some(e) => cancel(errorMessage, e)
             case None => cancel(errorMessage)
           }
-        case _ => 
-          try Helpers.running(TestServer(port, app))(super.apply())
+        case _ =>
+          def callSuper = super.apply()  // this is needed for Scala 2.10 to work
+          try Helpers.running(TestServer(port, app))(callSuper)
           finally webDriver.close()
       }
     }
@@ -446,8 +450,9 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
             case Some(e) => cancel(errorMessage, e)
             case None => cancel(errorMessage)
           }
-        case _ => 
-          try Helpers.running(TestServer(port, app))(super.apply())
+        case _ =>
+          def callSuper = super.apply()  // this is needed for Scala 2.10 to work
+          try Helpers.running(TestServer(port, app))(callSuper)
           finally webDriver.quit()
       }
     }
@@ -488,8 +493,9 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
             case Some(e) => cancel(errorMessage, e)
             case None => cancel(errorMessage)
           }
-        case _ => 
-          try Helpers.running(TestServer(port, app))(super.apply())
+        case _ =>
+          def callSuper = super.apply()  // this is needed for Scala 2.10 to work
+          try Helpers.running(TestServer(port, app))(callSuper)
           finally webDriver.quit()
       }
     }
@@ -530,8 +536,9 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
             case Some(e) => cancel(errorMessage, e)
             case None => cancel(errorMessage)
           }
-        case _ => 
-          try Helpers.running(TestServer(port, app))(super.apply())
+        case _ =>
+          def callSuper = super.apply()  // this is needed for Scala 2.10 to work
+          try Helpers.running(TestServer(port, app))(callSuper)
           finally webDriver.close()
       }
     }
