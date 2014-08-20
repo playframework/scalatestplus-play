@@ -19,7 +19,7 @@ import com.typesafe.sbt.SbtPgp._
 
 object ScalaTestPlusPlayBuild extends Build {
 
-  val releaseVersion = "1.1.0-RC2"
+  val releaseVersion = "1.3.0"
   val projectTitle = "ScalaTest + Play" // for scaladoc source urls
 
   def envVar(name: String): Option[String] =
@@ -57,7 +57,7 @@ object ScalaTestPlusPlayBuild extends Build {
     version := releaseVersion,
 
     // scalaVersion := "2.11.0",
-    crossScalaVersions := Seq("2.10.3", "2.11.0"),
+    crossScalaVersions := Seq("2.10.4", "2.11.2"),
 
     resolvers += "Typesafe Releases" at "http://repo.typesafe.com/typesafe/releases",
 
