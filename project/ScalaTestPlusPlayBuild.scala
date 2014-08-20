@@ -56,8 +56,8 @@ object ScalaTestPlusPlayBuild extends Build {
 
     version := releaseVersion,
 
-    // scalaVersion := "2.11.0",
-    crossScalaVersions := Seq("2.10.4", "2.11.2"),
+    scalaVersion := "2.10.4", // Play 2.2.x supports only Scala 2.10.
+    //crossScalaVersions := Seq("2.10.4", "2.11.2"),
 
     resolvers += "Typesafe Releases" at "http://repo.typesafe.com/typesafe/releases",
 
