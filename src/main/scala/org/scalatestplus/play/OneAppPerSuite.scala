@@ -141,12 +141,12 @@ trait OneAppPerSuite extends SuiteMixin { this: Suite =>
       val newConfigMap = args.configMap + ("org.scalatestplus.play.app" -> app)
       val newArgs = args.copy(configMap = newConfigMap)
       val status = super.run(testName, newArgs)
-      status.whenCompleted { _ => Play.stop() }
+      status.whenCompleted { _ => Play.stop(app) }
       status
     }
     catch { // In case the suite aborts, ensure the app is stopped
       case ex: Throwable =>
-        Play.stop()
+        Play.stop(app)
         throw ex
     }
   }
