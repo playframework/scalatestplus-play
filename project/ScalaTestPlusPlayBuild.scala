@@ -67,7 +67,7 @@ object ScalaTestPlusPlayBuild extends Build {
     libraryDependencies ++= Seq(
       "org.scalatest" %% "scalatest" % "2.2.0",
       "com.typesafe.play" %% "play-test" % "2.3.0",
-      "org.seleniumhq.selenium" % "selenium-java" % "2.38.0",
+      "org.seleniumhq.selenium" % "selenium-java" % "2.44.0",
       "com.typesafe.play" %% "play-ws" % "2.3.0"
     ),
 
