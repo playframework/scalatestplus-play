@@ -19,7 +19,7 @@ import com.typesafe.sbt.SbtPgp._
 
 object ScalaTestPlusPlayBuild extends Build {
 
-  val releaseVersion = "1.4.0"
+  val releaseVersion = "1.4.0-SNAPSHOT"
   val projectTitle = "ScalaTest + Play" // for scaladoc source urls
 
   def envVar(name: String): Option[String] =
@@ -56,20 +56,23 @@ object ScalaTestPlusPlayBuild extends Build {
 
     version := releaseVersion,
 
-    scalaVersion := "2.11.1",
+    scalaVersion := "2.11.5",
 
-    crossScalaVersions := Seq("2.11.1", "2.10.4"),
+    crossScalaVersions := Seq("2.11.5", "2.10.4"),
 
     resolvers += "Typesafe Releases" at "http://repo.typesafe.com/typesafe/releases",
 
     resolvers += "Local Maven" at Path.userHome.asFile.toURI.toURL + ".m2/repository",
 
-    libraryDependencies ++= Seq(
-      "org.scalatest" %% "scalatest" % "2.2.0",
-      "com.typesafe.play" %% "play-test" % "2.4.0-M2",
-      "org.seleniumhq.selenium" % "selenium-java" % "2.43.1",
-      "com.typesafe.play" %% "play-ws" % "2.4.0-M2"
-    ),
+    libraryDependencies ++= {
+      val playVsn = "2.4.0-M3"
+      Seq(
+        "org.scalatest"     %% "scalatest"  % "2.2.4",
+        "org.seleniumhq.selenium" % "selenium-java" % "2.45.0",
+        "com.typesafe.play" %% "play-test"  % playVsn,
+        "com.typesafe.play" %% "play-ws"    % playVsn
+      )
+    },
 
     parallelExecution in Test := false,
 
