@@ -65,7 +65,7 @@ object ScalaTestPlusPlayBuild extends Build {
     resolvers += "Local Maven" at Path.userHome.asFile.toURI.toURL + ".m2/repository",
 
     libraryDependencies ++= {
-      val playVsn = "2.4.0-M3"
+      val playVsn = "2.4.0-RC2"
       Seq(
         "org.scalatest"     %% "scalatest"  % "2.2.4",
         "org.seleniumhq.selenium" % "selenium-java" % "2.45.0",
