@@ -56,18 +56,18 @@ object ScalaTestPlusPlayBuild extends Build {
 
     version := releaseVersion,
 
-    scalaVersion := "2.11.5",
+    scalaVersion := "2.11.6",
 
-    crossScalaVersions := Seq("2.11.5", "2.10.4"),
+    crossScalaVersions := Seq("2.11.6", "2.10.4"),
 
     resolvers += "Typesafe Releases" at "http://repo.typesafe.com/typesafe/releases",
 
     resolvers += "Local Maven" at Path.userHome.asFile.toURI.toURL + ".m2/repository",
 
     libraryDependencies ++= {
-      val playVsn = "2.4.0-RC2"
+      val playVsn = "2.4.0"
       Seq(
-        "org.scalatest"     %% "scalatest"  % "2.2.4",
+        "org.scalatest"     %% "scalatest"  % "2.2.5",
         "org.seleniumhq.selenium" % "selenium-java" % "2.45.0",
         "com.typesafe.play" %% "play-test"  % playVsn,
         "com.typesafe.play" %% "play-ws"    % playVsn
