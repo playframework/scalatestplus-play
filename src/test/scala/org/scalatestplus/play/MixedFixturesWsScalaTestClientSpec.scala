@@ -21,7 +21,7 @@ import play.api.mvc.Call
 
 class MixedFixturesWsScalaTestClientSpec extends MixedSpec with ScalaFutures {
 
-  val app: FakeApplication =
+  def app: FakeApplication =
     FakeApplication(
       additionalConfiguration = Map("foo" -> "bar", "ehcacheplugin" -> "disabled"),
       withRoutes = TestRoute
