@@ -65,7 +65,7 @@ object ScalaTestPlusPlayBuild extends Build {
     resolvers += "Local Maven" at Path.userHome.asFile.toURI.toURL + ".m2/repository",
 
     libraryDependencies ++= Seq(
-      "org.scalatest" %% "scalatest" % "2.2.0",
+      "org.scalatest" %% "scalatest" % "2.2.5",
       "com.typesafe.play" %% "play-test" % "2.4.2",
       "org.seleniumhq.selenium" % "selenium-java" % "2.45.0",
       "com.typesafe.play" %% "play-ws" % "2.4.2"
