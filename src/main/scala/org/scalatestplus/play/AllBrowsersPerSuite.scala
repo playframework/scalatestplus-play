@@ -15,6 +15,7 @@
  */
 package org.scalatestplus.play
 
+import play.api.Application
 import play.api.test._
 import org.scalatest._
 import org.scalatest.events._
@@ -44,7 +45,7 @@ import org.openqa.selenium.chrome.ChromeDriver
  * instance the first time it is needed  by each test, and close it the first time it is not needed (thus allowing multiple tests
  * to share the same browser), and overrides the `tags` lifecycle method to tag the shared tests so you can
  * filter them by browser type.  This trait's self-type, [[org.scalatestplus.play.ServerProvider ServerProvider]],  will ensure 
- * a `TestServer` and `FakeApplication` are available to each test. The self-type will require that you mix in either
+ * a `TestServer` and `Application` are available to each test. The self-type will require that you mix in either
  * [[org.scalatestplus.play.OneServerPerSuite OneServerPerSuite]], [[org.scalatestplus.play.OneServerPerTest OneServerPerTest]], 
  * [[org.scalatestplus.play.ConfiguredServer ConfiguredServer]] before you mix in this trait. Your choice among these three
  * `ServerProvider`s will determine the extent to which a `TestServer` is shared by multiple tests.
@@ -101,8 +102,8 @@ import org.openqa.selenium.chrome.ChromeDriver
  * 
  * class ExampleSpec extends PlaySpec with OneServerPerSuite with AllBrowsersPerSuite {
  * 
- *   // Override app if you need a FakeApplication with other than non-default parameters.
- *   implicit override def app: FakeApplication =
+ *   // Override app if you need a Application with other than non-default parameters.
+ *   implicit override def app: Application =
  *     FakeApplication(
  *       additionalConfiguration = Map("foo" -&gt; "bar", "ehcacheplugin" -&gt; "disabled"),
  *       withRoutes = TestRoute
@@ -124,14 +125,14 @@ import org.openqa.selenium.chrome.ChromeDriver
  *   // Place tests that don't need a WebDriver outside the `sharedTests` method
  *   // in the constructor, the usual place for tests in a `PlaySpec`
  *   "The AllBrowsersPerSuite trait" must {
- *     "provide a FakeApplication" in {
+ *     "provide an Application" in {
  *       app.configuration.getString("foo") mustBe Some("bar")
  *     }
- *     "make the FakeApplication available implicitly" in {
+ *     "make the Application available implicitly" in {
  *        def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
  *       getConfig("foo") mustBe Some("bar")
  *     }
- *     "start the FakeApplication" in {
+ *     "start the Application" in {
  *       Play.maybeApplication mustBe Some(app)
  *     }
  *     "provide the port" in {
@@ -167,9 +168,9 @@ import org.openqa.selenium.chrome.ChromeDriver
  * [info] <span class="stGreen">The AllBrowsersPerSuite trait</span>
  * [info] <span class="stGreen">- must provide a web driver [HtmlUnit]</span>
  * [info] <span class="stGreen">The AllBrowsersPerSuite trait</span>
- * [info] <span class="stGreen">- must provide a FakeApplication</span>
- * [info] <span class="stGreen">- must make the FakeApplication available implicitly</span>
- * [info] <span class="stGreen">- must start the FakeApplication</span>
+ * [info] <span class="stGreen">- must provide a Application</span>
+ * [info] <span class="stGreen">- must make the Application available implicitly</span>
+ * [info] <span class="stGreen">- must start the Application</span>
  * [info] <span class="stGreen">- must provide the port</span>
  * [info] <span class="stGreen">- must provide an actual running server</span>
  * </pre>
@@ -212,7 +213,7 @@ trait AllBrowsersPerSuite extends SuiteMixin with WebBrowser with Eventually wit
       HtmlUnitInfo(true)
     )
 
-  private var privateApp: FakeApplication = _
+  private var privateApp: Application = _
 
   private var privateWebDriver: WebDriver = UninitializedDriver
 

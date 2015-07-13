@@ -17,17 +17,17 @@ package org.scalatestplus.play
 
 import play.api.test._
 import org.scalatest._
-import play.api.Play
+import play.api.{Play, Application}
 
 /**
- * Trait that provides a configured `FakeApplication` and server port number to the suite into which it is mixed.
+ * Trait that provides a configured `Application` and server port number to the suite into which it is mixed.
  *
  * The purpose of this trait is to allow nested suites of an enclosing suite that extends [[org.scalatestplus.play.OneServerPerSuite OneServerPerSuite]]
- * to make use of the `FakeApplication` and port number provided by `OneServerPerSuite`. Trait `OneServerPerSuite` will ensure
- * the `FakeApplication` is placed in the `ConfigMap` under the key `org.scalatestplus.play.app` and the port number
+ * to make use of the `Application` and port number provided by `OneServerPerSuite`. Trait `OneServerPerSuite` will ensure
+ * the `Application` is placed in the `ConfigMap` under the key `org.scalatestplus.play.app` and the port number
  * under the key `org.scalatestplus.play.port` before nested suites are invoked. This information represents the "configured server" that
  * is passed from the enclosing suite to the nested suites. Trait `ConfiguredServer` extracts this information from
- * from the `ConfigMap` and makes the `FakeApplication` available via the `app` method, the port number available as an `Int` from
+ * from the `ConfigMap` and makes the `Application` available via the `app` method, the port number available as an `Int` from
  * the `port` method, and also the port number wrapped in a [[org.scalatestplus.play.PortNumber PortNumber]] available as implicit method `portNumber` (for use
  * with trait [[org.scalatestplus.play.WsScalaTestClient WsScalaTestClient]]).
  *
@@ -49,8 +49,8 @@ import play.api.Play
  *   new RedSpec,
  *   new BlueSpec
  * ) with OneServerPerSuite {
- *   // Override app if you need a FakeApplication with other than non-default parameters.
- *   implicit override lazy val app: FakeApplication =
+ *   // Override app if you need a Application with other than non-default parameters.
+ *   implicit override lazy val app: Application =
  *     FakeApplication(additionalConfiguration = Map("ehcacheplugin" -> "disabled"))
  * }
  *  
@@ -63,14 +63,14 @@ import play.api.Play
  * class BlueSpec extends PlaySpec with ConfiguredServer {
  * 
  *   "The OneAppPerSuite trait" must {
- *     "provide a FakeApplication" in { 
+ *     "provide an Application" in {
  *       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "make the FakeApplication available implicitly" in {
+ *     "make the Application available implicitly" in {
  *       def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
  *       getConfig("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "start the FakeApplication" in {
+ *     "start the Application" in {
  *       Play.maybeApplication mustBe Some(app)
  *     }
  *     "provide the port number" in {
@@ -90,14 +90,14 @@ import play.api.Play
  */
 trait ConfiguredServer extends SuiteMixin with ServerProvider { this: Suite => 
 
-  private var configuredApp: FakeApplication = _
+  private var configuredApp: Application = _
 
   /**
-   * The "configured" `FakeApplication` instance that was passed into `run` via the `ConfigMap`.
+   * The "configured" `Application` instance that was passed into `run` via the `ConfigMap`.
    *
-   * @return the configured `FakeApplication`
+   * @return the configured `Application`
    */
-  implicit final def app: FakeApplication = synchronized { configuredApp }
+  implicit final def app: Application = synchronized { configuredApp }
 
   private var configuredPort: Int = -1
 
@@ -109,14 +109,14 @@ trait ConfiguredServer extends SuiteMixin with ServerProvider { this: Suite =>
   def port: Int = synchronized { configuredPort }
 
   /**
-   * Looks in `args.configMap` for a key named "org.scalatestplus.play.app" whose value is a `FakeApplication`, 
+   * Looks in `args.configMap` for a key named "org.scalatestplus.play.app" whose value is a `Application`,
    * and a key named "org.scalatestplus.play.port" whose value is an `Int`,
-   * and if they exist, sets the `FakeApplication` as the value that will be returned from the `app` method and
+   * and if they exist, sets the `Application` as the value that will be returned from the `app` method and
    * the `Int` as the value that will be returned from the `port` method, then calls
    * `super.run`.
    *
    * If no key matches "org.scalatestplus.play.app" in `args.configMap`, or the associated value is
-   * not a `FakeApplication`, or if no key matches "org.scalatestplus.play.port" in `args.configMap`,
+   * not a `Application`, or if no key matches "org.scalatestplus.play.port" in `args.configMap`,
    * or the associated value is not an `Int`, throws `IllegalArgumentException`.
    *
    * @param testName an optional name of one test to run. If `None`, all relevant tests should be run.
@@ -124,12 +124,12 @@ trait ConfiguredServer extends SuiteMixin with ServerProvider { this: Suite =>
    * @param args the `Args` for this run
    * @return a `Status` object that indicates when all tests and nested suites started by this method have completed, and whether or not a failure occurred.
    *         
-   * @throws IllegalArgumentException if the `FakeApplication` and/or port number does not appear in `args.configMap` under the expected keys
+   * @throws IllegalArgumentException if the `Application` and/or port number does not appear in `args.configMap` under the expected keys
    */
   abstract override def run(testName: Option[String], args: Args): Status = {
-    args.configMap.getOptional[FakeApplication]("org.scalatestplus.play.app") match {
+    args.configMap.getOptional[Application]("org.scalatestplus.play.app") match {
       case Some(ca) => synchronized { configuredApp = ca }
-      case None => throw new Exception("Trait ConfiguredServer needs a FakeApplication value associated with key \"org.scalatestplus.play.app\" in the config map. Did you forget to annotate a nested suite with @DoNotDiscover?")
+      case None => throw new Exception("Trait ConfiguredServer needs an Application value associated with key \"org.scalatestplus.play.app\" in the config map. Did you forget to annotate a nested suite with @DoNotDiscover?")
     }
     args.configMap.getOptional[Int]("org.scalatestplus.play.port") match {
       case Some(cp) => synchronized { configuredPort = cp }

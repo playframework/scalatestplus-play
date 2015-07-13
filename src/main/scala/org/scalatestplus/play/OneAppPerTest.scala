@@ -15,18 +15,19 @@
  */
 package org.scalatestplus.play
 
+import play.api.Application
 import play.api.test._
 import org.scalatest._
 
 /**
- * Trait that provides a new `FakeApplication` instance for each test.
+ * Trait that provides a new `Application` instance for each test.
  * 
- * This `SuiteMixin` trait's overridden `withFixture` method creates a new `FakeApplication` 
+ * This `SuiteMixin` trait's overridden `withFixture` method creates a new `Application`
  * before each test and ensures it is cleaned up after the test has completed. You can
- * access the `FakeApplication` from your tests as method `app` (which is marked implicit).
+ * access the `Application` from your tests as method `app` (which is marked implicit).
  *
  * By default, this trait creates a new `FakeApplication` for each test using default parameter values, which
- * is returned by the `newAppForTest` method defined in this trait. If your tests need a `FakeApplication` with non-default 
+ * is returned by the `newAppForTest` method defined in this trait. If your tests need a `Application` with non-default
  * parameters, override `newAppForTest` to return it.
  *
  * Here's an example that demonstrates some of the services provided by this trait:
@@ -41,19 +42,19 @@ import org.scalatest._
  * 
  * class ExampleSpec extends PlaySpec with OneAppPerTest {
  * 
- *   // Override newAppForTest if you need a FakeApplication with other than non-default parameters.
- *   implicit override def newAppForTest(testData: TestData): FakeApplication =
+ *   // Override newAppForTest if you need an Application with other than non-default parameters.
+ *   implicit override def newAppForTest(testData: TestData): Application =
  *     FakeApplication(additionalConfiguration = Map("ehcacheplugin" -> "disabled"))
  * 
  *   "The OneAppPerTest trait" must {
- *     "provide a FakeApplication" in {
+ *     "provide an Application" in {
  *       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "make the FakeApplication available implicitly" in {
+ *     "make the Application available implicitly" in {
  *       def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
  *       getConfig("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "start the FakeApplication" in {
+ *     "start the Application" in {
  *       Play.maybeApplication mustBe Some(app)
  *     }
  *   }
@@ -63,20 +64,20 @@ import org.scalatest._
 trait OneAppPerTest extends SuiteMixin { this: Suite => 
 
   /**
-   * Creates new instance of `FakeApplication` with parameters set to their defaults. Override this method if you
-   * need a `FakeApplication` created with non-default parameter values.
+   * Creates new instance of `Application` with parameters set to their defaults. Override this method if you
+   * need a `Application` created with non-default parameter values.
    */
-  def newAppForTest(testData: TestData): FakeApplication = new FakeApplication()
-  private var appPerTest: FakeApplication = _
+  def newAppForTest(testData: TestData): Application = new FakeApplication()
+  private var appPerTest: Application = _
 
   /**
    * Implicit method that returns the `FakeApplication` instance for the current test.
    */
-  implicit final def app: FakeApplication = synchronized { appPerTest }
+  implicit final def app: Application = synchronized { appPerTest }
 
   /**
-   * Creates a new `FakeApplication` instance before executing each test, and 
-   * ensure it is cleaned up after the test completes. You can access the `FakeApplication` from
+   * Creates a new `Application` instance before executing each test, and
+   * ensure it is cleaned up after the test completes. You can access the `Application` from
    * your tests via `app`.
    *
    * @param test the no-arg test function to run with a fixture

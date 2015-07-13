@@ -15,6 +15,7 @@
  */
 package org.scalatestplus.play
 
+import play.api.Application
 import play.api.test._
 import org.scalatest._
 import selenium.WebBrowser
@@ -26,7 +27,7 @@ import org.openqa.selenium.safari.SafariDriver
 import org.openqa.selenium.chrome.ChromeDriver
 
 /**
- * Trait that defines abstract methods that providing a port number and implicit `FakeApplication` and a concrete
+ * Trait that defines abstract methods that providing a port number and implicit `Application` and a concrete
  * method that provides an implicit [[org.scalatestplus.play.PortNumber PortNumber]] that wraps the port number.
  *
  * This trait is implemented by [[org.scalatestplus.play.OneServerPerSuite OneServerPerSuite]], 
@@ -42,9 +43,9 @@ import org.openqa.selenium.chrome.ChromeDriver
 trait ServerProvider {
 
   /**
-   * Implicit method that returns a `FakeApplication` instance.
+   * Implicit method that returns a `Application` instance.
    */
-  implicit def app: FakeApplication
+  implicit def app: Application
 
   /**
    * The port used by the `TestServer`.

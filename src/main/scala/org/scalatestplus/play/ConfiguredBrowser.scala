@@ -25,7 +25,7 @@ import concurrent.IntegrationPatience
 import BrowserFactory.UninitializedDriver
 
 /**
- * Trait that provides a configured `FakeApplication`, server port number, and Selenium `WebDriver` to the suite
+ * Trait that provides a configured `Application`, server port number, and Selenium `WebDriver` to the suite
  * into which it is mixed.
  *
  * The purpose of this trait is to allow nested suites of an enclosing suite that extends [[org.scalatestplus.play.OneBrowserPerSuite OneBrowserPerSuite]]
@@ -35,7 +35,7 @@ import BrowserFactory.UninitializedDriver
  * from the `ConfigMap` and makes the `WebDriver` available implicitly from the `webDriver` method.
  *
  * This trait's self-type, [[org.scalatestplus.play.ServerProvider ServerProvider]],  will ensure 
- * a `TestServer` and `FakeApplication` are available to each test. The self-type will require that you mix in either
+ * a `TestServer` and `Application` are available to each test. The self-type will require that you mix in either
  * [[org.scalatestplus.play.OneServerPerSuite OneServerPerSuite]], [[org.scalatestplus.play.OneServerPerTest OneServerPerTest]], 
  * [[org.scalatestplus.play.ConfiguredServer ConfiguredServer]] before you mix in this trait. Your choice among these three
  * `ServerProvider`s will determine the extent to which one or more `TestServer`s are shared by multiple tests.
@@ -59,8 +59,8 @@ import BrowserFactory.UninitializedDriver
  *   new RedSpec,
  *   new BlueSpec
  * ) with OneServerPerSuite with OneBrowserPerSuite with FirefoxFactory {
- *   // Override app if you need a FakeApplication with other than non-default parameters.
- *   implicit override lazy val app: FakeApplication =
+ *   // Override app if you need a Application with other than non-default parameters.
+ *   implicit override lazy val app: Application =
  *     FakeApplication(
  *       additionalConfiguration = Map("ehcacheplugin" -&gt; "disabled"),
  *       withRoutes = TestRoute
@@ -76,14 +76,14 @@ import BrowserFactory.UninitializedDriver
  * class BlueSpec extends PlaySpec with ConfiguredServer with ConfiguredBrowser {
  * 
  *   "The OneBrowserPerSuite trait" must {
- *     "provide a FakeApplication" in { 
+ *     "provide an Application" in {
  *       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "make the FakeApplication available implicitly" in {
+ *     "make the Application available implicitly" in {
  *       def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
  *       getConfig("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "start the FakeApplication" in {
+ *     "start the Application" in {
  *       Play.maybeApplication mustBe Some(app)
  *     }
  *     "provide the port number" in {

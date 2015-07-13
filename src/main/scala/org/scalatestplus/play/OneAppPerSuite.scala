@@ -17,24 +17,24 @@ package org.scalatestplus.play
 
 import play.api.test._
 import org.scalatest._
-import play.api.Play
+import play.api.{Application, Play}
 
 /**
- * Trait that provides a new `FakeApplication` instance per ScalaTest `Suite`.
+ * Trait that provides a new `Application` instance per ScalaTest `Suite`.
  *
  * By default, this trait creates a new `FakeApplication` for the `Suite` using default parameter values, which
- * is made available via the `app` field defined in this trait. If your `Suite` needs a `FakeApplication` with non-default 
+ * is made available via the `app` field defined in this trait. If your `Suite` needs a `Application` with non-default
  * parameters, override `app` to create it the way you need it.
  *
  * This `SuiteMixin` trait's overridden `run` method calls `Play.start`, passing in the
- * `FakeApplication` provided by `app`, before executing the `Suite` via a call to `super.run`.
- * In addition, it places a reference to the `FakeApplication` provided by `app` into the `ConfigMap`
+ * `Application` provided by `app`, before executing the `Suite` via a call to `super.run`.
+ * In addition, it places a reference to the `Application` provided by `app` into the `ConfigMap`
  * under the key `org.scalatestplus.play.app`.  This allows any nested `Suite`s to access the `Suite`'s 
- * `FakeApplication` as well, most easily by having the nested `Suite`s mix in the
+ * `Application` as well, most easily by having the nested `Suite`s mix in the
  * [[org.scalatestplus.play.ConfiguredApp ConfiguredApp]] trait.  On the status returned by `super.run`, this
  * trait's overridden `run` method registers a call to `Play.stop` to be executed when the `Status`
- * completes, and returns the same `Status`. This ensure the `FakeApplication` will continue to execute until
- * all nested suites have completed, after which the `FakeApplication` will be stopped.
+ * completes, and returns the same `Status`. This ensure the `Application` will continue to execute until
+ * all nested suites have completed, after which the `Application` will be stopped.
  *
  * Here's an example that demonstrates some of the services provided by this trait:
  *
@@ -48,26 +48,26 @@ import play.api.Play
  * 
  * class ExampleSpec extends PlaySpec with OneAppPerSuite {
  * 
- *   // Override app if you need a FakeApplication with other than non-default parameters.
- *   implicit override lazy val app: FakeApplication =
+ *   // Override app if you need an Application with other than non-default parameters.
+ *   implicit override lazy val app: Application =
  *     FakeApplication(additionalConfiguration = Map("ehcacheplugin" -> "disabled"))
  * 
  *   "The OneAppPerSuite trait" must {
- *     "provide a FakeApplication" in {
+ *     "provide an Application" in {
  *       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "make the FakeApplication available implicitly" in {
+ *     "make the Application available implicitly" in {
  *       def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
  *       getConfig("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "start the FakeApplication" in {
+ *     "start the Application" in {
  *       Play.maybeApplication mustBe Some(app)
  *     }
  *   }
  * }
  * </pre>
  *
- * If you have many tests that can share the same `FakeApplication`, and you don't want to put them all into one
+ * If you have many tests that can share the same `Application`, and you don't want to put them all into one
  * test class, you can place them into different `Suite` classes.
  * These will be your nested suites. Create a master suite that extends `OneAppPerSuite` and declares the nested 
  * `Suite`s. Annotate the nested suites with `@DoNotDiscover` and have them extend `ConfiguredApp`. Here's an example:
@@ -87,8 +87,8 @@ import play.api.Play
  *   new RedSpec,
  *   new BlueSpec
  * ) with OneAppPerSuite {
- *   // Override app if you need a FakeApplication with other than non-default parameters.
- *   implicit override lazy val app: FakeApplication =
+ *   // Override app if you need an Application with other than non-default parameters.
+ *   implicit override lazy val app: Application =
  *     FakeApplication(additionalConfiguration = Map("ehcacheplugin" -> "disabled"))
  * } 
  *   
@@ -101,14 +101,14 @@ import play.api.Play
  * class BlueSpec extends PlaySpec with ConfiguredApp {
  *   
  *   "The OneAppPerSuite trait" must {
- *     "provide a FakeApplication" in { 
+ *     "provide an Application" in {
  *       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "make the FakeApplication available implicitly" in {
+ *     "make the Application available implicitly" in {
  *       def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
  *       getConfig("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "start the FakeApplication" in {
+ *     "start the Application" in {
  *       Play.maybeApplication mustBe Some(app)
  *     }
  *   }
@@ -118,16 +118,16 @@ import play.api.Play
 trait OneAppPerSuite extends SuiteMixin { this: Suite => 
 
   /**
-   * An implicit instance of `FakeApplication`.
+   * An implicit instance of `Application`.
    *
-   * This trait's implementation initializes this `lazy` `val` with a new instance of `FakeApplication` with
-   * parameters set to their defaults. Override this `lazy` `val` if you need a `FakeApplication` created with non-default parameter values.
+   * This trait's implementation initializes this `lazy` `val` with a new instance of `Application` with
+   * parameters set to their defaults. Override this `lazy` `val` if you need a `Application` created with non-default parameter values.
    */
-  implicit lazy val app: FakeApplication = new FakeApplication()
+  implicit lazy val app: Application = new FakeApplication()
 
   /**
-   * Invokes `Play.start`, passing in the `FakeApplication` provided by `app`, and places
-   * that same `FakeApplication` into the `ConfigMap` under the key `org.scalatestplus.play.app` to make it available
+   * Invokes `Play.start`, passing in the `Application` provided by `app`, and places
+   * that same `Application` into the `ConfigMap` under the key `org.scalatestplus.play.app` to make it available
    * to nested suites; calls `super.run`; and lastly ensures `Play.stop` is invoked after all tests and nested suites have completed.
    *
    * @param testName an optional name of one test to run. If `None`, all relevant tests should be run.

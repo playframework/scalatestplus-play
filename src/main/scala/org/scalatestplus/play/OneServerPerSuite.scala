@@ -15,25 +15,26 @@
  */
 package org.scalatestplus.play
 
+import play.api.Application
 import play.api.test._
 import org.scalatest._
 
 /**
- * Trait that provides a new `FakeApplication` and running `TestServer` instance per ScalaTest `Suite`.
+ * Trait that provides a new `Application` and running `TestServer` instance per ScalaTest `Suite`.
  * 
  * By default, this trait creates a new `FakeApplication` for the `Suite` using default parameter values, which
  * is made available via the `app` field defined in this trait and a new `TestServer` for the `Suite` using the port number provided by
- * its `port` field and the `FakeApplication` provided by its `app` field. If your `Suite` needs a
- * `FakeApplication` with non-default parameters, override `app`. If it needs a different port number,
+ * its `port` field and the `Application` provided by its `app` field. If your `Suite` needs a
+ * `Application` with non-default parameters, override `app`. If it needs a different port number,
  * override `port`.
  *
  *
  * This `SuiteMixin` trait's overridden `run` method calls `start` on the `TestServer`
  * before executing the `Suite` via a call to `super.run`.
- * In addition, it places a reference to the `FakeApplication` provided by `app` into the `ConfigMap`
+ * In addition, it places a reference to the `Application` provided by `app` into the `ConfigMap`
  * under the key `org.scalatestplus.play.app` and to the port number provided by `port` under the key
  * `org.scalatestplus.play.port`.  This allows any nested `Suite`s to access the `Suite`'s 
- * `FakeApplication` and port number as well, most easily by having the nested `Suite`s mix in the
+ * `Application` and port number as well, most easily by having the nested `Suite`s mix in the
  * [[org.scalatestplus.play.ConfiguredServer ConfiguredServer]] trait. On the status returned by `super.run`, this
  * trait's overridden `run` method registers a call to `stop` on the `TestServer` to be executed when the `Status`
  * completes, and returns the same `Status`. This ensure the `TestServer` will continue to execute until
@@ -51,19 +52,19 @@ import org.scalatest._
  * 
  * class ExampleSpec extends PlaySpec with OneServerPerSuite {
  * 
- *   // Override app if you need a FakeApplication with other than non-default parameters.
- *   implicit override lazy val app: FakeApplication =
+ *   // Override app if you need a Application with other than non-default parameters.
+ *   implicit override lazy val app: Application =
  *     FakeApplication(additionalConfiguration = Map("ehcacheplugin" -> "disabled"))
  * 
  *   "The OneServerPerSuite trait" must {
- *     "provide a FakeApplication" in {
+ *     "provide an Application" in {
  *       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "make the FakeApplication available implicitly" in {
+ *     "make the Application available implicitly" in {
  *       def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
  *       getConfig("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "start the FakeApplication" in {
+ *     "start the Application" in {
  *       Play.maybeApplication mustBe Some(app)
  *     }
  *     "provide the port number" in {
@@ -81,7 +82,7 @@ import org.scalatest._
  * }
  * </pre>
  *
- * If you have many tests that can share the same `FakeApplication` and `TestServer`, and you don't want to put them all into one
+ * If you have many tests that can share the same `Application` and `TestServer`, and you don't want to put them all into one
  * test class, you can place them into different `Suite` classes.
  * These will be your nested suites. Create a master suite that extends `OneServerPerSuite` and declares the nested 
  * `Suite`s. Annotate the nested suites with `@DoNotDiscover` and have them extend `ConfiguredServer`. Here's an example:
@@ -101,8 +102,8 @@ import org.scalatest._
  *   new RedSpec,
  *   new BlueSpec
  * ) with OneServerPerSuite {
- *   // Override app if you need a FakeApplication with other than non-default parameters.
- *   implicit override lazy val app: FakeApplication =
+ *   // Override app if you need a Application with other than non-default parameters.
+ *   implicit override lazy val app: Application =
  *     FakeApplication(additionalConfiguration = Map("ehcacheplugin" -> "disabled"))
  * }
  *  
@@ -115,14 +116,14 @@ import org.scalatest._
  * class BlueSpec extends PlaySpec with ConfiguredServer {
  * 
  *   "The OneAppPerSuite trait" must {
- *     "provide a FakeApplication" in { 
+ *     "provide an Application" in {
  *       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "make the FakeApplication available implicitly" in {
+ *     "make the Application available implicitly" in {
  *       def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
  *       getConfig("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "start the FakeApplication" in {
+ *     "start the Application" in {
  *       Play.maybeApplication mustBe Some(app)
  *     }
  *     "provide the port number" in {
@@ -143,12 +144,12 @@ import org.scalatest._
 trait OneServerPerSuite extends SuiteMixin with ServerProvider { this: Suite =>
 
   /**
-   * An implicit instance of `FakeApplication`.
+   * An implicit instance of `Application`.
    *
    * This trait's implementation initializes this `lazy` `val` with a new instance of `FakeApplication` with
-   * parameters set to their defaults. Override this `lazy` `val` if you need a `FakeApplication` created with non-default parameter values.
+   * parameters set to their defaults. Override this `lazy` `val` if you need a `Application` created with non-default parameter values.
    */
-  implicit lazy val app: FakeApplication = new FakeApplication()
+  implicit lazy val app: Application = new FakeApplication()
 
   /**
    * The port used by the `TestServer`.  By default this will be set to the result returned from
@@ -157,10 +158,10 @@ trait OneServerPerSuite extends SuiteMixin with ServerProvider { this: Suite =>
   lazy val port: Int = Helpers.testServerPort
 
   /**
-   * Invokes `start` on a new `TestServer` created with the `FakeApplication` provided by `app` and the
-   * port number defined by `port`, places the `FakeApplication` and port number into the `ConfigMap` under the keys
+   * Invokes `start` on a new `TestServer` created with the `Application` provided by `app` and the
+   * port number defined by `port`, places the `Application` and port number into the `ConfigMap` under the keys
    * `org.scalatestplus.play.app` and `org.scalatestplus.play.port`, respectively, to make
-   * them available to nested suites; calls `super.run`; and lastly ensures the `FakeApplication and test server are stopped after
+   * them available to nested suites; calls `super.run`; and lastly ensures the `Application and test server are stopped after
    * all tests and nested suites have completed.
    *
    * @param testName an optional name of one test to run. If `None`, all relevant tests should be run.

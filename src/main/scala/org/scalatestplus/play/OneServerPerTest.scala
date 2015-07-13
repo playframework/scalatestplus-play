@@ -15,19 +15,20 @@
  */
 package org.scalatestplus.play
 
+import play.api.Application
 import play.api.test._
 import org.scalatest._
 
 /**
- * Trait that provides a new `FakeApplication` and running `TestServer` instance for each test executed in a ScalaTest `Suite`.
+ * Trait that provides a new `Application` and running `TestServer` instance for each test executed in a ScalaTest `Suite`.
  * 
- * This `SuiteMixin` trait overrides ScalaTest's `withFixture` method to create a new `FakeApplication` and `TestServer`
- * before each test, and ensure they are cleaned up after the test has completed. The `FakeApplication` is available (implicitly) from
+ * This `SuiteMixin` trait overrides ScalaTest's `withFixture` method to create a new `Application` and `TestServer`
+ * before each test, and ensure they are cleaned up after the test has completed. The `Application` is available (implicitly) from
  * method `app`. The `TestServer`'s port number is available as `port` (and implicitly available as `portNumber`, wrapped
  * in a [[org.scalatestplus.play.PortNumber PortNumber]]).
  *
  * By default, this trait creates a new `FakeApplication` for each test using default parameter values, which
- * is returned by the `newAppForTest` method defined in this trait. If your tests need a `FakeApplication` with non-default 
+ * is returned by the `newAppForTest` method defined in this trait. If your tests need an `Application` with non-default
  * parameters, override `newAppForTest` to return it.
  *
  * Here's an example that demonstrates some of the services provided by this trait:
@@ -42,19 +43,19 @@ import org.scalatest._
  * 
  * class ExampleSpec extends PlaySpec with OneServerPerTest {
  * 
- *   // Override newAppForTest if you need a FakeApplication with other than non-default parameters.
- *   implicit override def newAppForTest(testData: TestData): FakeApplication =
+ *   // Override newAppForTest if you need an Application with other than non-default parameters.
+ *   implicit override def newAppForTest(testData: TestData): Application =
  *     FakeApplication(additionalConfiguration = Map("ehcacheplugin" -> "disabled"))
  * 
  *   "The OneServerPerTest trait" must {
- *     "provide a FakeApplication" in {
+ *     "provide an Application" in {
  *       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "make the FakeApplication available implicitly" in {
+ *     "make the Application available implicitly" in {
  *       def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
  *       getConfig("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "start the FakeApplication" in {
+ *     "start the Application" in {
  *       Play.maybeApplication mustBe Some(app)
  *     }
  *     "provide the port number" in {
@@ -74,18 +75,18 @@ import org.scalatest._
  */
 trait OneServerPerTest extends SuiteMixin with ServerProvider { this: Suite =>
 
-  private var privateApp: FakeApplication = _
+  private var privateApp: Application = _
 
   /**
    * Implicit method that returns the `FakeApplication` instance for the current test.
    */
-  implicit final def app: FakeApplication = synchronized { privateApp }
+  implicit final def app: Application = synchronized { privateApp }
 
   /**
-   * Creates new instance of `FakeApplication` with parameters set to their defaults. Override this method if you
-   * need a `FakeApplication` created with non-default parameter values.
+   * Creates new instance of `Application` with parameters set to their defaults. Override this method if you
+   * need an `Application` created with non-default parameter values.
    */
-  def newAppForTest(testData: TestData): FakeApplication = new FakeApplication()
+  def newAppForTest(testData: TestData): Application = new FakeApplication()
 
   /**
    * The port used by the `TestServer`.  By default this will be set to the result returned from
@@ -94,8 +95,8 @@ trait OneServerPerTest extends SuiteMixin with ServerProvider { this: Suite =>
   lazy val port: Int = Helpers.testServerPort
 
   /**
-   * Creates new `FakeApplication` and running `TestServer` instances before executing each test, and 
-   * ensures they are cleaned up after the test completes. You can access the `FakeApplication` from
+   * Creates new `Application` and running `TestServer` instances before executing each test, and
+   * ensures they are cleaned up after the test completes. You can access the `Application` from
    * your tests as `app` and the `TestServer`'s port number as `port`.
    *
    * @param test the no-arg test function to run with a fixture

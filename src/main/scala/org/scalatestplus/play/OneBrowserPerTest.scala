@@ -34,7 +34,7 @@ import BrowserFactory.UninitializedDriver
  * The `WebDriver` is available (implicitly) from method `webDriver`.
  *
  * This trait's self-type, [[org.scalatestplus.play.ServerProvider ServerProvider]],  will ensure 
- * a `TestServer` and `FakeApplication` are available to each test. The self-type will require that you mix in either
+ * a `TestServer` and `Application` are available to each test. The self-type will require that you mix in either
  * [[org.scalatestplus.play.OneServerPerSuite OneServerPerSuite]], [[org.scalatestplus.play.OneServerPerTest OneServerPerTest]], 
  * [[org.scalatestplus.play.ConfiguredServer ConfiguredServer]] before you mix in this trait. Your choice among these three
  * `ServerProvider`s will determine the extent to which one or more `TestServer`s are shared by multiple tests.
@@ -55,22 +55,22 @@ import BrowserFactory.UninitializedDriver
  * @FirefoxBrowser
  * class ExampleSpec extends PlaySpec with OneServerPerTest with OneBrowserPerTest with FirefoxFactory {
  * 
- *   // Override newAppForTest if you need a FakeApplication with other than non-default parameters.
- *   override def newAppForTest(testData: TestData): FakeApplication =
+ *   // Override newAppForTest if you need an Application with other than non-default parameters.
+ *   override def newAppForTest(testData: TestData): Application =
  *     FakeApplication(
  *       additionalConfiguration = Map("ehcacheplugin" -&gt; "disabled"),
  *       withRoutes = TestRoute
  *     )
  * 
  *   "The OneBrowserPerTest trait" must {
- *     "provide a FakeApplication" in {
+ *     "provide an Application" in {
  *       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "make the FakeApplication available implicitly" in {
+ *     "make the Application available implicitly" in {
  *       def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
  *       getConfig("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "start the FakeApplication" in {
+ *     "start the Application" in {
  *       Play.maybeApplication mustBe Some(app)
  *     }
  *     "provide the port number" in {

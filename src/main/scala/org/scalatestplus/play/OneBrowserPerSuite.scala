@@ -42,7 +42,7 @@ import org.openqa.selenium.chrome.ChromeDriver
  * `WebDriver` is not available on the host platform.
  *
  * This trait's self-type, [[org.scalatestplus.play.ServerProvider ServerProvider]],  will ensure 
- * a `TestServer` and `FakeApplication` are available to each test. The self-type will require that you mix in either
+ * a `TestServer` and `Application` are available to each test. The self-type will require that you mix in either
  * [[org.scalatestplus.play.OneServerPerSuite OneServerPerSuite]], [[org.scalatestplus.play.OneServerPerTest OneServerPerTest]], 
  * [[org.scalatestplus.play.ConfiguredServer ConfiguredServer]] before you mix in this trait. Your choice among these three
  * `ServerProvider`s will determine the extent to which one or more `TestServer`s are shared by multiple tests.
@@ -61,22 +61,22 @@ import org.openqa.selenium.chrome.ChromeDriver
  * 
  * class ExampleSpec extends PlaySpec with OneServerPerSuite with OneBrowserPerSuite with FirefoxFactory {
  * 
- *   // Override app if you need a FakeApplication with other than non-default parameters.
- *   implicit override lazy val app: FakeApplication =
+ *   // Override app if you need a Application with other than non-default parameters.
+ *   implicit override lazy val app: Application =
  *     FakeApplication(
  *       additionalConfiguration = Map("ehcacheplugin" -&gt; "disabled"),
  *       withRoutes = TestRoute
  *     )
  * 
  *   "The OneBrowserPerSuite trait" must {
- *     "provide a FakeApplication" in {
+ *     "provide an Application" in {
  *       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "make the FakeApplication available implicitly" in {
+ *     "make the Application available implicitly" in {
  *       def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
  *       getConfig("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "start the FakeApplication" in {
+ *     "start the Application" in {
  *       Play.maybeApplication mustBe Some(app)
  *     }
  *     "provide the port number" in {
@@ -100,7 +100,7 @@ import org.openqa.selenium.chrome.ChromeDriver
  * }
  * </pre>
  *
- * If you have many tests that can share the same `FakeApplication`, `TestServer`, and `WebDriver`, and you don't want to put them all into one
+ * If you have many tests that can share the same `Application`, `TestServer`, and `WebDriver`, and you don't want to put them all into one
  * test class, you can place them into different "nested" `Suite` classes.
  * Create a master suite that extends `OneServerPerSuite` and declares the nested 
  * `Suite`s. Annotate the nested suites with `@DoNotDiscover` and have them extend `ConfiguredBrowser`. Here's an example:
@@ -121,8 +121,8 @@ import org.openqa.selenium.chrome.ChromeDriver
  *   new RedSpec,
  *   new BlueSpec
  * ) with OneServerPerSuite with OneBrowserPerSuite with FirefoxFactory {
- *   // Override app if you need a FakeApplication with other than non-default parameters.
- *   implicit override lazy val app: FakeApplication =
+ *   // Override app if you need a Application with other than non-default parameters.
+ *   implicit override lazy val app: Application =
  *     FakeApplication(
  *       additionalConfiguration = Map("ehcacheplugin" -&gt; "disabled"),
  *       withRoutes = TestRoute
@@ -138,14 +138,14 @@ import org.openqa.selenium.chrome.ChromeDriver
  * class BlueSpec extends PlaySpec with ConfiguredServer with ConfiguredBrowser {
  * 
  *   "The OneBrowserPerSuite trait" must {
- *     "provide a FakeApplication" in { 
+ *     "provide an Application" in {
  *       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "make the FakeApplication available implicitly" in {
+ *     "make the Application available implicitly" in {
  *       def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
  *       getConfig("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "start the FakeApplication" in {
+ *     "start the Application" in {
  *       Play.maybeApplication mustBe Some(app)
  *     }
  *     "provide the port number" in {
@@ -182,22 +182,22 @@ import org.openqa.selenium.chrome.ChromeDriver
  * // Place your tests in an abstract class
  * abstract class MultiBrowserExampleSpec extends PlaySpec with OneServerPerSuite with OneBrowserPerSuite {
  * 
- *   // Override app if you need a FakeApplication with other than non-default parameters.
- *   implicit override lazy val app: FakeApplication =
+ *   // Override app if you need an Application with other than non-default parameters.
+ *   implicit override lazy val app: Application =
  *     FakeApplication(
  *       additionalConfiguration = Map("ehcacheplugin" -> "disabled"),
  *       withRoutes = TestRoute
  *     )
  * 
  *   "The OneBrowserPerSuite trait" must {
- *     "provide a FakeApplication" in {
+ *     "provide an Application" in {
  *       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "make the FakeApplication available implicitly" in {
+ *     "make the Application available implicitly" in {
  *       def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
  *       getConfig("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "start the FakeApplication" in {
+ *     "start the Application" in {
  *       Play.maybeApplication mustBe Some(app)
  *     }
  *     "provide the port number" in {
@@ -239,27 +239,27 @@ import org.openqa.selenium.chrome.ChromeDriver
  * &gt; test-only *onebrowserpersuite*
  * [info] <span class="stGreen">FirefoxExampleSpec:</span>
  * [info] <span class="stGreen">The OneBrowserPerSuite trait</span>
- * [info] <span class="stGreen">- must provide a FakeApplication</span>
- * [info] <span class="stGreen">- must make the FakeApplication available implicitly</span>
- * [info] <span class="stGreen">- must start the FakeApplication</span>
+ * [info] <span class="stGreen">- must provide an Application</span>
+ * [info] <span class="stGreen">- must make the Application available implicitly</span>
+ * [info] <span class="stGreen">- must start the Application</span>
  * [info] <span class="stGreen">- must provide the port number</span>
  * [info] <span class="stGreen">- must provide an actual running server</span>
  * [info] <span class="stGreen">- must provide a web driver</span>
  * [info] <span class="stGreen">SafariExampleSpec:</span>
  * [info] <span class="stGreen">The OneBrowserPerSuite trait</span>
- * [info] <span class="stGreen">- must provide a FakeApplication</span>
- * [info] <span class="stGreen">- must make the FakeApplication available implicitly</span>
- * [info] <span class="stGreen">- must start the FakeApplication</span>
+ * [info] <span class="stGreen">- must provide an Application</span>
+ * [info] <span class="stGreen">- must make the Application available implicitly</span>
+ * [info] <span class="stGreen">- must start the Application</span>
  * [info] <span class="stGreen">- must provide the port number</span>
  * [info] <span class="stGreen">- must provide an actual running server</span>
  * [info] <span class="stGreen">- must provide a web driver</span>
  * [info] <span class="stGreen">InternetExplorerExampleSpec:</span>
  * [info] <span class="stGreen">The OneBrowserPerSuite trait</span>
- * [info] <span class="stYellow">- must provide a FakeApplication !!! CANCELED !!!</span>
+ * [info] <span class="stYellow">- must provide an Application !!! CANCELED !!!</span>
  * [info]   <span class="stYellow">Was unable to create a Selenium InternetExplorerDriver on this platform. (OneBrowserPerSuite.scala:201)</span>
- * [info] <span class="stYellow">- must make the FakeApplication available implicitly !!! CANCELED !!!</span>
+ * [info] <span class="stYellow">- must make the Application available implicitly !!! CANCELED !!!</span>
  * [info]   <span class="stYellow">Was unable to create a Selenium InternetExplorerDriver on this platform. (OneBrowserPerSuite.scala:201)</span>
- * [info] <span class="stYellow">- must start the FakeApplication !!! CANCELED !!!</span>
+ * [info] <span class="stYellow">- must start the Application !!! CANCELED !!!</span>
  * [info]   <span class="stYellow">Was unable to create a Selenium InternetExplorerDriver on this platform. (OneBrowserPerSuite.scala:201)</span>
  * [info] <span class="stYellow">- must provide the port number !!! CANCELED !!!</span>
  * [info]   <span class="stYellow">Was unable to create a Selenium InternetExplorerDriver on this platform. (OneBrowserPerSuite.scala:201)</span>
@@ -269,11 +269,11 @@ import org.openqa.selenium.chrome.ChromeDriver
  * [info]   <span class="stYellow">Was unable to create a Selenium InternetExplorerDriver on this platform. (OneBrowserPerSuite.scala:201)</span>
  * [info] <span class="stGreen">ChromeExampleSpec:</span>
  * [info] <span class="stGreen">The OneBrowserPerSuite trait</span>
- * [info] <span class="stYellow">- must provide a FakeApplication !!! CANCELED !!!</span>
+ * [info] <span class="stYellow">- must provide an Application !!! CANCELED !!!</span>
  * [info]   <span class="stYellow">Was unable to create a Selenium ChromeDriver on this platform. (OneBrowserPerSuite.scala:201)</span>
- * [info] <span class="stYellow">- must make the FakeApplication available implicitly !!! CANCELED !!!</span>
+ * [info] <span class="stYellow">- must make the Application available implicitly !!! CANCELED !!!</span>
  * [info]   <span class="stYellow">Was unable to create a Selenium ChromeDriver on this platform. (OneBrowserPerSuite.scala:201)</span>
- * [info] <span class="stYellow">- must start the FakeApplication !!! CANCELED !!!</span>
+ * [info] <span class="stYellow">- must start the Application !!! CANCELED !!!</span>
  * [info]   <span class="stYellow">Was unable to create a Selenium ChromeDriver on this platform. (OneBrowserPerSuite.scala:201)</span>
  * [info] <span class="stYellow">- must provide the port number !!! CANCELED !!!</span>
  * [info]   <span class="stYellow">Was unable to create a Selenium ChromeDriver on this platform. (OneBrowserPerSuite.scala:201)</span>
@@ -283,9 +283,9 @@ import org.openqa.selenium.chrome.ChromeDriver
  * [info]   <span class="stYellow">Was unable to create a Selenium ChromeDriver on this platform. (OneBrowserPerSuite.scala:201)</span>
  * [info] <span class="stGreen">HtmlUnitExampleSpec:</span>
  * [info] <span class="stGreen">The OneBrowserPerSuite trait</span>
- * [info] <span class="stGreen">- must provide a FakeApplication</span>
- * [info] <span class="stGreen">- must make the FakeApplication available implicitly</span>
- * [info] <span class="stGreen">- must start the FakeApplication</span>
+ * [info] <span class="stGreen">- must provide an Application</span>
+ * [info] <span class="stGreen">- must make the Application available implicitly</span>
+ * [info] <span class="stGreen">- must start the Application</span>
  * [info] <span class="stGreen">- must provide the port number</span>
  * [info] <span class="stGreen">- must provide an actual running server</span>
  * [info] <span class="stGreen">- must provide a web driver</span>
@@ -297,9 +297,9 @@ import org.openqa.selenium.chrome.ChromeDriver
  * &gt; test-only *onebrowserpersuite* -- -n org.scalatest.tags.FirefoxBrowser
  * [info] <span class="stGreen">FirefoxExampleSpec:</span>
  * [info] <span class="stGreen">The OneBrowserPerSuite trait</span>
- * [info] <span class="stGreen">- must provide a FakeApplication</span>
- * [info] <span class="stGreen">- must make the FakeApplication available implicitly</span>
- * [info] <span class="stGreen">- must start the FakeApplication</span>
+ * [info] <span class="stGreen">- must provide an Application</span>
+ * [info] <span class="stGreen">- must make the Application available implicitly</span>
+ * [info] <span class="stGreen">- must start the Application</span>
  * [info] <span class="stGreen">- must provide the port number</span>
  * [info] <span class="stGreen">- must provide an actual running server</span>
  * [info] <span class="stGreen">- must provide a web driver</span>

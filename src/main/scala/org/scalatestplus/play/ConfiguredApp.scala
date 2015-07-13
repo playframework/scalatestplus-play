@@ -17,16 +17,16 @@ package org.scalatestplus.play
 
 import play.api.test._
 import org.scalatest._
-import play.api.Play
+import play.api.{Application, Play}
 
 /**
- * Trait that provides a configured `FakeApplication` to the suite into which it is mixed.
+ * Trait that provides a configured `Application` to the suite into which it is mixed.
  *
  * The purpose of this trait is to allow nested suites of an enclosing suite that extends [[org.scalatestplus.play.OneAppPerSuite OneAppPerSuite]]
- * to make use of the `FakeApplication` provided by `OneAppPerSuite`. Trait `OneAppPerSuite` will ensure
- * the `FakeApplication` is placed in the `ConfigMap` under the key `org.scalatestplus.play.app` before
+ * to make use of the `Application` provided by `OneAppPerSuite`. Trait `OneAppPerSuite` will ensure
+ * the `Application` is placed in the `ConfigMap` under the key `org.scalatestplus.play.app` before
  * nested suites are invoked. This represents the "configured application" that is passed from the enclosing
- * suite to the nested suites. Trait `ConfiguredApp` extracts the `FakeApplication` from the `ConfigMap`
+ * suite to the nested suites. Trait `ConfiguredApp` extracts the `Application` from the `ConfigMap`
  * and makes it available via the `app` method it provides.
  *
  * To prevent discovery of nested suites you can annotate them with `@DoNotDiscover`. Here's an example,
@@ -47,8 +47,8 @@ import play.api.Play
  *   new RedSpec,
  *   new BlueSpec
  * ) with OneAppPerSuite {
- *   // Override app if you need a FakeApplication with other than non-default parameters.
- *   implicit override lazy val app: FakeApplication =
+ *   // Override app if you need a Application with other than non-default parameters.
+ *   implicit override lazy val app: Application =
  *     FakeApplication(additionalConfiguration = Map("ehcacheplugin" -> "disabled"))
  * } 
  *   
@@ -61,14 +61,14 @@ import play.api.Play
  * class BlueSpec extends PlaySpec with ConfiguredApp {
  *   
  *   "The OneAppPerSuite trait" must {
- *     "provide a FakeApplication" in { 
+ *     "provide a Application" in {
  *       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "make the FakeApplication available implicitly" in {
+ *     "make the Application available implicitly" in {
  *       def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
  *       getConfig("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "start the FakeApplication" in {
+ *     "start the Application" in {
  *       Play.maybeApplication mustBe Some(app)
  *     }
  *   }
@@ -77,22 +77,22 @@ import play.api.Play
  */
 trait ConfiguredApp extends SuiteMixin { this: Suite => 
 
-  private var configuredApp: FakeApplication = _
+  private var configuredApp: Application = _
 
   /**
-   * The "configured" `FakeApplication` instance that was passed into `run` via the `ConfigMap`.
+   * The "configured" `Application` instance that was passed into `run` via the `ConfigMap`.
    *
-   * @return the configured `FakeApplication`
+   * @return the configured `Application`
    */
-  implicit final def app: FakeApplication = synchronized { configuredApp }
+  implicit final def app: Application = synchronized { configuredApp }
 
   /**
-   * Looks in `args.configMap` for a key named "org.scalatestplus.play.app" whose value is a `FakeApplication`, 
-   * and if it exists, sets it as the `FakeApplication` that will be returned from the `app` method, then calls
+   * Looks in `args.configMap` for a key named "org.scalatestplus.play.app" whose value is a `Application`,
+   * and if it exists, sets it as the `Application` that will be returned from the `app` method, then calls
    * `super.run`.
    *
    * If no key matches "org.scalatestplus.play.app" in `args.configMap`, or the associated value is
-   * not a `FakeApplication`, throws `IllegalArgumentException`.
+   * not a `Application`, throws `IllegalArgumentException`.
    *
    * To prevent discovery of nested suites you can annotate them with `@DoNotDiscover`.
    *
@@ -101,12 +101,12 @@ trait ConfiguredApp extends SuiteMixin { this: Suite =>
    * @param args the `Args` for this run
    * @return a `Status` object that indicates when all tests and nested suites started by this method have completed, and whether or not a failure occurred.
    *         
-   * @throws IllegalArgumentException if the `FakeApplication` does not appear in `args.configMap` under the expected key
+   * @throws IllegalArgumentException if the `Application` does not appear in `args.configMap` under the expected key
    */
   abstract override def run(testName: Option[String], args: Args): Status = {
-    args.configMap.getOptional[FakeApplication]("org.scalatestplus.play.app") match {
+    args.configMap.getOptional[Application]("org.scalatestplus.play.app") match {
       case Some(ca) => synchronized { configuredApp = ca }
-      case None => throw new IllegalArgumentException("ConfiguredApp needs a FakeApplication value associated with key \"org.scalatestplus.play.app\" in the config map. Did you forget to annotate a nested suite with @DoNotDiscover?")
+      case None => throw new IllegalArgumentException("ConfiguredApp needs an Application value associated with key \"org.scalatestplus.play.app\" in the config map. Did you forget to annotate a nested suite with @DoNotDiscover?")
     }
     super.run(testName, args)
   }
