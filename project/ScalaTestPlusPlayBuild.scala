@@ -66,9 +66,9 @@ object ScalaTestPlusPlayBuild extends Build {
 
     libraryDependencies ++= Seq(
       "org.scalatest" %% "scalatest" % "2.2.0",
-      "com.typesafe.play" %% "play-test" % "2.4.0",
+      "com.typesafe.play" %% "play-test" % "2.4.2",
       "org.seleniumhq.selenium" % "selenium-java" % "2.45.0",
-      "com.typesafe.play" %% "play-ws" % "2.4.0"
+      "com.typesafe.play" %% "play-ws" % "2.4.2"
     ),
 
     parallelExecution in Test := false,
