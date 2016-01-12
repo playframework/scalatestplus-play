@@ -129,7 +129,7 @@ object ScalaTestPlusPlayBuild extends Build {
       ))
   lazy val root = Project(
     "ScalaTestPlusPlay",
-    file("module"),
+    file("."),
     settings = buildSettings ++ sonatypeSettings
   )
 }
