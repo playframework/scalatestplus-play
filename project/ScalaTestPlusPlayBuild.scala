@@ -56,19 +56,19 @@ object ScalaTestPlusPlayBuild extends Build {
 
     version := releaseVersion,
 
-    scalaVersion := "2.11.6",
+    scalaVersion := "2.11.7",
 
-    crossScalaVersions := Seq("2.11.6", "2.10.4"),
+    crossScalaVersions := Seq("2.11.7", "2.10.6"),
 
     resolvers += "Typesafe Releases" at "http://repo.typesafe.com/typesafe/releases",
 
     resolvers += "Local Maven" at Path.userHome.asFile.toURI.toURL + ".m2/repository",
 
     libraryDependencies ++= Seq(
-      "org.scalatest" %% "scalatest" % "2.2.5",
-      "com.typesafe.play" %% "play-test" % "2.4.2",
-      "org.seleniumhq.selenium" % "selenium-java" % "2.46.0",
-      "com.typesafe.play" %% "play-ws" % "2.4.2"
+      "org.scalatest" %% "scalatest" % "2.2.6",
+      "com.typesafe.play" %% "play-test" % "2.4.6",
+      "org.seleniumhq.selenium" % "selenium-java" % "2.48.2",
+      "com.typesafe.play" %% "play-ws" % "2.4.6"
     ),
 
     parallelExecution in Test := false,
