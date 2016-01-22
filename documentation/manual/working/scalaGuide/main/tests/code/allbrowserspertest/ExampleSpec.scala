@@ -3,36 +3,32 @@
  */
 package scalaguide.tests.scalatest.allbrowserspertest
 
-import play.api.test._
-import org.scalatest._
 import org.scalatestplus.play._
-import play.api.test.Helpers._
-import play.api.libs.ws._
 import play.api.mvc._
-import Results._
+import play.api.inject.guice._
+import play.api.routing._
+import play.api.routing.sird._
+import play.api.cache.EhCacheModule
 
 // #scalafunctionaltest-allbrowserspertest
 class ExampleSpec extends PlaySpec with OneServerPerSuite with AllBrowsersPerTest {
 
-  // Override app if you need a FakeApplication with other than
+  // Override app if you need an Application with other than
   // default parameters.
-  implicit override lazy val app: FakeApplication =
-    FakeApplication(
-      additionalConfiguration = Map("ehcacheplugin" -> "disabled"),
-      withRoutes = {
-        case ("GET", "/testing") =>
-          Action(
-            Results.Ok(
-              "<html>" +
-                "<head><title>Test Page</title></head>" +
-                "<body>" +
-                "<input type='button' name='b' value='Click Me' onclick='document.title=\"scalatest\"' />" +
-                "</body>" +
-                "</html>"
-            ).as("text/html")
-          )
-      }
-    )
+  implicit override lazy val app =
+    new GuiceApplicationBuilder().disable[EhCacheModule].additionalRouter(Router.from {
+      case GET(p"/testing") =>
+        Action(
+          Results.Ok(
+            "<html>" +
+              "<head><title>Test Page</title></head>" +
+              "<body>" +
+              "<input type='button' name='b' value='Click Me' onclick='document.title=\"scalatest\"' />" +
+              "</body>" +
+              "</html>"
+          ).as("text/html")
+        )
+    }).build()
 
   def sharedTests(browser: BrowserInfo) = {
     "The AllBrowsersPerTest trait" must {

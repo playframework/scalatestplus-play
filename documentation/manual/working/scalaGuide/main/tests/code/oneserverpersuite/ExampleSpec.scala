@@ -4,25 +4,25 @@
 package scalaguide.tests.scalatest.oneserverpersuite
 
 import play.api.test._
-import org.scalatest._
 import org.scalatestplus.play._
-import play.api.test.Helpers._
+import play.api.test.Helpers.{GET => GET_REQUEST, _}
 import play.api.libs.ws._
 import play.api.mvc._
 import Results._
+import play.api.inject.guice._
+import play.api.routing._
+import play.api.routing.sird._
+import play.api.cache.EhCacheModule
 
 // #scalafunctionaltest-oneserverpersuite
 class ExampleSpec extends PlaySpec with OneServerPerSuite {
 
-  // Override app if you need a FakeApplication with other than
+  // Override app if you need an Application with other than
   // default parameters.
-  implicit override lazy val app: FakeApplication =
-    FakeApplication(
-      additionalConfiguration = Map("ehcacheplugin" -> "disabled"),
-      withRoutes = {
-        case ("GET", "/") => Action { Ok("ok") }
-      }
-    )
+  implicit override lazy val app =
+    new GuiceApplicationBuilder().disable[EhCacheModule].additionalRouter(Router.from {
+      case GET(p"/") => Action { Ok("ok") }
+    }).build()
 
   "test server logic" in {
     val myPublicAddress =  s"localhost:$port"

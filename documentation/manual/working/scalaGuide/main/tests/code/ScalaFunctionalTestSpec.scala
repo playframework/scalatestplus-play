@@ -6,15 +6,14 @@ package scalaguide.tests.scalatest
 import org.scalatest._
 import org.scalatestplus.play._
 
-import play.api.libs.ws._
-
 import play.api.mvc._
-import play.api.test._
-
+import play.api.test.FakeRequest
+import play.api.test.Helpers.{GET => GET_REQUEST, _}
 import play.api.{GlobalSettings, Application}
-import play.api.test.Helpers._
-import scala.Some
-import play.api.test.FakeApplication
+import play.api.libs.ws._
+import play.api.inject.guice._
+import play.api.routing._
+import play.api.routing.sird._
 
 abstract class MixedPlaySpec extends fixture.WordSpec with MustMatchers with OptionValues with MixedFixtures
 
@@ -33,21 +32,22 @@ class ScalaFunctionalTestSpec extends MixedPlaySpec with Results {
   "Scala Functional Test" should {
 
     // #scalafunctionaltest-fakeApplication
-    val fakeApplicationWithGlobal = FakeApplication(withGlobal = Some(new GlobalSettings() {
+    val applicationWithGlobal = new GuiceApplicationBuilder().global(new GlobalSettings() {
       override def onStart(app: Application) { println("Hello world!") }
-    }))
+    }).build()
     // #scalafunctionaltest-fakeApplication
 
-    val fakeApplication = FakeApplication(withRoutes = {
-      case ("GET", "/Bob") =>
+    val application = new GuiceApplicationBuilder().additionalRouter(Router.from {
+      case GET(p"/Bob") =>
         Action {
           Ok("Hello Bob") as "text/html; charset=utf-8"
         }
-    })
+    }).build()
+
 
     // #scalafunctionaltest-respondtoroute
-    "respond to the index Action" in new App(fakeApplication) {
-      val Some(result) = route(FakeRequest(GET, "/Bob"))
+    "respond to the index Action" in new App(application) {
+      val Some(result) = route(FakeRequest(GET_REQUEST, "/Bob"))
 
       status(result) mustEqual OK
       contentType(result) mustEqual Some("text/html")
@@ -55,6 +55,7 @@ class ScalaFunctionalTestSpec extends MixedPlaySpec with Results {
       contentAsString(result) must include ("Hello Bob")
     }
     // #scalafunctionaltest-respondtoroute
+
 
     // #scalafunctionaltest-testview
     "render index template" in new App {
@@ -64,8 +65,9 @@ class ScalaFunctionalTestSpec extends MixedPlaySpec with Results {
     }
     // #scalafunctionaltest-testview
 
+
     // #scalafunctionaltest-testmodel
-    val appWithMemoryDatabase = FakeApplication(additionalConfiguration = inMemoryDatabase("test"))
+    val appWithMemoryDatabase = new GuiceApplicationBuilder().configure(inMemoryDatabase("test")).build()
     "run an application" in new App(appWithMemoryDatabase) {
 
       val Some(macintosh) = Computer.findById(21)
@@ -75,9 +77,10 @@ class ScalaFunctionalTestSpec extends MixedPlaySpec with Results {
     }
     // #scalafunctionaltest-testmodel
 
+
     // #scalafunctionaltest-testwithbrowser
-    def fakeApplicationWithBrowser = FakeApplication(withRoutes = {
-      case ("GET", "/") =>
+    def applicationWithBrowser = new GuiceApplicationBuilder().additionalRouter(Router.from {
+      case GET(p"/") =>
         Action {
           Ok(
             """
@@ -90,7 +93,7 @@ class ScalaFunctionalTestSpec extends MixedPlaySpec with Results {
               |</html>
             """.stripMargin) as "text/html"
         }
-      case ("GET", "/login") =>
+      case GET(p"/login") =>
         Action {
           Ok(
             """
@@ -102,9 +105,9 @@ class ScalaFunctionalTestSpec extends MixedPlaySpec with Results {
               |</html>
             """.stripMargin) as "text/html"
         }
-    })
+    }).build()
 
-    "run in a browser" in new HtmlUnit(app = fakeApplicationWithBrowser) {
+    "run in a browser" in new HtmlUnit(app = applicationWithBrowser) {
 
       // Check the home page
       go to "http://localhost:" + port
@@ -118,7 +121,7 @@ class ScalaFunctionalTestSpec extends MixedPlaySpec with Results {
     // #scalafunctionaltest-testwithbrowser
 
     // #scalafunctionaltest-testpaymentgateway
-    "test server logic" in new Server(app = fakeApplicationWithBrowser, port = 19001) { port =>
+    "test server logic" in new Server(app = applicationWithBrowser, port = 19001) { port =>
       val myPublicAddress =  s"localhost:$port"
       val testPaymentGatewayURL = s"http://$myPublicAddress"
       // The test payment gateway requires a callback to this server before it returns a result...
@@ -132,12 +135,12 @@ class ScalaFunctionalTestSpec extends MixedPlaySpec with Results {
     // #scalafunctionaltest-testpaymentgateway
 
     // #scalafunctionaltest-testws
-    val appWithRoutes = FakeApplication(withRoutes = {
-      case ("GET", "/") =>
+    val appWithRoutes = new GuiceApplicationBuilder().additionalRouter(Router.from{
+      case GET(p"/") =>
         Action {
           Ok("ok")
         }
-    })
+    }).build()
 
     "test WS logic" in new Server(app = appWithRoutes, port = 3333) {
       await(WS.url("http://localhost:3333").get()).status mustEqual OK

@@ -3,26 +3,23 @@
  */
 package scalaguide.tests.scalatest.oneapppertest
 
-import play.api.test._
 import org.scalatest._
 import org.scalatestplus.play._
-import play.api.{Play, Application}
+import play.api.Play
+import play.api.inject.guice._
 
 // #scalafunctionaltest-oneapppertest
 class ExampleSpec extends PlaySpec with OneAppPerTest {
 
-  // Override app if you need a FakeApplication with other than
+  // Override newAppForTest if you need an Application with other than
   // default parameters.
-  implicit override def newAppForTest(td: TestData): FakeApplication =
-    FakeApplication(
-      additionalConfiguration = Map("ehcacheplugin" -> "disabled")
-    )
+  implicit override def newAppForTest(td: TestData) = new GuiceApplicationBuilder().configure(Map("ehcacheplugin" -> "disabled")).build()
 
   "The OneAppPerTest trait" must {
-    "provide a new FakeApplication for each test" in {
+    "provide a new Application for each test" in {
       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
     }
-    "start the FakeApplication" in {
+    "start the Application" in {
       Play.maybeApplication mustBe Some(app)
     }
   }

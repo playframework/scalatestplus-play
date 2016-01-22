@@ -3,26 +3,26 @@
  */
 package scalaguide.tests.scalatest.oneserverpertest
 
-import play.api.test._
 import org.scalatest._
 import org.scalatestplus.play._
-import play.api.test.Helpers._
+import play.api.test.Helpers.{GET => GET_REQUEST, _}
 import play.api.libs.ws._
 import play.api.mvc._
 import Results._
+import play.api.inject.guice._
+import play.api.routing._
+import play.api.routing.sird._
+import play.api.cache.EhCacheModule
 
 // #scalafunctionaltest-oneserverpertest
 class ExampleSpec extends PlaySpec with OneServerPerTest {
 
-  // Override newAppForTest if you need a FakeApplication with other than
+  // Override newAppForTest if you need an Application with other than
   // default parameters.
-  override def newAppForTest(testData: TestData): FakeApplication =
-    new FakeApplication(
-      additionalConfiguration = Map("ehcacheplugin" -> "disabled"),
-      withRoutes = {
-        case ("GET", "/") => Action { Ok("ok") }
-      }
-    )
+  override def newAppForTest(testData: TestData) =
+    new GuiceApplicationBuilder().disable[EhCacheModule].additionalRouter(Router.from {
+      case GET(p"/") => Action { Ok("ok") }
+    }).build()
 
   "The OneServerPerTest trait" must {
     "test server logic" in {

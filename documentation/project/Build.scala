@@ -59,7 +59,8 @@ object ApplicationBuild extends Build {
     resolvers += Resolver.sonatypeRepo("releases"), // TODO: Delete this eventually, just needed for lag between deploying to sonatype and getting on maven central
     version := PlayVersion.current,
     libraryDependencies ++= Seq(
-      "org.mockito" % "mockito-core" % "1.9.5" % "test"
+      "org.mockito" % "mockito-core" % "1.9.5" % Test,
+      "com.typesafe.play" %% "play-cache" % "2.5.0-SNAPSHOT" % Test
     ),
 
     //PlayDocsKeys.docsJarFile := Some((packageBin in (playDocs, Compile)).value),
