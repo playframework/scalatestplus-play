@@ -68,7 +68,8 @@ object ScalaTestPlusPlayBuild extends Build {
       "org.scalatest" %% "scalatest" % "2.2.6",
       "com.typesafe.play" %% "play-test" % "2.5.0-SNAPSHOT",
       "org.seleniumhq.selenium" % "selenium-java" % "2.48.2",
-      "com.typesafe.play" %% "play-ws" % "2.5.0-SNAPSHOT"
+      "com.typesafe.play" %% "play-ws" % "2.5.0-SNAPSHOT",
+      "com.typesafe.play" %% "play-cache" % "2.5.0-SNAPSHOT" % Test
     ),
 
     parallelExecution in Test := false,

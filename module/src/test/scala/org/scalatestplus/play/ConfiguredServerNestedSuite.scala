@@ -36,17 +36,17 @@ class ConfiguredServerNestedSuite extends UnitSpec with ConfiguredServer {
   }
 
   "The ConfiguredServer trait" must {
-    "provide a FakeApplication" in {
+    "provide an Application" in {
       app.configuration.getString("foo") mustBe Some("bar")
     }
-    "make the FakeApplication available implicitly" in {
+    "make the Application available implicitly" in {
       getConfig("foo") mustBe Some("bar")
     }
-    "start the FakeApplication" in {
+    "start the Application" in {
       Play.maybeApplication mustBe Some(app)
     }
     "put the app in the configMap" in {
-      val configuredApp = configMap.getOptional[FakeApplication]("org.scalatestplus.play.app")
+      val configuredApp = configMap.getOptional[Application]("org.scalatestplus.play.app")
       configuredApp.value must be theSameInstanceAs app
     }
     "put the port in the configMap" in {

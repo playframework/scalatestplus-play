@@ -15,31 +15,44 @@
  */
 package org.scalatestplus.play.examples.onebrowserpertest
 
+import play.api.mvc.{Action, Results}
 import play.api.test._
 import org.scalatest._
 import org.scalatest.tags.FirefoxBrowser
 import org.scalatestplus.play._
 import play.api.{Play, Application}
+import play.api.inject.guice._
+import play.api.routing._
+import play.api.routing.sird._
 
 @FirefoxBrowser
 class ExampleSpec extends PlaySpec with OneServerPerTest with OneBrowserPerTest with FirefoxFactory {
 
-  // Override newAppForTest if you need a FakeApplication with other than non-default parameters.
-  override def newAppForTest(testData: TestData): FakeApplication =
-    FakeApplication(
-      additionalConfiguration = Map("ehcacheplugin" -> "disabled"),
-      withRoutes = TestRoute
-    )
+  // Override newAppForTest if you need an Application with other than non-default parameters.
+  override def newAppForTest(testData: TestData): Application =
+    new GuiceApplicationBuilder().configure(Map("ehcacheplugin" -> "disabled")).additionalRouter(Router.from {
+      case GET(p"/testing") =>
+        Action(
+          Results.Ok(
+            "<html>" +
+              "<head><title>Test Page</title></head>" +
+              "<body>" +
+              "<input type='button' name='b' value='Click Me' onclick='document.title=\"scalatest\"' />" +
+              "</body>" +
+              "</html>"
+          ).as("text/html")
+        )
+    }).build()
 
   "The OneBrowserPerTest trait" must {
-    "provide a FakeApplication" in {
+    "provide an Application" in {
       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
     }
-    "make the FakeApplication available implicitly" in {
+    "make the Application available implicitly" in {
       def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
       getConfig("ehcacheplugin") mustBe Some("disabled")
     }
-    "start the FakeApplication" in {
+    "start the Application" in {
       Play.maybeApplication mustBe Some(app)
     }
     "provide the port number" in {

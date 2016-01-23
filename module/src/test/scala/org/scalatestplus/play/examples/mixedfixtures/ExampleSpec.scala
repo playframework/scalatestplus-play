@@ -15,36 +15,52 @@
  */
 package org.scalatestplus.play.examples.mixedfixtures
 
+import play.api.mvc.{Action, Results}
 import play.api.test._
-import org.scalatest._
 import org.scalatestplus.play._
 import play.api.{Play, Application}
+import play.api.inject.guice._
+import play.api.routing._
+import play.api.routing.sird._
 
 class ExampleSpec extends MixedPlaySpec {
 
   // Some helper methods
-  def fakeApp[A](elems: (String, String)*) = FakeApplication(additionalConfiguration = Map(elems:_*), withRoutes = TestRoute)
+  def buildApp[A](elems: (String, String)*) =
+    new GuiceApplicationBuilder().configure(Map(elems:_*)).additionalRouter(Router.from {
+      case GET(p"/testing") =>
+        Action(
+          Results.Ok(
+            "<html>" +
+              "<head><title>Test Page</title></head>" +
+              "<body>" +
+              "<input type='button' name='b' value='Click Me' onclick='document.title=\"scalatest\"' />" +
+              "</body>" +
+              "</html>"
+          ).as("text/html")
+        )
+    }).build()
   def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
 
   "The App function" must {
-    "provide a FakeApplication" in new App(fakeApp("ehcacheplugin" -> "disabled")) {
+    "provide an Application" in new App(buildApp("ehcacheplugin" -> "disabled")) {
       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
     }
-    "make the FakeApplication available implicitly" in new App(fakeApp("ehcacheplugin" -> "disabled")) {
+    "make the Application available implicitly" in new App(buildApp("ehcacheplugin" -> "disabled")) {
       getConfig("ehcacheplugin") mustBe Some("disabled")
     }
-    "start the FakeApplication" in new App(fakeApp("ehcacheplugin" -> "disabled")) {
+    "start the Application" in new App(buildApp("ehcacheplugin" -> "disabled")) {
       Play.maybeApplication mustBe Some(app)
     }
   }
   "The Server function" must {
-    "provide a FakeApplication" in new Server(fakeApp("ehcacheplugin" -> "disabled")) {
+    "provide an Application" in new Server(buildApp("ehcacheplugin" -> "disabled")) {
       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
     }
-    "make the FakeApplication available implicitly" in new Server(fakeApp("ehcacheplugin" -> "disabled")) {
+    "make the Application available implicitly" in new Server(buildApp("ehcacheplugin" -> "disabled")) {
       getConfig("ehcacheplugin") mustBe Some("disabled")
     }
-    "start the FakeApplication" in new Server(fakeApp("ehcacheplugin" -> "disabled")) {
+    "start the Application" in new Server(buildApp("ehcacheplugin" -> "disabled")) {
       Play.maybeApplication mustBe Some(app)
     }
     import Helpers._
@@ -57,13 +73,13 @@ class ExampleSpec extends MixedPlaySpec {
     }
   }
   "The HtmlUnit function" must {
-    "provide a FakeApplication" in new HtmlUnit(fakeApp("ehcacheplugin" -> "disabled")) {
+    "provide an Application" in new HtmlUnit(buildApp("ehcacheplugin" -> "disabled")) {
       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
     }
-    "make the FakeApplication available implicitly" in new HtmlUnit(fakeApp("ehcacheplugin" -> "disabled")) {
+    "make the Application available implicitly" in new HtmlUnit(buildApp("ehcacheplugin" -> "disabled")) {
       getConfig("ehcacheplugin") mustBe Some("disabled")
     }
-    "start the FakeApplication" in new HtmlUnit(fakeApp("ehcacheplugin" -> "disabled")) {
+    "start the Application" in new HtmlUnit(buildApp("ehcacheplugin" -> "disabled")) {
       Play.maybeApplication mustBe Some(app)
     }
     import Helpers._
@@ -74,7 +90,7 @@ class ExampleSpec extends MixedPlaySpec {
       try con.getResponseCode mustBe 404
       finally con.disconnect()
     }
-    "provide a web driver" in new HtmlUnit(fakeApp()) {
+    "provide a web driver" in new HtmlUnit(buildApp()) {
       go to ("http://localhost:" + port + "/testing")
       pageTitle mustBe "Test Page"
       click on find(name("b")).value
@@ -82,13 +98,13 @@ class ExampleSpec extends MixedPlaySpec {
     }
   }
   "The Firefox function" must {
-    "provide a FakeApplication" in new Firefox(fakeApp("ehcacheplugin" -> "disabled")) {
+    "provide an Application" in new Firefox(buildApp("ehcacheplugin" -> "disabled")) {
       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
     }
-    "make the FakeApplication available implicitly" in new Firefox(fakeApp("ehcacheplugin" -> "disabled")) {
+    "make the Application available implicitly" in new Firefox(buildApp("ehcacheplugin" -> "disabled")) {
       getConfig("ehcacheplugin") mustBe Some("disabled")
     }
-    "start the FakeApplication" in new Firefox(fakeApp("ehcacheplugin" -> "disabled")) {
+    "start the Application" in new Firefox(buildApp("ehcacheplugin" -> "disabled")) {
       Play.maybeApplication mustBe Some(app)
     }
     import Helpers._
@@ -99,7 +115,7 @@ class ExampleSpec extends MixedPlaySpec {
       try con.getResponseCode mustBe 404
       finally con.disconnect()
     }
-    "provide a web driver" in new Firefox(fakeApp()) {
+    "provide a web driver" in new Firefox(buildApp()) {
       go to ("http://localhost:" + port + "/testing")
       pageTitle mustBe "Test Page"
       click on find(name("b")).value
@@ -107,13 +123,13 @@ class ExampleSpec extends MixedPlaySpec {
     }
   }
   "The Safari function" must {
-    "provide a FakeApplication" in new Safari(fakeApp("ehcacheplugin" -> "disabled")) {
+    "provide an Application" in new Safari(buildApp("ehcacheplugin" -> "disabled")) {
       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
     }
-    "make the FakeApplication available implicitly" in new Safari(fakeApp("ehcacheplugin" -> "disabled")) {
+    "make the Application available implicitly" in new Safari(buildApp("ehcacheplugin" -> "disabled")) {
       getConfig("ehcacheplugin") mustBe Some("disabled")
     }
-    "start the FakeApplication" in new Safari(fakeApp("ehcacheplugin" -> "disabled")) {
+    "start the Application" in new Safari(buildApp("ehcacheplugin" -> "disabled")) {
       Play.maybeApplication mustBe Some(app)
     }
     import Helpers._
@@ -124,7 +140,7 @@ class ExampleSpec extends MixedPlaySpec {
       try con.getResponseCode mustBe 404
       finally con.disconnect()
     }
-    "provide a web driver" in new Safari(fakeApp()) {
+    "provide a web driver" in new Safari(buildApp()) {
       go to ("http://localhost:" + port + "/testing")
       pageTitle mustBe "Test Page"
       click on find(name("b")).value
@@ -132,13 +148,13 @@ class ExampleSpec extends MixedPlaySpec {
     }
   }
   "The Chrome function" must {
-    "provide a FakeApplication" in new Chrome(fakeApp("ehcacheplugin" -> "disabled")) {
+    "provide an Application" in new Chrome(buildApp("ehcacheplugin" -> "disabled")) {
       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
     }
-    "make the FakeApplication available implicitly" in new Chrome(fakeApp("ehcacheplugin" -> "disabled")) {
+    "make the Application available implicitly" in new Chrome(buildApp("ehcacheplugin" -> "disabled")) {
       getConfig("ehcacheplugin") mustBe Some("disabled")
     }
-    "start the FakeApplication" in new Chrome(fakeApp("ehcacheplugin" -> "disabled")) {
+    "start the Application" in new Chrome(buildApp("ehcacheplugin" -> "disabled")) {
       Play.maybeApplication mustBe Some(app)
     }
     import Helpers._
@@ -149,7 +165,7 @@ class ExampleSpec extends MixedPlaySpec {
       try con.getResponseCode mustBe 404
       finally con.disconnect()
     }
-    "provide a web driver" in new Chrome(fakeApp()) {
+    "provide a web driver" in new Chrome(buildApp()) {
       go to ("http://localhost:" + port + "/testing")
       pageTitle mustBe "Test Page"
       click on find(name("b")).value
@@ -157,13 +173,13 @@ class ExampleSpec extends MixedPlaySpec {
     }
   }
   "The InternetExplorer function" must {
-    "provide a FakeApplication" in new InternetExplorer(fakeApp("ehcacheplugin" -> "disabled")) {
+    "provide an Application" in new InternetExplorer(buildApp("ehcacheplugin" -> "disabled")) {
       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
     }
-    "make the FakeApplication available implicitly" in new InternetExplorer(fakeApp("ehcacheplugin" -> "disabled")) {
+    "make the Application available implicitly" in new InternetExplorer(buildApp("ehcacheplugin" -> "disabled")) {
       getConfig("ehcacheplugin") mustBe Some("disabled")
     }
-    "start the FakeApplication" in new InternetExplorer(fakeApp("ehcacheplugin" -> "disabled")) {
+    "start the Application" in new InternetExplorer(buildApp("ehcacheplugin" -> "disabled")) {
       Play.maybeApplication mustBe Some(app)
     }
     import Helpers._
@@ -174,7 +190,7 @@ class ExampleSpec extends MixedPlaySpec {
       try con.getResponseCode mustBe 404
       finally con.disconnect()
     }
-    "provide a web driver" in new InternetExplorer(fakeApp()) {
+    "provide a web driver" in new InternetExplorer(buildApp()) {
       go to ("http://localhost:" + port + "/testing")
       pageTitle mustBe "Test Page"
       click on find(name("b")).value

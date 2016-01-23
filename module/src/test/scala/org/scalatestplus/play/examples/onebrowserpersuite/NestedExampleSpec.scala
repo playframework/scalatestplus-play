@@ -15,11 +15,14 @@
  */
 package org.scalatestplus.play.examples.onebrowserpersuite
 
+import play.api.mvc.{Results, Action}
 import play.api.test._
 import org.scalatest._
-import tags.FirefoxBrowser
 import org.scalatestplus.play._
 import play.api.{Play, Application}
+import play.api.inject.guice._
+import play.api.routing._
+import play.api.routing.sird._
 
 // This is the "master" suite
 class NestedExampleSpec extends Suites(
@@ -28,12 +31,21 @@ class NestedExampleSpec extends Suites(
   new RedSpec,
   new BlueSpec
 ) with OneServerPerSuite with OneBrowserPerSuite with FirefoxFactory {
-  // Override app if you need a FakeApplication with other than non-default parameters.
-  implicit override lazy val app: FakeApplication =
-    FakeApplication(
-      additionalConfiguration = Map("ehcacheplugin" -> "disabled"),
-      withRoutes = TestRoute
-    )
+  // Override app if you need an Application with other than non-default parameters.
+  implicit override lazy val app: Application =
+    new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").additionalRouter(Router.from {
+      case GET(p"/testing") =>
+        Action(
+          Results.Ok(
+            "<html>" +
+              "<head><title>Test Page</title></head>" +
+              "<body>" +
+              "<input type='button' name='b' value='Click Me' onclick='document.title=\"scalatest\"' />" +
+              "</body>" +
+              "</html>"
+          ).as("text/html")
+        )
+    }).build()
 }
  
 // These are the nested suites
@@ -45,14 +57,14 @@ class NestedExampleSpec extends Suites(
 class BlueSpec extends PlaySpec with ConfiguredServer with ConfiguredBrowser {
 
   "The OneBrowserPerSuite trait" must {
-    "provide a FakeApplication" in { 
+    "provide an Application" in {
       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
     }
-    "make the FakeApplication available implicitly" in {
+    "make the Application available implicitly" in {
       def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
       getConfig("ehcacheplugin") mustBe Some("disabled")
     }
-    "start the FakeApplication" in {
+    "start the Application" in {
       Play.maybeApplication mustBe Some(app)
     }
     "provide the port number" in {

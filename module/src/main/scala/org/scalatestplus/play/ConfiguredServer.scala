@@ -36,33 +36,20 @@ import play.api.{Play, Application}
  *
  * <pre class="stHighlight">
  * package org.scalatestplus.play.examples.oneserverpersuite
- * 
+ *
  * import play.api.test._
- * import org.scalatest._
  * import org.scalatestplus.play._
  * import play.api.{Play, Application}
- * 
- *  // This is the "master" suite
- * class NestedExampleSpec extends Suites(
- *   new OneSpec,
- *   new TwoSpec,
- *   new RedSpec,
- *   new BlueSpec
- * ) with OneServerPerSuite {
+ * import play.api.inject.guice._
+ * import play.api.cache.EhCacheModule
+ *
+ * class ExampleSpec extends PlaySpec with OneServerPerSuite {
+ *
  *   // Override app if you need a Application with other than non-default parameters.
  *   implicit override lazy val app: Application =
- *     FakeApplication(additionalConfiguration = Map("ehcacheplugin" -> "disabled"))
- * }
- *  
- * // These are the nested suites
- * @DoNotDiscover class OneSpec extends PlaySpec with ConfiguredServer
- * @DoNotDiscover class TwoSpec extends PlaySpec with ConfiguredServer
- * @DoNotDiscover class RedSpec extends PlaySpec with ConfiguredServer
- * 
- * @DoNotDiscover
- * class BlueSpec extends PlaySpec with ConfiguredServer {
- * 
- *   "The OneAppPerSuite trait" must {
+ *     new GuiceApplicationBuilder().disable[EhCacheModule].build()
+ *
+ *   "The OneServerPerSuite trait" must {
  *     "provide an Application" in {
  *       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
  *     }

@@ -20,6 +20,7 @@ import org.scalatest._
 import events._
 import play.api.{Play, Application}
 import scala.collection.mutable.ListBuffer
+import play.api.inject.guice._
 
 class ConfiguredAppSpec extends UnitSpec with SequentialNestedSuiteExecution with OneAppPerSuite {
 
@@ -35,17 +36,17 @@ class ConfiguredAppSpec extends UnitSpec with SequentialNestedSuiteExecution wit
     }
 
     "The ConfiguredApp trait" must {
-      "provide a FakeApplication" in {
+      "provide an Application" in {
         app.configuration.getString("foo") mustBe Some("bar")
       }
-      "make the FakeApplication available implicitly" in {
+      "make the Application available implicitly" in {
         getConfig("foo") mustBe Some("bar")
       }
-      "start the FakeApplication" in {
+      "start the Application" in {
         Play.maybeApplication mustBe Some(app)
       }
       "put the app in the configMap" in {
-        val configuredApp = configMap.getOptional[FakeApplication]("org.scalatestplus.play.app")
+        val configuredApp = configMap.getOptional[Application]("org.scalatestplus.play.app")
         configuredApp.value must be theSameInstanceAs app
       }
     }
@@ -53,7 +54,8 @@ class ConfiguredAppSpec extends UnitSpec with SequentialNestedSuiteExecution wit
 
   override def nestedSuites = Vector(new NestedSuite)
 
-  implicit override lazy val app: FakeApplication = FakeApplication(additionalConfiguration = Map("foo" -> "bar", "ehcacheplugin" -> "disabled"))
+  implicit override lazy val app: Application =
+    new GuiceApplicationBuilder().configure(Map("foo" -> "bar", "ehcacheplugin" -> "disabled")).build()
   def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
 }
 

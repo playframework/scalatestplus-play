@@ -1,5 +1,5 @@
 /*
- * Copyright 2001-2014 Artima, Inc.
+ * Copyright 2001-2016 Artima, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.scalatestplus.play
+package org.scalatestplus.play.examples.allbrowserspersuite
 
 import play.api.test._
-import org.scalatest._
+import org.scalatestplus.play._
 import play.api.{Play, Application}
-import org.openqa.selenium.WebDriver
 import play.api.mvc.{Action, Results}
 import play.api.inject.guice._
 import play.api.routing._
 import play.api.routing.sird._
+import play.api.cache.EhCacheModule
+ 
+class ExampleSpec extends PlaySpec with OneServerPerSuite with AllBrowsersPerSuite {
 
-// Can't get this one to work either on my Mac, even with the system property set
-class ChromeFactorySpec extends UnitSpec with OneServerPerSuite with OneBrowserPerSuite with ChromeFactory {
-
-  implicit override lazy val app: Application =
-    new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").additionalRouter(Router.from {
+  // Override app if you need an Application with other than
+  // default parameters.
+  implicit override lazy val app =
+    new GuiceApplicationBuilder().disable[EhCacheModule].configure("foo" -> "bar").additionalRouter(Router.from {
       case GET(p"/testing") =>
         Action(
           Results.Ok(
@@ -42,22 +43,27 @@ class ChromeFactorySpec extends UnitSpec with OneServerPerSuite with OneBrowserP
         )
     }).build()
 
-  def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
+  // Place tests you want run in different browsers in the `sharedTests` method:
+  def sharedTests(browser: BrowserInfo) = {
 
-  // Doesn't need synchronization because set by withFixture and checked by the test
-  // invoked inside same withFixture with super.withFixture(test)
-  var configMap: ConfigMap = _
-
-  override def withFixture(test: NoArgTest): Outcome = {
-    configMap = test.configMap
-    super.withFixture(test)
+    "The AllBrowsersPerSuite trait" must {
+      "provide a web driver " + browser.name in {
+        go to ("http://localhost:" + port + "/testing")
+        pageTitle mustBe "Test Page"
+        click on find(name("b")).value
+        eventually { pageTitle mustBe "scalatest" }
+      }
+    }
   }
 
-  "The ChromeFactory trait" must {
+  // Place tests that don't need a WebDriver outside the `sharedTests` method
+  // in the constructor, the usual place for tests in a `PlaySpec`
+  "The AllBrowsersPerSuite trait" must {
     "provide an Application" in {
       app.configuration.getString("foo") mustBe Some("bar")
     }
     "make the Application available implicitly" in {
+      def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
       getConfig("foo") mustBe Some("bar")
     }
     "start the Application" in {
@@ -66,32 +72,12 @@ class ChromeFactorySpec extends UnitSpec with OneServerPerSuite with OneBrowserP
     "provide the port" in {
       port mustBe Helpers.testServerPort
     }
-    import Helpers._
-    "send 404 on a bad request" in {
+    "provide an actual running server" in {
       import java.net._
       val url = new URL("http://localhost:" + port + "/boum")
       val con = url.openConnection().asInstanceOf[HttpURLConnection]
       try con.getResponseCode mustBe 404
       finally con.disconnect()
     }
-    "put the app in the configMap" in {
-      val configuredApp = configMap.getOptional[Application]("org.scalatestplus.play.app")
-      configuredApp.value must be theSameInstanceAs app
-    }
-    "put the port in the configMap" in {
-      val configuredPort = configMap.getOptional[Int]("org.scalatestplus.play.port")
-      configuredPort.value mustEqual port
-    }
-    "put the webDriver in the configMap" in {
-      val configuredApp = configMap.getOptional[WebDriver]("org.scalatestplus.play.webDriver")
-      configuredApp mustBe defined
-    }
-    "provide a web driver" in {
-      go to ("http://localhost:" + port + "/testing")
-      pageTitle mustBe "Test Page"
-      click on find(name("b")).value
-      eventually { pageTitle mustBe "scalatest" }
-    }
   }
 }
-

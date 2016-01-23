@@ -21,15 +21,28 @@ import org.scalatestplus.play._
 import play.api.{Play, Application}
 import play.api.mvc.{Action, Results}
 import org.openqa.selenium.WebDriver
+import play.api.inject.guice._
+import play.api.routing._
+import play.api.routing.sird._
+import play.api.cache.EhCacheModule
 
 class ExampleSpec extends PlaySpec with OneServerPerTest with AllBrowsersPerTest {
 
-   // Override newAppForTest if you need a FakeApplication with other than non-default parameters.
-  override def newAppForTest(testData: TestData): FakeApplication =
-    FakeApplication(
-      additionalConfiguration = Map("foo" -> "bar", "ehcacheplugin" -> "disabled"),
-      withRoutes = TestRoute
-    )
+  // Override newAppForTest if you need a Application with other than non-default parameters.
+  override def newAppForTest(testData: TestData): Application =
+     new GuiceApplicationBuilder().disable[EhCacheModule].configure("foo" -> "bar").additionalRouter(Router.from {
+       case GET(p"/testing") =>
+         Action(
+           Results.Ok(
+             "<html>" +
+               "<head><title>Test Page</title></head>" +
+               "<body>" +
+               "<input type='button' name='b' value='Click Me' onclick='document.title=\"scalatest\"' />" +
+               "</body>" +
+               "</html>"
+           ).as("text/html")
+         )
+     }).build()
 
   // Place tests you want run in different browsers in the `sharedTests` method:
   def sharedTests(browser: BrowserInfo) = {
