@@ -16,25 +16,25 @@
 package org.scalatestplus.play.examples.oneserverpersuite
 
 import play.api.test._
-import org.scalatest._
 import org.scalatestplus.play._
 import play.api.{Play, Application}
+import play.api.inject.guice._
 
 class ExampleSpec extends PlaySpec with OneServerPerSuite {
 
-  // Override app if you need a FakeApplication with other than non-default parameters.
-  implicit override lazy val app: FakeApplication =
-    FakeApplication(additionalConfiguration = Map("ehcacheplugin" -> "disabled"))
+  // Override app if you need a Application with other than non-default parameters.
+  implicit override lazy val app: Application =
+    new GuiceApplicationBuilder().configure("ehcacheplugin" -> "disabled").build()
 
   "The OneServerPerSuite trait" must {
-    "provide a FakeApplication" in {
+    "provide an Application" in {
       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
     }
-    "make the FakeApplication available implicitly" in {
+    "make the Application available implicitly" in {
       def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
       getConfig("ehcacheplugin") mustBe Some("disabled")
     }
-    "start the FakeApplication" in {
+    "start the Application" in {
       Play.maybeApplication mustBe Some(app)
     }
     "provide the port number" in {
@@ -50,4 +50,3 @@ class ExampleSpec extends PlaySpec with OneServerPerSuite {
     }
   }
 }
-

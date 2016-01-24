@@ -15,14 +15,14 @@
  */
 package org.scalatestplus.play
 
-import play.api.test._
 import org.scalatest._
 import play.api.{Application, Play}
+import play.api.inject.guice._
 
 /**
  * Trait that provides a new `Application` instance per ScalaTest `Suite`.
  *
- * By default, this trait creates a new `FakeApplication` for the `Suite` using default parameter values, which
+ * By default, this trait creates a new `Application` for the `Suite` using default parameter values, which
  * is made available via the `app` field defined in this trait. If your `Suite` needs a `Application` with non-default
  * parameters, override `app` to create it the way you need it.
  *
@@ -41,16 +41,15 @@ import play.api.{Application, Play}
  * <pre class="stHighlight">
  * package org.scalatestplus.play.examples.oneapppersuite
  * 
- * import play.api.test._
- * import org.scalatest._
  * import org.scalatestplus.play._
- * import play.api.{Play, Application}
+ * import play.api.Play
+ * import play.api.inject.guice._
  * 
  * class ExampleSpec extends PlaySpec with OneAppPerSuite {
  * 
  *   // Override app if you need an Application with other than non-default parameters.
  *   implicit override lazy val app: Application =
- *     FakeApplication(additionalConfiguration = Map("ehcacheplugin" -> "disabled"))
+ *     new GuiceApplicationBuilder().configure(Map("ehcacheplugin" -> "disabled")).build()
  * 
  *   "The OneAppPerSuite trait" must {
  *     "provide an Application" in {
@@ -89,7 +88,7 @@ import play.api.{Application, Play}
  * ) with OneAppPerSuite {
  *   // Override app if you need an Application with other than non-default parameters.
  *   implicit override lazy val app: Application =
- *     FakeApplication(additionalConfiguration = Map("ehcacheplugin" -> "disabled"))
+ *     Application(additionalConfiguration = Map("ehcacheplugin" -> "disabled"))
  * } 
  *   
  * // These are the nested suites
@@ -123,7 +122,7 @@ trait OneAppPerSuite extends SuiteMixin { this: Suite =>
    * This trait's implementation initializes this `lazy` `val` with a new instance of `Application` with
    * parameters set to their defaults. Override this `lazy` `val` if you need a `Application` created with non-default parameter values.
    */
-  implicit lazy val app: Application = new FakeApplication()
+  implicit lazy val app: Application = new GuiceApplicationBuilder().build()
 
   /**
    * Invokes `Play.start`, passing in the `Application` provided by `app`, and places

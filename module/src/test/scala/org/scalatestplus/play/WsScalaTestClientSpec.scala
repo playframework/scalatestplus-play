@@ -15,18 +15,15 @@
  */
 package org.scalatestplus.play
 
-import play.api.test._
-import play.api.test.TestRoute
 import org.scalatest.concurrent.{ScalaFutures, IntegrationPatience}
 import play.api.mvc.Call
+import play.api.inject.guice._
+import play.api.routing._
 
 class WsScalaTestClientSpec extends UnitSpec with OneServerPerSuite with ScalaFutures with IntegrationPatience {
 
-  implicit override lazy val app: FakeApplication =
-    FakeApplication(
-      additionalConfiguration = Map("foo" -> "bar", "ehcacheplugin" -> "disabled"),
-      withRoutes = TestRoute
-    )
+  implicit override lazy val app =
+    new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").additionalRouter(Router.from(TestRoute)).build()
 
   "WsScalaTestClient's" must {
 

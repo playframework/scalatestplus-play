@@ -18,16 +18,14 @@ package org.scalatestplus.play
 import play.api.test._
 import org.scalatest._
 import play.api.{Play, Application}
-import play.api.mvc.{Action, Results}
+import play.api.inject.guice._
+import play.api.routing._
 
 class ConfiguredServerWithOneBrowserPerTestSpec extends Suites(
   new ConfiguredServerWithOneBrowserPerTestNestedSpec 
 ) with OneServerPerSuite {
-  implicit override lazy val app: FakeApplication = 
-    FakeApplication(
-      additionalConfiguration = Map("foo" -> "bar", "ehcacheplugin" -> "disabled"), 
-      withRoutes = TestRoute
-    )
+  implicit override lazy val app: Application =
+    new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").additionalRouter(Router.from(TestRoute)).build()
 }
 
 @DoNotDiscover

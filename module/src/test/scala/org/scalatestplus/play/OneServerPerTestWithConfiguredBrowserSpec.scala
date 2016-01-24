@@ -17,17 +17,17 @@ package org.scalatestplus.play
 
 import play.api.test._
 import org.scalatest._
-import events._
 import play.api.{Play, Application}
-import scala.collection.mutable.ListBuffer
 import org.openqa.selenium.WebDriver
+import play.api.inject.guice._
+import play.api.routing._
 
 class OneServerPerTestWithConfiguredBrowserSpec extends UnitSpec with SequentialNestedSuiteExecution with OneServerPerSuite with OneBrowserPerSuite with HtmlUnitFactory {
 
   override def nestedSuites = Vector(new OneServerPerTestWithConfiguredBrowserNestedSpec)
 
-  implicit override lazy val app: FakeApplication = FakeApplication(additionalConfiguration = Map("foo" -> "bar", "ehcacheplugin" -> "disabled"),
-      withRoutes = TestRoute)
+  implicit override lazy val app =
+    new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").additionalRouter(Router.from(TestRoute)).build()
   def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
 }
 
@@ -46,17 +46,17 @@ class OneServerPerTestWithConfiguredBrowserNestedSpec extends UnitSpec with Conf
   }
 
   "The ConfiguredBrowser trait" must {
-    "provide a FakeApplication" in {
+    "provide an Application" in {
       app.configuration.getString("foo") mustBe Some("bar")
     }
-    "make the FakeApplication available implicitly" in {
+    "make the Application available implicitly" in {
       getConfig("foo") mustBe Some("bar")
     }
-    "start the FakeApplication" in {
+    "start the Application" in {
       Play.maybeApplication mustBe Some(app)
     }
     "put the app in the configMap" in {
-      val configuredApp = configMap.getOptional[FakeApplication]("org.scalatestplus.play.app")
+      val configuredApp = configMap.getOptional[Application]("org.scalatestplus.play.app")
       configuredApp.value must be theSameInstanceAs app
     }
     "put the port in the configMap" in {

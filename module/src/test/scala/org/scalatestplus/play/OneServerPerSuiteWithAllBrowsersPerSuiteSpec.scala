@@ -16,19 +16,15 @@
 package org.scalatestplus.play
 
 import play.api.test._
-import org.scalatest._
 import play.api.{Play, Application}
-import play.api.mvc.{Action, Results}
 import org.openqa.selenium.WebDriver
-import BrowserFactory.UnavailableDriver
+import play.api.inject.guice._
+import play.api.routing._
 
 class OneServerPerSuiteWithAllBrowsersPerSuiteSpec extends UnitSpec with OneServerPerSuite with AllBrowsersPerSuite {
 
-  implicit override lazy val app: FakeApplication =
-    FakeApplication(
-      additionalConfiguration = Map("foo" -> "bar", "ehcacheplugin" -> "disabled"),
-      withRoutes = TestRoute
-    )
+  implicit override lazy val app =
+    new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").additionalRouter(Router.from(TestRoute)).build()
   def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
 
   var theWebDriver: WebDriver = null
@@ -52,13 +48,13 @@ class OneServerPerSuiteWithAllBrowsersPerSuiteSpec extends UnitSpec with OneServ
   }
 
   "The AllBrowsersPerSuite trait" must {
-    "provide a FakeApplication" in {
+    "provide an Application" in {
       app.configuration.getString("foo") mustBe Some("bar")
     }
-    "make the FakeApplication available implicitly" in {
+    "make the Application available implicitly" in {
       getConfig("foo") mustBe Some("bar")
     }
-    "start the FakeApplication" in {
+    "start the Application" in {
       Play.maybeApplication mustBe Some(app)
     }
     "provide the port" in {

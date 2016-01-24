@@ -103,12 +103,21 @@ import org.openqa.selenium.chrome.ChromeDriver
  * 
  * class ExampleSpec extends PlaySpec with OneServerPerSuite with AllBrowsersPerTest {
  * 
- *   // Override app if you need an Application with other than non-default parameters.
- *   implicit override def app: Application =
- *     FakeApplication(
- *       additionalConfiguration = Map("foo" -&gt; "bar", "ehcacheplugin" -&gt; "disabled"),
- *       withRoutes = TestRoute
- *     )
+ *   // Override newAppForTest if you need a Application with other than non-default parameters.
+ *   override def newAppForTest(testData: TestData): Application =
+ *      new GuiceApplicationBuilder().disable[EhCacheModule].configure("foo" -> "bar").additionalRouter(Router.from {
+ *        case GET(p"/testing") =>
+ *          Action(
+ *            Results.Ok(
+ *              "<html>" +
+ *                "<head><title>Test Page</title></head>" +
+ *                "<body>" +
+ *                "<input type='button' name='b' value='Click Me' onclick='document.title=\"scalatest\"' />" +
+ *                "</body>" +
+ *                "</html>"
+ *            ).as("text/html")
+ *          )
+ *      }).build()
  * 
  *   // Place tests you want run in different browsers in the `sharedTests` method:
  *   def sharedTests(browser: BrowserInfo) = {

@@ -3,26 +3,22 @@
  */
 package scalaguide.tests.scalatest.oneapppersuite
 
-import play.api.test._
-import org.scalatest._
 import org.scalatestplus.play._
-import play.api.{Play, Application}
+import play.api.Play
+import play.api.inject.guice._
 
 // #scalafunctionaltest-oneapppersuite
 class ExampleSpec extends PlaySpec with OneAppPerSuite {
 
-  // Override app if you need a FakeApplication with other than
+  // Override app if you need a Application with other than
   // default parameters.
-  implicit override lazy val app: FakeApplication =
-    FakeApplication(
-      additionalConfiguration = Map("ehcacheplugin" -> "disabled")
-    )
+  implicit override lazy val app = new GuiceApplicationBuilder().configure(Map("ehcacheplugin" -> "disabled")).build()
 
   "The OneAppPerSuite trait" must {
-    "provide a FakeApplication" in {
+    "provide an Application" in {
       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
     }
-    "start the FakeApplication" in {
+    "start the Application" in {
       Play.maybeApplication mustBe Some(app)
     }
   }

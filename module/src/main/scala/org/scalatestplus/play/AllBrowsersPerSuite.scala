@@ -91,27 +91,38 @@ import org.openqa.selenium.chrome.ChromeDriver
  *
  * <pre class="stHighlight">
  * package org.scalatestplus.play.examples.allbrowserspersharedsuite
- * 
+ *
  * import play.api.test._
- * import org.scalatest._
  * import org.scalatestplus.play._
  * import play.api.{Play, Application}
  * import play.api.mvc.{Action, Results}
- * import org.openqa.selenium.WebDriver
- * import BrowserFactory.UnavailableDriver
- * 
+ * import play.api.inject.guice._
+ * import play.api.routing._
+ * import play.api.routing.sird._
+ * import play.api.cache.EhCacheModule
+ *
  * class ExampleSpec extends PlaySpec with OneServerPerSuite with AllBrowsersPerSuite {
- * 
- *   // Override app if you need a Application with other than non-default parameters.
- *   implicit override def app: Application =
- *     FakeApplication(
- *       additionalConfiguration = Map("foo" -&gt; "bar", "ehcacheplugin" -&gt; "disabled"),
- *       withRoutes = TestRoute
- *     )
- * 
+ *
+ *   // Override app if you need an Application with other than
+ *   // default parameters.
+ *   implicit override lazy val app =
+ *     new GuiceApplicationBuilder().disable[EhCacheModule].configure("foo" -> "bar").additionalRouter(Router.from {
+ *       case GET(p"/testing") =>
+ *         Action(
+ *           Results.Ok(
+ *             "<html>" +
+ *               "<head><title>Test Page</title></head>" +
+ *               "<body>" +
+ *               "<input type='button' name='b' value='Click Me' onclick='document.title=\"scalatest\"' />" +
+ *               "</body>" +
+ *               "</html>"
+ *           ).as("text/html")
+ *         )
+ *     }).build()
+ *
  *   // Place tests you want run in different browsers in the `sharedTests` method:
  *   def sharedTests(browser: BrowserInfo) = {
- * 
+ *
  *     "The AllBrowsersPerSuite trait" must {
  *       "provide a web driver " + browser.name in {
  *         go to ("http://localhost:" + port + "/testing")
@@ -121,7 +132,7 @@ import org.openqa.selenium.chrome.ChromeDriver
  *       }
  *     }
  *   }
- * 
+ *
  *   // Place tests that don't need a WebDriver outside the `sharedTests` method
  *   // in the constructor, the usual place for tests in a `PlaySpec`
  *   "The AllBrowsersPerSuite trait" must {
@@ -129,7 +140,7 @@ import org.openqa.selenium.chrome.ChromeDriver
  *       app.configuration.getString("foo") mustBe Some("bar")
  *     }
  *     "make the Application available implicitly" in {
- *        def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
+ *       def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
  *       getConfig("foo") mustBe Some("bar")
  *     }
  *     "start the Application" in {

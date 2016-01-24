@@ -18,25 +18,23 @@ package org.scalatestplus.play
 import play.api.test._
 import org.scalatest._
 import play.api.{Play, Application}
-import play.api.mvc.{Action, Results}
+import play.api.inject.guice._
+import play.api.routing._
 
 class OneServerPerSuiteWithOneBrowserPerTestSpec extends UnitSpec with OneServerPerSuite with OneBrowserPerTest with FirefoxFactory {
 
-  implicit override lazy val app: FakeApplication = 
-    FakeApplication(
-      additionalConfiguration = Map("foo" -> "bar", "ehcacheplugin" -> "disabled"), 
-      withRoutes = TestRoute
-    )
+  implicit override lazy val app =
+    new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").additionalRouter(Router.from(TestRoute)).build()
   def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
 
   "The OneBrowserPerTest trait" must {
-    "provide a FakeApplication" in {
+    "provide an Application" in {
       app.configuration.getString("foo") mustBe Some("bar")
     }
-    "make the FakeApplication available implicitly" in {
+    "make the Application available implicitly" in {
       getConfig("foo") mustBe Some("bar")
     }
-    "start the FakeApplication" in {
+    "start the Application" in {
       Play.maybeApplication mustBe Some(app)
     }
     "provide the port" in {
