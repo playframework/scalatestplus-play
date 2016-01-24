@@ -15,29 +15,15 @@
  */
 package org.scalatestplus.play
 
-import play.api.mvc.{Results, Action}
 import play.api.test._
 import play.api.{Play, Application}
 import play.api.inject.guice._
 import play.api.routing._
-import play.api.routing.sird._
 
 class MixedFixtureSpec extends MixedSpec {
 
   def buildApp[A](elems: (String, String)*) =
-    new GuiceApplicationBuilder().configure(Map(elems:_*)).additionalRouter(Router.from {
-      case GET(p"/testing") =>
-        Action(
-          Results.Ok(
-            "<html>" +
-              "<head><title>Test Page</title></head>" +
-              "<body>" +
-              "<input type='button' name='b' value='Click Me' onclick='document.title=\"scalatest\"' />" +
-              "</body>" +
-              "</html>"
-          ).as("text/html")
-        )
-    }).build()
+    new GuiceApplicationBuilder().configure(Map(elems:_*)).additionalRouter(Router.from(TestRoute)).build()
   def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
 
   "The App function" must {

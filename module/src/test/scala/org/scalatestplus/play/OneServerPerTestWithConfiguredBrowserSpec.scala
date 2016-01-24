@@ -18,30 +18,16 @@ package org.scalatestplus.play
 import play.api.test._
 import org.scalatest._
 import play.api.{Play, Application}
-import play.api.mvc.{Action, Results}
 import org.openqa.selenium.WebDriver
 import play.api.inject.guice._
 import play.api.routing._
-import play.api.routing.sird._
 
 class OneServerPerTestWithConfiguredBrowserSpec extends UnitSpec with SequentialNestedSuiteExecution with OneServerPerSuite with OneBrowserPerSuite with HtmlUnitFactory {
 
   override def nestedSuites = Vector(new OneServerPerTestWithConfiguredBrowserNestedSpec)
 
   implicit override lazy val app =
-    new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").additionalRouter(Router.from {
-      case GET(p"/testing") =>
-        Action(
-          Results.Ok(
-            "<html>" +
-              "<head><title>Test Page</title></head>" +
-              "<body>" +
-              "<input type='button' name='b' value='Click Me' onclick='document.title=\"scalatest\"' />" +
-              "</body>" +
-              "</html>"
-          ).as("text/html")
-        )
-    }).build()
+    new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").additionalRouter(Router.from(TestRoute)).build()
   def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
 }
 

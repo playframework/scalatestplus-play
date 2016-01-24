@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package play.api.test
+package org.scalatestplus.play
 
 import play.api.mvc.{RequestHeader, Handler, Action, Results}
 import play.api.routing.Router

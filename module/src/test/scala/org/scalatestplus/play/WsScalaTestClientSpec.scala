@@ -15,30 +15,15 @@
  */
 package org.scalatestplus.play
 
-import play.api.test._
-import play.api.test.TestRoute
 import org.scalatest.concurrent.{ScalaFutures, IntegrationPatience}
-import play.api.mvc.{Action, Call, Results}
+import play.api.mvc.Call
 import play.api.inject.guice._
 import play.api.routing._
-import play.api.routing.sird._
 
 class WsScalaTestClientSpec extends UnitSpec with OneServerPerSuite with ScalaFutures with IntegrationPatience {
 
   implicit override lazy val app =
-    new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").additionalRouter(Router.from(play.api.test.TestRoute))/*.additionalRouter(Router.from {
-      case GET(p"/testing") =>
-        Action(
-          Results.Ok(
-            "<html>" +
-              "<head><title>Test Page</title></head>" +
-              "<body>" +
-              "<input type='button' name='b' value='Click Me' onclick='document.title=\"scalatest\"' />" +
-              "</body>" +
-              "</html>"
-          ).as("text/html")
-        )
-    })*/.build()
+    new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").additionalRouter(Router.from(TestRoute)).build()
 
   "WsScalaTestClient's" must {
 
