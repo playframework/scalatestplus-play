@@ -15,17 +15,28 @@
  */
 package org.scalatestplus.play
 
-import play.api.test._
 import org.scalatest.concurrent.ScalaFutures
-import play.api.mvc.Call
+import play.api.mvc.{Action, Call, Results}
+import play.api.inject.guice._
+import play.api.routing._
+import play.api.routing.sird._
 
 class MixedFixturesWsScalaTestClientSpec extends MixedSpec with ScalaFutures {
 
-  def app: FakeApplication =
-    FakeApplication(
-      additionalConfiguration = Map("foo" -> "bar", "ehcacheplugin" -> "disabled"),
-      withRoutes = TestRoute
-    )
+  def app =
+    new GuiceApplicationBuilder().configure(Map("foo" -> "bar", "ehcacheplugin" -> "disabled")).additionalRouter(Router.from {
+      case GET(p"/testing") =>
+        Action(
+          Results.Ok(
+            "<html>" +
+              "<head><title>Test Page</title></head>" +
+              "<body>" +
+              "<input type='button' name='b' value='Click Me' onclick='document.title=\"scalatest\"' />" +
+              "</body>" +
+              "</html>"
+          ).as("text/html")
+        )
+    }).build()
 
   "WsScalaTestClient" when {
 

@@ -15,18 +15,31 @@
  */
 package org.scalatestplus.play
 
+import play.api.mvc.{Results, Action}
 import play.api.test._
 import org.scalatest._
 import play.api.{Play, Application}
 import org.openqa.selenium.WebDriver
+import play.api.inject.guice._
+import play.api.routing._
+import play.api.routing.sird._
 
 class InternetExplorerFactorySpec extends UnitSpec with OneServerPerSuite with OneBrowserPerSuite with InternetExplorerFactory {
 
-  implicit override lazy val app: FakeApplication = 
-    FakeApplication(
-      additionalConfiguration = Map("foo" -> "bar", "ehcacheplugin" -> "disabled"), 
-      withRoutes = TestRoute
-    )
+  implicit override lazy val app: Application =
+    new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").additionalRouter(Router.from {
+      case GET(p"/testing") =>
+        Action(
+          Results.Ok(
+            "<html>" +
+              "<head><title>Test Page</title></head>" +
+              "<body>" +
+              "<input type='button' name='b' value='Click Me' onclick='document.title=\"scalatest\"' />" +
+              "</body>" +
+              "</html>"
+          ).as("text/html")
+        )
+    }).build()
   def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
 
   // Doesn't need synchronization because set by withFixture and checked by the test
@@ -39,13 +52,13 @@ class InternetExplorerFactorySpec extends UnitSpec with OneServerPerSuite with O
   }
 
   "The InternetExplorerFactory trait" must {
-    "provide a FakeApplication" in {
+    "provide an Application" in {
       app.configuration.getString("foo") mustBe Some("bar")
     }
-    "make the FakeApplication available implicitly" in {
+    "make the Application available implicitly" in {
       getConfig("foo") mustBe Some("bar")
     }
-    "start the FakeApplication" in {
+    "start the Application" in {
       Play.maybeApplication mustBe Some(app)
     }
     "provide the port" in {
@@ -60,7 +73,7 @@ class InternetExplorerFactorySpec extends UnitSpec with OneServerPerSuite with O
       finally con.disconnect()
     }
     "put the app in the configMap" in {
-      val configuredApp = configMap.getOptional[FakeApplication]("org.scalatestplus.play.app")
+      val configuredApp = configMap.getOptional[Application]("org.scalatestplus.play.app")
       configuredApp.value must be theSameInstanceAs app
     }
     "put the port in the configMap" in {

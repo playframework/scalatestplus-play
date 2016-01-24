@@ -18,20 +18,21 @@ package org.scalatestplus.play
 import play.api.test._
 import org.scalatest._
 import play.api.{Play, Application}
+import play.api.inject.guice._
 
 class OneAppPerTestSpec extends UnitSpec with OneAppPerTest {
 
-  override def newAppForTest(testData: TestData): FakeApplication = FakeApplication(additionalConfiguration = Map("foo" -> "bar", "ehcacheplugin" -> "disabled"))
+  override def newAppForTest(testData: TestData) = new GuiceApplicationBuilder().configure(Map("foo" -> "bar", "ehcacheplugin" -> "disabled")).build()
   def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
 
   "The OneAppPerTest trait" must {
-    "provide a FakeApplication" in {
+    "provide an Application" in {
       app.configuration.getString("foo") mustBe Some("bar")
     }
-    "make the FakeApplication available implicitly" in {
+    "make the Application available implicitly" in {
       getConfig("foo") mustBe Some("bar")
     }
-    "start the FakeApplication" in {
+    "start the Application" in {
       Play.maybeApplication mustBe Some(app)
     }
   }

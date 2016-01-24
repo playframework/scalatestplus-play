@@ -15,24 +15,26 @@
  */
 package play.api.test
 
-import play.api.mvc.{Handler, Action, Results}
+import play.api.mvc.{RequestHeader, Handler, Action, Results}
+import play.api.routing.Router
+import play.api.routing.sird._
 
-object TestRoute extends PartialFunction[(String, String), Handler] {
+object TestRoute extends PartialFunction[RequestHeader, Handler] {
 
-  def apply(v1: (String, String)): Handler = v1 match {
-    case ("GET", "/testing") => 
+  def apply(v1: RequestHeader): Handler = v1 match {
+    case GET(p"/testing") =>
       Action(
         Results.Ok(
-          "<html>" + 
-          "<head><title>Test Page</title></head>" + 
-          "<body>" + 
-          "<input type='button' name='b' value='Click Me' onclick='document.title=\"scalatest\"' />" + 
-          "</body>" + 
-          "</html>"
+          "<html>" +
+            "<head><title>Test Page</title></head>" +
+            "<body>" +
+            "<input type='button' name='b' value='Click Me' onclick='document.title=\"scalatest\"' />" +
+            "</body>" +
+            "</html>"
         ).as("text/html")
       )
   }
 
-  def isDefinedAt(x: (String, String)): Boolean = x._1 == "GET" && x._2 == "/testing"
+  def isDefinedAt(x: RequestHeader): Boolean = x.method == "GET" && x.path == "/testing"
 
 }
