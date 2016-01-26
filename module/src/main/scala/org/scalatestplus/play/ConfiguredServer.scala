@@ -41,13 +41,12 @@ import play.api.{Play, Application}
  * import org.scalatestplus.play._
  * import play.api.{Play, Application}
  * import play.api.inject.guice._
- * import play.api.cache.EhCacheModule
  *
  * class ExampleSpec extends PlaySpec with OneServerPerSuite {
  *
  *   // Override app if you need a Application with other than non-default parameters.
  *   implicit override lazy val app: Application =
- *     new GuiceApplicationBuilder().disable[EhCacheModule].build()
+ *     new GuiceApplicationBuilder().configure("ehcacheplugin" -> "disabled").build()
  *
  *   "The OneServerPerSuite trait" must {
  *     "provide an Application" in {

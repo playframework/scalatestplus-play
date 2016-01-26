@@ -65,6 +65,3 @@ class BlueSpec extends PlaySpec with ConfiguredServer {
     }
   }
 }
-
-
-

@@ -53,21 +53,21 @@ import org.openqa.selenium.chrome.ChromeDriver
  *
  * <pre class="stHighlight">
  * package org.scalatestplus.play.examples.onebrowserpersuite
- * 
- * import play.api.test._
- * import org.scalatest._
+ *
+ * import play.api.test.Helpers
+ * import org.scalatest.tags.FirefoxBrowser
  * import org.scalatestplus.play._
  * import play.api.{Play, Application}
- * 
+ * import play.api.inject.guice._
+ * import play.api.routing._
+ *
+ * @FirefoxBrowser
  * class ExampleSpec extends PlaySpec with OneServerPerSuite with OneBrowserPerSuite with FirefoxFactory {
- * 
+ *
  *   // Override app if you need a Application with other than non-default parameters.
  *   implicit override lazy val app: Application =
- *     FakeApplication(
- *       additionalConfiguration = Map("ehcacheplugin" -&gt; "disabled"),
- *       withRoutes = TestRoute
- *     )
- * 
+ *     new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").additionalRouter(Router.from(TestRoute)).build()
+ *
  *   "The OneBrowserPerSuite trait" must {
  *     "provide an Application" in {
  *       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
@@ -83,7 +83,6 @@ import org.openqa.selenium.chrome.ChromeDriver
  *       port mustBe Helpers.testServerPort
  *     }
  *     "provide an actual running server" in {
- *       import Helpers._
  *       import java.net._
  *       val url = new URL("http://localhost:" + port + "/boum")
  *       val con = url.openConnection().asInstanceOf[HttpURLConnection]

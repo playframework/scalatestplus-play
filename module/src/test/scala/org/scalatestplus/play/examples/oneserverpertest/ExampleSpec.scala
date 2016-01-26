@@ -52,4 +52,3 @@ class ExampleSpec extends PlaySpec with OneServerPerTest {
     }
   }
 }
-

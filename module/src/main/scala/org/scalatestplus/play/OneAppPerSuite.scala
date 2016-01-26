@@ -40,26 +40,26 @@ import play.api.inject.guice._
  *
  * <pre class="stHighlight">
  * package org.scalatestplus.play.examples.oneapppersuite
- * 
+ *
  * import org.scalatestplus.play._
- * import play.api.Play
+ * import play.api.{Play, Application}
  * import play.api.inject.guice._
- * 
+ *
  * class ExampleSpec extends PlaySpec with OneAppPerSuite {
- * 
+ *
  *   // Override app if you need an Application with other than non-default parameters.
  *   implicit override lazy val app: Application =
  *     new GuiceApplicationBuilder().configure(Map("ehcacheplugin" -> "disabled")).build()
- * 
+ *
  *   "The OneAppPerSuite trait" must {
- *     "provide an Application" in {
+ *     "provide a FakeApplication" in {
  *       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "make the Application available implicitly" in {
+ *     "make the FakeApplication available implicitly" in {
  *       def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
  *       getConfig("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "start the Application" in {
+ *     "start the FakeApplication" in {
  *       Play.maybeApplication mustBe Some(app)
  *     }
  *   }
@@ -73,12 +73,13 @@ import play.api.inject.guice._
  *
  * <pre class="stHighlight">
  * package org.scalatestplus.play.examples.oneapppersuite
- *  
+ *
  * import play.api.test._
  * import org.scalatest._
  * import org.scalatestplus.play._
  * import play.api.{Play, Application}
- *  
+ * import play.api.inject.guice._
+ *
  * // This is the "master" suite
  * class NestedExampleSpec extends Suites(
  *   new OneSpec,
@@ -88,17 +89,17 @@ import play.api.inject.guice._
  * ) with OneAppPerSuite {
  *   // Override app if you need an Application with other than non-default parameters.
  *   implicit override lazy val app: Application =
- *     Application(additionalConfiguration = Map("ehcacheplugin" -> "disabled"))
- * } 
- *   
+ *     new GuiceApplicationBuilder().configure(Map("ehcacheplugin" -> "disabled")).build()
+ * }
+ *
  * // These are the nested suites
  * @DoNotDiscover class OneSpec extends PlaySpec with ConfiguredApp
  * @DoNotDiscover class TwoSpec extends PlaySpec with ConfiguredApp
  * @DoNotDiscover class RedSpec extends PlaySpec with ConfiguredApp
- *   
+ *
  * @DoNotDiscover
  * class BlueSpec extends PlaySpec with ConfiguredApp {
- *   
+ *
  *   "The OneAppPerSuite trait" must {
  *     "provide an Application" in {
  *       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")

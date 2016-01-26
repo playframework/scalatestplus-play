@@ -45,23 +45,22 @@ import BrowserFactory.UninitializedDriver
  *
  * <pre class="stHighlight">
  * package org.scalatestplus.play.examples.onebrowserpertest
- * 
+ *
  * import play.api.test._
  * import org.scalatest._
  * import org.scalatest.tags.FirefoxBrowser
  * import org.scalatestplus.play._
  * import play.api.{Play, Application}
- * 
+ * import play.api.inject.guice._
+ * import play.api.routing._
+ *
  * @FirefoxBrowser
  * class ExampleSpec extends PlaySpec with OneServerPerTest with OneBrowserPerTest with FirefoxFactory {
- * 
+ *
  *   // Override newAppForTest if you need an Application with other than non-default parameters.
  *   override def newAppForTest(testData: TestData): Application =
- *     FakeApplication(
- *       additionalConfiguration = Map("ehcacheplugin" -&gt; "disabled"),
- *       withRoutes = TestRoute
- *     )
- * 
+ *     new GuiceApplicationBuilder().configure(Map("ehcacheplugin" -> "disabled")).additionalRouter(Router.from(TestRoute)).build()
+ *
  *   "The OneBrowserPerTest trait" must {
  *     "provide an Application" in {
  *       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
