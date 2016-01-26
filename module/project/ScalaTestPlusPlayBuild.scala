@@ -50,9 +50,9 @@ object ScalaTestPlusPlayBuild extends Build {
 
   val buildSettings = Defaults.defaultSettings ++ Seq(
 
-    name := "play", // The Artifact ID when deployed should be "play"
+    name := "scalatestplus.play", // The Artifact ID when deployed should be "play"
 
-    organization := "org.scalatestplus", // The Groupd ID when deployed should be "org.scalatestplus"
+    organization := "org.scalatestplus.play", // The Groupd ID when deployed should be "org.scalatestplus"
 
     version := releaseVersion,
 
