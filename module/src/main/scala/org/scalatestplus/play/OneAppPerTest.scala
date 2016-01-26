@@ -38,15 +38,15 @@ import play.api.inject.guice._
  *
  * import org.scalatest._
  * import org.scalatestplus.play._
- * import play.api.Play
+ * import play.api.{Play, Application}
  * import play.api.inject.guice._
- * 
+ *
  * class ExampleSpec extends PlaySpec with OneAppPerTest {
- * 
- *   // Override newAppForTest if you need an Application with other than non-default parameters.
+ *
+ *   // Override newAppForTest if you need a FakeApplication with other than non-default parameters.
  *   implicit override def newAppForTest(testData: TestData): Application =
  *     new GuiceApplicationBuilder().configure(Map("ehcacheplugin" -> "disabled")).build()
- * 
+ *
  *   "The OneAppPerTest trait" must {
  *     "provide an Application" in {
  *       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")

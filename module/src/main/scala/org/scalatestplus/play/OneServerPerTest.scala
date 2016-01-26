@@ -35,27 +35,29 @@ import org.scalatest._
  *
  * <pre class="stHighlight">
  * package org.scalatestplus.play.examples.oneserverpertest
- * 
+ *
  * import play.api.test._
  * import org.scalatest._
  * import org.scalatestplus.play._
  * import play.api.{Play, Application}
- * 
+ * import play.api.inject.guice._
+ * import play.api.routing._
+ *
  * class ExampleSpec extends PlaySpec with OneServerPerTest {
- * 
- *   // Override newAppForTest if you need an Application with other than non-default parameters.
+ *
+ *   // Override newAppForTest if you need a FakeApplication with other than non-default parameters.
  *   implicit override def newAppForTest(testData: TestData): Application =
- *     FakeApplication(additionalConfiguration = Map("ehcacheplugin" -> "disabled"))
- * 
+ *     new GuiceApplicationBuilder().configure(Map("ehcacheplugin" -> "disabled")).additionalRouter(Router.from(TestRoute)).build()
+ *
  *   "The OneServerPerTest trait" must {
- *     "provide an Application" in {
+ *     "provide a FakeApplication" in {
  *       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "make the Application available implicitly" in {
+ *     "make the FakeApplication available implicitly" in {
  *       def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
  *       getConfig("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "start the Application" in {
+ *     "start the FakeApplication" in {
  *       Play.maybeApplication mustBe Some(app)
  *     }
  *     "provide the port number" in {

@@ -90,15 +90,13 @@ import org.openqa.selenium.chrome.ChromeDriver
  * will become a type error once we release ScalaTest 2.2.0.
  *
  * <pre class="stHighlight">
- * package org.scalatestplus.play.examples.allbrowserspersharedsuite
+ * package org.scalatestplus.play.examples.allbrowserspersuite
  *
  * import play.api.test._
  * import org.scalatestplus.play._
  * import play.api.{Play, Application}
- * import play.api.mvc.{Action, Results}
  * import play.api.inject.guice._
  * import play.api.routing._
- * import play.api.routing.sird._
  * import play.api.cache.EhCacheModule
  *
  * class ExampleSpec extends PlaySpec with OneServerPerSuite with AllBrowsersPerSuite {
@@ -106,19 +104,7 @@ import org.openqa.selenium.chrome.ChromeDriver
  *   // Override app if you need an Application with other than
  *   // default parameters.
  *   implicit override lazy val app =
- *     new GuiceApplicationBuilder().disable[EhCacheModule].configure("foo" -> "bar").additionalRouter(Router.from {
- *       case GET(p"/testing") =>
- *         Action(
- *           Results.Ok(
- *             "<html>" +
- *               "<head><title>Test Page</title></head>" +
- *               "<body>" +
- *               "<input type='button' name='b' value='Click Me' onclick='document.title=\"scalatest\"' />" +
- *               "</body>" +
- *               "</html>"
- *           ).as("text/html")
- *         )
- *     }).build()
+ *     new GuiceApplicationBuilder().disable[EhCacheModule].configure("foo" -> "bar").additionalRouter(Router.from(TestRoute)).build()
  *
  *   // Place tests you want run in different browsers in the `sharedTests` method:
  *   def sharedTests(browser: BrowserInfo) = {

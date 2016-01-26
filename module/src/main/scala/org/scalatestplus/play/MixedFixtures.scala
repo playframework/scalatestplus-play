@@ -77,54 +77,39 @@ import org.openqa.selenium.safari.SafariDriver
  *
  * <pre class="stHighlight">
  * package org.scalatestplus.play.examples.mixedfixtures
- * 
+ *
  * import play.api.test._
- * import org.scalatest._
  * import org.scalatestplus.play._
  * import play.api.{Play, Application}
- * 
+ * import play.api.inject.guice._
+ * import play.api.routing._
+ *
  * class ExampleSpec extends MixedPlaySpec {
- * 
+ *
  *   // Some helper methods
- *   def fakeApp[A](elems: (String, String)*) = FakeApplication(additionalConfiguration = Map(elems:_*),
- *     withRoutes = {
- *       case ("GET", "/testing") =&gt;
- *         Action(
- *           Results.Ok(
- *             "&lt;html&gt;" +
- *             "&lt;head&gt;&lt;title&gt;Test Page&lt;/title&gt;&lt;/head&gt;" +
- *             "&lt;body&gt;" +
- *             "&lt;input type='button' name='b' value='Click Me' onclick='document.title=\"scalatest\"' /&gt;" +
- *             "&lt;/body&gt;" +
- *             "&lt;/html&gt;"
- *           ).as("text/html")
- *         )
- *     }
- *   )
+ *   def buildApp[A](elems: (String, String)*) =
+ *     new GuiceApplicationBuilder().configure(Map(elems:_*)).additionalRouter(Router.from(TestRoute)).build()
  *   def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
- * 
- *   // If a test just needs an <code>Application</code>, use "<code>new App</code>":
+ *
  *   "The App function" must {
- *     "provide an Application" in new App(fakeApp("ehcacheplugin" -&gt; "disabled")) {
+ *     "provide an Application" in new App(buildApp("ehcacheplugin" -> "disabled")) {
  *       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "make the Application available implicitly" in new App(fakeApp("ehcacheplugin" -&gt; "disabled")) {
+ *     "make the Application available implicitly" in new App(buildApp("ehcacheplugin" -> "disabled")) {
  *       getConfig("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "start the Application" in new App(fakeApp("ehcacheplugin" -&gt; "disabled")) {
+ *     "start the Application" in new App(buildApp("ehcacheplugin" -> "disabled")) {
  *       Play.maybeApplication mustBe Some(app)
  *     }
  *   }
- *
- *   // If a test needs an <code>Application</code> and running <code>TestServer</code>, use "<code>new Server</code>":
  *   "The Server function" must {
- *     "provide an Application" in new Server(fakeApp("ehcacheplugin" -&gt; "disabled")) {
+ *     "provide an Application" in new Server(buildApp("ehcacheplugin" -> "disabled")) {
  *       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "make the Application available implicitly" in new Server(fakeApp("ehcacheplugin" -&gt; "disabled")) {
+ *     "make the Application available implicitly" in new Server(buildApp("ehcacheplugin" -> "disabled")) {
  *       getConfig("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "start the Application" in new Server(fakeApp("ehcacheplugin" -&gt; "disabled")) {
+ *     "start the Application" in new Server(buildApp("ehcacheplugin" -> "disabled")) {
  *       Play.maybeApplication mustBe Some(app)
  *     }
  *     import Helpers._
@@ -136,17 +121,14 @@ import org.openqa.selenium.safari.SafariDriver
  *       finally con.disconnect()
  *     }
  *   }
- *
- *   // If a test needs an <code>Application</code>, running <code>TestServer</code>, and Selenium
- *   // <code>HtmlUnit</code> driver use "<code>new HtmlUnit</code>":
  *   "The HtmlUnit function" must {
- *     "provide an Application" in new HtmlUnit(fakeApp("ehcacheplugin" -&gt; "disabled")) {
+ *     "provide an Application" in new HtmlUnit(buildApp("ehcacheplugin" -> "disabled")) {
  *       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "make the Application available implicitly" in new HtmlUnit(fakeApp("ehcacheplugin" -&gt; "disabled")) {
+ *     "make the Application available implicitly" in new HtmlUnit(buildApp("ehcacheplugin" -> "disabled")) {
  *       getConfig("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "start the Application" in new HtmlUnit(fakeApp("ehcacheplugin" -&gt; "disabled")) {
+ *     "start the Application" in new HtmlUnit(buildApp("ehcacheplugin" -> "disabled")) {
  *       Play.maybeApplication mustBe Some(app)
  *     }
  *     import Helpers._
@@ -157,24 +139,21 @@ import org.openqa.selenium.safari.SafariDriver
  *       try con.getResponseCode mustBe 404
  *       finally con.disconnect()
  *     }
- *     "provide a web driver" in new HtmlUnit(fakeApp()) {
+ *     "provide a web driver" in new HtmlUnit(buildApp()) {
  *       go to ("http://localhost:" + port + "/testing")
  *       pageTitle mustBe "Test Page"
  *       click on find(name("b")).value
  *       eventually { pageTitle mustBe "scalatest" }
  *     }
  *   }
- *
- *   // If a test needs an <code>Application</code>, running <code>TestServer</code>, and Selenium
- *   // <code>Firefox</code> driver use "<code>new Firefox</code>":
  *   "The Firefox function" must {
- *     "provide an Application" in new Firefox(fakeApp("ehcacheplugin" -&gt; "disabled")) {
+ *     "provide an Application" in new Firefox(buildApp("ehcacheplugin" -> "disabled")) {
  *       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "make the Application available implicitly" in new Firefox(fakeApp("ehcacheplugin" -&gt; "disabled")) {
+ *     "make the Application available implicitly" in new Firefox(buildApp("ehcacheplugin" -> "disabled")) {
  *       getConfig("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "start the Application" in new Firefox(fakeApp("ehcacheplugin" -&gt; "disabled")) {
+ *     "start the Application" in new Firefox(buildApp("ehcacheplugin" -> "disabled")) {
  *       Play.maybeApplication mustBe Some(app)
  *     }
  *     import Helpers._
@@ -185,24 +164,21 @@ import org.openqa.selenium.safari.SafariDriver
  *       try con.getResponseCode mustBe 404
  *       finally con.disconnect()
  *     }
- *     "provide a web driver" in new Firefox(fakeApp()) {
+ *     "provide a web driver" in new Firefox(buildApp()) {
  *       go to ("http://localhost:" + port + "/testing")
  *       pageTitle mustBe "Test Page"
  *       click on find(name("b")).value
  *       eventually { pageTitle mustBe "scalatest" }
  *     }
  *   }
- *
- *   // If a test needs an <code>Application</code>, running <code>TestServer</code>, and Selenium
- *   // <code>Safari</code> driver use "<code>new Safari</code>":
  *   "The Safari function" must {
- *     "provide an Application" in new Safari(fakeApp("ehcacheplugin" -&gt; "disabled")) {
+ *     "provide an Application" in new Safari(buildApp("ehcacheplugin" -> "disabled")) {
  *       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "make the Application available implicitly" in new Safari(fakeApp("ehcacheplugin" -&gt; "disabled")) {
+ *     "make the Application available implicitly" in new Safari(buildApp("ehcacheplugin" -> "disabled")) {
  *       getConfig("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "start the Application" in new Safari(fakeApp("ehcacheplugin" -&gt; "disabled")) {
+ *     "start the Application" in new Safari(buildApp("ehcacheplugin" -> "disabled")) {
  *       Play.maybeApplication mustBe Some(app)
  *     }
  *     import Helpers._
@@ -213,24 +189,21 @@ import org.openqa.selenium.safari.SafariDriver
  *       try con.getResponseCode mustBe 404
  *       finally con.disconnect()
  *     }
- *     "provide a web driver" in new Safari(fakeApp()) {
+ *     "provide a web driver" in new Safari(buildApp()) {
  *       go to ("http://localhost:" + port + "/testing")
  *       pageTitle mustBe "Test Page"
  *       click on find(name("b")).value
  *       eventually { pageTitle mustBe "scalatest" }
  *     }
  *   }
- *
- *   // If a test needs an <code>Application</code>, running <code>TestServer</code>, and Selenium
- *   // <code>Chrome</code> driver use "<code>new Chrome</code>":
  *   "The Chrome function" must {
- *     "provide an Application" in new Chrome(fakeApp("ehcacheplugin" -&gt; "disabled")) {
+ *     "provide an Application" in new Chrome(buildApp("ehcacheplugin" -> "disabled")) {
  *       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "make the Application available implicitly" in new Chrome(fakeApp("ehcacheplugin" -&gt; "disabled")) {
+ *     "make the Application available implicitly" in new Chrome(buildApp("ehcacheplugin" -> "disabled")) {
  *       getConfig("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "start the Application" in new Chrome(fakeApp("ehcacheplugin" -&gt; "disabled")) {
+ *     "start the Application" in new Chrome(buildApp("ehcacheplugin" -> "disabled")) {
  *       Play.maybeApplication mustBe Some(app)
  *     }
  *     import Helpers._
@@ -241,24 +214,21 @@ import org.openqa.selenium.safari.SafariDriver
  *       try con.getResponseCode mustBe 404
  *       finally con.disconnect()
  *     }
- *     "provide a web driver" in new Chrome(fakeApp()) {
+ *     "provide a web driver" in new Chrome(buildApp()) {
  *       go to ("http://localhost:" + port + "/testing")
  *       pageTitle mustBe "Test Page"
  *       click on find(name("b")).value
  *       eventually { pageTitle mustBe "scalatest" }
  *     }
  *   }
- *
- *   // If a test needs an <code>Application</code>, running <code>TestServer</code>, and Selenium
- *   // <code>InternetExplorer</code> driver use "<code>new InternetExplorer</code>":
  *   "The InternetExplorer function" must {
- *     "provide an Application" in new InternetExplorer(fakeApp("ehcacheplugin" -&gt; "disabled")) {
+ *     "provide an Application" in new InternetExplorer(buildApp("ehcacheplugin" -> "disabled")) {
  *       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "make the Application available implicitly" in new InternetExplorer(fakeApp("ehcacheplugin" -&gt; "disabled")) {
+ *     "make the Application available implicitly" in new InternetExplorer(buildApp("ehcacheplugin" -> "disabled")) {
  *       getConfig("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "start the Application" in new InternetExplorer(fakeApp("ehcacheplugin" -&gt; "disabled")) {
+ *     "start the Application" in new InternetExplorer(buildApp("ehcacheplugin" -> "disabled")) {
  *       Play.maybeApplication mustBe Some(app)
  *     }
  *     import Helpers._
@@ -269,16 +239,13 @@ import org.openqa.selenium.safari.SafariDriver
  *       try con.getResponseCode mustBe 404
  *       finally con.disconnect()
  *     }
- *     "provide a web driver" in new InternetExplorer(fakeApp()) {
+ *     "provide a web driver" in new InternetExplorer(buildApp()) {
  *       go to ("http://localhost:" + port + "/testing")
  *       pageTitle mustBe "Test Page"
  *       click on find(name("b")).value
  *       eventually { pageTitle mustBe "scalatest" }
  *     }
  *   }
- *
- *   // If a test does not need any special fixtures, just 
- *   // write <code>"in { () => ..."</code>
  *   "Any old thing" must {
  *     "be doable without much boilerplate" in { () =>
  *        1 + 1 mustEqual 2
