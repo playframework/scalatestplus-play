@@ -1,0 +1,94 @@
+/*
+ * Copyright 2001-2014 Artima, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+val PlayVersion = playVersion("2.5.0-M2")
+
+lazy val `scalatestplus-play-root` = project
+  .in(file("."))
+  .enablePlugins(PlayRootProject)
+  .aggregate(`scalatestplus-play`)
+
+lazy val `scalatestplus-play` = project
+  .in(file("module"))
+  .enablePlugins(Playdoc, PlayLibrary, PlayReleaseBase)
+  .settings(
+    organization := "org.scalatestplus.play",
+    libraryDependencies ++= Seq(
+      "org.scalatest" %% "scalatest" % "2.2.6",
+      "com.typesafe.play" %% "play-test" % PlayVersion,
+      "org.seleniumhq.selenium" % "selenium-java" % "2.48.2",
+      "com.typesafe.play" %% "play-ws" % PlayVersion,
+      "com.typesafe.play" %% "play-cache" % PlayVersion % Test
+    ),
+    parallelExecution in Test := false,
+    testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oTK"),
+
+    scalacOptions in (Compile, doc) := Seq("-doc-title", "ScalaTest + Play, " + releaseVersion),
+    
+    pomExtra := PomExtra
+  )
+
+lazy val docs = project
+  .in(file("docs"))
+  .enablePlugins(PlayDocsPlugin, PlayNoPublish)
+  .settings(
+    scalaVersion := "2.11.7",
+    libraryDependencies ++= Seq(
+      "com.typesafe.play" %% "play-cache" % PlayVersion % Test,
+      "org.mockito" % "mockito-core" % "1.9.5" % Test
+    ),
+    
+    parallelExecution in Test := false,
+
+    PlayDocsKeys.scalaManualSourceDirectories := (baseDirectory.value / "manual" / "working" / "scalaGuide" ** "code").get,
+    SettingKey[Seq[File]]("migrationManualSources") := Nil
+  )
+  .dependsOn(`scalatestplus-play`)
+  
+playBuildRepoName in ThisBuild := "scalatestplus-play"
+
+lazy val PomExtra = {
+  <url>http://www.scalatest.org/plus/play</url>
+  <licenses>
+    <license>
+      <name>The Apache License, ASL Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses> 
+  <scm>
+    <url>https://github.com/scalatest/scalatest</url>
+    <connection>scm:git:git@github.com:scalatest/scalatest.git</connection>
+    <developerConnection>
+      scm:git:git@github.com:scalatest/scalatest.git
+    </developerConnection>
+  </scm>
+  <developers>
+    <developer>
+      <id>bvenners</id>
+      <name>Bill Venners</name>
+    </developer>
+    <developer>
+      <id>gcberger</id>
+      <name>George Berger</name>
+    </developer>
+    <developer>
+      <id>cheeseng</id>
+      <name>Chua Chee Seng</name>
+    </developer>
+  </developers>
+}
+
