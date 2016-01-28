@@ -61,16 +61,8 @@ lazy val docs = project
 playBuildRepoName in ThisBuild := "scalatestplus-play"
 
 lazy val PomExtra = {
-  <url>http://www.scalatest.org/plus/play</url>
-  <licenses>
-    <license>
-      <name>The Apache License, ASL Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses> 
   <scm>
-    <url>https://github.com/scalatest/scalatest</url>
+    <url>https://github.com/scalatest/scalatestplus-play</url>
     <connection>scm:git:git@github.com:scalatest/scalatest.git</connection>
     <developerConnection>
       scm:git:git@github.com:scalatest/scalatest.git
