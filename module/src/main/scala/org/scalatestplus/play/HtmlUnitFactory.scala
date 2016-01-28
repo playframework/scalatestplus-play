@@ -66,6 +66,6 @@ object HtmlUnitFactory extends HtmlUnitFactory {
       htmlUnitDriver
     }
     catch {
-      case ex: Throwable => UnavailableDriver(Some(ex), Resources("cantCreateHtmlUnitDriver"))
+      case ex: Throwable => UnavailableDriver(Some(ex), Resources("cantCreateHtmlUnitDriver", ex.getMessage))
     }
 }

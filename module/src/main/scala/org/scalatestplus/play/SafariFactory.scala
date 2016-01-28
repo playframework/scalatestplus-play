@@ -48,7 +48,7 @@ trait SafariFactory extends BrowserFactory {
       new SafariDriver()
     }
     catch {
-      case ex: Throwable => UnavailableDriver(Some(ex), Resources("cantCreateSafariDriver"))
+      case ex: Throwable => UnavailableDriver(Some(ex), Resources("cantCreateSafariDriver", ex.getMessage))
     }
 }
 
