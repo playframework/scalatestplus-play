@@ -75,6 +75,6 @@ object FirefoxFactory extends FirefoxFactory {
       new FirefoxDriver(firefoxProfile)
     }
     catch {
-      case ex: Throwable => UnavailableDriver(Some(ex), Resources("cantCreateFirefoxDriver"))
+      case ex: Throwable => UnavailableDriver(Some(ex), Resources("cantCreateFirefoxDriver", ex.getMessage))
     }
 }

@@ -48,7 +48,7 @@ trait ChromeFactory extends BrowserFactory {
       new ChromeDriver()
     }
     catch {
-      case ex: Throwable => UnavailableDriver(Some(ex), Resources("cantCreateChromeDriver"))
+      case ex: Throwable => UnavailableDriver(Some(ex), Resources("cantCreateChromeDriver", ex.getMessage))
     }
 }
 

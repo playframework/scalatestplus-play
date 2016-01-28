@@ -456,7 +456,6 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
     override def apply() {
       webDriver match {
         case UnavailableDriver(ex, errorMessage) =>
-          val msg = Resources("cantCreateChromeDriver")
           ex match {
             case Some(e) => cancel(errorMessage, e)
             case None => cancel(errorMessage)
@@ -499,7 +498,6 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
     override def apply() {
       webDriver match {
         case UnavailableDriver(ex, errorMessage) =>
-          val msg = Resources("cantCreateInternetExplorerDriver")
           ex match {
             case Some(e) => cancel(errorMessage, e)
             case None => cancel(errorMessage)
