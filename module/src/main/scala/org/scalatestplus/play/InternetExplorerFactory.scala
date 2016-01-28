@@ -48,7 +48,7 @@ trait InternetExplorerFactory extends BrowserFactory {
       new InternetExplorerDriver()
     }
     catch {
-      case ex: Throwable => UnavailableDriver(Some(ex), Resources("cantCreateInternetExplorerDriver"))
+      case ex: Throwable => UnavailableDriver(Some(ex), Resources("cantCreateInternetExplorerDriver", ex.getMessage))
     }
 }
 
