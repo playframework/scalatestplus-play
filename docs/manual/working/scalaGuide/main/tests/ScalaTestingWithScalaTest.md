@@ -30,9 +30,9 @@ libraryDependencies ++= Seq(
 
 You do not need to add ScalaTest to your build explicitly. The proper version of ScalaTest will be brought in automatically as a transitive dependency of _ScalaTest + Play_. You will, however, need to select a version of _ScalaTest + Play_ that matches your Play version. You can do so by checking the [Versions, Versions, Versions](http://www.scalatest.org/plus/play/versions) page for _ScalaTest + Play_.
 
-In [_ScalaTest + Play_](http://scalatest.org/plus/play), you define test classes by extending the [`PlaySpec`](http://doc.scalatest.org/plus-play/1.0.0/index.html#org.scalatestplus.play.PlaySpec) trait. Here's an example:
+In [_ScalaTest + Play_](http://scalatest.org/plus/play), you define test classes by extending the [`PlaySpec`](api/scala/org/scalatestplus/play/PlaySpec.html) trait. Here's an example:
 
-@[scalatest-stackspec](code-scalatestplus-play/StackSpec.scala)
+@[scalatest-stackspec](code/StackSpec.scala)
 
 You can alternatively [define your own base classes](http://scalatest.org/user_guide/defining_base_classes) instead of using `PlaySpec`.
 
@@ -58,9 +58,9 @@ ScalaTest provides integration with [Mockito](https://github.com/mockito/mockito
 
 To use Mockito, mix `MockitoSugar` into your test class and then use the Mockito library to mock dependencies:
 
-@[scalatest-mockito-dataservice](code-scalatestplus-play/ExampleMockitoSpec.scala)
+@[scalatest-mockito-dataservice](code/ExampleMockitoSpec.scala)
 
-@[scalatest-mockitosugar](code-scalatestplus-play/ExampleMockitoSpec.scala)
+@[scalatest-mockitosugar](code/ExampleMockitoSpec.scala)
 
 Mocking is especially useful for testing the public methods of classes.  Mocking objects and private methods is possible, but considerably harder.
 
@@ -104,28 +104,22 @@ and then access them through services:
 
 In this way, the `isAdmin` method can be tested by mocking out the `UserRepository` reference and passing it into the service:
 
-@[scalatest-userservicespec](code-scalatestplus-play/UserServiceSpec.scala)
+@[scalatest-userservicespec](code/UserServiceSpec.scala)
 
 ## Unit Testing Controllers
 
 When defining controllers as objects, they can be trickier to unit test. In Play this can be alleviated by [[dependency injection|ScalaDependencyInjection]]. Another way to finesse unit testing with a controller declared as a object is to use a trait with an [explicitly typed self reference](http://www.naildrivin5.com/scalatour/wiki_pages/ExplcitlyTypedSelfReferences) to the controller:
 
-@[scalatest-examplecontroller](code-scalatestplus-play/ExampleControllerSpec.scala)
+@[scalatest-examplecontroller](code/ExampleControllerSpec.scala)
 
 and then test the trait:
 
-@[scalatest-examplecontrollerspec](code-scalatestplus-play/ExampleControllerSpec.scala)
-
-When testing POST requests with, for example, JSON bodies, you won't be able to
-use the pattern shown above (`apply(fakeRequest)`); instead you should use
-`call()` on the `testController`:
-
-@[scalatest-examplepost](code-scalatestplus-play/ExamplePostSpec.scala)
+@[scalatest-examplecontrollerspec](code/ExampleControllerSpec.scala)
 
 ## Unit Testing EssentialAction
 
-Testing [`Action`](api/scala/play/api/mvc/Action.html) or [`Filter`](api/scala/play/api/mvc/Filter.html) can require to test an an [`EssentialAction`](api/scala/play/api/mvc/EssentialAction.html) ([[more information about what an EssentialAction is|HttpApi]])
+Testing [`Action`](api/scala/play/api/mvc/Action.html) or [`Filter`](api/scala/play/api/mvc/Filter.html) can require to test an an [`EssentialAction`](api/scala/play/api/mvc/EssentialAction.html) ([[more information about what an EssentialAction is|ScalaEssentialAction]])
 
 For this, the test [`Helpers.call`](api/scala/play/api/test/Helpers$.html#call) can be used like that:
 
-@[scalatest-exampleessentialactionspec](code-scalatestplus-play/ExampleEssentialActionSpec.scala)
+@[scalatest-exampleessentialactionspec](code/ExampleEssentialActionSpec.scala)
