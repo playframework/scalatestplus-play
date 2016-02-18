@@ -20,6 +20,9 @@ lazy val `scalatestplus-play-root` = project
   .in(file("."))
   .enablePlugins(PlayRootProject)
   .aggregate(`scalatestplus-play`)
+  .settings(
+    sonatypeProfileName := "org.scalatestplus.play"
+  )
 
 lazy val `scalatestplus-play` = project
   .in(file("module"))
