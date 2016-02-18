@@ -18,6 +18,7 @@ package org.scalatestplus.play
 import play.api.test._
 import org.scalatest._
 import play.api.{Play, Application}
+import play.api.mvc.Handler
 
 class MixedFixtureSpec extends MixedSpec {
 
@@ -34,6 +35,34 @@ class MixedFixtureSpec extends MixedSpec {
     "start the FakeApplication" in new App(fakeApp("foo" -> "bar",  "ehcacheplugin" -> "disabled")) {
       Play.maybeApplication mustBe Some(app)
     }
+    "start the FakeApplication lazily" in new App(fakeApp("foo" -> "bar",  "ehcacheplugin" -> "disabled")) {
+      var count = 0
+      class TestFakeApplication(override val path: java.io.File = new java.io.File("."),
+                                override val classloader: ClassLoader = classOf[FakeApplication].getClassLoader,
+                                additionalPlugins: Seq[String] = Nil,
+                                withoutPlugins: Seq[String] = Nil,
+                                additionalConfiguration: Map[String, _ <: Any] = Map.empty,
+                                withGlobal: Option[play.api.GlobalSettings] = None,
+                                withRoutes: PartialFunction[(String, String), Handler] = PartialFunction.empty)
+        extends FakeApplication(path, classloader, additionalPlugins, withoutPlugins, additionalConfiguration, withGlobal, withRoutes) {
+        count = count + 1
+      }
+      class TestSpec extends fixture.WordSpec with MixedFixtures {
+        "test 1" in new App(new TestFakeApplication()) { t =>
+          assert(count == 1)
+        }
+        "test 2" in new App(new TestFakeApplication()) { t =>
+          assert(count == 1)
+        }
+        "test 3" in new App(new TestFakeApplication()) { t =>
+          assert(count == 1)
+        }
+      }
+      val spec = new TestSpec
+      count mustBe 0
+      spec.run(None, Args(SilentReporter))
+      count mustBe 3
+    }
   }
   "The Server function" must {
     "provide a FakeApplication" in new Server(fakeApp("foo" -> "bar", "ehcacheplugin" -> "disabled")) {
@@ -44,6 +73,34 @@ class MixedFixtureSpec extends MixedSpec {
     }
     "start the FakeApplication" in new Server(fakeApp("foo" -> "bar",  "ehcacheplugin" -> "disabled")) {
       Play.maybeApplication mustBe Some(app)
+    }
+    "start the FakeApplication lazily" in new App(fakeApp("foo" -> "bar",  "ehcacheplugin" -> "disabled")) {
+      var count = 0
+      class TestFakeApplication(override val path: java.io.File = new java.io.File("."),
+                                override val classloader: ClassLoader = classOf[FakeApplication].getClassLoader,
+                                additionalPlugins: Seq[String] = Nil,
+                                withoutPlugins: Seq[String] = Nil,
+                                additionalConfiguration: Map[String, _ <: Any] = Map.empty,
+                                withGlobal: Option[play.api.GlobalSettings] = None,
+                                withRoutes: PartialFunction[(String, String), Handler] = PartialFunction.empty)
+        extends FakeApplication(path, classloader, additionalPlugins, withoutPlugins, additionalConfiguration, withGlobal, withRoutes) {
+        count = count + 1
+      }
+      class TestSpec extends fixture.WordSpec with MixedFixtures {
+        "test 1" in new Server(new TestFakeApplication()) { t =>
+          assert(count == 1)
+        }
+        "test 2" in new Server(new TestFakeApplication()) { t =>
+          assert(count == 1)
+        }
+        "test 3" in new Server(new TestFakeApplication()) { t =>
+          assert(count == 1)
+        }
+      }
+      val spec = new TestSpec
+      count mustBe 0
+      spec.run(None, Args(SilentReporter))
+      count mustBe 3
     }
     import Helpers._
     "send 404 on a bad request" in new Server {
@@ -63,6 +120,32 @@ class MixedFixtureSpec extends MixedSpec {
     }
     "start the FakeApplication" in new HtmlUnit(fakeApp("foo" -> "bar",  "ehcacheplugin" -> "disabled")) {
       Play.maybeApplication mustBe Some(app)
+    }
+    "start the FakeApplication lazily" in new App(fakeApp("foo" -> "bar",  "ehcacheplugin" -> "disabled")) {
+      var count = 0
+      class TestFakeApplication(override val path: java.io.File = new java.io.File("."),
+                                override val classloader: ClassLoader = classOf[FakeApplication].getClassLoader,
+                                additionalPlugins: Seq[String] = Nil,
+                                withoutPlugins: Seq[String] = Nil,
+                                additionalConfiguration: Map[String, _ <: Any] = Map.empty,
+                                withGlobal: Option[play.api.GlobalSettings] = None,
+                                withRoutes: PartialFunction[(String, String), Handler] = PartialFunction.empty)
+        extends FakeApplication(path, classloader, additionalPlugins, withoutPlugins, additionalConfiguration, withGlobal, withRoutes) {
+        count = count + 1
+      }
+      class TestSpec extends fixture.WordSpec with MixedFixtures {
+        var testRun = false  // will be false if test is canceled due to driver not available on platform.
+        "test 1" in new HtmlUnit(new TestFakeApplication()) { t => testRun = true }
+        "test 2" in new HtmlUnit(new TestFakeApplication()) { t => testRun = true }
+        "test 3" in new HtmlUnit(new TestFakeApplication()) { t => testRun = true }
+      }
+      val spec = new TestSpec
+      count mustBe 0
+      spec.run(None, Args(SilentReporter))
+      if (spec.testRun)
+        count mustBe 3
+      else
+        count mustBe 0  // when driver not available, not Application instance should be created at all.
     }
     import Helpers._
     "send 404 on a bad request" in new HtmlUnit {
@@ -89,6 +172,32 @@ class MixedFixtureSpec extends MixedSpec {
     "start the FakeApplication" in new Firefox(fakeApp("foo" -> "bar",  "ehcacheplugin" -> "disabled")) {
       Play.maybeApplication mustBe Some(app)
     }
+    "start the FakeApplication lazily" in new App(fakeApp("foo" -> "bar",  "ehcacheplugin" -> "disabled")) {
+      var count = 0
+      class TestFakeApplication(override val path: java.io.File = new java.io.File("."),
+                                override val classloader: ClassLoader = classOf[FakeApplication].getClassLoader,
+                                additionalPlugins: Seq[String] = Nil,
+                                withoutPlugins: Seq[String] = Nil,
+                                additionalConfiguration: Map[String, _ <: Any] = Map.empty,
+                                withGlobal: Option[play.api.GlobalSettings] = None,
+                                withRoutes: PartialFunction[(String, String), Handler] = PartialFunction.empty)
+        extends FakeApplication(path, classloader, additionalPlugins, withoutPlugins, additionalConfiguration, withGlobal, withRoutes) {
+        count = count + 1
+      }
+      class TestSpec extends fixture.WordSpec with MixedFixtures {
+        var testRun = false  // will be false if test is canceled due to driver not available on platform.
+        "test 1" in new Firefox(new TestFakeApplication()) { t => testRun = true }
+        "test 2" in new Firefox(new TestFakeApplication()) { t => testRun = true }
+        "test 3" in new Firefox(new TestFakeApplication()) { t => testRun = true }
+      }
+      val spec = new TestSpec
+      count mustBe 0
+      spec.run(None, Args(SilentReporter))
+      if (spec.testRun)
+        count mustBe 3
+      else
+        count mustBe 0  // when driver not available, not Application instance should be created at all.
+    }
     import Helpers._
     "send 404 on a bad request" in new Firefox {
       import java.net._
@@ -113,6 +222,32 @@ class MixedFixtureSpec extends MixedSpec {
     }
     "start the FakeApplication" in new Safari(fakeApp("foo" -> "bar",  "ehcacheplugin" -> "disabled")) {
       Play.maybeApplication mustBe Some(app)
+    }
+    "start the FakeApplication lazily" in new App(fakeApp("foo" -> "bar",  "ehcacheplugin" -> "disabled")) {
+      var count = 0
+      class TestFakeApplication(override val path: java.io.File = new java.io.File("."),
+                                override val classloader: ClassLoader = classOf[FakeApplication].getClassLoader,
+                                additionalPlugins: Seq[String] = Nil,
+                                withoutPlugins: Seq[String] = Nil,
+                                additionalConfiguration: Map[String, _ <: Any] = Map.empty,
+                                withGlobal: Option[play.api.GlobalSettings] = None,
+                                withRoutes: PartialFunction[(String, String), Handler] = PartialFunction.empty)
+        extends FakeApplication(path, classloader, additionalPlugins, withoutPlugins, additionalConfiguration, withGlobal, withRoutes) {
+        count = count + 1
+      }
+      class TestSpec extends fixture.WordSpec with MixedFixtures {
+        var testRun = false  // will be false if test is canceled due to driver not available on platform.
+        "test 1" in new Safari(new TestFakeApplication()) { t => testRun = true }
+        "test 2" in new Safari(new TestFakeApplication()) { t => testRun = true }
+        "test 3" in new Safari(new TestFakeApplication()) { t => testRun = true }
+      }
+      val spec = new TestSpec
+      count mustBe 0
+      spec.run(None, Args(SilentReporter))
+      if (spec.testRun)
+        count mustBe 3
+      else
+        count mustBe 0  // when driver not available, not Application instance should be created at all.
     }
     import Helpers._
     "send 404 on a bad request" in new Safari {
@@ -139,6 +274,32 @@ class MixedFixtureSpec extends MixedSpec {
     "start the FakeApplication" in new Chrome(fakeApp("foo" -> "bar",  "ehcacheplugin" -> "disabled")) {
       Play.maybeApplication mustBe Some(app)
     }
+    "start the FakeApplication lazily" in new App(fakeApp("foo" -> "bar",  "ehcacheplugin" -> "disabled")) {
+      var count = 0
+      class TestFakeApplication(override val path: java.io.File = new java.io.File("."),
+                                override val classloader: ClassLoader = classOf[FakeApplication].getClassLoader,
+                                additionalPlugins: Seq[String] = Nil,
+                                withoutPlugins: Seq[String] = Nil,
+                                additionalConfiguration: Map[String, _ <: Any] = Map.empty,
+                                withGlobal: Option[play.api.GlobalSettings] = None,
+                                withRoutes: PartialFunction[(String, String), Handler] = PartialFunction.empty)
+        extends FakeApplication(path, classloader, additionalPlugins, withoutPlugins, additionalConfiguration, withGlobal, withRoutes) {
+        count = count + 1
+      }
+      class TestSpec extends fixture.WordSpec with MixedFixtures {
+        var testRun = false  // will be false if test is canceled due to driver not available on platform.
+        "test 1" in new Chrome(new TestFakeApplication()) { t => testRun = true }
+        "test 2" in new Chrome(new TestFakeApplication()) { t => testRun = true }
+        "test 3" in new Chrome(new TestFakeApplication()) { t => testRun = true }
+      }
+      val spec = new TestSpec
+      count mustBe 0
+      spec.run(None, Args(SilentReporter))
+      if (spec.testRun)
+        count mustBe 3
+      else
+        count mustBe 0  // when driver not available, not Application instance should be created at all.
+    }
     import Helpers._
     "send 404 on a bad request" in new Chrome {
       import java.net._
@@ -163,6 +324,32 @@ class MixedFixtureSpec extends MixedSpec {
     }
     "start the FakeApplication" in new InternetExplorer(fakeApp("foo" -> "bar",  "ehcacheplugin" -> "disabled")) {
       Play.maybeApplication mustBe Some(app)
+    }
+    "start the FakeApplication lazily" in new App(fakeApp("foo" -> "bar",  "ehcacheplugin" -> "disabled")) {
+      var count = 0
+      class TestFakeApplication(override val path: java.io.File = new java.io.File("."),
+                                override val classloader: ClassLoader = classOf[FakeApplication].getClassLoader,
+                                additionalPlugins: Seq[String] = Nil,
+                                withoutPlugins: Seq[String] = Nil,
+                                additionalConfiguration: Map[String, _ <: Any] = Map.empty,
+                                withGlobal: Option[play.api.GlobalSettings] = None,
+                                withRoutes: PartialFunction[(String, String), Handler] = PartialFunction.empty)
+        extends FakeApplication(path, classloader, additionalPlugins, withoutPlugins, additionalConfiguration, withGlobal, withRoutes) {
+        count = count + 1
+      }
+      class TestSpec extends fixture.WordSpec with MixedFixtures {
+        var testRun = false  // will be false if test is canceled due to driver not available on platform.
+        "test 1" in new InternetExplorer(new TestFakeApplication()) { t => testRun = true }
+        "test 2" in new InternetExplorer(new TestFakeApplication()) { t => testRun = true }
+        "test 3" in new InternetExplorer(new TestFakeApplication()) { t => testRun = true }
+      }
+      val spec = new TestSpec
+      count mustBe 0
+      spec.run(None, Args(SilentReporter))
+      if (spec.testRun)
+        count mustBe 3
+      else
+        count mustBe 0  // when driver not available, not Application instance should be created at all.
     }
     import Helpers._
     "send 404 on a bad request" in new InternetExplorer {

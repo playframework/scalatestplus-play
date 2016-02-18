@@ -292,11 +292,16 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
   /**
    * `NoArg` subclass that provides an `Application` fixture.
    */
-  abstract class App(val app: Application = FakeApplication()) extends NoArg {
+  abstract class App(appFun: => Application = FakeApplication()) extends NoArg {
     /**
      * Makes the passed-in `Application` implicit.
      */
     implicit def implicitApp: Application = app
+
+    /**
+     * The lazy instance created from passed <code>appFun</code>
+     */
+    lazy val app = appFun
 
     /**
      * Runs the passed in `Application` before executing the test body, ensuring it is closed after the test body completes.
@@ -310,11 +315,16 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
   /**
    * `NoArg` subclass that provides a fixture composed of a `Application` and running `TestServer`.
    */
-  abstract class Server(val app: Application = FakeApplication(), val port: Int = Helpers.testServerPort) extends NoArg {
+  abstract class Server(appFun: => Application = FakeApplication(), val port: Int = Helpers.testServerPort) extends NoArg {
     /**
      * Makes the passed in `Application` implicit.
      */
     implicit def implicitApp: Application = app
+
+    /**
+     * The lazy instance created from passed <code>appFun</code>
+     */
+    lazy val app = appFun
 
     /**
      * Implicit `PortNumber` instance that wraps `port`. The value returned from `portNumber.value`
@@ -336,7 +346,7 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
    * `NoArg` subclass that provides a fixture composed of an `Application`, running `TestServer`, and
    * Selenium `HtmlUnitDriver`.
    */
-  abstract class HtmlUnit(val app: Application = FakeApplication(), val port: Int = Helpers.testServerPort) extends WebBrowser with NoArg with HtmlUnitFactory {
+  abstract class HtmlUnit(appFun: => Application = FakeApplication(), val port: Int = Helpers.testServerPort) extends WebBrowser with NoArg with HtmlUnitFactory {
     /**
      * A lazy implicit instance of `HtmlUnitDriver`. It will hold `UnavailableDriver` if `HtmlUnitDriver` 
      * is not available in the running machine.
@@ -347,6 +357,11 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
      * Makes the passed in `Application` implicit.
      */
     implicit def implicitApp: Application = app
+
+    /**
+     * The lazy instance created from passed <code>appFun</code>
+     */
+    lazy val app = appFun
 
     /**
      * Implicit `PortNumber` instance that wraps `port`. The value returned from `portNumber.value`
@@ -378,7 +393,7 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
    * `NoArg` subclass that provides a fixture composed of a `Application`, running `TestServer`, and
    * Selenium `FirefoxDriver`.
    */
-  abstract class Firefox(val app: Application = FakeApplication(), val port: Int = Helpers.testServerPort) extends WebBrowser with NoArg with FirefoxFactory {
+  abstract class Firefox(appFun: => Application = FakeApplication(), val port: Int = Helpers.testServerPort) extends WebBrowser with NoArg with FirefoxFactory {
 
     /**
      * A lazy implicit instance of `FirefoxDriver`, it will hold `UnavailableDriver` if `FirefoxDriver` 
@@ -390,6 +405,11 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
      * Makes the passed in `Application` implicit.
      */
     implicit def implicitApp: Application = app
+
+    /**
+     * The lazy instance created from passed <code>appFun</code>
+     */
+    lazy val app = appFun
 
     /**
      * Implicit `PortNumber` instance that wraps `port`. The value returned from `portNumber.value`
@@ -421,7 +441,7 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
    * `NoArg` subclass that provides a fixture composed of an `Application`, running `TestServer`, and
    * Selenium `SafariDriver`.
    */
-  abstract class Safari(val app: Application = FakeApplication(), val port: Int = Helpers.testServerPort) extends WebBrowser with NoArg with SafariFactory {
+  abstract class Safari(appFun: => Application = FakeApplication(), val port: Int = Helpers.testServerPort) extends WebBrowser with NoArg with SafariFactory {
     /**
      * A lazy implicit instance of `SafariDriver`, it will hold `UnavailableDriver` if `SafariDriver` 
      * is not available in the running machine.
@@ -432,6 +452,11 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
      * Makes the passed in `Application` implicit.
      */
     implicit def implicitApp: Application = app
+
+    /**
+     * The lazy instance created from passed <code>appFun</code>
+     */
+    lazy val app = appFun
 
     /**
      * Implicit `PortNumber` instance that wraps `port`. The value returned from `portNumber.value`
@@ -463,7 +488,7 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
    * `NoArg` subclass that provides a fixture composed of an `Application`, running `TestServer`, and
    * Selenium `ChromeDriver`.
    */
-  abstract class Chrome(val app: Application = FakeApplication(), val port: Int = Helpers.testServerPort) extends WebBrowser with NoArg with ChromeFactory {
+  abstract class Chrome(appFun: => Application = FakeApplication(), val port: Int = Helpers.testServerPort) extends WebBrowser with NoArg with ChromeFactory {
     /**
      * A lazy implicit instance of `ChromeDriver`, it will hold `UnavailableDriver` if `ChromeDriver` 
      * is not available in the running machine.
@@ -474,6 +499,11 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
      * Makes the passed in `Application` implicit.
      */
     implicit def implicitApp: Application = app
+
+    /**
+     * The lazy instance created from passed <code>appFun</code>
+     */
+    lazy val app = appFun
 
     /**
      * Implicit `PortNumber` instance that wraps `port`. The value returned from `portNumber.value`
@@ -506,7 +536,7 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
    * `NoArg` subclass that provides a fixture composed of an `Application`, running `TestServer`, and
    * Selenium `InternetExplorerDriver`.
    */
-  abstract class InternetExplorer(val app: Application = FakeApplication(), val port: Int = Helpers.testServerPort) extends WebBrowser with NoArg with InternetExplorerFactory {
+  abstract class InternetExplorer(appFun: => Application = FakeApplication(), val port: Int = Helpers.testServerPort) extends WebBrowser with NoArg with InternetExplorerFactory {
     /**
      * A lazy implicit instance of `InternetExplorerDriver`, it will hold `UnavailableDriver` if `InternetExplorerDriver` 
      * is not available in the running machine.
@@ -517,6 +547,11 @@ trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
      * Makes the passed in `Application` implicit.
      */
     implicit def implicitApp: Application = app
+
+    /**
+     * The lazy instance created from passed <code>appFun</code>
+     */
+    lazy val app = appFun
 
     /**
      * Implicit `PortNumber` instance that wraps `port`. The value returned from `portNumber.value`
