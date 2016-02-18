@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
-val PlayVersion = playVersion("2.5.0-M2")
+val PlayVersion = playVersion("2.5.0-RC1")
 
 lazy val `scalatestplus-play-root` = project
   .in(file("."))
   .enablePlugins(PlayRootProject)
   .aggregate(`scalatestplus-play`)
+  .settings(
+    sonatypeProfileName := "org.scalatestplus.play"
+  )
 
 lazy val `scalatestplus-play` = project
   .in(file("module"))
@@ -54,6 +57,17 @@ lazy val docs = project
     parallelExecution in Test := false,
 
     PlayDocsKeys.scalaManualSourceDirectories := (baseDirectory.value / "manual" / "working" / "scalaGuide" ** "code").get,
+    PlayDocsKeys.resources += {
+      val apiDocs = (doc in (`scalatestplus-play`, Compile)).value
+      // Copy the docs to a place so they have the correct api/scala prefix
+      val apiDocsStage = target.value / "api-docs-stage"
+      val cacheFile = streams.value.cacheDirectory / "api-docs-stage"
+      val mappings = (apiDocs.***.filter(!_.isDirectory).get pair relativeTo(apiDocs)).map {
+        case (file, path) => file -> apiDocsStage / "api" / "scala" / path
+      }
+      Sync(cacheFile)(mappings)
+      PlayDocsDirectoryResource(apiDocsStage)
+    },
     SettingKey[Seq[File]]("migrationManualSources") := Nil
   )
   .dependsOn(`scalatestplus-play`)
