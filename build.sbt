@@ -33,6 +33,7 @@ lazy val `scalatestplus-play` = project
       "org.scalatest" %% "scalatest" % "2.2.6",
       "com.typesafe.play" %% "play-test" % PlayVersion,
       "org.seleniumhq.selenium" % "selenium-java" % "2.48.2",
+      "com.machinepublishers" % "jbrowserdriver" % "0.10.1",
       "com.typesafe.play" %% "play-ws" % PlayVersion,
       "com.typesafe.play" %% "play-cache" % PlayVersion % Test
     ),

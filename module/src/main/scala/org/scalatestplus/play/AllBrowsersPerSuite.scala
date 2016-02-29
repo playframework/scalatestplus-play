@@ -207,6 +207,7 @@ trait AllBrowsersPerSuite extends SuiteMixin with WebBrowser with Eventually wit
       SafariInfo,
       InternetExplorerInfo,
       ChromeInfo,
+      JBrowserDriverInfo,
       HtmlUnitInfo(true)
     )
 
