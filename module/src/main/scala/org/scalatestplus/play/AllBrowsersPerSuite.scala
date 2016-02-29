@@ -205,6 +205,7 @@ trait AllBrowsersPerSuite extends TestSuiteMixin with WebBrowser with Eventually
       SafariInfo,
       InternetExplorerInfo,
       ChromeInfo,
+      JBrowserDriverInfo,
       HtmlUnitInfo(true)
     )
 
