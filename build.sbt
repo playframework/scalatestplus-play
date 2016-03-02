@@ -32,6 +32,7 @@ lazy val `scalatestplus-play` = project
     libraryDependencies ++= Seq(
       "org.scalatest" %% "scalatest" % "2.2.6",
       "com.typesafe.play" %% "play-test" % PlayVersion,
+      "net.sourceforge.htmlunit" % "htmlunit" % "2.20", // adds support for jQuery 2.20; can be removed as soon as selenium-java has it in it's own dependencies
       "org.seleniumhq.selenium" % "selenium-java" % "2.48.2",
       "com.typesafe.play" %% "play-ws" % PlayVersion,
       "com.typesafe.play" %% "play-cache" % PlayVersion % Test
