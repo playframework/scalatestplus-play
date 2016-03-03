@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-val PlayVersion = playVersion("2.5.0-RC1")
+val PlayVersion = playVersion("2.5.0")
 
 lazy val `scalatestplus-play-root` = project
   .in(file("."))
