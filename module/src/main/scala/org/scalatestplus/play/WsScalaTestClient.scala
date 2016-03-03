@@ -16,7 +16,7 @@
 package org.scalatestplus.play
 
 import play.api.Play.current
-import play.api.libs.ws.{WS, WSRequest}
+import play.api.libs.ws.{WS, WSClient, WSRequest}
 import play.api.mvc.Call
 
 /**
@@ -34,14 +34,20 @@ trait WsScalaTestClient {
    *
    * @param call the `Call` describing the request
    * @param portNumber the port number of the `TestServer`
+   * @param wsClient the implicit WSClient
    */
-  def wsCall(call: Call)(implicit portNumber: PortNumber): WSRequest = wsUrl(call.url)
+  def wsCall(call: Call)(implicit portNumber: PortNumber, wsClient: WSClient = WS.client): WSRequest = doCall(call.url, wsClient, portNumber)
 
   /**
    * Construct a WS request for the given relative URL.
    *
    * @param url the URL of the request
    * @param portNumber the port number of the `TestServer`
+   * @param wsClient the implicit WSClient
    */
-  def wsUrl(url: String)(implicit portNumber: PortNumber): WSRequest = WS.url("http://localhost:" + portNumber.value + url)
+  def wsUrl(url: String)(implicit portNumber: PortNumber, wsClient: WSClient = WS.client): WSRequest = doCall(url, wsClient, portNumber)
+
+  private def doCall(url: String, wsClient: WSClient, portNumber: PortNumber) = {
+    wsClient.url("http://localhost:" + portNumber.value + url)
+  }
 }

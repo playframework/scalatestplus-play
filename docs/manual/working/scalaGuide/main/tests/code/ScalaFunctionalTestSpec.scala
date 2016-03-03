@@ -107,7 +107,7 @@ class ScalaFunctionalTestSpec extends MixedPlaySpec with Results {
         }
     }).build()
 
-    "run in a browser" in new HtmlUnit(app = applicationWithBrowser) {
+    "run in a browser" in new HtmlUnit(appFun = { applicationWithBrowser }) {
 
       // Check the home page
       go to "http://localhost:" + port
@@ -121,14 +121,16 @@ class ScalaFunctionalTestSpec extends MixedPlaySpec with Results {
     // #scalafunctionaltest-testwithbrowser
 
     // #scalafunctionaltest-testpaymentgateway
-    "test server logic" in new Server(app = applicationWithBrowser, port = 19001) { port =>
+    "test server logic" in new Server(appFun = { applicationWithBrowser }, port = 19001) { port =>
+      implicit val wsClient = app.injector.instanceOf[WSClient]
+
       val myPublicAddress =  s"localhost:$port"
       val testPaymentGatewayURL = s"http://$myPublicAddress"
       // The test payment gateway requires a callback to this server before it returns a result...
       val callbackURL = s"http://$myPublicAddress/callback"
 
       // await is from play.api.test.FutureAwaits
-      val response = await(WS.url(testPaymentGatewayURL).withQueryString("callbackURL" -> callbackURL).get())
+      val response = await(wsClient.url(testPaymentGatewayURL).withQueryString("callbackURL" -> callbackURL).get())
 
       response.status mustEqual OK
     }
@@ -142,8 +144,9 @@ class ScalaFunctionalTestSpec extends MixedPlaySpec with Results {
         }
     }).build()
 
-    "test WS logic" in new Server(app = appWithRoutes, port = 3333) {
-      await(WS.url("http://localhost:3333").get()).status mustEqual OK
+    "test WS logic" in new Server(appFun = appWithRoutes, port = 3333) {
+      val wsClient = app.injector.instanceOf[WSClient]
+      await(wsClient.url("http://localhost:3333").get()).status mustEqual OK
     }
     // #scalafunctionaltest-testws
   }
