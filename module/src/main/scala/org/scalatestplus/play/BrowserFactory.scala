@@ -45,7 +45,7 @@ import org.openqa.selenium._
 
 /**
  * Companion object to trait `BrowserFactory` that holds a `UnavailableDriver` object that implements 
- * the Selenium `WebDriver` interface by throwing `UnuspportedOperationException`. This is
+ * the Selenium `WebDriver` interface by throwing `UnsupportedOperationException`. This is
  * used as a placeholder when a driver is not available on the host platform.
  */
 object BrowserFactory {

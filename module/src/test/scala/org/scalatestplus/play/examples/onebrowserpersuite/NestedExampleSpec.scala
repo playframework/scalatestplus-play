@@ -31,7 +31,7 @@ class NestedExampleSpec extends Suites(
 ) with OneServerPerSuite with OneBrowserPerSuite with FirefoxFactory {
   // Override app if you need an Application with other than non-default parameters.
   implicit override lazy val app: Application =
-    new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").additionalRouter(Router.from(TestRoute)).build()
+    new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(Router.from(TestRoute)).build()
 }
  
 // These are the nested suites
