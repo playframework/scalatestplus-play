@@ -16,6 +16,7 @@
 package org.scalatestplus.play
 
 import play.api.Application
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test._
 import org.scalatest._
 
@@ -46,8 +47,10 @@ import org.scalatest._
  * class ExampleSpec extends PlaySpec with OneServerPerTest {
  *
  *   // Override newAppForTest if you need a FakeApplication with other than non-default parameters.
- *   implicit override def newAppForTest(testData: TestData): Application =
- *     new GuiceApplicationBuilder().configure(Map("ehcacheplugin" -> "disabled")).additionalRouter(Router.from(TestRoute)).build()
+ *   implicit override def newAppForTest(testData: TestData): Application = new GuiceApplicationBuilder()
+ *     .configure(Map("ehcacheplugin" -> "disabled"))
+ *     .router(Router.from(TestRoute))
+ *     .build()
  *
  *   "The OneServerPerTest trait" must {
  *     "provide a FakeApplication" in {
@@ -88,7 +91,7 @@ trait OneServerPerTest extends SuiteMixin with ServerProvider { this: Suite =>
    * Creates new instance of `Application` with parameters set to their defaults. Override this method if you
    * need an `Application` created with non-default parameter values.
    */
-  def newAppForTest(testData: TestData): Application = new FakeApplication()
+  def newAppForTest(testData: TestData): Application = GuiceApplicationBuilder().build()
 
   /**
    * The port used by the `TestServer`.  By default this will be set to the result returned from

@@ -3,7 +3,6 @@
  */
 package scalaguide.tests.scalatest.onebrowserpersuite
 
-import play.api.test._
 import org.scalatestplus.play._
 import play.api.mvc._
 import play.api.inject.guice._
@@ -17,7 +16,7 @@ class ExampleSpec extends PlaySpec with OneServerPerSuite with OneBrowserPerSuit
   // Override app if you need a Application with other than
   // default parameters.
   implicit override lazy val app =
-    new GuiceApplicationBuilder().disable[EhCacheModule].additionalRouter(Router.from {
+    new GuiceApplicationBuilder().disable[EhCacheModule].router(Router.from {
       case GET(p"/testing") =>
         Action(
           Results.Ok(
@@ -33,7 +32,7 @@ class ExampleSpec extends PlaySpec with OneServerPerSuite with OneBrowserPerSuit
 
   "The OneBrowserPerTest trait" must {
     "provide a web driver" in {
-      go to (s"http://localhost:$port/testing")
+      go to s"http://localhost:$port/testing"
       pageTitle mustBe "Test Page"
       click on find(name("b")).value
       eventually { pageTitle mustBe "scalatest" }

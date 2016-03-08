@@ -22,7 +22,7 @@ import play.api.inject.guice._
 
 class OneServerPerTestSpec extends UnitSpec with OneServerPerTest {
 
-  implicit override def newAppForTest(testData: TestData) = new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").build()
+  implicit override def newAppForTest(testData: TestData): Application = new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").build()
   def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
 
   "The OneServerPerTest trait" must {
@@ -38,7 +38,6 @@ class OneServerPerTestSpec extends UnitSpec with OneServerPerTest {
     "provide the port" in {
       port mustBe Helpers.testServerPort
     }
-    import Helpers._
     "send 404 on a bad request" in {
       import java.net._
       val url = new URL("http://localhost:" + port + "/boum")

@@ -24,7 +24,7 @@ import play.api.routing._
 class OneServerPerSuiteWithOneBrowserPerTestSpec extends UnitSpec with OneServerPerSuite with OneBrowserPerTest with FirefoxFactory {
 
   implicit override lazy val app =
-    new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").additionalRouter(Router.from(TestRoute)).build()
+    new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(Router.from(TestRoute)).build()
   def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
 
   "The OneBrowserPerTest trait" must {

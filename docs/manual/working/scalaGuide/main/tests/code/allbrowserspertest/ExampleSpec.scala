@@ -16,7 +16,7 @@ class ExampleSpec extends PlaySpec with OneServerPerSuite with AllBrowsersPerTes
   // Override app if you need an Application with other than
   // default parameters.
   implicit override lazy val app =
-    new GuiceApplicationBuilder().disable[EhCacheModule].additionalRouter(Router.from {
+    new GuiceApplicationBuilder().disable[EhCacheModule].router(Router.from {
       case GET(p"/testing") =>
         Action(
           Results.Ok(

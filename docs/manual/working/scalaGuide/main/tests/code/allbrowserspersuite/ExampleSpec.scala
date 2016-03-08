@@ -16,7 +16,7 @@ class ExampleSpec extends PlaySpec with OneServerPerSuite with AllBrowsersPerSui
   // Override app if you need an Application with other than
   // default parameters.
   implicit override lazy val app =
-    new GuiceApplicationBuilder().disable[EhCacheModule].additionalRouter(Router.from {
+    new GuiceApplicationBuilder().disable[EhCacheModule].router(Router.from {
       case GET(p"/testing") =>
         Action(
           Results.Ok(
@@ -33,7 +33,7 @@ class ExampleSpec extends PlaySpec with OneServerPerSuite with AllBrowsersPerSui
   def sharedTests(browser: BrowserInfo) = {
     "The AllBrowsersPerSuite trait" must {
       "provide a web driver " + browser.name in {
-        go to (s"http://localhost:$port/testing")
+        go to s"http://localhost:$port/testing"
         pageTitle mustBe "Test Page"
         click on find(name("b")).value
         eventually { pageTitle mustBe "scalatest" }

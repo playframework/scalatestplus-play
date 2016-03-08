@@ -6,7 +6,6 @@ package scalaguide.tests.scalatest
 // #scalatest-examplecontrollerspec
 import scala.concurrent.Future
 
-import org.scalatest._
 import org.scalatestplus.play._
 
 import play.api.mvc._
@@ -15,11 +14,9 @@ import play.api.test.Helpers._
 
 class ExampleControllerSpec extends PlaySpec with Results {
 
-  class TestController() extends Controller with ExampleController
-
   "Example Page#index" should {
     "should be valid" in {
-      val controller = new TestController()
+      val controller = new ExampleController()
       val result: Future[Result] = controller.index().apply(FakeRequest())
       val bodyText: String = contentAsString(result)
       bodyText mustBe "ok"
@@ -29,13 +26,9 @@ class ExampleControllerSpec extends PlaySpec with Results {
 // #scalatest-examplecontrollerspec
 
 // #scalatest-examplecontroller
-trait ExampleController {
-  this: Controller =>
-
+class ExampleController extends Controller {
   def index() = Action {
     Ok("ok")
   }
 }
-
-object ExampleController extends Controller with ExampleController
 // #scalatest-examplecontroller

@@ -23,7 +23,7 @@ import play.api.routing._
 class MixedFixturesWsScalaTestClientSpec extends MixedSpec with ScalaFutures {
 
   def app =
-    new GuiceApplicationBuilder().configure(Map("foo" -> "bar", "ehcacheplugin" -> "disabled")).additionalRouter(Router.from(TestRoute)).build()
+    new GuiceApplicationBuilder().configure(Map("foo" -> "bar", "ehcacheplugin" -> "disabled")).router(Router.from(TestRoute)).build()
 
   "WsScalaTestClient" when {
 

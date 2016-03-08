@@ -17,7 +17,7 @@ class ExampleSpec extends MixedPlaySpec {
 
   // Some helper methods
   def buildApp[A](elems: (String, String)*) =
-    new GuiceApplicationBuilder().configure(Map(elems:_*)).additionalRouter(Router.from {
+    new GuiceApplicationBuilder().configure(Map(elems:_*)).router(Router.from {
       case GET(p"/testing") =>
         Action(
           Results.Ok(
@@ -98,7 +98,7 @@ class ExampleSpec extends MixedPlaySpec {
   // If a test needs an Application, running TestServer, and Selenium
   // Firefox driver use "new Firefox":
   "The Firefox function" must {
-    "provide an pplication" in new Firefox(buildApp("ehcacheplugin" -> "disabled")) {
+    "provide an application" in new Firefox(buildApp("ehcacheplugin" -> "disabled")) {
       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
     }
     "make the Application available implicitly" in new Firefox(buildApp("ehcacheplugin" -> "disabled")) {

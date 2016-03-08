@@ -28,7 +28,7 @@ class ExampleSpec extends PlaySpec with OneServerPerTest with OneBrowserPerTest 
 
   // Override newAppForTest if you need an Application with other than non-default parameters.
   override def newAppForTest(testData: TestData): Application =
-    new GuiceApplicationBuilder().configure(Map("ehcacheplugin" -> "disabled")).additionalRouter(Router.from(TestRoute)).build()
+    new GuiceApplicationBuilder().configure(Map("ehcacheplugin" -> "disabled")).router(Router.from(TestRoute)).build()
 
   "The OneBrowserPerTest trait" must {
     "provide an Application" in {
