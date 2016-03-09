@@ -22,7 +22,7 @@ import play.api.inject.guice._
 
 class ServerSpecSpec extends ServerSpec {
 
-  implicit override def newAppForTest(testData: TestData) = new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").build()
+  implicit override def newAppForTest(testData: TestData): Application = new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").build()
   def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
 
   "The ServerFixture" must {

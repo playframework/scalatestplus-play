@@ -25,7 +25,7 @@ import play.api.routing._
 class HtmlUnitFactorySpec extends UnitSpec with OneServerPerSuite with OneBrowserPerSuite with HtmlUnitFactory {
 
   implicit override lazy val app: Application =
-    new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").additionalRouter(Router.from(TestRoute)).build()
+    new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(Router.from(TestRoute)).build()
 
   def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
 
