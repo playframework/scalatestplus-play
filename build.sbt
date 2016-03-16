@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+resolvers ++= DefaultOptions.resolvers(snapshot = true)
+
 val PlayVersion = playVersion("2.5.0")
 
 lazy val `scalatestplus-play-root` = project
