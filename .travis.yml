@@ -7,7 +7,7 @@ before_script:
   - "sh -e /etc/init.d/xvfb start"
   - sleep 3 # give xvfb some time to start
 script:
-  - sbt test docs/test docs/validateDocs 
+  - sbt test
 cache:
   directories:
     - $HOME/.ivy2/cache
