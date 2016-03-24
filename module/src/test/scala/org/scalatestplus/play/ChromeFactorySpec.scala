@@ -26,7 +26,7 @@ import play.api.routing._
 class ChromeFactorySpec extends UnitSpec with OneServerPerSuite with OneBrowserPerSuite with ChromeFactory {
 
   implicit override lazy val app: Application =
-    new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").additionalRouter(Router.from(TestRoute)).build()
+    new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(Router.from(TestRoute)).build()
 
   def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
 

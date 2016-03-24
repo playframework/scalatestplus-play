@@ -25,7 +25,7 @@ import play.api.routing._
 class OneServerPerSuiteWithOneBrowserPerSuiteSpec extends UnitSpec with OneServerPerSuite with OneBrowserPerSuite with FirefoxFactory {
 
   implicit override lazy val app =
-    new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").additionalRouter(Router.from(TestRoute)).build()
+    new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(Router.from(TestRoute)).build()
   def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
 
   // Doesn't need synchronization because set by withFixture and checked by the test

@@ -65,8 +65,10 @@ import org.openqa.selenium.chrome.ChromeDriver
  * class ExampleSpec extends PlaySpec with OneServerPerSuite with OneBrowserPerSuite with FirefoxFactory {
  *
  *   // Override app if you need a Application with other than non-default parameters.
- *   implicit override lazy val app: Application =
- *     new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").additionalRouter(Router.from(TestRoute)).build()
+ *   implicit override lazy val app: Application = new GuiceApplicationBuilder()
+ *     .configure("foo" -> "bar", "ehcacheplugin" -> "disabled")
+ *     .router(Router.from(TestRoute))
+ *     .build()
  *
  *   "The OneBrowserPerSuite trait" must {
  *     "provide an Application" in {

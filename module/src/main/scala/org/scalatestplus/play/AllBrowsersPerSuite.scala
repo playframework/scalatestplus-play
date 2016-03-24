@@ -103,8 +103,11 @@ import org.openqa.selenium.chrome.ChromeDriver
  *
  *   // Override app if you need an Application with other than
  *   // default parameters.
- *   implicit override lazy val app =
- *     new GuiceApplicationBuilder().disable[EhCacheModule].configure("foo" -> "bar").additionalRouter(Router.from(TestRoute)).build()
+ *   implicit override lazy val app = new GuiceApplicationBuilder()
+ *     .disable[EhCacheModule]
+ *     .configure("foo" -> "bar")
+ *     .router(Router.from(TestRoute))
+ *     .build()
  *
  *   // Place tests you want run in different browsers in the `sharedTests` method:
  *   def sharedTests(browser: BrowserInfo) = {

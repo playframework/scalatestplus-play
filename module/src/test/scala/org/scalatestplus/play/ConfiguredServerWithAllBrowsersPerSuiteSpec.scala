@@ -27,7 +27,7 @@ class ConfiguredServerWithAllBrowsersPerSuiteSpec extends Suites(
 )
 with OneServerPerSuite {
   override lazy val app: Application =
-    new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").additionalRouter(Router.from(TestRoute)).build()
+    new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(Router.from(TestRoute)).build()
 }
 
 @DoNotDiscover

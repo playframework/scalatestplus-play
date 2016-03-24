@@ -16,6 +16,7 @@
 package org.scalatestplus.play
 
 import play.api.Application
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test._
 import org.scalatest._
 
@@ -109,10 +110,10 @@ import org.scalatest._
  * }
  *
  * // These are the nested suites
+ *
  * @DoNotDiscover class OneSpec extends PlaySpec with ConfiguredServer
  * @DoNotDiscover class TwoSpec extends PlaySpec with ConfiguredServer
  * @DoNotDiscover class RedSpec extends PlaySpec with ConfiguredServer
- *
  * @DoNotDiscover
  * class BlueSpec extends PlaySpec with ConfiguredServer {
  *
@@ -150,7 +151,7 @@ trait OneServerPerSuite extends SuiteMixin with ServerProvider { this: Suite =>
    * This trait's implementation initializes this `lazy` `val` with a new instance of `FakeApplication` with
    * parameters set to their defaults. Override this `lazy` `val` if you need a `Application` created with non-default parameter values.
    */
-  implicit lazy val app: Application = new FakeApplication()
+  implicit lazy val app: Application = new GuiceApplicationBuilder().build()
 
   /**
    * The port used by the `TestServer`.  By default this will be set to the result returned from
@@ -162,6 +163,7 @@ trait OneServerPerSuite extends SuiteMixin with ServerProvider { this: Suite =>
    * Invokes `start` on a new `TestServer` created with the `Application` provided by `app` and the
    * port number defined by `port`, places the `Application` and port number into the `ConfigMap` under the keys
    * `org.scalatestplus.play.app` and `org.scalatestplus.play.port`, respectively, to make
+ *
    * them available to nested suites; calls `super.run`; and lastly ensures the `Application and test server are stopped after
    * all tests and nested suites have completed.
    *

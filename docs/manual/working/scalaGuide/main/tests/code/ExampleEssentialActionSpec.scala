@@ -3,7 +3,6 @@
  */
 package scalaguide.tests.scalatest
 
-import org.scalatest._
 import org.scalatestplus.play._
 
 import play.api.mvc._

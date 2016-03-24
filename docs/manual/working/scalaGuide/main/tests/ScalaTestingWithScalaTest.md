@@ -1,11 +1,11 @@
 <!--- Copyright (C) 2009-2016 Typesafe Inc. <http://www.typesafe.com> -->
 # Testing your application with ScalaTest
 
-Writing tests for your application can be an involved process. Play provides helpers and application stubs, and ScalaTest provides an integration library, [ScalaTest + Play](http://scalatest.org/plus/play), to make testing your application as easy as possible.
+Writing tests for your application can be an involved process. Play provides helpers and application stubs, and ScalaTest provides an integration library, _ScalaTest + Play_, to make testing your application as easy as possible.
 
 ## Overview
 
-The location for tests is in the "test" folder.  <!-- There are two sample test files created in the test folder which can be used as templates. -->
+The location for tests is in the "test" folder. <!-- There are two sample test files created in the test folder which can be used as templates. -->
 
 You can run tests from the Play console.
 
@@ -15,7 +15,7 @@ You can run tests from the Play console.
 * To run tests continually, run a command with a tilde in front, i.e. `~test-quick`.
 * To access test helpers such as `FakeRequest` in console, run `test:console`.
 
-Testing in Play is based on SBT, and a full description is available in the [testing SBT](http://www.scala-sbt.org/0.13.0/docs/Detailed-Topics/Testing) chapter.
+Testing in Play is based on SBT, and a full description is available in the [testing SBT](http://www.scala-sbt.org/0.13/docs/Testing.html) chapter.
 
 ## Using ScalaTest + Play
 
@@ -23,8 +23,7 @@ To use _ScalaTest + Play_, you'll need to add it to your build, by changing `bui
 
 ```scala
 libraryDependencies ++= Seq(
-  "org.scalatest" %% "scalatest" % "2.2.1" % "test",
-  "org.scalatestplus" %% "play" % "1.2.0" % "test",
+  "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.0" % "test"
 )
 ```
 
@@ -40,7 +39,7 @@ You can run your tests with Play itself, or in IntelliJ IDEA (using the [Scala p
 
 ### Matchers
 
-`PlaySpec` mixes in ScalaTest's [`MustMatchers`](http://doc.scalatest.org/2.1.5/index.html#org.scalatest.MustMatchers), so you can write assertions using ScalaTest's matchers DSL:
+`PlaySpec` mixes in ScalaTest's [`MustMatchers`](http://doc.scalatest.org/2.2.6/index.html#org.scalatest.MustMatchers), so you can write assertions using ScalaTest's matchers DSL:
 
 ```scala
 import play.api.test.Helpers._
@@ -48,13 +47,13 @@ import play.api.test.Helpers._
 "Hello world" must endWith ("world")
 ```
 
-For more information, see the documentation for [`MustMatchers`](http://doc.scalatest.org/2.1.5/index.html#org.scalatest.MustMatchers).
+For more information, see the documentation for [`MustMatchers`](http://doc.scalatest.org/2.2.6/index.html#org.scalatest.MustMatchers).
 
 ### Mockito
 
 You can use mocks to isolate unit tests against external dependencies.  For example, if your class depends on an external `DataService` class, you can feed appropriate data to your class without instantiating a `DataService` object.
 
-ScalaTest provides integration with [Mockito](https://github.com/mockito/mockito) via its [`MockitoSugar`](http://doc.scalatest.org/2.1.5/index.html#org.scalatest.mock.MockitoSugar) trait.
+ScalaTest provides integration with [Mockito](https://github.com/mockito/mockito) via its [`MockitoSugar`](http://doc.scalatest.org/2.2.6/index.html#org.scalatest.mock.MockitoSugar) trait.
 
 To use Mockito, mix `MockitoSugar` into your test class and then use the Mockito library to mock dependencies:
 
@@ -98,7 +97,7 @@ class AnormUserRepository extends UserRepository {
 }
 ```
 
-and then access them through services:
+And then access them through services:
 
 @[scalatest-userservice](code/services/UserService.scala)
 
@@ -108,17 +107,17 @@ In this way, the `isAdmin` method can be tested by mocking out the `UserReposito
 
 ## Unit Testing Controllers
 
-When defining controllers as objects, they can be trickier to unit test. In Play this can be alleviated by [[dependency injection|ScalaDependencyInjection]]. Another way to finesse unit testing with a controller declared as a object is to use a trait with an [explicitly typed self reference](http://www.naildrivin5.com/scalatour/wiki_pages/ExplcitlyTypedSelfReferences) to the controller:
+Since your controllers are just regular classes, you can easily unit test them using Play helpers. If your controllers depends on another classes, using [[dependency injection|ScalaDependencyInjection]] will enable you to mock these dependencies. Per instance, given the following controller:
 
 @[scalatest-examplecontroller](code/ExampleControllerSpec.scala)
 
-and then test the trait:
+You can test it like:
 
 @[scalatest-examplecontrollerspec](code/ExampleControllerSpec.scala)
 
 ## Unit Testing EssentialAction
 
-Testing [`Action`](api/scala/play/api/mvc/Action.html) or [`Filter`](api/scala/play/api/mvc/Filter.html) can require to test an an [`EssentialAction`](api/scala/play/api/mvc/EssentialAction.html) ([[more information about what an EssentialAction is|ScalaEssentialAction]])
+Testing [`Action`](api/scala/play/api/mvc/Action.html) or [`Filter`](api/scala/play/api/mvc/Filter.html) can require testing an [`EssentialAction`](api/scala/play/api/mvc/EssentialAction.html) ([[more information about what an EssentialAction is|ScalaEssentialAction]])
 
 For this, the test [`Helpers.call`](api/scala/play/api/test/Helpers$.html#call) can be used like that:
 
