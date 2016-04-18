@@ -5,7 +5,7 @@ ScalaTest + Play provides integration support between ScalaTest and Play Framewo
 To use it, please add the following dependency to your project's `build.sbt` or `project/Build.scala` file:
 
 ```scala
-"org.scalatestplus.play" %% "scalatestplus-play" % "1.5.0" % "test"
+"org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % "test"
 ```
 
 ## Docs:
