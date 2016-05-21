@@ -16,7 +16,7 @@
 
 resolvers ++= DefaultOptions.resolvers(snapshot = true)
 
-val PlayVersion = playVersion("2.5.0")
+val PlayVersion = playVersion("2.6.0-SNAPSHOT")
 
 lazy val `scalatestplus-play-root` = project
   .in(file("."))
