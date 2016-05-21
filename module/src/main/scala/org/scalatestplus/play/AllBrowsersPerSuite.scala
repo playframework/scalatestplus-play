@@ -101,9 +101,9 @@ import org.openqa.selenium.chrome.ChromeDriver
  *
  * class ExampleSpec extends PlaySpec with OneServerPerSuite with AllBrowsersPerSuite {
  *
- *   // Override app if you need an Application with other than
+ *   // Override fakeApplication if you need an Application with other than
  *   // default parameters.
- *   implicit override lazy val app = new GuiceApplicationBuilder()
+ *   def fakeApplication() = new GuiceApplicationBuilder()
  *     .disable[EhCacheModule]
  *     .configure("foo" -> "bar")
  *     .router(Router.from(TestRoute))

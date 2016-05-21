@@ -26,7 +26,7 @@ class OneServerPerTestWithConfiguredBrowserSpec extends UnitSpec with Sequential
 
   override def nestedSuites = Vector(new OneServerPerTestWithConfiguredBrowserNestedSpec)
 
-  implicit override lazy val app =
+  def fakeApplication() =
     new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(Router.from(TestRoute)).build()
   def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
 }

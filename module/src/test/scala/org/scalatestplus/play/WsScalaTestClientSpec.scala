@@ -22,7 +22,7 @@ import play.api.routing._
 
 class WsScalaTestClientSpec extends UnitSpec with OneServerPerSuite with ScalaFutures with IntegrationPatience {
 
-  implicit override lazy val app =
+  def fakeApplication() =
     new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(Router.from(TestRoute)).build()
 
   "WsScalaTestClient's" must {

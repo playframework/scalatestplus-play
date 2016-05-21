@@ -16,15 +16,6 @@
 package org.scalatestplus.play
 
 import play.api.Application
-import play.api.test._
-import org.scalatest._
-import selenium.WebBrowser
-import concurrent.Eventually
-import concurrent.IntegrationPatience
-import org.openqa.selenium.WebDriver
-import BrowserFactory.UnavailableDriver
-import org.openqa.selenium.safari.SafariDriver
-import org.openqa.selenium.chrome.ChromeDriver
 
 /**
  * Trait that defines abstract methods that providing a port number and implicit `Application` and a concrete

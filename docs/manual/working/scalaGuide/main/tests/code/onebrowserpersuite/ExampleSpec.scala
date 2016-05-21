@@ -15,7 +15,7 @@ class ExampleSpec extends PlaySpec with OneServerPerSuite with OneBrowserPerSuit
 
   // Override app if you need a Application with other than
   // default parameters.
-  implicit override lazy val app =
+  def fakeApplication() =
     new GuiceApplicationBuilder().disable[EhCacheModule].router(Router.from {
       case GET(p"/testing") =>
         Action(

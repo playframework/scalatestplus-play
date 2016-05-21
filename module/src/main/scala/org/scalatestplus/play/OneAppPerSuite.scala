@@ -17,7 +17,6 @@ package org.scalatestplus.play
 
 import org.scalatest._
 import play.api.{Application, Play}
-import play.api.inject.guice._
 
 /**
  * Trait that provides a new `Application` instance per ScalaTest `Suite`.
@@ -48,7 +47,7 @@ import play.api.inject.guice._
  * class ExampleSpec extends PlaySpec with OneAppPerSuite {
  *
  *   // Override app if you need an Application with other than non-default parameters.
- *   implicit override lazy val app: Application =
+ *   def fakeApplication(): Application =
  *     new GuiceApplicationBuilder().configure(Map("ehcacheplugin" -> "disabled")).build()
  *
  *   "The OneAppPerSuite trait" must {
@@ -88,7 +87,7 @@ import play.api.inject.guice._
  *   new BlueSpec
  * ) with OneAppPerSuite {
  *   // Override app if you need an Application with other than non-default parameters.
- *   implicit override lazy val app: Application =
+ *   def fakeApplication(): Application =
  *     new GuiceApplicationBuilder().configure(Map("ehcacheplugin" -> "disabled")).build()
  * }
  *
@@ -115,7 +114,7 @@ import play.api.inject.guice._
  * }
  * </pre>
  */
-trait OneAppPerSuite extends SuiteMixin { this: Suite => 
+trait OneAppPerSuite extends SuiteMixin with FakeApplicationFactory { this: Suite =>
 
   /**
    * An implicit instance of `Application`.
@@ -123,7 +122,7 @@ trait OneAppPerSuite extends SuiteMixin { this: Suite =>
    * This trait's implementation initializes this `lazy` `val` with a new instance of `Application` with
    * parameters set to their defaults. Override this `lazy` `val` if you need a `Application` created with non-default parameter values.
    */
-  implicit lazy val app: Application = new GuiceApplicationBuilder().build()
+  implicit lazy val app: Application = fakeApplication()
 
   /**
    * Invokes `Play.start`, passing in the `Application` provided by `app`, and places

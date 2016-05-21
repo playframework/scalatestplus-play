@@ -21,7 +21,7 @@ import play.api.inject.guice._
 
 class OneAppPerSuiteSpec extends UnitSpec with OneAppPerSuite {
 
-  implicit override lazy val app = new GuiceApplicationBuilder().configure(Map("foo" -> "bar", "ehcacheplugin" -> "disabled")).build()
+  def fakeApplication() = new GuiceApplicationBuilder().configure(Map("foo" -> "bar", "ehcacheplugin" -> "disabled")).build()
   def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
 
   // Doesn't need synchronization because set by withFixture and checked by the test

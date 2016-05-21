@@ -16,19 +16,17 @@
 package org.scalatestplus.play
 
 import play.api.Application
-import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test._
 import org.scalatest._
 
 /**
  * Trait that provides a new `Application` and running `TestServer` instance per ScalaTest `Suite`.
  * 
- * By default, this trait creates a new `FakeApplication` for the `Suite` using default parameter values, which
+ * By default, this trait creates a new `Application` for the `Suite` using default parameter values, which
  * is made available via the `app` field defined in this trait and a new `TestServer` for the `Suite` using the port number provided by
  * its `port` field and the `Application` provided by its `app` field. If your `Suite` needs a
  * `Application` with non-default parameters, override `app`. If it needs a different port number,
  * override `port`.
- *
  *
  * This `SuiteMixin` trait's overridden `run` method calls `start` on the `TestServer`
  * before executing the `Suite` via a call to `super.run`.
@@ -53,8 +51,8 @@ import org.scalatest._
  *
  * class ExampleSpec extends PlaySpec with OneServerPerSuite {
  *
- *   // Override app if you need a Application with other than non-default parameters.
- *   implicit override lazy val app: Application =
+ *   // Override fakeApplication() if you need a Application with other than non-default parameters.
+ *   def fakeApplication(): Application =
  *     new GuiceApplicationBuilder().configure("ehcacheplugin" -> "disabled").build()
  *
  *   "The OneServerPerSuite trait" must {
@@ -105,7 +103,7 @@ import org.scalatest._
  *   new BlueSpec
  * ) with OneServerPerSuite {
  *   // Override app if you need an Application with other than non-default parameters.
- *   implicit override lazy val app: Application =
+ *   def fakeApplication(): Application =
  *     new GuiceApplicationBuilder().configure(Map("ehcacheplugin" -> "disabled")).build()
  * }
  *
@@ -143,15 +141,17 @@ import org.scalatest._
  * }
  * </pre>
  */
-trait OneServerPerSuite extends SuiteMixin with ServerProvider { this: Suite =>
+trait OneServerPerSuite extends SuiteMixin with ServerProvider with FakeApplicationFactory { this: Suite =>
 
   /**
    * An implicit instance of `Application`.
    *
-   * This trait's implementation initializes this `lazy` `val` with a new instance of `FakeApplication` with
-   * parameters set to their defaults. Override this `lazy` `val` if you need a `Application` created with non-default parameter values.
+   * This trait's implementation initializes this `lazy` `val` with a new instance of `Application` with
+   * parameters set to their defaults, using the `fakeApplication()` method from `FakeApplicationFactory`.
+   *
+   * Override this `lazy` `val` if you need a `Application` created with non-default parameter values.
    */
-  implicit lazy val app: Application = new GuiceApplicationBuilder().build()
+  implicit lazy val app: Application = fakeApplication()
 
   /**
    * The port used by the `TestServer`.  By default this will be set to the result returned from

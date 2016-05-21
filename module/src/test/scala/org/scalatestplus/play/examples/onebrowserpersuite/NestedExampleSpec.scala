@@ -30,7 +30,7 @@ class NestedExampleSpec extends Suites(
   new BlueSpec
 ) with OneServerPerSuite with OneBrowserPerSuite with FirefoxFactory {
   // Override app if you need an Application with other than non-default parameters.
-  implicit override lazy val app: Application =
+  def fakeApplication(): Application =
     new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(Router.from(TestRoute)).build()
 }
  

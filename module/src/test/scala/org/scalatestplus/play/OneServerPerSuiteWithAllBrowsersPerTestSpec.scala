@@ -22,7 +22,7 @@ import play.api.routing._
 
 class OneServerPerSuiteWithAllBrowsersPerTestSpec extends UnitSpec with OneServerPerSuite with AllBrowsersPerTest {
 
-  implicit override lazy val app =
+  def fakeApplication() =
     new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(Router.from(TestRoute)).build()
   def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
 

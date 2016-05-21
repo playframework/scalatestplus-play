@@ -25,7 +25,7 @@ import play.api.routing._
 class ConfiguredServerWithOneBrowserPerSuiteSpec extends Suites(
   new ConfiguredServerWithOneBrowserPerSuiteNestedSpec 
 ) with OneServerPerSuite {
-  implicit override lazy val app: Application =
+  def fakeApplication(): Application =
     new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(Router.from(TestRoute)).build()
 }
 

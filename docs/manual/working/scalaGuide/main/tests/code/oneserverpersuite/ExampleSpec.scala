@@ -8,6 +8,7 @@ import play.api.test.Helpers.{GET => GET_REQUEST, _}
 import play.api.libs.ws._
 import play.api.mvc._
 import Results._
+import play.api.Application
 import play.api.inject.guice._
 import play.api.routing._
 import play.api.routing.sird._
@@ -18,7 +19,7 @@ class ExampleSpec extends PlaySpec with OneServerPerSuite {
 
   // Override app if you need an Application with other than
   // default parameters.
-  implicit override lazy val app =
+  def fakeApplication(): Application =
     new GuiceApplicationBuilder().disable[EhCacheModule].router(Router.from {
       case GET(p"/") => Action { Ok("ok") }
     }).build()

@@ -9,15 +9,21 @@ You can access all of Play's built-in test support and _ScalaTest + Play_ with t
 
 ## Creating `Application` instances for testing
 
-Play frequently requires a running [`Application`](api/scala/play/api/Application.html) as context. If you're using the default Guice dependency injection, you can use the [`GuiceApplicationBuilder`](api/scala/play/api/inject/guice/GuiceApplicationBuilder.html) class which can be configured with different configuration, routes, or even additional modules.
+Play frequently requires a running [`Application`](api/scala/play/api/Application.html) as context.  Providing an application to a test environment depends on how the application is built.  If you're using the default Guice dependency injection, you can use the [`GuiceApplicationBuilder`](api/scala/play/api/inject/guice/GuiceApplicationBuilder.html) class which can be configured with different configuration, routes, or even additional modules.  
 
 @[scalafunctionaltest-application](code/ScalaFunctionalTestSpec.scala)
 
-If all or most tests in your test class need a `Application`, and they can all share the same instance of `Application`, mix in trait [`OneAppPerSuite`](api/scala/org/scalatestplus/play/OneAppPerSuite.html). You can access the `Application` from the `app` field. If you need to customize the `Application`, override `app` as shown in this example:
+Rather than create an application with [`GuiceApplicationBuilder`](api/scala/play/api/inject/guice/GuiceApplicationBuilder.html) explicitly, a default application can be created by mixing in the [`GuiceFakeApplicationFactory`](api/scala/org/scalatestplus/play/guice/GuiceFakeApplicationFactory.html) trait.  
+
+If all or most tests in your test class need a `Application`, and they can all share the same instance of `Application`, mix in trait [`OneAppPerSuite`](api/scala/org/scalatestplus/play/OneAppPerSuite.html) with the `GuiceFakeApplicationFactory` trait. You can access the `Application` from the `app` field.  
+ 
+If you need to customize the `Application`, override `fakeApplication()` as shown in this example:
 
 @[scalafunctionaltest-oneapppersuite](code/oneapppersuite/ExampleSpec.scala)
 
-If you need each test to get its own `Application`, instead of sharing the same one, use `OneAppPerTest` instead:
+You can also use [`GuiceOneAppPerSuite`](api/scala/org/scalatestplus/play/guice/GuiceOneAppPerSuite.html) if you prefer not to mix in `GuiceFakeApplicationFactory` by hand.
+
+If you need each test to get its own `Application`, instead of sharing the same one, use `OneAppPerTest` or `GuiceOneAppPerTest` instead:
 
 @[scalafunctionaltest-oneapppertest](code/oneapppertest/ExampleSpec.scala)
 
@@ -119,7 +125,7 @@ If you are using an SQL database, you can replace the database connection with a
 
 ## Testing WS calls
 
-If you are calling a web service, you can use [`WSTestClient`](api/scala/play/api/test/WsTestClient.html).  There are two calls available, `wsCall` and `wsUrl` that will take a Call or a string, respectively.  Note that they expect to be called in the context of `WithApplication`.
+If you are calling a web service, you can use [`WSTestClient`](api/scala/play/api/test/WsTestClient.html).  There are two calls available, `wsCall` and `wsUrl` that will take a Call or a string, respectively.  Note that they expect to be called in the context of a running application.
 
 ```
 wsCall(controllers.routes.Application.index()).get()

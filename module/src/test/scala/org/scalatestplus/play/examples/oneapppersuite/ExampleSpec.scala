@@ -22,7 +22,7 @@ import play.api.inject.guice._
 class ExampleSpec extends PlaySpec with OneAppPerSuite {
 
   // Override app if you need an Application with other than non-default parameters.
-  implicit override lazy val app: Application =
+  def fakeApplication(): Application =
     new GuiceApplicationBuilder().configure(Map("ehcacheplugin" -> "disabled")).build()
 
   "The OneAppPerSuite trait" must {

@@ -24,9 +24,13 @@ import play.api.routing._
 
 class ExampleSpec extends PlaySpec with OneServerPerTest {
 
-  // Override newAppForTest if you need a FakeApplication with other than non-default parameters.
-  implicit override def newAppForTest(testData: TestData): Application =
-    new GuiceApplicationBuilder().configure(Map("ehcacheplugin" -> "disabled")).router(Router.from(TestRoute)).build()
+  // Override newAppForTest if you need a test with other than non-default parameters, or use GuiceOneServerPerTest.
+  override def newAppForTest(testData: TestData): Application = {
+      new GuiceApplicationBuilder()
+        .configure(Map("ehcacheplugin" -> "disabled"))
+        .router(Router.from(TestRoute))
+        .build()
+  }
 
   "The OneServerPerTest trait" must {
     "provide a FakeApplication" in {

@@ -16,7 +16,6 @@
 package org.scalatestplus.play
 
 import play.api.Application
-import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test._
 import org.scalatest._
 
@@ -28,7 +27,7 @@ import org.scalatest._
  * method `app`. The `TestServer`'s port number is available as `port` (and implicitly available as `portNumber`, wrapped
  * in a [[org.scalatestplus.play.PortNumber PortNumber]]).
  *
- * By default, this trait creates a new `FakeApplication` for each test using default parameter values, which
+ * By default, this trait creates a new `Application` for each test using default parameter values, which
  * is returned by the `newAppForTest` method defined in this trait. If your tests need an `Application` with non-default
  * parameters, override `newAppForTest` to return it.
  *
@@ -46,7 +45,7 @@ import org.scalatest._
  *
  * class ExampleSpec extends PlaySpec with OneServerPerTest {
  *
- *   // Override newAppForTest if you need a FakeApplication with other than non-default parameters.
+ *   // Override newAppForTest or use GuiceOneServerPerTest
  *   implicit override def newAppForTest(testData: TestData): Application = new GuiceApplicationBuilder()
  *     .configure(Map("ehcacheplugin" -> "disabled"))
  *     .router(Router.from(TestRoute))
@@ -83,7 +82,7 @@ trait OneServerPerTest extends SuiteMixin with ServerProvider { this: Suite =>
   private var privateApp: Application = _
 
   /**
-   * Implicit method that returns the `FakeApplication` instance for the current test.
+   * Implicit method that returns the `Application` instance for the current test.
    */
   implicit final def app: Application = synchronized { privateApp }
 
@@ -91,7 +90,7 @@ trait OneServerPerTest extends SuiteMixin with ServerProvider { this: Suite =>
    * Creates new instance of `Application` with parameters set to their defaults. Override this method if you
    * need an `Application` created with non-default parameter values.
    */
-  def newAppForTest(testData: TestData): Application = GuiceApplicationBuilder().build()
+  def newAppForTest(testData: TestData): Application
 
   /**
    * The port used by the `TestServer`.  By default this will be set to the result returned from

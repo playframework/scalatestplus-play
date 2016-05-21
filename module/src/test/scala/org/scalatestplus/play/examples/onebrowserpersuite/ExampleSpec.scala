@@ -25,8 +25,8 @@ import play.api.routing._
 @FirefoxBrowser
 class ExampleSpec extends PlaySpec with OneServerPerSuite with OneBrowserPerSuite with FirefoxFactory {
 
-  // Override app if you need a Application with other than non-default parameters.
-  implicit override lazy val app: Application =
+  // Override fakeApplication or use GuiceOneServerPerSuite if you need a Application with other than non-default parameters.
+  def fakeApplication(): Application =
     new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(Router.from(TestRoute)).build()
 
   "The OneBrowserPerSuite trait" must {

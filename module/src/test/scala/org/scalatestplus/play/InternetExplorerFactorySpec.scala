@@ -24,7 +24,7 @@ import play.api.routing._
 
 class InternetExplorerFactorySpec extends UnitSpec with OneServerPerSuite with OneBrowserPerSuite with InternetExplorerFactory {
 
-  implicit override lazy val app: Application =
+  def fakeApplication(): Application =
     new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(Router.from(TestRoute)).build()
   def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
 

@@ -24,6 +24,6 @@ class ConfiguredServerSpec extends UnitSpec with SequentialNestedSuiteExecution 
 
   override def nestedSuites = Vector(new ConfiguredServerNestedSuite)
 
-  implicit override lazy val app: Application = new GuiceApplicationBuilder().configure(Map("foo" -> "bar", "ehcacheplugin" -> "disabled")).build()
+  def fakeApplication(): Application = new GuiceApplicationBuilder().configure(Map("foo" -> "bar", "ehcacheplugin" -> "disabled")).build()
   def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
 }

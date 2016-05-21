@@ -10,9 +10,9 @@ import play.api.inject.guice._
 // #scalafunctionaltest-oneapppersuite
 class ExampleSpec extends PlaySpec with OneAppPerSuite {
 
-  // Override app if you need a Application with other than
+  // Override fakeApplication if you need a Application with other than
   // default parameters.
-  implicit override lazy val app = new GuiceApplicationBuilder().configure(Map("ehcacheplugin" -> "disabled")).build()
+  def fakeApplication() = new GuiceApplicationBuilder().configure(Map("ehcacheplugin" -> "disabled")).build()
 
   "The OneAppPerSuite trait" must {
     "provide an Application" in {
