@@ -5,7 +5,7 @@ package scalaguide.tests.scalatest
 
 import akka.stream.Materializer
 import org.scalatestplus.play._
-import org.scalatestplus.play.guice.GuiceFakeApplicationFactory
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.libs.json.Json
 import play.api.mvc.Results._
 import play.api.mvc._
@@ -13,7 +13,7 @@ import play.api.test.Helpers._
 import play.api.test._
 
 // #scalatest-exampleessentialactionspec
-class ExampleEssentialActionSpec extends PlaySpec with OneAppPerSuite with GuiceFakeApplicationFactory {
+class ExampleEssentialActionSpec extends PlaySpec with GuiceOneAppPerSuite {
 
   implicit lazy val materializer: Materializer = app.materializer
 

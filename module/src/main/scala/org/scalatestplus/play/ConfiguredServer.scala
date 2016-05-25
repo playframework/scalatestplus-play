@@ -32,7 +32,7 @@ import play.api.{Play, Application}
  * with trait [[org.scalatestplus.play.WsScalaTestClient WsScalaTestClient]]).
  *
  * To prevent discovery of nested suites you can annotate them with `@DoNotDiscover`. Here's an example,
- * taken from `OneAppPerSuite`'s documentation:
+ * taken from `GuiceOneAppPerSuite`'s documentation:
  *
  * <pre class="stHighlight">
  * package org.scalatestplus.play.examples.oneserverpersuite
