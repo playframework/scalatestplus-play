@@ -17,12 +17,13 @@ package org.scalatestplus.play
 
 import play.api.test._
 import org.scalatest._
-import play.api.{Play, Application}
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
+import play.api.{Application, Play}
 import play.api.inject.guice._
 
-class OneServerPerSuiteSpec extends UnitSpec with OneServerPerSuite {
+class OneServerPerSuiteSpec extends UnitSpec with GuiceOneServerPerSuite {
 
-  def fakeApplication() = new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").build()
+  override def fakeApplication() = new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").build()
   def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
 
   // Doesn't need synchronization because set by withFixture and checked by the test

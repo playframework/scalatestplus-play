@@ -21,7 +21,7 @@ import play.api.Application
  * Trait that defines abstract methods that providing a port number and implicit `Application` and a concrete
  * method that provides an implicit [[org.scalatestplus.play.PortNumber PortNumber]] that wraps the port number.
  *
- * This trait is implemented by [[org.scalatestplus.play.OneServerPerSuite OneServerPerSuite]], 
+ * This trait is implemented by [[org.scalatestplus.play.BaseOneServerPerSuite OneServerPerSuite]],
  * [[org.scalatestplus.play.OneServerPerTest OneServerPerTest]], and
  * [[org.scalatestplus.play.ConfiguredServer ConfiguredServer]], each of which use a different strategy to
  * provide `TestServer`s to tests. This trait is included in the self-type of 

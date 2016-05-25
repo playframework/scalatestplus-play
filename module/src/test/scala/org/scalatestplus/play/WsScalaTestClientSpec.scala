@@ -15,14 +15,15 @@
  */
 package org.scalatestplus.play
 
-import org.scalatest.concurrent.{ScalaFutures, IntegrationPatience}
+import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.mvc.Call
 import play.api.inject.guice._
 import play.api.routing._
 
-class WsScalaTestClientSpec extends UnitSpec with OneServerPerSuite with ScalaFutures with IntegrationPatience {
+class WsScalaTestClientSpec extends UnitSpec with GuiceOneServerPerSuite with ScalaFutures with IntegrationPatience {
 
-  def fakeApplication() =
+  override def fakeApplication() =
     new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(Router.from(TestRoute)).build()
 
   "WsScalaTestClient's" must {

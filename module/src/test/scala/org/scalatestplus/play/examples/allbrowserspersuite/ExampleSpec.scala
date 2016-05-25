@@ -17,16 +17,17 @@ package org.scalatestplus.play.examples.allbrowserspersuite
 
 import play.api.test._
 import org.scalatestplus.play._
-import play.api.{Play, Application}
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
+import play.api.{Application, Play}
 import play.api.inject.guice._
 import play.api.routing._
 import play.api.cache.EhCacheModule
  
-class ExampleSpec extends PlaySpec with OneServerPerSuite with AllBrowsersPerSuite {
+class ExampleSpec extends PlaySpec with GuiceOneServerPerSuite with AllBrowsersPerSuite {
 
   // Override app if you need an Application with other than
   // default parameters.
-  def fakeApplication(): Application =
+  override def fakeApplication(): Application =
     new GuiceApplicationBuilder().disable[EhCacheModule].configure("foo" -> "bar").router(Router.from(TestRoute)).build()
 
   // Place tests you want run in different browsers in the `sharedTests` method:

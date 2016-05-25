@@ -18,7 +18,8 @@ package org.scalatestplus.play.examples.oneserverpersuite
 import play.api.test._
 import org.scalatest._
 import org.scalatestplus.play._
-import play.api.{Play, Application}
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
+import play.api.{Application, Play}
 import play.api.inject.guice._
 
  // This is the "master" suite
@@ -27,9 +28,9 @@ class NestedExampleSpec extends Suites(
   new TwoSpec,
   new RedSpec,
   new BlueSpec
-) with OneServerPerSuite {
+) with GuiceOneServerPerSuite {
   // Override app if you need an Application with other than non-default parameters.
-  def fakeApplication(): Application =
+  override def fakeApplication(): Application =
     new GuiceApplicationBuilder().configure(Map("ehcacheplugin" -> "disabled")).build()
 }
  

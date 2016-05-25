@@ -20,7 +20,7 @@ package org.scalatestplus.play
  *
  * An implicit `PortNumber` is made available by traits that provide a `play.api.test.TestServer`: [[org.scalatestplus.play.MixedFixtures MixedFixtures]],
  * [[org.scalatestplus.play.OneBrowserPerSuite OneBrowserPerSuite]],
- * [[org.scalatestplus.play.OneBrowserPerTest OneBrowserPerTest]],   [[org.scalatestplus.play.OneServerPerSuite OneServerPerSuite]], 
+ * [[org.scalatestplus.play.OneBrowserPerTest OneBrowserPerTest]],   [[org.scalatestplus.play.guice.GuiceOneServerPerSuite GuiceOneServerPerSuite]],
  * and [[org.scalatestplus.play.OneServerPerTest OneServerPerTest]].
  *
  * The implicit `PortNumber` is taken by the methods of [[org.scalatestplus.play.WsScalaTestClient WsScalaTestClient]].
