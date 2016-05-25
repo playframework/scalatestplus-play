@@ -1,10 +1,10 @@
 package org.scalatestplus.play.guice
 
 import org.scalatest.{Suite, TestData}
-import org.scalatestplus.play.OneServerPerTest
+import org.scalatestplus.play.BaseOneServerPerTest
 import play.api.Application
 
-trait GuiceOneServerPerTest extends OneServerPerTest with GuiceFakeApplicationFactory { this: Suite =>
+trait GuiceOneServerPerTest extends BaseOneServerPerTest with GuiceFakeApplicationFactory { this: Suite =>
 
   /**
    * Creates new instance of `Application` with parameters set to their defaults.

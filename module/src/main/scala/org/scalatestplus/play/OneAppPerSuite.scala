@@ -20,8 +20,6 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 
 /**
  * Synonym for GuiceOneAppPerSuite.
- *
- * @deprecated Use GuiceOneAppPerSuite or BaseOneAppPerSuite with a fake application
  */
 @Deprecated
 trait OneAppPerSuite extends GuiceOneAppPerSuite { this: Suite =>

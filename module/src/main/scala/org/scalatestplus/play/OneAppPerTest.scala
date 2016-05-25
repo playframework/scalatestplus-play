@@ -19,6 +19,9 @@ import play.api.test._
 import org.scalatest._
 import org.scalatestplus.play.guice.GuiceOneAppPerTest
 
+/**
+ * Synonym for GuiceOneAppPerTest
+ */
 @Deprecated
 trait OneAppPerTest extends GuiceOneAppPerTest { this: Suite =>
 
