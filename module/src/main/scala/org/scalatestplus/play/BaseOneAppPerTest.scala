@@ -1,8 +1,9 @@
-package org.scalatestplus.play.guice
+package org.scalatestplus.play
 
-import org.scalatest.{Suite, TestData}
-import org.scalatestplus.play.BaseOneAppPerTest
+import org.scalatest.{Suite, SuiteMixin, TestData}
 import play.api.Application
+import play.api.test.Helpers
+
 
 /**
  * Trait that provides a new `Application` instance for each test.
@@ -22,11 +23,10 @@ import play.api.Application
  *
  * import org.scalatest._
  * import org.scalatestplus.play._
- * import org.scalatestplus.play.guice.GuiceOneAppPerTest
  * import play.api.{Play, Application}
  * import play.api.inject.guice._
  *
- * class ExampleSpec extends PlaySpec with GuiceOneAppPerTest {
+ * class ExampleSpec extends PlaySpec with OneAppPerTest {
  *
  *   // Override newAppForTest if you need an Application with other than non-default parameters.
  *   implicit override def newAppForTest(testData: TestData): Application =
@@ -47,13 +47,34 @@ import play.api.Application
  * }
  * </pre>
  */
-trait GuiceOneAppPerTest extends BaseOneAppPerTest with GuiceFakeApplicationFactory { this: Suite =>
+trait BaseOneAppPerTest extends SuiteMixin with AppProvider { this: Suite =>
 
   /**
-   * Creates new instance of `Application` with parameters set to their defaults.
-   *
-   * Override this method if you need a `Application` created with non-default parameter values.
+   * Creates new instance of `Application` with parameters set to their defaults. Override this method if you
+   * need a `Application` created with non-default parameter values.
    */
-  def newAppForTest(testData: TestData): Application = fakeApplication()
+  def newAppForTest(testData: TestData): Application
 
+  private var appPerTest: Application = _
+
+  /**
+   * Implicit method that returns the `Application` instance for the current test.
+   */
+  implicit final def app: Application = synchronized { appPerTest }
+
+  /**
+   * Creates a new `Application` instance before executing each test, and
+   * ensure it is cleaned up after the test completes. You can access the `Application` from
+   * your tests via `app`.
+   *
+   * @param test the no-arg test function to run with a fixture
+   * @return the `Outcome` of the test execution
+   */
+  abstract override def withFixture(test: NoArgTest) = {
+    synchronized { appPerTest = newAppForTest(test) }
+    Helpers.running(app) {
+      super.withFixture(test)
+    }
+  }
 }
+

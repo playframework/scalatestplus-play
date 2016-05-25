@@ -17,10 +17,11 @@ package org.scalatestplus.play
 
 import play.api.test._
 import org.scalatest._
-import play.api.{Play, Application}
+import org.scalatestplus.play.guice.GuiceOneAppPerTest
+import play.api.{Application, Play}
 import play.api.inject.guice._
 
-class OneAppPerTestSpec extends UnitSpec with OneAppPerTest {
+class OneAppPerTestSpec extends UnitSpec with GuiceOneAppPerTest {
 
   override def newAppForTest(testData: TestData) = new GuiceApplicationBuilder().configure(Map("foo" -> "bar", "ehcacheplugin" -> "disabled")).build()
   def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
