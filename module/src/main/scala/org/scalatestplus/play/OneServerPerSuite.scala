@@ -143,7 +143,7 @@ import org.scalatest._
  * }
  * </pre>
  */
-trait OneServerPerSuite extends SuiteMixin with ServerProvider { this: Suite =>
+trait OneServerPerSuite extends TestSuiteMixin with ServerProvider { this: TestSuite =>
 
   /**
    * An implicit instance of `Application`.

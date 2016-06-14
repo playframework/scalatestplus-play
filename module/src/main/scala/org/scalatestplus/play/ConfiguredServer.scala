@@ -74,7 +74,7 @@ import play.api.{Play, Application}
  * }
  * </pre>
  */
-trait ConfiguredServer extends SuiteMixin with ServerProvider { this: Suite => 
+trait ConfiguredServer extends TestSuiteMixin with ServerProvider { this: TestSuite =>
 
   private var configuredApp: Application = _
 
