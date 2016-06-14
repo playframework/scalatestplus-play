@@ -27,7 +27,7 @@ class NestedExampleSpec extends Suites(
   new TwoSpec,
   new RedSpec,
   new BlueSpec
-) with OneServerPerSuite {
+) with TestSuite with OneServerPerSuite {
   // Override app if you need an Application with other than non-default parameters.
   implicit override lazy val app: Application =
     new GuiceApplicationBuilder().configure(Map("ehcacheplugin" -> "disabled")).build()

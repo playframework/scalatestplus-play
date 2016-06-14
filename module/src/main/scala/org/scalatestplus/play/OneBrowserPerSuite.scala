@@ -315,7 +315,7 @@ import scala.util.Try
  * [info] <span class="stGreen">The OneBrowserPerSuite trait</span>
  * </pre>
  */
-trait OneBrowserPerSuite extends SuiteMixin with WebBrowser with Eventually with IntegrationPatience with BrowserFactory { this: Suite with ServerProvider =>
+trait OneBrowserPerSuite extends TestSuiteMixin with WebBrowser with Eventually with IntegrationPatience with BrowserFactory { this: TestSuite with ServerProvider =>
 
   /**
    * An implicit instance of `WebDriver`, created by calling `createWebDriver`.  
