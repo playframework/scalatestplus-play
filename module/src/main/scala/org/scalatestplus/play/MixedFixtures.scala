@@ -258,7 +258,7 @@ import org.openqa.selenium.safari.SafariDriver
  * }
  * </pre>
  */
-trait MixedFixtures extends SuiteMixin with UnitFixture { this: fixture.Suite =>
+trait MixedFixtures extends TestSuiteMixin with UnitFixture { this: fixture.TestSuite =>
 
   /**
    * `NoArg` subclass that provides an `Application` fixture.

@@ -191,7 +191,7 @@ import org.openqa.selenium.chrome.ChromeDriver
  * [info] <span class="stGreen">The AllBrowsersPerSuite trait</span>
  * </pre>
  */
-trait AllBrowsersPerSuite extends SuiteMixin with WebBrowser with Eventually with IntegrationPatience { this: Suite with ServerProvider =>
+trait AllBrowsersPerSuite extends TestSuiteMixin with WebBrowser with Eventually with IntegrationPatience { this: TestSuite with ServerProvider =>
 
   /**
    * Method to provide `FirefoxProfile` for creating `FirefoxDriver`, you can override this method to

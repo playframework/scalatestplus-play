@@ -78,7 +78,7 @@ import org.scalatest._
  * }
  * </pre>
  */
-trait OneServerPerTest extends SuiteMixin with ServerProvider { this: Suite =>
+trait OneServerPerTest extends TestSuiteMixin with ServerProvider { this: TestSuite =>
 
   private var privateApp: Application = _
 

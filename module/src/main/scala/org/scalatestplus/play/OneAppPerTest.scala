@@ -62,7 +62,7 @@ import play.api.inject.guice._
  * }
  * </pre>
  */
-trait OneAppPerTest extends SuiteMixin { this: Suite => 
+trait OneAppPerTest extends TestSuiteMixin { this: TestSuite =>
 
   /**
    * Creates new instance of `Application` with parameters set to their defaults. Override this method if you

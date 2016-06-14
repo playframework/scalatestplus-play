@@ -22,8 +22,9 @@ import play.api.inject.guice._
 import play.api.routing._
 
 class ConfiguredServerWithAllBrowsersPerTestSpec extends Suites(
-  new ConfiguredServerWithAllBrowsersPerTestNestedSpec 
+  new ConfiguredServerWithAllBrowsersPerTestNestedSpec
 )
+with TestSuite
 with OneServerPerSuite {
   override lazy val app: Application =
     new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(Router.from(TestRoute)).build()
