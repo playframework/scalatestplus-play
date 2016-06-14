@@ -24,6 +24,7 @@ import org.openqa.selenium.WebDriver
 import BrowserFactory.UnavailableDriver
 import org.openqa.selenium.safari.SafariDriver
 import org.openqa.selenium.chrome.ChromeDriver
+import scala.util.Try
 
 /* TODO: Make ConfiguredBrowser require a ServerProvider also, I think. */
 
@@ -350,7 +351,7 @@ trait OneBrowserPerSuite extends SuiteMixin with WebBrowser with Eventually with
    * @return a `Status` object that indicates when all tests and nested suites started by this method have completed, and whether or not a failure occurred.
    */
   abstract override def run(testName: Option[String], args: Args): Status = {
-    val cleanup: Boolean => Unit = { _ =>
+    val cleanup: Try[Boolean] => Unit = { _ =>
       webDriver match {
         case _: UnavailableDriver => // do nothing for UnavailableDriver
         case safariDriver: SafariDriver => safariDriver.quit()
@@ -366,7 +367,7 @@ trait OneBrowserPerSuite extends SuiteMixin with WebBrowser with Eventually with
       status
     } catch {
       case ex: Throwable =>
-        cleanup(false)
+        cleanup(Try(false))
         throw ex
     }
   }
