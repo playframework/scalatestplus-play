@@ -77,7 +77,7 @@ import org.scalatest._
  * }
  * </pre>
  */
-trait BaseOneServerPerTest extends SuiteMixin with ServerProvider { this: Suite =>
+trait BaseOneServerPerTest extends SuiteMixin with ServerProvider { this: Suite with FakeApplicationFactory =>
 
   private var privateApp: Application = _
 
@@ -90,7 +90,7 @@ trait BaseOneServerPerTest extends SuiteMixin with ServerProvider { this: Suite 
    * Creates new instance of `Application` with parameters set to their defaults. Override this method if you
    * need an `Application` created with non-default parameter values.
    */
-  def newAppForTest(testData: TestData): Application
+  def newAppForTest(testData: TestData): Application = fakeApplication()
 
   /**
    * The port used by the `TestServer`.  By default this will be set to the result returned from

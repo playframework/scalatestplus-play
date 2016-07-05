@@ -117,9 +117,4 @@ import play.api.Application
  */
 trait GuiceOneAppPerSuite extends BaseOneAppPerSuite with GuiceFakeApplicationFactory { this: Suite =>
 
-  /**
-   * Defines an instance of application as a lazy val.
-   */
-  implicit lazy val app: Application = fakeApplication()
-
 }

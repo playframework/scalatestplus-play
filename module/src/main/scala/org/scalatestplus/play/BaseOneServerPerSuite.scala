@@ -141,12 +141,12 @@ import org.scalatest._
  * }
  * </pre>
  */
-trait BaseOneServerPerSuite extends SuiteMixin with ServerProvider with FakeApplicationFactory { this: Suite =>
+trait BaseOneServerPerSuite extends SuiteMixin with ServerProvider { this: Suite with FakeApplicationFactory  =>
 
   /**
    * An implicit instance of `Application`.
    */
-  implicit def app: Application
+  implicit lazy val app: Application = fakeApplication()
 
   /**
    * The port used by the `TestServer`.  By default this will be set to the result returned from

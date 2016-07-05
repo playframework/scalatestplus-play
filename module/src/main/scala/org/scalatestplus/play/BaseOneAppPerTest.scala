@@ -47,13 +47,13 @@ import play.api.test.Helpers
  * }
  * </pre>
  */
-trait BaseOneAppPerTest extends SuiteMixin with AppProvider { this: Suite =>
+trait BaseOneAppPerTest extends SuiteMixin with AppProvider { this: Suite with FakeApplicationFactory =>
 
   /**
    * Creates new instance of `Application` with parameters set to their defaults. Override this method if you
    * need a `Application` created with non-default parameter values.
    */
-  def newAppForTest(testData: TestData): Application
+  def newAppForTest(testData: TestData): Application = fakeApplication()
 
   private var appPerTest: Application = _
 

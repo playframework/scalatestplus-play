@@ -21,12 +21,12 @@ import play.api.{Application, Play}
 /**
  * The base abstract trait for one app per suite.
  */
-trait BaseOneAppPerSuite extends SuiteMixin { this: Suite =>
+trait BaseOneAppPerSuite extends SuiteMixin { this: Suite with FakeApplicationFactory =>
 
   /**
    * An implicit instance of `Application`.
    */
-  implicit def app: Application
+  implicit lazy val app: Application = fakeApplication()
 
   /**
    * Invokes `Play.start`, passing in the `Application` provided by `app`, and places
