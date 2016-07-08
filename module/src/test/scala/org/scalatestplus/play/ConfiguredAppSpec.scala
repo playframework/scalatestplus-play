@@ -18,11 +18,12 @@ package org.scalatestplus.play
 import play.api.test._
 import org.scalatest._
 import events._
-import play.api.{Play, Application}
-import scala.collection.mutable.ListBuffer
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.{Application, Play}
+
 import play.api.inject.guice._
 
-class ConfiguredAppSpec extends UnitSpec with SequentialNestedSuiteExecution with OneAppPerSuite {
+class ConfiguredAppSpec extends UnitSpec with SequentialNestedSuiteExecution with GuiceOneAppPerSuite {
 
   class NestedSuite extends UnitSpec with ConfiguredApp {
 
@@ -54,7 +55,7 @@ class ConfiguredAppSpec extends UnitSpec with SequentialNestedSuiteExecution wit
 
   override def nestedSuites = Vector(new NestedSuite)
 
-  implicit override lazy val app: Application =
+  override def fakeApplication(): Application =
     new GuiceApplicationBuilder().configure(Map("foo" -> "bar", "ehcacheplugin" -> "disabled")).build()
   def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
 }

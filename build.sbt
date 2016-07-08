@@ -56,12 +56,12 @@ lazy val docs = project
       "com.typesafe.play" %% "play-cache" % PlayVersion % Test,
       "org.mockito" % "mockito-core" % "1.9.5" % Test
     ),
-    
+
     parallelExecution in Test := false,
 
     PlayDocsKeys.scalaManualSourceDirectories := (baseDirectory.value / "manual" / "working" / "scalaGuide" ** "code").get,
     PlayDocsKeys.resources += {
-      val apiDocs = (doc in (`scalatestplus-play`, Compile)).value
+      val apiDocs = (doc in(`scalatestplus-play`, Compile)).value
       // Copy the docs to a place so they have the correct api/scala prefix
       val apiDocsStage = target.value / "api-docs-stage"
       val cacheFile = streams.value.cacheDirectory / "api-docs-stage"

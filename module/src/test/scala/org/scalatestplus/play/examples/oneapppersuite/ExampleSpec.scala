@@ -16,16 +16,17 @@
 package org.scalatestplus.play.examples.oneapppersuite
 
 import org.scalatestplus.play._
-import play.api.{Play, Application}
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.{Application, Play}
 import play.api.inject.guice._
 
-class ExampleSpec extends PlaySpec with OneAppPerSuite {
+class ExampleSpec extends PlaySpec with GuiceOneAppPerSuite {
 
   // Override app if you need an Application with other than non-default parameters.
-  implicit override lazy val app: Application =
+  override def fakeApplication(): Application =
     new GuiceApplicationBuilder().configure(Map("ehcacheplugin" -> "disabled")).build()
 
-  "The OneAppPerSuite trait" must {
+  "The GuiceOneAppPerSuite trait" must {
     "provide a FakeApplication" in {
       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
     }

@@ -22,15 +22,15 @@ import play.api.{Application, Play}
 /**
  * Trait that provides a configured `Application` to the suite into which it is mixed.
  *
- * The purpose of this trait is to allow nested suites of an enclosing suite that extends [[org.scalatestplus.play.OneAppPerSuite OneAppPerSuite]]
- * to make use of the `Application` provided by `OneAppPerSuite`. Trait `OneAppPerSuite` will ensure
+ * The purpose of this trait is to allow nested suites of an enclosing suite that extends [[org.scalatestplus.play.GuiceOneAppPerSuite GuiceOneAppPerSuite]]
+ * to make use of the `Application` provided by `GuiceOneAppPerSuite`. Trait `GuiceOneAppPerSuite` will ensure
  * the `Application` is placed in the `ConfigMap` under the key `org.scalatestplus.play.app` before
  * nested suites are invoked. This represents the "configured application" that is passed from the enclosing
  * suite to the nested suites. Trait `ConfiguredApp` extracts the `Application` from the `ConfigMap`
  * and makes it available via the `app` method it provides.
  *
  * To prevent discovery of nested suites you can annotate them with `@DoNotDiscover`. Here's an example,
- * taken from `OneAppPerSuite`'s documentation:
+ * taken from `GuiceOneAppPerSuite`'s documentation:
  *
  * <pre class="stHighlight">
  * package org.scalatestplus.play.examples.oneapppersuite
@@ -39,13 +39,13 @@ import play.api.{Application, Play}
  * import play.api.{Play, Application}
  * import play.api.inject.guice._
  *
- * class ExampleSpec extends PlaySpec with OneAppPerSuite {
+ * class ExampleSpec extends PlaySpec with GuiceOneAppPerSuite {
  *
  *   // Override app if you need an Application with other than non-default parameters.
- *   implicit override lazy val app: Application =
+ *   def fakeApplication(): Application =
  *     new GuiceApplicationBuilder().configure(Map("ehcacheplugin" -> "disabled")).build()
  *
- *   "The OneAppPerSuite trait" must {
+ *   "The GuiceOneAppPerSuite trait" must {
  *     "provide a FakeApplication" in {
  *       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
  *     }

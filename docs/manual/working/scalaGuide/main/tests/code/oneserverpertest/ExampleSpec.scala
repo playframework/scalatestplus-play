@@ -9,6 +9,7 @@ import play.api.test.Helpers.{GET => GET_REQUEST, _}
 import play.api.libs.ws._
 import play.api.mvc._
 import Results._
+import play.api.Application
 import play.api.inject.guice._
 import play.api.routing._
 import play.api.routing.sird._
@@ -17,12 +18,12 @@ import play.api.cache.EhCacheModule
 // #scalafunctionaltest-oneserverpertest
 class ExampleSpec extends PlaySpec with OneServerPerTest {
 
-  // Override newAppForTest if you need an Application with other than
-  // default parameters.
-  override def newAppForTest(testData: TestData) =
+  // Override newAppForTest or mixin GuiceFakeApplicationFactory and use fakeApplication() for an Application
+  override def newAppForTest(testData: TestData): Application = {
     new GuiceApplicationBuilder().disable[EhCacheModule].router(Router.from {
       case GET(p"/") => Action { Ok("ok") }
     }).build()
+  }
 
   "The OneServerPerTest trait" must {
     "test server logic" in {

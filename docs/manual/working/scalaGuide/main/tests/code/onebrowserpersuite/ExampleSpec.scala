@@ -4,6 +4,7 @@
 package scalaguide.tests.scalatest.onebrowserpersuite
 
 import org.scalatestplus.play._
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.mvc._
 import play.api.inject.guice._
 import play.api.routing._
@@ -11,11 +12,11 @@ import play.api.routing.sird._
 import play.api.cache.EhCacheModule
 
 // #scalafunctionaltest-onebrowserpersuite
-class ExampleSpec extends PlaySpec with OneServerPerSuite with OneBrowserPerSuite with HtmlUnitFactory {
+class ExampleSpec extends PlaySpec with GuiceOneServerPerSuite with OneBrowserPerSuite with HtmlUnitFactory {
 
   // Override app if you need a Application with other than
   // default parameters.
-  implicit override lazy val app =
+  override def fakeApplication() =
     new GuiceApplicationBuilder().disable[EhCacheModule].router(Router.from {
       case GET(p"/testing") =>
         Action(

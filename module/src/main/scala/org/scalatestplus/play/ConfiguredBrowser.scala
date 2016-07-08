@@ -36,7 +36,7 @@ import BrowserFactory.UninitializedDriver
  *
  * This trait's self-type, [[org.scalatestplus.play.ServerProvider ServerProvider]],  will ensure 
  * a `TestServer` and `Application` are available to each test. The self-type will require that you mix in either
- * [[org.scalatestplus.play.OneServerPerSuite OneServerPerSuite]], [[org.scalatestplus.play.OneServerPerTest OneServerPerTest]], 
+ * [[org.scalatestplus.play.guice.GuiceOneServerPerSuite GuiceOneServerPerSuite]], [[org.scalatestplus.play.OneServerPerTest OneServerPerTest]],
  * [[org.scalatestplus.play.ConfiguredServer ConfiguredServer]] before you mix in this trait. Your choice among these three
  * `ServerProvider`s will determine the extent to which one or more `TestServer`s are shared by multiple tests.
  *
@@ -56,8 +56,8 @@ import BrowserFactory.UninitializedDriver
  * @FirefoxBrowser
  * class ExampleSpec extends PlaySpec with OneServerPerSuite with OneBrowserPerSuite with FirefoxFactory {
  *
- *   // Override app if you need a Application with other than non-default parameters.
- *   implicit override lazy val app: Application = new GuiceApplicationBuilder()
+ *   // Override fakeApplication() if you need a Application with other than non-default parameters.
+ *   def fakeApplication(): Application = new GuiceApplicationBuilder()
  *       .configure("foo" -> "bar", "ehcacheplugin" -> "disabled")
  *       .router(Router.from(TestRoute))
  *       .build()

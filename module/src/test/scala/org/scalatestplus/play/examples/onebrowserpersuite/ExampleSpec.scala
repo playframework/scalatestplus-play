@@ -18,15 +18,16 @@ package org.scalatestplus.play.examples.onebrowserpersuite
 import play.api.test.Helpers
 import org.scalatest.tags.FirefoxBrowser
 import org.scalatestplus.play._
-import play.api.{Play, Application}
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
+import play.api.{Application, Play}
 import play.api.inject.guice._
 import play.api.routing._
 
 @FirefoxBrowser
-class ExampleSpec extends PlaySpec with OneServerPerSuite with OneBrowserPerSuite with FirefoxFactory {
+class ExampleSpec extends PlaySpec with GuiceOneServerPerSuite with OneBrowserPerSuite with FirefoxFactory {
 
-  // Override app if you need a Application with other than non-default parameters.
-  implicit override lazy val app: Application =
+  // Override fakeApplication or use GuiceOneServerPerSuite if you need a Application with other than non-default parameters.
+  override def fakeApplication(): Application =
     new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(Router.from(TestRoute)).build()
 
   "The OneBrowserPerSuite trait" must {

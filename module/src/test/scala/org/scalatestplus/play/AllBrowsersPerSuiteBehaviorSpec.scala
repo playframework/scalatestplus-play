@@ -22,12 +22,13 @@ import org.openqa.selenium.ie.InternetExplorerDriver
 import org.openqa.selenium.safari.SafariDriver
 import org.openqa.selenium.htmlunit.HtmlUnitDriver
 import org.openqa.selenium.WebDriver
+import org.scalatestplus.play.guice.GuiceOneServerPerTest
 
 class AllBrowsersPerSuiteBehaviorSpec extends WordSpec {
 
   object ChosenTest extends Tag("ChosenTest")
 
-  class TestSpec extends UnitSpec with OneServerPerTest with AllBrowsersPerSuite {
+  class TestSpec extends UnitSpec with GuiceOneServerPerTest with AllBrowsersPerSuite {
     def sharedTests(browser: BrowserInfo) = {
       "test 1 " + browser.name in {}
       "test 2 " + browser.name taggedAs(ChosenTest) in {}

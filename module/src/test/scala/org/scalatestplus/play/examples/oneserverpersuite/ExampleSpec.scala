@@ -17,13 +17,14 @@ package org.scalatestplus.play.examples.oneserverpersuite
 
 import play.api.test._
 import org.scalatestplus.play._
-import play.api.{Play, Application}
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
+import play.api.{Application, Play}
 import play.api.inject.guice._
 
-class ExampleSpec extends PlaySpec with OneServerPerSuite {
+class ExampleSpec extends PlaySpec with GuiceOneServerPerSuite {
 
-  // Override app if you need a Application with other than non-default parameters.
-  implicit override lazy val app: Application =
+  // Override fakeApplication() if you need a Application with other than non-default parameters.
+  implicit override def fakeApplication(): Application =
     new GuiceApplicationBuilder().configure("ehcacheplugin" -> "disabled").build()
 
   "The OneServerPerSuite trait" must {

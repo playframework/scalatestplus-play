@@ -16,12 +16,13 @@
 package org.scalatestplus.play
 
 import org.scalatest._
-import play.api.{Play, Application}
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.{Application, Play}
 import play.api.inject.guice._
 
-class OneAppPerSuiteSpec extends UnitSpec with OneAppPerSuite {
+class OneAppPerSuiteSpec extends UnitSpec with GuiceOneAppPerSuite {
 
-  implicit override lazy val app = new GuiceApplicationBuilder().configure(Map("foo" -> "bar", "ehcacheplugin" -> "disabled")).build()
+  override def fakeApplication() = new GuiceApplicationBuilder().configure(Map("foo" -> "bar", "ehcacheplugin" -> "disabled")).build()
   def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
 
   // Doesn't need synchronization because set by withFixture and checked by the test
@@ -33,7 +34,7 @@ class OneAppPerSuiteSpec extends UnitSpec with OneAppPerSuite {
     super.withFixture(test)
   }
 
-  "The OneAppPerSuite trait" must {
+  "The GuiceOneAppPerSuite trait" must {
     "provide an Application" in {
       app.configuration.getString("foo") mustBe Some("bar")
     }

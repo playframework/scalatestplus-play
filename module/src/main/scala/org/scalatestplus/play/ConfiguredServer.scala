@@ -22,7 +22,7 @@ import play.api.{Play, Application}
 /**
  * Trait that provides a configured `Application` and server port number to the suite into which it is mixed.
  *
- * The purpose of this trait is to allow nested suites of an enclosing suite that extends [[org.scalatestplus.play.OneServerPerSuite OneServerPerSuite]]
+ * The purpose of this trait is to allow nested suites of an enclosing suite that extends [[org.scalatestplus.play.guice.GuiceOneServerPerSuite GuiceOneServerPerSuite]]
  * to make use of the `Application` and port number provided by `OneServerPerSuite`. Trait `OneServerPerSuite` will ensure
  * the `Application` is placed in the `ConfigMap` under the key `org.scalatestplus.play.app` and the port number
  * under the key `org.scalatestplus.play.port` before nested suites are invoked. This information represents the "configured server" that
@@ -32,7 +32,7 @@ import play.api.{Play, Application}
  * with trait [[org.scalatestplus.play.WsScalaTestClient WsScalaTestClient]]).
  *
  * To prevent discovery of nested suites you can annotate them with `@DoNotDiscover`. Here's an example,
- * taken from `OneAppPerSuite`'s documentation:
+ * taken from `GuiceOneAppPerSuite`'s documentation:
  *
  * <pre class="stHighlight">
  * package org.scalatestplus.play.examples.oneserverpersuite
@@ -42,10 +42,10 @@ import play.api.{Play, Application}
  * import play.api.{Play, Application}
  * import play.api.inject.guice._
  *
- * class ExampleSpec extends PlaySpec with OneServerPerSuite {
+ * class ExampleSpec extends PlaySpec with GuiceOneServerPerSuite {
  *
- *   // Override app if you need a Application with other than non-default parameters.
- *   implicit override lazy val app: Application =
+ *   // Override fakeApplication() if you need a Application with other than non-default parameters.
+ *   def fakeApplication(): Application =
  *     new GuiceApplicationBuilder().configure("ehcacheplugin" -> "disabled").build()
  *
  *   "The OneServerPerSuite trait" must {

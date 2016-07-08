@@ -8,17 +8,19 @@ import play.api.test.Helpers.{GET => GET_REQUEST, _}
 import play.api.libs.ws._
 import play.api.mvc._
 import Results._
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
+import play.api.Application
 import play.api.inject.guice._
 import play.api.routing._
 import play.api.routing.sird._
 import play.api.cache.EhCacheModule
 
 // #scalafunctionaltest-oneserverpersuite
-class ExampleSpec extends PlaySpec with OneServerPerSuite {
+class ExampleSpec extends PlaySpec with GuiceOneServerPerSuite {
 
   // Override app if you need an Application with other than
   // default parameters.
-  implicit override lazy val app =
+  override def fakeApplication(): Application =
     new GuiceApplicationBuilder().disable[EhCacheModule].router(Router.from {
       case GET(p"/") => Action { Ok("ok") }
     }).build()

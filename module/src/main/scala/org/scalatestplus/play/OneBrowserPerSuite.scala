@@ -43,7 +43,7 @@ import org.openqa.selenium.chrome.ChromeDriver
  *
  * This trait's self-type, [[org.scalatestplus.play.ServerProvider ServerProvider]],  will ensure 
  * a `TestServer` and `Application` are available to each test. The self-type will require that you mix in either
- * [[org.scalatestplus.play.OneServerPerSuite OneServerPerSuite]], [[org.scalatestplus.play.OneServerPerTest OneServerPerTest]], 
+ * [[org.scalatestplus.play.guice.GuiceOneServerPerSuite GuiceOneServerPerSuite]], [[org.scalatestplus.play.OneServerPerTest OneServerPerTest]],
  * [[org.scalatestplus.play.ConfiguredServer ConfiguredServer]] before you mix in this trait. Your choice among these three
  * `ServerProvider`s will determine the extent to which one or more `TestServer`s are shared by multiple tests.
  *
@@ -64,8 +64,8 @@ import org.openqa.selenium.chrome.ChromeDriver
  * @FirefoxBrowser
  * class ExampleSpec extends PlaySpec with OneServerPerSuite with OneBrowserPerSuite with FirefoxFactory {
  *
- *   // Override app if you need a Application with other than non-default parameters.
- *   implicit override lazy val app: Application = new GuiceApplicationBuilder()
+ *   // Override fakeApplication() if you need a Application with other than non-default parameters.
+ *   def fakeApplication(): Application = new GuiceApplicationBuilder()
  *     .configure("foo" -> "bar", "ehcacheplugin" -> "disabled")
  *     .router(Router.from(TestRoute))
  *     .build()
@@ -122,12 +122,12 @@ import org.openqa.selenium.chrome.ChromeDriver
  *   new RedSpec,
  *   new BlueSpec
  * ) with OneServerPerSuite with OneBrowserPerSuite with FirefoxFactory {
- *   // Override app if you need a Application with other than non-default parameters.
- *   implicit override lazy val app: Application =
- *     FakeApplication(
+ *   // Override fakeApplication() if you need a Application with other than non-default parameters.
+ *   def fakeApplication(): Application =
+ *     new GuiceApplicationBuilder(
  *       additionalConfiguration = Map("ehcacheplugin" -&gt; "disabled"),
  *       withRoutes = TestRoute
- *     )
+ *     ).build()
  * }
  *  
  * // These are the nested suites
@@ -184,11 +184,11 @@ import org.openqa.selenium.chrome.ChromeDriver
  * abstract class MultiBrowserExampleSpec extends PlaySpec with OneServerPerSuite with OneBrowserPerSuite {
  * 
  *   // Override app if you need an Application with other than non-default parameters.
- *   implicit override lazy val app: Application =
- *     FakeApplication(
+ *   def fakeApplication(): Application =
+ *     new GuiceApplicationBuilder(
  *       additionalConfiguration = Map("ehcacheplugin" -> "disabled"),
  *       withRoutes = TestRoute
- *     )
+ *     ).build
  * 
  *   "The OneBrowserPerSuite trait" must {
  *     "provide an Application" in {

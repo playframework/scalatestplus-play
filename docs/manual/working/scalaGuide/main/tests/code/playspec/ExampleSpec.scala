@@ -7,17 +7,18 @@ import org.scalatestplus.play._
 import play.api.mvc._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.concurrent.IntegrationPatience
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.inject.guice._
 import play.api.routing._
 import play.api.routing.sird._
 import play.api.cache.EhCacheModule
 
 // #scalafunctionaltest-playspec
-class ExampleSpec extends PlaySpec with OneServerPerSuite with ScalaFutures with IntegrationPatience {
+class ExampleSpec extends PlaySpec with GuiceOneServerPerSuite with ScalaFutures with IntegrationPatience {
 
   // Override app if you need an Application with other than
   // default parameters.
-  implicit override lazy val app =
+  override def fakeApplication() =
     new GuiceApplicationBuilder().disable[EhCacheModule].router(Router.from {
       case GET(p"/testing") =>
         Action(

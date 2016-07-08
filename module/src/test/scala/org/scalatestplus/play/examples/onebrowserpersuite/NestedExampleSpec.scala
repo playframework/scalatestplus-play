@@ -18,7 +18,8 @@ package org.scalatestplus.play.examples.onebrowserpersuite
 import play.api.test._
 import org.scalatest._
 import org.scalatestplus.play._
-import play.api.{Play, Application}
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
+import play.api.{Application, Play}
 import play.api.inject.guice._
 import play.api.routing._
 
@@ -28,9 +29,9 @@ class NestedExampleSpec extends Suites(
   new TwoSpec,
   new RedSpec,
   new BlueSpec
-) with OneServerPerSuite with OneBrowserPerSuite with FirefoxFactory {
+) with GuiceOneServerPerSuite with OneBrowserPerSuite with FirefoxFactory {
   // Override app if you need an Application with other than non-default parameters.
-  implicit override lazy val app: Application =
+  override def fakeApplication(): Application =
     new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(Router.from(TestRoute)).build()
 }
  

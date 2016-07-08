@@ -17,13 +17,14 @@ package org.scalatestplus.play
 
 import play.api.test._
 import org.scalatest._
-import play.api.{Play, Application}
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
+import play.api.{Application, Play}
 import play.api.inject.guice._
 import play.api.routing._
 
-class OneServerPerSuiteWithOneBrowserPerTestSpec extends UnitSpec with OneServerPerSuite with OneBrowserPerTest with FirefoxFactory {
+class OneServerPerSuiteWithOneBrowserPerTestSpec extends UnitSpec with GuiceOneServerPerSuite with OneBrowserPerTest with FirefoxFactory {
 
-  implicit override lazy val app =
+  override def fakeApplication() =
     new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(Router.from(TestRoute)).build()
   def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
 

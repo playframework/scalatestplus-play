@@ -17,13 +17,14 @@ package org.scalatestplus.play
 
 import play.api.test._
 import org.scalatest._
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.Application
 import play.api.inject.guice._
 
-class ConfiguredServerSpec extends UnitSpec with SequentialNestedSuiteExecution with OneServerPerSuite {
+class ConfiguredServerSpec extends UnitSpec with SequentialNestedSuiteExecution with GuiceOneServerPerSuite {
 
   override def nestedSuites = Vector(new ConfiguredServerNestedSuite)
 
-  implicit override lazy val app: Application = new GuiceApplicationBuilder().configure(Map("foo" -> "bar", "ehcacheplugin" -> "disabled")).build()
+  override def fakeApplication(): Application = new GuiceApplicationBuilder().configure(Map("foo" -> "bar", "ehcacheplugin" -> "disabled")).build()
   def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
 }

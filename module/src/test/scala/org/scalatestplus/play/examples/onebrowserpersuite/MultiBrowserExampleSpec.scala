@@ -19,15 +19,16 @@ import play.api.test._
 import org.scalatest._
 import tags._
 import org.scalatestplus.play._
-import play.api.{Play, Application}
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
+import play.api.{Application, Play}
 import play.api.inject.guice._
 import play.api.routing._
 
 // Place your tests in an abstract class
-abstract class MultiBrowserExampleSpec extends PlaySpec with OneServerPerSuite with OneBrowserPerSuite {
+abstract class MultiBrowserExampleSpec extends PlaySpec with GuiceOneServerPerSuite with OneBrowserPerSuite {
 
   // Override app if you need an Application with other than non-default parameters.
-  implicit override lazy val app: Application =
+  override def fakeApplication(): Application =
     new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(Router.from(TestRoute)).build()
 
   "The OneBrowserPerSuite trait" must {
