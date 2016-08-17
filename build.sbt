@@ -32,7 +32,7 @@ lazy val `scalatestplus-play` = project
   .settings(
     organization := "org.scalatestplus.play",
     libraryDependencies ++= Seq(
-      "org.scalatest" %% "scalatest" % "3.0.0-RC2",
+      "org.scalatest" %% "scalatest" % "3.0.0",
       "com.typesafe.play" %% "play-test" % PlayVersion,
       "net.sourceforge.htmlunit" % "htmlunit" % "2.20", // adds support for jQuery 2.20; can be removed as soon as selenium-java has it in it's own dependencies
       "org.seleniumhq.selenium" % "selenium-java" % "2.48.2",
