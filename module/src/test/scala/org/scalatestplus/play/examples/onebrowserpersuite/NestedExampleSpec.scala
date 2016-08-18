@@ -29,7 +29,7 @@ class NestedExampleSpec extends Suites(
   new TwoSpec,
   new RedSpec,
   new BlueSpec
-) with GuiceOneServerPerSuite with OneBrowserPerSuite with FirefoxFactory {
+) with TestSuite with GuiceOneServerPerSuite with OneBrowserPerSuite with FirefoxFactory {
   // Override app if you need an Application with other than non-default parameters.
   override def fakeApplication(): Application =
     new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(Router.from(TestRoute)).build()
@@ -58,7 +58,6 @@ class BlueSpec extends PlaySpec with ConfiguredServer with ConfiguredBrowser {
       port mustBe Helpers.testServerPort
     }
     "provide an actual running server" in {
-      import Helpers._
       import java.net._
       val url = new URL("http://localhost:" + port + "/boum")
       val con = url.openConnection().asInstanceOf[HttpURLConnection]

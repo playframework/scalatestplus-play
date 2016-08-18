@@ -15,7 +15,6 @@
  */
 package org.scalatestplus.play.examples.oneapppersuite
 
-import play.api.test._
 import org.scalatest._
 import org.scalatestplus.play._
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
@@ -28,7 +27,7 @@ class NestedExampleSpec extends Suites(
   new TwoSpec,
   new RedSpec,
   new BlueSpec
-) with GuiceOneAppPerSuite {
+) with GuiceOneAppPerSuite with TestSuite {
    // Override fakeApplication if you need an Application with other than non-default parameters.
   override def fakeApplication(): Application =
     new GuiceApplicationBuilder().configure(Map("ehcacheplugin" -> "disabled")).build()

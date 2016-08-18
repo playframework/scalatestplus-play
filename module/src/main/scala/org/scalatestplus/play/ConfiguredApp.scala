@@ -15,14 +15,13 @@
  */
 package org.scalatestplus.play
 
-import play.api.test._
 import org.scalatest._
-import play.api.{Application, Play}
+import play.api.Application
 
 /**
  * Trait that provides a configured `Application` to the suite into which it is mixed.
  *
- * The purpose of this trait is to allow nested suites of an enclosing suite that extends [[org.scalatestplus.play.GuiceOneAppPerSuite GuiceOneAppPerSuite]]
+ * The purpose of this trait is to allow nested suites of an enclosing suite that extends [[org.scalatestplus.play.guice.GuiceOneAppPerSuite GuiceOneAppPerSuite]]
  * to make use of the `Application` provided by `GuiceOneAppPerSuite`. Trait `GuiceOneAppPerSuite` will ensure
  * the `Application` is placed in the `ConfigMap` under the key `org.scalatestplus.play.app` before
  * nested suites are invoked. This represents the "configured application" that is passed from the enclosing
@@ -60,7 +59,7 @@ import play.api.{Application, Play}
  * }
  * </pre>
  */
-trait ConfiguredApp extends SuiteMixin { this: Suite => 
+trait ConfiguredApp extends TestSuiteMixin { this: TestSuite =>
 
   private var configuredApp: Application = _
 

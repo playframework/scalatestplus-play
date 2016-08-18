@@ -15,11 +15,7 @@
  */
 package org.scalatestplus.play
 
-import play.api.Application
-import play.api.test._
 import org.scalatest._
-import org.scalatest.events._
-import org.scalatest.tags._
 import selenium.WebBrowser
 import concurrent.Eventually
 import concurrent.IntegrationPatience
@@ -191,7 +187,7 @@ import org.openqa.selenium.chrome.ChromeDriver
  * [info] <span class="stGreen">The AllBrowsersPerSuite trait</span>
  * </pre>
  */
-trait AllBrowsersPerSuite extends SuiteMixin with WebBrowser with Eventually with IntegrationPatience { this: Suite with ServerProvider =>
+trait AllBrowsersPerSuite extends TestSuiteMixin with WebBrowser with Eventually with IntegrationPatience { this: TestSuite with ServerProvider =>
 
   /**
    * Method to provide `FirefoxProfile` for creating `FirefoxDriver`, you can override this method to
@@ -212,8 +208,6 @@ trait AllBrowsersPerSuite extends SuiteMixin with WebBrowser with Eventually wit
       ChromeInfo,
       HtmlUnitInfo(true)
     )
-
-  private var privateApp: Application = _
 
   private var privateWebDriver: WebDriver = UninitializedDriver
 
@@ -275,7 +269,7 @@ trait AllBrowsersPerSuite extends SuiteMixin with WebBrowser with Eventually wit
         case None => (tn, Set.empty[String])
       }
     }
-    mergeMap(List(super.tags, generatedBrowserTags.filter(!_._2.isEmpty))) { case (s1, s2) =>
+    mergeMap(List(super.tags, generatedBrowserTags.filter(_._2.nonEmpty))) { case (s1, s2) =>
       s1 ++ s2  // just add the 2 sets together
     }
   }
@@ -290,18 +284,9 @@ trait AllBrowsersPerSuite extends SuiteMixin with WebBrowser with Eventually wit
   }
 
   /**
-   * Checks the result of the `webDriver` method before running each test, canceling the
-   * test if it is an `UnavailableDriver` (which means the driver was not available on the current platform).
-   * Otherwise, creates a new instance of `TestServer` for the test and ensures it is cleaned up
-   * after the test completes.
-   *
-   * @param test the no-arg test function to run with a fixture
-   * @return the `Outcome` of the test execution
-   */
-  /**
    * Inspects the current test name and if it ends with the name of one of the `BrowserInfo`s 
    * mentioned in the `browsers` `IndexedSeq`; if so, and a `WebDriver` of that type is already
-   * intalled and being returned by `webDriver`, does nothing so that the current test can reuse
+   * installed and being returned by `webDriver`, does nothing so that the current test can reuse
    * the same browser used by the previous test; otherwise, closes the currently installed `WebDriver`,
    * if necessary, and creates a new web driver by invoking `createWebDriver` on
    * that `BrowserInfo` and, unless it is an `UnavailableDriver`, installs it so it will be returned by
@@ -330,7 +315,7 @@ trait AllBrowsersPerSuite extends SuiteMixin with WebBrowser with Eventually wit
       browsers.find(b => test.name.endsWith(b.name)) match {
         case Some(b) =>
           (
-            if (currentWebDriverName == Some(b.name))
+            if (currentWebDriverName.contains(b.name))
               webDriver // Reuse the current WebDriver
             else {
               closeWebDriverIfNecessary()

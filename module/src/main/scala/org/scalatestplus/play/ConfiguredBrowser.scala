@@ -15,9 +15,7 @@
  */
 package org.scalatestplus.play
 
-import play.api.test._
 import org.scalatest._
-import play.api.Play
 import selenium.WebBrowser
 import org.openqa.selenium.WebDriver
 import concurrent.Eventually
@@ -93,7 +91,7 @@ import BrowserFactory.UninitializedDriver
  * }
  * </pre>
  */
-trait ConfiguredBrowser extends SuiteMixin with WebBrowser with Eventually with IntegrationPatience { this: Suite with ServerProvider => 
+trait ConfiguredBrowser extends TestSuiteMixin with WebBrowser with Eventually with IntegrationPatience { this: TestSuite with ServerProvider =>
 
   private var configuredWebDriver: WebDriver = UninitializedDriver
 

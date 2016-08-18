@@ -18,6 +18,8 @@ resolvers ++= DefaultOptions.resolvers(snapshot = true)
 
 val PlayVersion = playVersion("2.5.0")
 
+val ScalatestVersion = "3.0.0"
+
 lazy val `scalatestplus-play-root` = project
   .in(file("."))
   .enablePlugins(PlayRootProject)
@@ -32,7 +34,7 @@ lazy val `scalatestplus-play` = project
   .settings(
     organization := "org.scalatestplus.play",
     libraryDependencies ++= Seq(
-      "org.scalatest" %% "scalatest" % "2.2.6",
+      "org.scalatest" %% "scalatest" % ScalatestVersion,
       "com.typesafe.play" %% "play-test" % PlayVersion,
       "net.sourceforge.htmlunit" % "htmlunit" % "2.20", // adds support for jQuery 2.20; can be removed as soon as selenium-java has it in it's own dependencies
       "org.seleniumhq.selenium" % "selenium-java" % "2.48.2",

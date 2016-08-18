@@ -15,8 +15,6 @@
  */
 package org.scalatestplus.play
 
-import play.api.Application
-import play.api.test._
 import org.scalatest._
 import org.scalatestplus.play.guice.GuiceOneServerPerTest
 
@@ -24,7 +22,7 @@ import org.scalatestplus.play.guice.GuiceOneServerPerTest
  * Synonym for GuiceOneServerPerTest
  */
 @Deprecated
-trait OneServerPerTest extends GuiceOneServerPerTest { this: Suite =>
+trait OneServerPerTest extends GuiceOneServerPerTest { this: TestSuite =>
 
 }
 

@@ -22,7 +22,7 @@ import org.scalatest._
 /**
  * Trait that provides a new `Application` and running `TestServer` instance for each test executed in a ScalaTest `Suite`.
  *
- * This `SuiteMixin` trait overrides ScalaTest's `withFixture` method to create a new `Application` and `TestServer`
+ * This `TestSuiteMixin` trait overrides ScalaTest's `withFixture` method to create a new `Application` and `TestServer`
  * before each test, and ensure they are cleaned up after the test has completed. The `Application` is available (implicitly) from
  * method `app`. The `TestServer`'s port number is available as `port` (and implicitly available as `portNumber`, wrapped
  * in a [[org.scalatestplus.play.PortNumber PortNumber]]).
@@ -77,7 +77,7 @@ import org.scalatest._
  * }
  * </pre>
  */
-trait BaseOneServerPerTest extends SuiteMixin with ServerProvider { this: Suite with FakeApplicationFactory =>
+trait BaseOneServerPerTest extends TestSuiteMixin with ServerProvider { this: TestSuite with FakeApplicationFactory =>
 
   private var privateApp: Application = _
 
