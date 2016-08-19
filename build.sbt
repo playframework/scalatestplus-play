@@ -16,17 +16,22 @@
 
 resolvers ++= DefaultOptions.resolvers(snapshot = true)
 
-val PlayVersion = playVersion("2.5.0")
+val PlayVersion = playVersion("2.5.4")
 
 val ScalatestVersion = "3.0.0"
+
+lazy val commonSettings = Seq(
+  scalaVersion := "2.11.8",
+  parallelExecution in Test := false
+)
 
 lazy val `scalatestplus-play-root` = project
   .in(file("."))
   .enablePlugins(PlayRootProject)
   .aggregate(`scalatestplus-play`)
-  .settings(
-    sonatypeProfileName := "org.scalatestplus.play"
-  )
+  .settings(sonatypeProfileName := "org.scalatestplus.play")
+  .settings(commonSettings: _*)
+
 
 lazy val `scalatestplus-play` = project
   .in(file("module"))
@@ -35,19 +40,18 @@ lazy val `scalatestplus-play` = project
     organization := "org.scalatestplus.play",
     libraryDependencies ++= Seq(
       "org.scalatest" %% "scalatest" % ScalatestVersion,
+      "org.seleniumhq.selenium" % "selenium-java" % "2.53.1",
       "com.typesafe.play" %% "play-test" % PlayVersion,
-      "net.sourceforge.htmlunit" % "htmlunit" % "2.20", // adds support for jQuery 2.20; can be removed as soon as selenium-java has it in it's own dependencies
-      "org.seleniumhq.selenium" % "selenium-java" % "2.48.2",
       "com.typesafe.play" %% "play-ws" % PlayVersion,
       "com.typesafe.play" %% "play-cache" % PlayVersion % Test
     ),
-    parallelExecution in Test := false,
     testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oTK"),
 
     scalacOptions in (Compile, doc) := Seq("-doc-title", "ScalaTest + Play, " + releaseVersion),
     
     pomExtra := PomExtra
   )
+  .settings(commonSettings: _*)
 
 lazy val docs = project
   .in(file("docs"))
@@ -58,8 +62,6 @@ lazy val docs = project
       "com.typesafe.play" %% "play-cache" % PlayVersion % Test,
       "org.mockito" % "mockito-core" % "1.9.5" % Test
     ),
-
-    parallelExecution in Test := false,
 
     PlayDocsKeys.scalaManualSourceDirectories := (baseDirectory.value / "manual" / "working" / "scalaGuide" ** "code").get,
     PlayDocsKeys.resources += {
@@ -75,6 +77,7 @@ lazy val docs = project
     },
     SettingKey[Seq[File]]("migrationManualSources") := Nil
   )
+  .settings(commonSettings: _*)
   .dependsOn(`scalatestplus-play`)
   
 playBuildRepoName in ThisBuild := "scalatestplus-play"
