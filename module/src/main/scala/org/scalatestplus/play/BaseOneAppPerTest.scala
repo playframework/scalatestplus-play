@@ -1,6 +1,6 @@
 package org.scalatestplus.play
 
-import org.scalatest.{Suite, SuiteMixin, TestData}
+import org.scalatest.{TestSuite, TestSuiteMixin, TestData}
 import play.api.Application
 import play.api.test.Helpers
 
@@ -8,7 +8,7 @@ import play.api.test.Helpers
 /**
  * Trait that provides a new `Application` instance for each test.
  *
- * This `SuiteMixin` trait's overridden `withFixture` method creates a new `Application`
+ * This `TestSuiteMixin` trait's overridden `withFixture` method creates a new `Application`
  * before each test and ensures it is cleaned up after the test has completed. You can
  * access the `Application` from your tests as method `app` (which is marked implicit).
  *
@@ -47,7 +47,7 @@ import play.api.test.Helpers
  * }
  * </pre>
  */
-trait BaseOneAppPerTest extends SuiteMixin with AppProvider { this: Suite with FakeApplicationFactory =>
+trait BaseOneAppPerTest extends TestSuiteMixin with AppProvider { this: TestSuite with FakeApplicationFactory =>
 
   /**
    * Creates new instance of `Application` with parameters set to their defaults. Override this method if you

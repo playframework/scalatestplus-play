@@ -28,7 +28,7 @@ import org.scalatest._
  * `Application` with non-default parameters, override `app`. If it needs a different port number,
  * override `port`.
  *
- * This `SuiteMixin` trait's overridden `run` method calls `start` on the `TestServer`
+ * This `TestSuiteMixin` trait's overridden `run` method calls `start` on the `TestServer`
  * before executing the `Suite` via a call to `super.run`.
  * In addition, it places a reference to the `Application` provided by `app` into the `ConfigMap`
  * under the key `org.scalatestplus.play.app` and to the port number provided by `port` under the key
@@ -141,7 +141,7 @@ import org.scalatest._
  * }
  * </pre>
  */
-trait BaseOneServerPerSuite extends SuiteMixin with ServerProvider { this: Suite with FakeApplicationFactory  =>
+trait BaseOneServerPerSuite extends TestSuiteMixin with ServerProvider { this: TestSuite with FakeApplicationFactory  =>
 
   /**
    * An implicit instance of `Application`.
@@ -158,8 +158,7 @@ trait BaseOneServerPerSuite extends SuiteMixin with ServerProvider { this: Suite
    * Invokes `start` on a new `TestServer` created with the `Application` provided by `app` and the
    * port number defined by `port`, places the `Application` and port number into the `ConfigMap` under the keys
    * `org.scalatestplus.play.app` and `org.scalatestplus.play.port`, respectively, to make
- *
-   * them available to nested suites; calls `super.run`; and lastly ensures the `Application and test server are stopped after
+   * them available to nested suites; calls `super.run`; and lastly ensures the `Application` and test server are stopped after
    * all tests and nested suites have completed.
    *
    * @param testName an optional name of one test to run. If `None`, all relevant tests should be run.

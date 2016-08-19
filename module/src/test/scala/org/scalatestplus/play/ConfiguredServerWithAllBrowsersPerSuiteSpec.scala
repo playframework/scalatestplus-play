@@ -26,7 +26,7 @@ import play.api.routing._
 class ConfiguredServerWithAllBrowsersPerSuiteSpec extends Suites(
   new ConfiguredServerWithAllBrowsersPerSuiteNestedSpec 
 )
-with GuiceOneServerPerSuite {
+with GuiceOneServerPerSuite with TestSuite {
   override def fakeApplication(): Application =
     new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(Router.from(TestRoute)).build()
 }
@@ -36,7 +36,7 @@ class ConfiguredServerWithAllBrowsersPerSuiteNestedSpec extends UnitSpec with Co
 
   def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
 
-  var theWebDriver: WebDriver = null
+  var theWebDriver: WebDriver = _
 
   def sharedTests(browser: BrowserInfo) = {
 

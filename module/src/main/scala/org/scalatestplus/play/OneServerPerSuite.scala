@@ -15,14 +15,13 @@
  */
 package org.scalatestplus.play
 
-import org.scalatest.Suite
+import org.scalatest.TestSuite
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 
 /**
  * Synonym for GuiceOneServerPerSuite.
  */
 @Deprecated
-trait OneServerPerSuite extends GuiceOneServerPerSuite { this: Suite =>
-
+trait OneServerPerSuite extends GuiceOneServerPerSuite { this: TestSuite =>
 
 }

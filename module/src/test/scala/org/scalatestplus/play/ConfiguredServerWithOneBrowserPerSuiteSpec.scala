@@ -25,7 +25,7 @@ import play.api.routing._
 
 class ConfiguredServerWithOneBrowserPerSuiteSpec extends Suites(
   new ConfiguredServerWithOneBrowserPerSuiteNestedSpec 
-) with GuiceOneServerPerSuite {
+) with GuiceOneServerPerSuite with TestSuite {
   override def fakeApplication(): Application =
     new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(Router.from(TestRoute)).build()
 }
@@ -57,7 +57,6 @@ class ConfiguredServerWithOneBrowserPerSuiteNestedSpec extends UnitSpec with Con
     "provide the port" in {
       port mustBe Helpers.testServerPort
     }
-    import Helpers._
     "send 404 on a bad request" in {
       import java.net._
       val url = new URL("http://localhost:" + port + "/boum")

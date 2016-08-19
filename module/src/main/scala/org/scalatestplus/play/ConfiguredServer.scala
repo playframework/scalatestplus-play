@@ -15,9 +15,8 @@
  */
 package org.scalatestplus.play
 
-import play.api.test._
 import org.scalatest._
-import play.api.{Play, Application}
+import play.api.Application
 
 /**
  * Trait that provides a configured `Application` and server port number to the suite into which it is mixed.
@@ -74,7 +73,7 @@ import play.api.{Play, Application}
  * }
  * </pre>
  */
-trait ConfiguredServer extends SuiteMixin with ServerProvider { this: Suite => 
+trait ConfiguredServer extends TestSuiteMixin with ServerProvider { this: TestSuite =>
 
   private var configuredApp: Application = _
 

@@ -1,9 +1,8 @@
 package org.scalatestplus.play.guice
 
-import org.scalatest.Suite
+import org.scalatest.TestSuite
 import org.scalatestplus.play.BaseOneServerPerSuite
-import play.api.Application
 
-trait GuiceOneServerPerSuite extends BaseOneServerPerSuite with GuiceFakeApplicationFactory { this: Suite =>
+trait GuiceOneServerPerSuite extends BaseOneServerPerSuite with GuiceFakeApplicationFactory { this: TestSuite =>
 
 }

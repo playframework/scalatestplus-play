@@ -15,13 +15,13 @@
  */
 package org.scalatestplus.play
 
-import org.scalatest.{Args, Status, Suite, SuiteMixin}
+import org.scalatest.{Args, Status, TestSuite, TestSuiteMixin}
 import play.api.{Application, Play}
 
 /**
  * The base abstract trait for one app per suite.
  */
-trait BaseOneAppPerSuite extends SuiteMixin { this: Suite with FakeApplicationFactory =>
+trait BaseOneAppPerSuite extends TestSuiteMixin { this: TestSuite with FakeApplicationFactory =>
 
   /**
    * An implicit instance of `Application`.

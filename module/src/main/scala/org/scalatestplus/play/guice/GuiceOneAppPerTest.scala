@@ -1,13 +1,12 @@
 package org.scalatestplus.play.guice
 
-import org.scalatest.{Suite, TestData}
+import org.scalatest.TestSuite
 import org.scalatestplus.play.BaseOneAppPerTest
-import play.api.Application
 
 /**
  * Trait that provides a new `Application` instance for each test.
  *
- * This `SuiteMixin` trait's overridden `withFixture` method creates a new `Application`
+ * This `TestSuiteMixin` trait's overridden `withFixture` method creates a new `Application`
  * before each test and ensures it is cleaned up after the test has completed. You can
  * access the `Application` from your tests as method `app` (which is marked implicit).
  *
@@ -47,6 +46,6 @@ import play.api.Application
  * }
  * </pre>
  */
-trait GuiceOneAppPerTest extends BaseOneAppPerTest with GuiceFakeApplicationFactory { this: Suite =>
+trait GuiceOneAppPerTest extends BaseOneAppPerTest with GuiceFakeApplicationFactory { this: TestSuite =>
 
 }

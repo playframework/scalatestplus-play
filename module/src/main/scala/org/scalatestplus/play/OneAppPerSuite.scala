@@ -22,7 +22,7 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
  * Synonym for GuiceOneAppPerSuite.
  */
 @Deprecated
-trait OneAppPerSuite extends GuiceOneAppPerSuite { this: Suite =>
+trait OneAppPerSuite extends GuiceOneAppPerSuite { this: TestSuite =>
 
 }
 

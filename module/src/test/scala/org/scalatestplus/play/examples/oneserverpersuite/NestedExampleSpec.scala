@@ -28,7 +28,7 @@ class NestedExampleSpec extends Suites(
   new TwoSpec,
   new RedSpec,
   new BlueSpec
-) with GuiceOneServerPerSuite {
+) with GuiceOneServerPerSuite with TestSuite {
   // Override app if you need an Application with other than non-default parameters.
   override def fakeApplication(): Application =
     new GuiceApplicationBuilder().configure(Map("ehcacheplugin" -> "disabled")).build()
@@ -57,7 +57,6 @@ class BlueSpec extends PlaySpec with ConfiguredServer {
       port mustBe Helpers.testServerPort
     }
     "provide an actual running server" in {
-      import Helpers._
       import java.net._
       val url = new URL("http://localhost:" + port + "/boum")
       val con = url.openConnection().asInstanceOf[HttpURLConnection]

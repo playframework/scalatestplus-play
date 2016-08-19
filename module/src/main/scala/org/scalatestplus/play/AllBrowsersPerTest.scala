@@ -15,11 +15,7 @@
  */
 package org.scalatestplus.play
 
-import play.api.Application
-import play.api.test._
 import org.scalatest._
-import org.scalatest.events._
-import org.scalatest.tags._
 import selenium.WebBrowser
 import concurrent.Eventually
 import concurrent.IntegrationPatience
@@ -192,7 +188,7 @@ import org.openqa.selenium.chrome.ChromeDriver
  * [info] <span class="stGreen">The AllBrowsersPerTest trait</span>
  * </pre>
  */
-trait AllBrowsersPerTest extends SuiteMixin with WebBrowser with Eventually with IntegrationPatience { this: Suite with ServerProvider =>
+trait AllBrowsersPerTest extends TestSuiteMixin with WebBrowser with Eventually with IntegrationPatience { this: TestSuite with ServerProvider =>
 
   /**
    * Method to provide `FirefoxProfile` for creating `FirefoxDriver`, you can override this method to
@@ -213,8 +209,6 @@ trait AllBrowsersPerTest extends SuiteMixin with WebBrowser with Eventually with
       ChromeInfo,
       HtmlUnitInfo(true)
     )
-
-  private var privateApp: Application = _
 
   private var privateWebDriver: WebDriver = UninitializedDriver
 
@@ -274,7 +268,7 @@ trait AllBrowsersPerTest extends SuiteMixin with WebBrowser with Eventually with
         case None => (tn, Set.empty[String])
       }
     }
-    mergeMap(List(super.tags, generatedBrowserTags.filter(!_._2.isEmpty))) { case (s1, s2) =>
+    mergeMap(List(super.tags, generatedBrowserTags.filter(_._2.nonEmpty))) { case (s1, s2) =>
       s1 ++ s2  // just add the 2 sets together
     }
   }
