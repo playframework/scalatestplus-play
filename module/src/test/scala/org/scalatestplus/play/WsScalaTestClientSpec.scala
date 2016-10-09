@@ -19,6 +19,7 @@ import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.mvc.Call
 import play.api.inject.guice._
+import play.api.libs.ws.WSClient
 import play.api.routing._
 
 class WsScalaTestClientSpec extends UnitSpec with GuiceOneServerPerSuite with ScalaFutures with IntegrationPatience {
@@ -29,6 +30,7 @@ class WsScalaTestClientSpec extends UnitSpec with GuiceOneServerPerSuite with Sc
   "WsScalaTestClient's" must {
 
     "wsUrl works correctly" in {
+      implicit val ws: WSClient = app.injector.instanceOf(classOf[WSClient])
       val futureResult = wsUrl("/testing").get
       val body = futureResult.futureValue.body
       val expectedBody =
@@ -42,6 +44,8 @@ class WsScalaTestClientSpec extends UnitSpec with GuiceOneServerPerSuite with Sc
     }
 
     "wsCall works correctly" in {
+      implicit val ws: WSClient = app.injector.instanceOf(classOf[WSClient])
+
       val futureResult = wsCall(Call("get", "/testing")).get
       val body = futureResult.futureValue.body
       val expectedBody =
