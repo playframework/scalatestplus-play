@@ -16,7 +16,7 @@
 package org.scalatestplus.play
 
 import org.scalatest._
-import play.api.Application
+import play.api.{Application, DefaultApplication}
 
 /**
  * Trait that provides a configured `Application` and server port number to the suite into which it is mixed.
@@ -112,7 +112,7 @@ trait ConfiguredServer extends TestSuiteMixin with ServerProvider { this: TestSu
    * @throws IllegalArgumentException if the `Application` and/or port number does not appear in `args.configMap` under the expected keys
    */
   abstract override def run(testName: Option[String], args: Args): Status = {
-    args.configMap.getOptional[Application]("org.scalatestplus.play.app") match {
+    args.configMap.getOptional[DefaultApplication]("org.scalatestplus.play.app") match {
       case Some(ca) => synchronized { configuredApp = ca }
       case None => throw new Exception("Trait ConfiguredServer needs an Application value associated with key \"org.scalatestplus.play.app\" in the config map. Did you forget to annotate a nested suite with @DoNotDiscover?")
     }
