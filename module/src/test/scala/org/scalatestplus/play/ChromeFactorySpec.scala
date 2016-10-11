@@ -53,7 +53,7 @@ class ChromeFactorySpec extends UnitSpec with GuiceOneServerPerSuite with OneBro
     "provide the port" in {
       port mustBe Helpers.testServerPort
     }
-    import Helpers._
+
     "send 404 on a bad request" in {
       import java.net._
       val url = new URL("http://localhost:" + port + "/boum")
