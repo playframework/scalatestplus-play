@@ -22,7 +22,8 @@ val ScalatestVersion = "3.0.0"
 
 lazy val commonSettings = Seq(
   scalaVersion := "2.11.8",
-  parallelExecution in Test := false
+  parallelExecution in Test := false,
+  testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oTK")
 )
 
 lazy val `scalatestplus-play-root` = project
@@ -45,10 +46,8 @@ lazy val `scalatestplus-play` = project
       "com.typesafe.play" %% "play-ws" % PlayVersion,
       "com.typesafe.play" %% "play-cache" % PlayVersion % Test
     ),
-    testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oTK"),
-
     scalacOptions in (Compile, doc) := Seq("-doc-title", "ScalaTest + Play, " + releaseVersion),
-    
+
     pomExtra := PomExtra
   )
   .settings(commonSettings: _*)
@@ -57,7 +56,6 @@ lazy val docs = project
   .in(file("docs"))
   .enablePlugins(PlayDocsPlugin, PlayNoPublish)
   .settings(
-    scalaVersion := "2.11.7",
     libraryDependencies ++= Seq(
       "com.typesafe.play" %% "play-cache" % PlayVersion % Test,
       "org.mockito" % "mockito-core" % "1.9.5" % Test
@@ -79,7 +77,7 @@ lazy val docs = project
   )
   .settings(commonSettings: _*)
   .dependsOn(`scalatestplus-play`)
-  
+
 playBuildRepoName in ThisBuild := "scalatestplus-play"
 
 lazy val PomExtra = {
