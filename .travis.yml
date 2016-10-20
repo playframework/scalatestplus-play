@@ -7,7 +7,7 @@ before_script:
   - "sh -e /etc/init.d/xvfb start"
   - sleep 3 # give xvfb some time to start
 script:
-  - sbt test docs/test docs/validateDocs 
+  - sbt test docs/test docs/validateDocs
 cache:
   directories:
     - $HOME/.ivy2/cache
@@ -24,3 +24,7 @@ notifications:
       - https://webhooks.gitter.im/e/d2c8a242a2615f659595
     on_success: always
     on_failure: always
+addons:
+  sauce_connect:
+    username: will_sargent
+    access_key: d809febf-5037-4857-aefb-ac652b4c5315
