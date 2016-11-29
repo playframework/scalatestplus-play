@@ -16,9 +16,9 @@
 
 resolvers ++= DefaultOptions.resolvers(snapshot = true)
 
-val PlayVersion = playVersion("2.5.4")
+val PlayVersion = playVersion("2.5.10")
 
-val ScalatestVersion = "3.0.0"
+val ScalatestVersion = "3.0.1"
 
 lazy val commonSettings = Seq(
   scalaVersion := "2.11.8",
