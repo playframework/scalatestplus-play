@@ -2,12 +2,16 @@ language: scala
 sudo: false
 jdk:
   - oraclejdk8
+env:
+  # Define scripts here so they run concurrently
+  - SCRIPT=runTests
+  - SCRIPT=testDocumentation
 before_script:
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
   - sleep 3 # give xvfb some time to start
 script:
-  - sbt test docs/test docs/validateDocs
+  - scripts/$SCRIPT "set concurrentRestrictions in Global += Tags.limitAll(1)"
 cache:
   directories:
     - $HOME/.ivy2/cache
