@@ -307,9 +307,7 @@ trait AllBrowsersPerTest extends TestSuiteMixin with WebBrowser with Eventually 
         finally {
           localWebDriver match {
             case _: GrumpyDriver => // do nothing
-            case safariDriver: SafariDriver => safariDriver.quit()
-            case chromeDriver: ChromeDriver => chromeDriver.quit()
-            case otherDriver => otherDriver.close()
+            case otherDriver => otherDriver.quit()
           }
         }
     }

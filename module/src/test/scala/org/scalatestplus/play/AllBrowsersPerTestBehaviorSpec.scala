@@ -38,14 +38,14 @@ class AllBrowsersPerTestBehaviorSpec extends WordSpec {
   "The AllBrowsersPerTest trait" must {
 
     val chrome = try { val d = new ChromeDriver(); d.quit(); 1 } catch { case ex: Throwable => 0 }
-    val firefox = try { val d = new FirefoxDriver(new FirefoxProfile); d.close(); 1 } catch { case ex: Throwable => 0 }
-    val internetExplorer =  try { val d = new InternetExplorerDriver; d.close(); 1 } catch { case ex: Throwable => 0 }
+    val firefox = try { val d = new FirefoxDriver(new FirefoxProfile); d.quit(); 1 } catch { case ex: Throwable => 0 }
+    val internetExplorer =  try { val d = new InternetExplorerDriver; d.quit(); 1 } catch { case ex: Throwable => 0 }
     val safari = try { val d = new SafariDriver; d.quit(); 1 } catch { case ex: Throwable => 0 }
     val htmlUnit =
       try {
         val d = new HtmlUnitDriver()
         d.setJavascriptEnabled(true)
-        d.close()
+        d.quit()
         1
       }
       catch {
