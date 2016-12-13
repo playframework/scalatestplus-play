@@ -19,6 +19,8 @@ resolvers ++= DefaultOptions.resolvers(snapshot = true)
 val PlayVersion = playVersion("2.5.10")
 
 val ScalatestVersion = "3.0.1"
+val SeleniumVersion = "3.0.1"
+val HtmlUnitVersion = "2.23.2"
 
 lazy val commonSettings = Seq(
   scalaVersion := "2.11.8",
@@ -41,7 +43,8 @@ lazy val `scalatestplus-play` = project
     organization := "org.scalatestplus.play",
     libraryDependencies ++= Seq(
       "org.scalatest" %% "scalatest" % ScalatestVersion,
-      "org.seleniumhq.selenium" % "selenium-java" % "2.53.1",
+      "org.seleniumhq.selenium" % "selenium-java" % SeleniumVersion,
+      "org.seleniumhq.selenium" % "htmlunit-driver" % HtmlUnitVersion,
       "com.typesafe.play" %% "play-test" % PlayVersion,
       "com.typesafe.play" %% "play-ws" % PlayVersion,
       "com.typesafe.play" %% "play-cache" % PlayVersion % Test

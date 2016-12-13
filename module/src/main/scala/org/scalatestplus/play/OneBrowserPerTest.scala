@@ -129,9 +129,7 @@ trait OneBrowserPerTest extends TestSuiteMixin with WebBrowser with Eventually w
     finally {
       privateWebDriver match {
         case _: UnavailableDriver => // do nothing
-        case safariDriver: SafariDriver => safariDriver.quit()
-        case chromeDriver: ChromeDriver => chromeDriver.quit()
-        case _ => privateWebDriver.close()
+        case _ => privateWebDriver.quit()
       }
     }
   }

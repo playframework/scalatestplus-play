@@ -25,8 +25,6 @@ import BrowserFactory.UnavailableDriver
 import BrowserFactory.UnneededDriver
 import BrowserFactory.UninitializedDriver
 import org.openqa.selenium.firefox.FirefoxProfile
-import org.openqa.selenium.safari.SafariDriver
-import org.openqa.selenium.chrome.ChromeDriver
 
 /**
  * Trait that uses a [[http://doc.scalatest.org/2.1.3/index.html#org.scalatest.FlatSpec@sharedTests ''shared test'']] approach to enable
@@ -277,9 +275,7 @@ trait AllBrowsersPerSuite extends TestSuiteMixin with WebBrowser with Eventually
   private def closeWebDriverIfNecessary(): Unit = {
     webDriver match {
       case _: GrumpyDriver => // do nothing
-      case safariDriver: SafariDriver => safariDriver.quit()
-      case chromeDriver: ChromeDriver => chromeDriver.quit()
-      case otherDriver => otherDriver.close()
+      case otherDriver => otherDriver.quit()
     }
   }
 

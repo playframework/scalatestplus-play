@@ -355,7 +355,7 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: fixt
         case _ =>
           def callSuper = super.apply()  // this is needed for Scala 2.10 to work
           try Helpers.running(TestServer(port, app))(callSuper)
-          finally webDriver.close()
+          finally webDriver.quit()
       }
     }
   }
@@ -403,7 +403,7 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: fixt
         case _ =>
           def callSuper = super.apply()  // this is needed for Scala 2.10 to work
           try Helpers.running(TestServer(port, app))(callSuper)
-          finally webDriver.close()
+          finally webDriver.quit()
       }
     }
   }
@@ -544,7 +544,7 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: fixt
         case _ =>
           def callSuper = super.apply()  // this is needed for Scala 2.10 to work
           try Helpers.running(TestServer(port, app))(callSuper)
-          finally webDriver.close()
+          finally webDriver.quit()
       }
     }
   }

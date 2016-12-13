@@ -354,9 +354,7 @@ trait OneBrowserPerSuite extends TestSuiteMixin with WebBrowser with Eventually 
     val cleanup: Try[Boolean] => Unit = { _ =>
       webDriver match {
         case _: UnavailableDriver => // do nothing for UnavailableDriver
-        case safariDriver: SafariDriver => safariDriver.quit()
-        case chromeDriver: ChromeDriver => chromeDriver.quit()
-        case _ => webDriver.close()
+        case _ => webDriver.quit()
       }
     }
     try {
