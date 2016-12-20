@@ -17,7 +17,7 @@ package org.scalatestplus.play
 
 import play.api.test._
 import org.scalatest._
-import play.api.{Application, Play}
+import play.api.{Application, DefaultApplication, Play}
 import org.openqa.selenium.WebDriver
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.inject.guice._
@@ -57,7 +57,7 @@ class OneServerPerTestWithConfiguredBrowserNestedSpec extends UnitSpec with Conf
       Play.maybeApplication mustBe Some(app)
     }
     "put the app in the configMap" in {
-      val configuredApp = configMap.getOptional[Application]("org.scalatestplus.play.app")
+      val configuredApp = configMap.getOptional[DefaultApplication]("org.scalatestplus.play.app")
       configuredApp.value must be theSameInstanceAs app
     }
     "put the port in the configMap" in {

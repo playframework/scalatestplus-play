@@ -18,7 +18,7 @@ package org.scalatestplus.play
 import play.api.test._
 import org.scalatest._
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
-import play.api.{Application, Play}
+import play.api.{Application, DefaultApplication, Play}
 import play.api.inject.guice._
 
 class OneServerPerSuiteSpec extends UnitSpec with GuiceOneServerPerSuite {
@@ -57,7 +57,7 @@ class OneServerPerSuiteSpec extends UnitSpec with GuiceOneServerPerSuite {
       finally con.disconnect()
     }
     "put the app in the configMap" in {
-      val configuredApp = configMap.getOptional[Application]("org.scalatestplus.play.app")
+      val configuredApp = configMap.getOptional[DefaultApplication]("org.scalatestplus.play.app")
       configuredApp.value must be theSameInstanceAs app
     }
     "put the port in the configMap" in {
