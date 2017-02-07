@@ -85,10 +85,10 @@ playBuildRepoName in ThisBuild := "scalatestplus-play"
 
 lazy val PomExtra = {
   <scm>
-    <url>https://github.com/scalatest/scalatestplus-play</url>
-    <connection>scm:git:git@github.com:scalatest/scalatest.git</connection>
+    <url>https://github.com/playframework/scalatestplus-play</url>
+    <connection>scm:git:git@github.com:playframework/scalatestplus-play.git</connection>
     <developerConnection>
-      scm:git:git@github.com:scalatest/scalatest.git
+      scm:git:git@github.com:playframework/scalatestplus-play.git
     </developerConnection>
   </scm>
   <developers>
