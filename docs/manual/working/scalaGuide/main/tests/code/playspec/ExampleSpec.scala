@@ -11,7 +11,7 @@ import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.inject.guice._
 import play.api.routing._
 import play.api.routing.sird._
-import play.api.cache.EhCacheModule
+import play.api.cache.ehcache.EhCacheModule
 import play.api.libs.ws.WSClient
 
 // #scalafunctionaltest-playspec

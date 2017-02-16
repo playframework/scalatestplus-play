@@ -4,10 +4,20 @@
 
 ScalaTest + Play provides integration support between ScalaTest and Play Framework (http://www.playframework.com).
 
+## Installation
+
 To use it, please add the following dependency to your project's `build.sbt` or `project/Build.scala` file:
+
+### Play 2.5.x 
 
 ```scala
 "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % "test"
+```
+
+### Play 2.6.x
+
+```scala
+"org.scalatestplus.play" %% "scalatestplus-play" % "2.0.0-M1" % "test"
 ```
 
 ## Docs:

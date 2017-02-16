@@ -13,7 +13,7 @@ import play.api.Application
 import play.api.inject.guice._
 import play.api.routing._
 import play.api.routing.sird._
-import play.api.cache.EhCacheModule
+import play.api.cache.ehcache.EhCacheModule
 
 // #scalafunctionaltest-oneserverpersuite
 class ExampleSpec extends PlaySpec with GuiceOneServerPerSuite {

@@ -95,7 +95,7 @@ import org.openqa.selenium.chrome.ChromeDriver
  * import play.api.{Play, Application}
  * import play.api.inject.guice._
  * import play.api.routing._
- * import play.api.cache.EhCacheModule
+ * import play.api.cache.ehcache.EhCacheModule
  *
  * class ExampleSpec extends PlaySpec with OneServerPerTest with AllBrowsersPerTest {
  *
