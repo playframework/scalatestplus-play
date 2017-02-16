@@ -9,7 +9,7 @@ import play.api.mvc._
 import play.api.inject.guice._
 import play.api.routing._
 import play.api.routing.sird._
-import play.api.cache.EhCacheModule
+import play.api.cache.ehcache.EhCacheModule
 
 // #scalafunctionaltest-onebrowserpertest
 class ExampleSpec extends PlaySpec with OneServerPerTest with OneBrowserPerTest with HtmlUnitFactory {

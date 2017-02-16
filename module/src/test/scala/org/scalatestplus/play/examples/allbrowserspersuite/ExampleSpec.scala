@@ -21,7 +21,7 @@ import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.{Application, Play}
 import play.api.inject.guice._
 import play.api.routing._
-import play.api.cache.EhCacheModule
+import play.api.cache.ehcache.EhCacheModule
  
 class ExampleSpec extends PlaySpec with GuiceOneServerPerSuite with AllBrowsersPerSuite {
 

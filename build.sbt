@@ -16,14 +16,14 @@
 
 resolvers ++= DefaultOptions.resolvers(snapshot = true)
 
-val PlayVersion = playVersion("2.5.10")
+val PlayVersion = playVersion("2.6.0-M1")
 
 val ScalatestVersion = "3.0.1"
 val SeleniumVersion = "3.0.1"
 val HtmlUnitVersion = "2.23.2"
 
 lazy val commonSettings = Seq(
-  scalaVersion := "2.11.8",
+  scalaVersion := "2.12.1",
   parallelExecution in Test := false,
   testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oTK")
 )
@@ -47,6 +47,7 @@ lazy val `scalatestplus-play` = project
       "org.seleniumhq.selenium" % "htmlunit-driver" % HtmlUnitVersion,
       "com.typesafe.play" %% "play-test" % PlayVersion,
       "com.typesafe.play" %% "play-ws" % PlayVersion,
+      "com.typesafe.play" %% "play-ahc-ws" % PlayVersion,
       "com.typesafe.play" %% "play-cache" % PlayVersion % Test
     ),
     scalacOptions in (Compile, doc) := Seq("-doc-title", "ScalaTest + Play, " + releaseVersion),

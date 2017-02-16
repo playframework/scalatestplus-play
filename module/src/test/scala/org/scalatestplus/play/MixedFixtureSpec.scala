@@ -23,6 +23,7 @@ import play.api._
 import play.api.inject.guice._
 import play.api.routing._
 import org.scalatest._
+import play.api.mvc.request.RequestFactory
 
 import scala.concurrent.Future
 
@@ -57,6 +58,8 @@ class MixedFixtureSpec extends MixedSpec {
         override def classloader = app.classloader
         implicit override def materializer = app.materializer
         override def path: java.io.File = app.path
+        override def environment: Environment = app.environment
+        override def requestFactory: RequestFactory = app.requestFactory
       }
       class TestSpec extends fixture.WordSpec with MixedFixtures {
         "test 1" in new App(new TestApplication()) { t => }
@@ -94,6 +97,8 @@ class MixedFixtureSpec extends MixedSpec {
         override def classloader = app.classloader
         implicit override def materializer = app.materializer
         override def path: java.io.File = app.path
+        override def environment: Environment = app.environment
+        override def requestFactory: RequestFactory = app.requestFactory
       }
       class TestSpec extends fixture.WordSpec with MixedFixtures {
         "test 1" in new Server(new TestApplication()) { t => }
@@ -139,6 +144,8 @@ class MixedFixtureSpec extends MixedSpec {
         override def classloader = app.classloader
         implicit override def materializer = app.materializer
         override def path: java.io.File = app.path
+        override def environment: Environment = app.environment
+        override def requestFactory: RequestFactory = app.requestFactory
       }
       class TestSpec extends fixture.WordSpec with MixedFixtures {
         var testRun = false  // will be false if test is canceled due to driver not available on platform.
@@ -194,6 +201,8 @@ class MixedFixtureSpec extends MixedSpec {
         override def classloader = app.classloader
         implicit override def materializer = app.materializer
         override def path: java.io.File = app.path
+        override def environment: Environment = app.environment
+        override def requestFactory: RequestFactory = app.requestFactory
       }
       class TestSpec extends fixture.WordSpec with MixedFixtures {
         var testRun = false  // will be false if test is canceled due to driver not available on platform.
@@ -249,6 +258,8 @@ class MixedFixtureSpec extends MixedSpec {
         override def classloader = app.classloader
         implicit override def materializer = app.materializer
         override def path: java.io.File = app.path
+        override def environment: Environment = app.environment
+        override def requestFactory: RequestFactory = app.requestFactory
       }
       class TestSpec extends fixture.WordSpec with MixedFixtures {
         var testRun = false  // will be false if test is canceled due to driver not available on platform.
@@ -304,6 +315,8 @@ class MixedFixtureSpec extends MixedSpec {
         override def classloader = app.classloader
         implicit override def materializer = app.materializer
         override def path: java.io.File = app.path
+        override def environment: Environment = app.environment
+        override def requestFactory: RequestFactory = app.requestFactory
       }
       class TestSpec extends fixture.WordSpec with MixedFixtures {
         var testRun = false  // will be false if test is canceled due to driver not available on platform.
@@ -359,6 +372,8 @@ class MixedFixtureSpec extends MixedSpec {
         override def classloader = app.classloader
         implicit override def materializer = app.materializer
         override def path: java.io.File = app.path
+        override def environment: Environment = app.environment
+        override def requestFactory: RequestFactory = app.requestFactory
       }
       class TestSpec extends fixture.WordSpec with MixedFixtures {
         var testRun = false  // will be false if test is canceled due to driver not available on platform.
