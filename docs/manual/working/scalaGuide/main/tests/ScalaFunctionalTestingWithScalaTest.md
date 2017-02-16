@@ -1,7 +1,7 @@
 <!--- Copyright (C) 2009-2016 Typesafe Inc. <http://www.typesafe.com> -->
 # Writing functional tests with ScalaTest
 
-Play provides a number of classes and convenience methods that assist with functional testing.  Most of these can be found either in the [`play.api.test`](api/scala/play/api/test/package.html) package or in the [`Helpers`](api/scala/play/api/test/Helpers$.html) object. The [_ScalaTest + Play_](api/scala/org/scalatestplus/play/package.html) integration library builds on this testing support for ScalaTest.
+Play provides a number of classes and convenience methods that assist with functional testing.  Most of these can be found either in the [`play.api.test`](api/scala/play/api/test/index.html) package or in the [`Helpers`](api/scala/play/api/test/Helpers$.html) object. The [_ScalaTest + Play_](api/scala/org/scalatestplus/play/index.html) integration library builds on this testing support for ScalaTest.
 
 You can access all of Play's built-in test support and _ScalaTest + Play_ with the following imports:
 
@@ -41,7 +41,7 @@ If all tests in your test class require separate server instances, use [`OneServ
 
 The `OneServerPerSuite` and `OneServerPerTest` traits provide the port number on which the server is running as the `port` field.  By default this is 19001, however you can change this either overriding `port` or by setting the system property `testserver.port`.  This can be useful for integrating with continuous integration servers, so that ports can be dynamically reserved for each build.
 
-You can also customize the [`Application`](api/scala/play/api/test/FakeApplication.html) by overriding `app`, as demonstrated in the previous examples.
+You can also customize the `Application` by overriding `app`, as demonstrated in the previous examples.
 
 Lastly, if allowing multiple test classes to share the same server will give you better performance than either the `OneServerPerSuite` or `OneServerPerTest` approaches, you can define a master suite that mixes in [`OneServerPerSuite`](api/scala/org/scalatestplus/play/OneServerPerSuite.html) and nested suites that mix in [`ConfiguredServer`](api/scala/org/scalatestplus/play/ConfiguredServer.html), as shown in the example in the [documentation for `ConfiguredServer`](api/scala/org/scalatestplus/play/ConfiguredServer.html).
 
