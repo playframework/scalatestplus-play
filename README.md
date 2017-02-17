@@ -17,7 +17,7 @@ To use it, please add the following dependency to your project's `build.sbt` or 
 ### Play 2.6.x
 
 ```scala
-"org.scalatestplus.play" %% "scalatestplus-play" % "2.0.0-M1" % "test"
+"org.scalatestplus.play" %% "scalatestplus-play" % "2.0.0-M2" % "test"
 ```
 
 ## Docs:
