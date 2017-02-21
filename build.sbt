@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import interplay.ScalaVersions._
 
 resolvers ++= DefaultOptions.resolvers(snapshot = true)
 
-val PlayVersion = playVersion("2.5.4")
+val PlayVersion = playVersion("2.5.12")
 
-val ScalatestVersion = "3.0.0"
+val ScalatestVersion = "3.0.1"
 
 lazy val commonSettings = Seq(
-  scalaVersion := "2.11.8",
+  scalaVersion := scala211,
   parallelExecution in Test := false
 )
 
@@ -57,7 +58,7 @@ lazy val docs = project
   .in(file("docs"))
   .enablePlugins(PlayDocsPlugin, PlayNoPublish)
   .settings(
-    scalaVersion := "2.11.7",
+    scalaVersion := scala211,
     libraryDependencies ++= Seq(
       "com.typesafe.play" %% "play-cache" % PlayVersion % Test,
       "org.mockito" % "mockito-core" % "1.9.5" % Test

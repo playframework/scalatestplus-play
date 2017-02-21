@@ -7,9 +7,18 @@ ScalaTest + Play provides integration support between ScalaTest and Play Framewo
 To use it, please add the following dependency to your project's `build.sbt` or `project/Build.scala` file:
 
 ```scala
-"org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % "test"
+"org.scalatestplus.play" %% "scalatestplus-play" % "2.0.0-M1" % "test"
 ```
 
-## Docs:
+## Releases
 
-See http://www.scalatest.org/plus/play and https://www.playframework.com/documentation/2.5.x/ScalaTestingWithScalaTest
+| Release | Play  | Scalatest | Documentation                                                                       |
+|:--------|:------|:----------|:------------------------------------------------------------------------------------|
+| 2.0.x   | 2.5.x | 3.0.x     | [docs](https://www.playframework.com/documentation/2.5.x/ScalaTestingWithScalaTest) |
+| 1.5.x   | 2.5.x | 2.2.x     | [docs](https://www.playframework.com/documentation/2.5.x/ScalaTestingWithScalaTest) |
+| 1.4.x   | 2.4.x | 2.2.x     | [docs](https://www.playframework.com/documentation/2.4.x/ScalaTestingWithScalaTest) |
+| 1.3.x   | 2.2.x | 2.2.x     | [docs](https://www.playframework.com/documentation/2.2.x/ScalaTestingWithScalaTest) |
+
+## License
+
+ScalaTest _Plus_ Play is licensed under the Apache license, version 2. See the LICENSE.txt file for more information.
