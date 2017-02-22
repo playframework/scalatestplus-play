@@ -12,6 +12,7 @@ import play.api.inject.guice._
 import play.api.routing._
 import play.api.routing.sird._
 import play.api.cache.EhCacheModule
+import play.api.libs.ws.WSClient
 
 // #scalafunctionaltest-playspec
 class ExampleSpec extends PlaySpec with GuiceOneServerPerSuite with ScalaFutures with IntegrationPatience {
@@ -32,6 +33,8 @@ class ExampleSpec extends PlaySpec with GuiceOneServerPerSuite with ScalaFutures
           ).as("text/html")
         )
     }).build()
+
+  implicit lazy val wsClient: WSClient = app.injector.instanceOf[WSClient]
 
   "WsScalaTestClient's" must {
 

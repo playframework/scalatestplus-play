@@ -116,7 +116,7 @@ trait ConfiguredBrowser extends TestSuiteMixin with WebBrowser with Eventually w
    * @param args the `Args` for this run
    * @return a `Status` object that indicates when all tests and nested suites started by this method have completed, and whether or not a failure occurred.
    *         
-   * @throws IllegalArgumentException if the `WebDriver` does not appear in `args.configMap` under the expected key
+   * @throws java.lang.IllegalArgumentException if the `WebDriver` does not appear in `args.configMap` under the expected key
    */
   abstract override def run(testName: Option[String], args: Args): Status = {
     args.configMap.getOptional[WebDriver]("org.scalatestplus.play.webDriver") match {
