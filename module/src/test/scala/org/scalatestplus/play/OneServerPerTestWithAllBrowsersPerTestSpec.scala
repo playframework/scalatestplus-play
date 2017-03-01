@@ -17,15 +17,16 @@ package org.scalatestplus.play
 
 import play.api.test._
 import org.scalatest._
-import play.api.{Play, Application}
+import org.scalatestplus.play.guice.GuiceOneServerPerTest
+import play.api.{Application, Play}
 import play.api.inject.guice._
 import play.api.routing._
 
-class OneServerPerTestWithAllBrowsersPerTestSpec extends UnitSpec with OneServerPerTest with AllBrowsersPerTest {
+class OneServerPerTestWithAllBrowsersPerTestSpec extends UnitSpec with GuiceOneServerPerTest with AllBrowsersPerTest {
 
   override def newAppForTest(testData: TestData) =
     new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(Router.from(TestRoute)).build()
-  def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
+  def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
 
   def sharedTests(browser: BrowserInfo) = {
 
@@ -41,7 +42,7 @@ class OneServerPerTestWithAllBrowsersPerTestSpec extends UnitSpec with OneServer
 
   "The AllBrowsersPerTest trait" must {
     "provide an Application" in {
-      app.configuration.getString("foo") mustBe Some("bar")
+      app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
     "make the Application available implicitly" in {
       getConfig("foo") mustBe Some("bar")

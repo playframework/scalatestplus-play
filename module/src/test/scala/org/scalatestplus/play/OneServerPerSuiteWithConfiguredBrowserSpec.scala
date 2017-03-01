@@ -29,13 +29,13 @@ class OneServerPerSuiteWithConfiguredBrowserSpec extends UnitSpec with Sequentia
 
   override def fakeApplication() =
     new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(Router.from(TestRoute)).build()
-  def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
+  def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
 }
 
 @DoNotDiscover
 class OneServerPerSuiteWithConfiguredBrowserNestedSpec extends UnitSpec with ConfiguredServer with ConfiguredBrowser {
 
-  def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
+  def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
 
   // Doesn't need synchronization because set by withFixture and checked by the test
   // invoked inside same withFixture with super.withFixture(test)
@@ -48,7 +48,7 @@ class OneServerPerSuiteWithConfiguredBrowserNestedSpec extends UnitSpec with Con
 
   "The ConfiguredBrowser trait" must {
     "provide an Application" in {
-      app.configuration.getString("foo") mustBe Some("bar")
+      app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
     "make the Application available implicitly" in {
       getConfig("foo") mustBe Some("bar")

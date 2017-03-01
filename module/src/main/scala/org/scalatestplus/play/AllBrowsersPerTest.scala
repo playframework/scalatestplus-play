@@ -123,10 +123,10 @@ import org.openqa.selenium.chrome.ChromeDriver
  *   // in the constructor, the usual place for tests in a `PlaySpec`
  *   "The AllBrowsersPerTest trait" must {
  *     "provide a FakeApplication" in {
- *       app.configuration.getString("foo") mustBe Some("bar")
+ *       app.configuration.getOptional[String]("foo") mustBe Some("bar")
  *     }
  *     "make the FakeApplication available implicitly" in {
- *        def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
+ *        def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
  *       getConfig("foo") mustBe Some("bar")
  *     }
  *     "start the FakeApplication" in {

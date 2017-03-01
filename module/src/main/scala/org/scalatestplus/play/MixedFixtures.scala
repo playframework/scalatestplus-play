@@ -44,7 +44,7 @@ import org.openqa.selenium.safari.SafariDriver
  *
  * <pre class="stHighlight">
  * "provide an Application" in new App(fakeApp("ehcacheplugin" -&gt; "disabled")) {
- *   app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
+ *   app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
  * }
  * </pre>
  *
@@ -93,11 +93,11 @@ import org.openqa.selenium.safari.SafariDriver
  *     .router(Router.from(TestRoute))
  *     .build()
  *
- *   def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
+ *   def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
  *
  *   "The App function" must {
  *     "provide an Application" in new App(buildApp("ehcacheplugin" -> "disabled")) {
- *       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
+ *       app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
  *     }
  *     "make the Application available implicitly" in new App(buildApp("ehcacheplugin" -> "disabled")) {
  *       getConfig("ehcacheplugin") mustBe Some("disabled")
@@ -108,7 +108,7 @@ import org.openqa.selenium.safari.SafariDriver
  *   }
  *   "The Server function" must {
  *     "provide an Application" in new Server(buildApp("ehcacheplugin" -> "disabled")) {
- *       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
+ *       app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
  *     }
  *     "make the Application available implicitly" in new Server(buildApp("ehcacheplugin" -> "disabled")) {
  *       getConfig("ehcacheplugin") mustBe Some("disabled")
@@ -127,7 +127,7 @@ import org.openqa.selenium.safari.SafariDriver
  *   }
  *   "The HtmlUnit function" must {
  *     "provide an Application" in new HtmlUnit(buildApp("ehcacheplugin" -> "disabled")) {
- *       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
+ *       app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
  *     }
  *     "make the Application available implicitly" in new HtmlUnit(buildApp("ehcacheplugin" -> "disabled")) {
  *       getConfig("ehcacheplugin") mustBe Some("disabled")
@@ -152,7 +152,7 @@ import org.openqa.selenium.safari.SafariDriver
  *   }
  *   "The Firefox function" must {
  *     "provide an Application" in new Firefox(buildApp("ehcacheplugin" -> "disabled")) {
- *       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
+ *       app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
  *     }
  *     "make the Application available implicitly" in new Firefox(buildApp("ehcacheplugin" -> "disabled")) {
  *       getConfig("ehcacheplugin") mustBe Some("disabled")
@@ -177,7 +177,7 @@ import org.openqa.selenium.safari.SafariDriver
  *   }
  *   "The Safari function" must {
  *     "provide an Application" in new Safari(buildApp("ehcacheplugin" -> "disabled")) {
- *       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
+ *       app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
  *     }
  *     "make the Application available implicitly" in new Safari(buildApp("ehcacheplugin" -> "disabled")) {
  *       getConfig("ehcacheplugin") mustBe Some("disabled")
@@ -202,7 +202,7 @@ import org.openqa.selenium.safari.SafariDriver
  *   }
  *   "The Chrome function" must {
  *     "provide an Application" in new Chrome(buildApp("ehcacheplugin" -> "disabled")) {
- *       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
+ *       app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
  *     }
  *     "make the Application available implicitly" in new Chrome(buildApp("ehcacheplugin" -> "disabled")) {
  *       getConfig("ehcacheplugin") mustBe Some("disabled")
@@ -227,7 +227,7 @@ import org.openqa.selenium.safari.SafariDriver
  *   }
  *   "The InternetExplorer function" must {
  *     "provide an Application" in new InternetExplorer(buildApp("ehcacheplugin" -> "disabled")) {
- *       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
+ *       app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
  *     }
  *     "make the Application available implicitly" in new InternetExplorer(buildApp("ehcacheplugin" -> "disabled")) {
  *       getConfig("ehcacheplugin") mustBe Some("disabled")

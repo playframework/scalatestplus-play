@@ -17,7 +17,7 @@ class ExampleSpec extends PlaySpec with GuiceOneAppPerSuite {
 
   "The GuiceOneAppPerSuite trait" must {
     "provide an Application" in {
-      app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
+      app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
     }
     "start the Application" in {
       Play.maybeApplication mustBe Some(app)

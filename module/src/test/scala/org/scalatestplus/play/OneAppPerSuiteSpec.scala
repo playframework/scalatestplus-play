@@ -23,7 +23,7 @@ import play.api.inject.guice._
 class OneAppPerSuiteSpec extends UnitSpec with GuiceOneAppPerSuite {
 
   override def fakeApplication() = new GuiceApplicationBuilder().configure(Map("foo" -> "bar", "ehcacheplugin" -> "disabled")).build()
-  def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
+  def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
 
   // Doesn't need synchronization because set by withFixture and checked by the test
   // invoked inside same withFixture with super.withFixture(test)
@@ -36,7 +36,7 @@ class OneAppPerSuiteSpec extends UnitSpec with GuiceOneAppPerSuite {
 
   "The GuiceOneAppPerSuite trait" must {
     "provide an Application" in {
-      app.configuration.getString("foo") mustBe Some("bar")
+      app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
     "make the Application available implicitly" in {
       getConfig("foo") mustBe Some("bar")

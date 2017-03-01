@@ -17,16 +17,17 @@ package org.scalatestplus.play
 
 import play.api.test._
 import org.scalatest._
-import play.api.{Play, Application}
+import play.api.{Application, Play}
 import org.openqa.selenium.WebDriver
+import org.scalatestplus.play.guice.GuiceOneServerPerTest
 import play.api.inject.guice._
 import play.api.routing._
 
-class OneServerPerTestWithOneBrowserPerSuiteSpec extends UnitSpec with OneServerPerTest with OneBrowserPerSuite with FirefoxFactory {
+class OneServerPerTestWithOneBrowserPerSuiteSpec extends UnitSpec with GuiceOneServerPerTest with OneBrowserPerSuite with FirefoxFactory {
 
   override def newAppForTest(testData: TestData) =
     new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(Router.from(TestRoute)).build()
-  def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
+  def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
 
   // Doesn't need synchronization because set by withFixture and checked by the test
   // invoked inside same withFixture with super.withFixture(test)
@@ -39,7 +40,7 @@ class OneServerPerTestWithOneBrowserPerSuiteSpec extends UnitSpec with OneServer
 
   "The OneBrowserPerSuite trait" must {
     "provide an Application" in {
-      app.configuration.getString("foo") mustBe Some("bar")
+      app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
     "make the Application available implicitly" in {
       getConfig("foo") mustBe Some("bar")
@@ -50,7 +51,6 @@ class OneServerPerTestWithOneBrowserPerSuiteSpec extends UnitSpec with OneServer
     "provide the port" in {
       port mustBe Helpers.testServerPort
     }
-    import Helpers._
     "send 404 on a bad request" in {
       import java.net._
       val url = new URL("http://localhost:" + port + "/boum")

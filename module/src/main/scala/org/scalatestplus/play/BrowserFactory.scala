@@ -15,7 +15,6 @@
  */
 package org.scalatestplus.play
 
-import play.api.test._
 import org.openqa.selenium.WebDriver
 
 /**
