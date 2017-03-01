@@ -111,3 +111,20 @@ lazy val PomExtra = {
   </developers>
 }
 
+lazy val checkCodeFormat = taskKey[Unit]("Check that code format is following Scalariform rules")
+
+checkCodeFormat := {
+  val exitCode = "git diff --exit-code".!
+  if (exitCode != 0) {
+    sys.error(
+      """
+        |ERROR: Scalariform check failed, see differences above.
+        |To fix, format your sources using sbt scalariformFormat test:scalariformFormat before submitting a pull request.
+        |Additionally, please squash your commits (eg, use git commit --amend) if you're going to update this pull request.
+        |""".stripMargin)
+  }
+}
+
+addCommandAlias("validateCode",
+  ";scalariformFormat;test:scalariformFormat;docs/scalariformFormat;docs/test:scalariformFormat;checkCodeFormat"
+)

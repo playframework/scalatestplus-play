@@ -31,7 +31,7 @@ import org.openqa.selenium.chrome.ChromeDriver
 /**
  * Trait that uses a [[http://doc.scalatest.org/2.1.3/index.html#org.scalatest.FlatSpec@sharedTests ''shared test'']] approach to enable
  * you to run the same tests on multiple browsers in a ScalaTest `Suite`, where a new browser is started before each test
- * that needs a browser, and stopped after. 
+ * that needs a browser, and stopped after.
  *
  * Note: the difference between this trait and [[org.scalatestplus.play.AllBrowsersPerSuite AllBrowsersPerSuite]] is that
  * `AllBrowsersPerSuite` will allow you to write tests that rely on maintaining browser state between the tests. Thus, `AllBrowsersPerSuite` is a good fit
@@ -40,7 +40,7 @@ import org.openqa.selenium.chrome.ChromeDriver
  *
  * This trait overrides `Suite`'s `withFixture` lifecycle method to create a new `WebDriver`
  * instance before executing each test that needs a browser, closing it after the test completes, and overrides the `tags` lifecycle method to tag the shared tests so you can
- * filter them by browser type.  This trait's self-type, [[org.scalatestplus.play.ServerProvider ServerProvider]],  will ensure 
+ * filter them by browser type.  This trait's self-type, [[org.scalatestplus.play.ServerProvider ServerProvider]],  will ensure
  * a `TestServer` and `Application` are available to each test. The self-type will require that you mix in either
  * [[org.scalatestplus.play.guice.GuiceOneServerPerSuite GuiceOneServerPerSuite]], [[org.scalatestplus.play.guice.GuiceOneServerPerTest GuiceOneServerPerTest]],
  * [[org.scalatestplus.play.ConfiguredServer ConfiguredServer]] before you mix in this trait. Your choice among these three
@@ -49,16 +49,16 @@ import org.openqa.selenium.chrome.ChromeDriver
  * You'll need to place any tests that you want executed by multiple browsers in a `sharedTests` method. Because all tests in a ScalaTest `Suite`
  * must have unique names, you'll need to append the browser name (available from the `BrowserInfo` passed
  * to `sharedTests`) to each test name:
- * 
+ *
  * <pre class="stHighlight">
  * def sharedTests(browser: BrowserInfo) {
  *   "The blog app home page" must {
  *     "have the correct title " + browser.name in {
  *        go to (host + "index.html")
  *        pageTitle must be ("Awesome Blog")
- *     } 
+ *     }
  * </pre>
- * 
+ *
  * All tests registered via `sharedTests` will be registered for each desired `WebDriver`, as specified by the `browsers` field. When
  * running, any tests for browser drivers that are unavailable
  * on the current platform will be canceled.
@@ -233,9 +233,9 @@ trait AllBrowsersPerTest extends TestSuiteMixin with WebBrowser with Eventually 
    *     "have the correct title " + browser.name in {
    *        go to (host + "index.html")
    *        pageTitle must be ("Awesome Blog")
-   *     } 
+   *     }
    * </pre>
-   * 
+   *
    * If you don't append `browser.name` to each test name you'll likely be rewarded with
    * a `DuplicateTestNameException` when you attempt to run the suite.
    *
@@ -253,7 +253,7 @@ trait AllBrowsersPerTest extends TestSuiteMixin with WebBrowser with Eventually 
    * ends in `[Firefox]`, it will be tagged with `org.scalatest.tags.FirefoxBrowser`. The browser tags will be merged with
    * tags returned from `super.tags`, so no existing tags will be lost when the browser tags are added.
    *
-   * @return `super.tags` with additional browser tags added for any browser-specific tests 
+   * @return `super.tags` with additional browser tags added for any browser-specific tests
    */
   abstract override def tags: Map[String, Set[String]] = {
 
@@ -268,13 +268,14 @@ trait AllBrowsersPerTest extends TestSuiteMixin with WebBrowser with Eventually 
         case None => (tn, Set.empty[String])
       }
     }
-    mergeMap(List(super.tags, generatedBrowserTags.filter(_._2.nonEmpty))) { case (s1, s2) =>
-      s1 ++ s2  // just add the 2 sets together
+    mergeMap(List(super.tags, generatedBrowserTags.filter(_._2.nonEmpty))) {
+      case (s1, s2) =>
+        s1 ++ s2 // just add the 2 sets together
     }
   }
 
   /**
-   * Inspects the current test name and if it ends with the name of one of the `BrowserInfo`s 
+   * Inspects the current test name and if it ends with the name of one of the `BrowserInfo`s
    * mentioned in the `browsers` `IndexedSeq`, creates a new web driver by invoking `createWebDriver` on
    * that `BrowserInfo` and, unless it is an `UnavailableDriver`, installs it so it will be returned by
    * `webDriver` during the test. (If the driver is unavailable on the host platform, the `createWebDriver`

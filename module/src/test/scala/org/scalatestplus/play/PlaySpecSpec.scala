@@ -21,7 +21,7 @@ class PlaySpecSpec extends UnitSpec {
 
   "PlaySpec" must {
     "mix in OptionValues" in {
-      (new PlaySpec {}) mustBe an [OptionValues]
+      (new PlaySpec {}) mustBe an[OptionValues]
     }
   }
 }

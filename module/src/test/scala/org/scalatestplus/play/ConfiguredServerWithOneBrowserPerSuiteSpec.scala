@@ -17,14 +17,14 @@ package org.scalatestplus.play
 
 import play.api.test._
 import org.scalatest._
-import play.api.{Application, Play}
+import play.api.{ Application, Play }
 import org.openqa.selenium.WebDriver
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.inject.guice._
 import play.api.routing._
 
 class ConfiguredServerWithOneBrowserPerSuiteSpec extends Suites(
-  new ConfiguredServerWithOneBrowserPerSuiteNestedSpec 
+  new ConfiguredServerWithOneBrowserPerSuiteNestedSpec
 ) with GuiceOneServerPerSuite with TestSuite {
   override def fakeApplication(): Application =
     new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(TestRoutes.router).build()
@@ -84,5 +84,4 @@ class ConfiguredServerWithOneBrowserPerSuiteNestedSpec extends UnitSpec with Con
     }
   }
 }
-
 

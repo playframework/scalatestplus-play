@@ -17,7 +17,7 @@ package org.scalatestplus.play
 
 import play.api.test._
 import org.scalatest._
-import play.api.{Play, Application}
+import play.api.{ Play, Application }
 import play.api.inject.guice._
 
 class ServerSpecSpec extends ServerSpec {

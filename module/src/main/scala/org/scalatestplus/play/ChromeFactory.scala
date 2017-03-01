@@ -23,7 +23,7 @@ import BrowserFactory.UnavailableDriver
  * Factory whose `createWebDriver` method will either return a new Selenium `ChromeDriver`, or
  * [[org.scalatestplus.play.BrowserFactory.UnavailableDriver UnavailableDriver]], if Chrome is not available on the host platform.
  *
- * Traits [[org.scalatestplus.play.OneBrowserPerSuite OneBrowserPerSuite]] and 
+ * Traits [[org.scalatestplus.play.OneBrowserPerSuite OneBrowserPerSuite]] and
  * [[org.scalatestplus.play.OneBrowserPerTest OneBrowserPerTest]] extend `BrowserFactory` and therefore require
  * you to fill in the `createWebDriver` method, usually by mixing in one of the `BrowserFactory` subtraits such as
  * `ChromeFactory`.
@@ -35,14 +35,13 @@ trait ChromeFactory extends BrowserFactory {
    * the exception that indicated the driver was not supported on the host platform and an appropriate
    * error message.
    *
-   * @return an new instance of a Selenium `ChromeDriver`, or a `BrowserFactory.UnavailableDriver` if it is not 
+   * @return an new instance of a Selenium `ChromeDriver`, or a `BrowserFactory.UnavailableDriver` if it is not
    * available on the host platform.
    */
   def createWebDriver(): WebDriver =
-    try { 
+    try {
       new ChromeDriver()
-    }
-    catch {
+    } catch {
       case ex: Throwable => UnavailableDriver(Some(ex), Resources("cantCreateChromeDriver", ex.getMessage))
     }
 }

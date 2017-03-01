@@ -16,7 +16,7 @@
 package org.scalatestplus.play
 
 import akka.actor.ActorSystem
-import play.api.http.{HttpErrorHandler, HttpRequestHandler}
+import play.api.http.{ HttpErrorHandler, HttpRequestHandler }
 import play.api.inject.Injector
 import play.api.test._
 import play.api._
@@ -30,20 +30,20 @@ import scala.concurrent.Future
 class MixedFixtureSpec extends MixedSpec {
 
   def buildApp[A](elems: (String, String)*) =
-    new GuiceApplicationBuilder().configure(Map(elems:_*)).router(TestRoutes.router).build()
+    new GuiceApplicationBuilder().configure(Map(elems: _*)).router(TestRoutes.router).build()
   def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
 
   "The App function" must {
     "provide a Application" in new App(buildApp("foo" -> "bar", "ehcacheplugin" -> "disabled")) {
       app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
-    "make the Application available implicitly" in new App(buildApp("foo" -> "bar",  "ehcacheplugin" -> "disabled")) {
+    "make the Application available implicitly" in new App(buildApp("foo" -> "bar", "ehcacheplugin" -> "disabled")) {
       getConfig("foo") mustBe Some("bar")
     }
-    "start the Application" in new App(buildApp("foo" -> "bar",  "ehcacheplugin" -> "disabled")) {
+    "start the Application" in new App(buildApp("foo" -> "bar", "ehcacheplugin" -> "disabled")) {
       Play.maybeApplication mustBe Some(app)
     }
-    "start the Application lazily" in new App(buildApp("foo" -> "bar",  "ehcacheplugin" -> "disabled")) {
+    "start the Application lazily" in new App(buildApp("foo" -> "bar", "ehcacheplugin" -> "disabled")) {
       var count = 0
       class TestApplication extends Application {
         count = count + 1
@@ -76,13 +76,13 @@ class MixedFixtureSpec extends MixedSpec {
     "provide a Application" in new Server(buildApp("foo" -> "bar", "ehcacheplugin" -> "disabled")) {
       app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
-    "make the Application available implicitly" in new Server(buildApp("foo" -> "bar",  "ehcacheplugin" -> "disabled")) {
+    "make the Application available implicitly" in new Server(buildApp("foo" -> "bar", "ehcacheplugin" -> "disabled")) {
       getConfig("foo") mustBe Some("bar")
     }
-    "start the Application" in new Server(buildApp("foo" -> "bar",  "ehcacheplugin" -> "disabled")) {
+    "start the Application" in new Server(buildApp("foo" -> "bar", "ehcacheplugin" -> "disabled")) {
       Play.maybeApplication mustBe Some(app)
     }
-    "start the Application lazily" in new App(buildApp("foo" -> "bar",  "ehcacheplugin" -> "disabled")) {
+    "start the Application lazily" in new App(buildApp("foo" -> "bar", "ehcacheplugin" -> "disabled")) {
       var count = 0
       class TestApplication extends Application {
         count = count + 1
@@ -123,13 +123,13 @@ class MixedFixtureSpec extends MixedSpec {
     "provide an Application" in new HtmlUnit(buildApp("foo" -> "bar", "ehcacheplugin" -> "disabled")) {
       app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
-    "make the Application available implicitly" in new HtmlUnit(buildApp("foo" -> "bar",  "ehcacheplugin" -> "disabled")) {
+    "make the Application available implicitly" in new HtmlUnit(buildApp("foo" -> "bar", "ehcacheplugin" -> "disabled")) {
       getConfig("foo") mustBe Some("bar")
     }
-    "start the Application" in new HtmlUnit(buildApp("foo" -> "bar",  "ehcacheplugin" -> "disabled")) {
+    "start the Application" in new HtmlUnit(buildApp("foo" -> "bar", "ehcacheplugin" -> "disabled")) {
       Play.maybeApplication mustBe Some(app)
     }
-    "start the Application lazily" in new App(buildApp("foo" -> "bar",  "ehcacheplugin" -> "disabled")) {
+    "start the Application lazily" in new App(buildApp("foo" -> "bar", "ehcacheplugin" -> "disabled")) {
       var count = 0
       class TestApplication extends Application {
         count = count + 1
@@ -148,7 +148,7 @@ class MixedFixtureSpec extends MixedSpec {
         override def requestFactory: RequestFactory = app.requestFactory
       }
       class TestSpec extends fixture.WordSpec with MixedFixtures {
-        var testRun = false  // will be false if test is canceled due to driver not available on platform.
+        var testRun = false // will be false if test is canceled due to driver not available on platform.
         "test 1" in new HtmlUnit(new TestApplication()) { t => testRun = true }
         "test 2" in new HtmlUnit(new TestApplication()) { t => testRun = true }
         "test 3" in new HtmlUnit(new TestApplication()) { t => testRun = true }
@@ -159,7 +159,7 @@ class MixedFixtureSpec extends MixedSpec {
       if (spec.testRun)
         count mustBe 3
       else
-        count mustBe 0  // when driver not available, not Application instance should be created at all.
+        count mustBe 0 // when driver not available, not Application instance should be created at all.
     }
     import Helpers._
     "send 404 on a bad request" in new HtmlUnit {
@@ -180,13 +180,13 @@ class MixedFixtureSpec extends MixedSpec {
     "provide an Application" in new Firefox(buildApp("foo" -> "bar", "ehcacheplugin" -> "disabled")) {
       app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
-    "make the Application available implicitly" in new Firefox(buildApp("foo" -> "bar",  "ehcacheplugin" -> "disabled")) {
+    "make the Application available implicitly" in new Firefox(buildApp("foo" -> "bar", "ehcacheplugin" -> "disabled")) {
       getConfig("foo") mustBe Some("bar")
     }
-    "start the Application" in new Firefox(buildApp("foo" -> "bar",  "ehcacheplugin" -> "disabled")) {
+    "start the Application" in new Firefox(buildApp("foo" -> "bar", "ehcacheplugin" -> "disabled")) {
       Play.maybeApplication mustBe Some(app)
     }
-    "start the Application lazily" in new App(buildApp("foo" -> "bar",  "ehcacheplugin" -> "disabled")) {
+    "start the Application lazily" in new App(buildApp("foo" -> "bar", "ehcacheplugin" -> "disabled")) {
       var count = 0
       class TestApplication extends Application {
         count = count + 1
@@ -205,7 +205,7 @@ class MixedFixtureSpec extends MixedSpec {
         override def requestFactory: RequestFactory = app.requestFactory
       }
       class TestSpec extends fixture.WordSpec with MixedFixtures {
-        var testRun = false  // will be false if test is canceled due to driver not available on platform.
+        var testRun = false // will be false if test is canceled due to driver not available on platform.
         "test 1" in new Firefox(new TestApplication()) { t => testRun = true }
         "test 2" in new Firefox(new TestApplication()) { t => testRun = true }
         "test 3" in new Firefox(new TestApplication()) { t => testRun = true }
@@ -216,7 +216,7 @@ class MixedFixtureSpec extends MixedSpec {
       if (spec.testRun)
         count mustBe 3
       else
-        count mustBe 0  // when driver not available, not Application instance should be created at all.
+        count mustBe 0 // when driver not available, not Application instance should be created at all.
     }
     import Helpers._
     "send 404 on a bad request" in new Firefox {
@@ -237,13 +237,13 @@ class MixedFixtureSpec extends MixedSpec {
     "provide an Application" in new Safari(buildApp("foo" -> "bar", "ehcacheplugin" -> "disabled")) {
       app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
-    "make the Application available implicitly" in new Safari(buildApp("foo" -> "bar",  "ehcacheplugin" -> "disabled")) {
+    "make the Application available implicitly" in new Safari(buildApp("foo" -> "bar", "ehcacheplugin" -> "disabled")) {
       getConfig("foo") mustBe Some("bar")
     }
-    "start the Application" in new Safari(buildApp("foo" -> "bar",  "ehcacheplugin" -> "disabled")) {
+    "start the Application" in new Safari(buildApp("foo" -> "bar", "ehcacheplugin" -> "disabled")) {
       Play.maybeApplication mustBe Some(app)
     }
-    "start the Application lazily" in new App(buildApp("foo" -> "bar",  "ehcacheplugin" -> "disabled")) {
+    "start the Application lazily" in new App(buildApp("foo" -> "bar", "ehcacheplugin" -> "disabled")) {
       var count = 0
       class TestApplication extends Application {
         count = count + 1
@@ -262,7 +262,7 @@ class MixedFixtureSpec extends MixedSpec {
         override def requestFactory: RequestFactory = app.requestFactory
       }
       class TestSpec extends fixture.WordSpec with MixedFixtures {
-        var testRun = false  // will be false if test is canceled due to driver not available on platform.
+        var testRun = false // will be false if test is canceled due to driver not available on platform.
         "test 1" in new Safari(new TestApplication()) { t => testRun = true }
         "test 2" in new Safari(new TestApplication()) { t => testRun = true }
         "test 3" in new Safari(new TestApplication()) { t => testRun = true }
@@ -273,7 +273,7 @@ class MixedFixtureSpec extends MixedSpec {
       if (spec.testRun)
         count mustBe 3
       else
-        count mustBe 0  // when driver not available, not Application instance should be created at all.
+        count mustBe 0 // when driver not available, not Application instance should be created at all.
     }
     import Helpers._
     "send 404 on a bad request" in new Safari {
@@ -294,13 +294,13 @@ class MixedFixtureSpec extends MixedSpec {
     "provide an Application" in new Chrome(buildApp("foo" -> "bar", "ehcacheplugin" -> "disabled")) {
       app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
-    "make the Application available implicitly" in new Chrome(buildApp("foo" -> "bar",  "ehcacheplugin" -> "disabled")) {
+    "make the Application available implicitly" in new Chrome(buildApp("foo" -> "bar", "ehcacheplugin" -> "disabled")) {
       getConfig("foo") mustBe Some("bar")
     }
-    "start the Application" in new Chrome(buildApp("foo" -> "bar",  "ehcacheplugin" -> "disabled")) {
+    "start the Application" in new Chrome(buildApp("foo" -> "bar", "ehcacheplugin" -> "disabled")) {
       Play.maybeApplication mustBe Some(app)
     }
-    "start the Application lazily" in new App(buildApp("foo" -> "bar",  "ehcacheplugin" -> "disabled")) {
+    "start the Application lazily" in new App(buildApp("foo" -> "bar", "ehcacheplugin" -> "disabled")) {
       var count = 0
       class TestApplication extends Application {
         count = count + 1
@@ -319,7 +319,7 @@ class MixedFixtureSpec extends MixedSpec {
         override def requestFactory: RequestFactory = app.requestFactory
       }
       class TestSpec extends fixture.WordSpec with MixedFixtures {
-        var testRun = false  // will be false if test is canceled due to driver not available on platform.
+        var testRun = false // will be false if test is canceled due to driver not available on platform.
         "test 1" in new Chrome(new TestApplication()) { t => testRun = true }
         "test 2" in new Chrome(new TestApplication()) { t => testRun = true }
         "test 3" in new Chrome(new TestApplication()) { t => testRun = true }
@@ -330,7 +330,7 @@ class MixedFixtureSpec extends MixedSpec {
       if (spec.testRun)
         count mustBe 3
       else
-        count mustBe 0  // when driver not available, not Application instance should be created at all.
+        count mustBe 0 // when driver not available, not Application instance should be created at all.
     }
     import Helpers._
     "send 404 on a bad request" in new Chrome {
@@ -351,13 +351,13 @@ class MixedFixtureSpec extends MixedSpec {
     "provide an Application" in new InternetExplorer(buildApp("foo" -> "bar", "ehcacheplugin" -> "disabled")) {
       app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
-    "make the Application available implicitly" in new InternetExplorer(buildApp("foo" -> "bar",  "ehcacheplugin" -> "disabled")) {
+    "make the Application available implicitly" in new InternetExplorer(buildApp("foo" -> "bar", "ehcacheplugin" -> "disabled")) {
       getConfig("foo") mustBe Some("bar")
     }
-    "start the Application" in new InternetExplorer(buildApp("foo" -> "bar",  "ehcacheplugin" -> "disabled")) {
+    "start the Application" in new InternetExplorer(buildApp("foo" -> "bar", "ehcacheplugin" -> "disabled")) {
       Play.maybeApplication mustBe Some(app)
     }
-    "start the Application lazily" in new App(buildApp("foo" -> "bar",  "ehcacheplugin" -> "disabled")) {
+    "start the Application lazily" in new App(buildApp("foo" -> "bar", "ehcacheplugin" -> "disabled")) {
       var count = 0
       class TestApplication extends Application {
         count = count + 1
@@ -376,7 +376,7 @@ class MixedFixtureSpec extends MixedSpec {
         override def requestFactory: RequestFactory = app.requestFactory
       }
       class TestSpec extends fixture.WordSpec with MixedFixtures {
-        var testRun = false  // will be false if test is canceled due to driver not available on platform.
+        var testRun = false // will be false if test is canceled due to driver not available on platform.
         "test 1" in new InternetExplorer(new TestApplication()) { t => testRun = true }
         "test 2" in new InternetExplorer(new TestApplication()) { t => testRun = true }
         "test 3" in new InternetExplorer(new TestApplication()) { t => testRun = true }
@@ -387,7 +387,7 @@ class MixedFixtureSpec extends MixedSpec {
       if (spec.testRun)
         count mustBe 3
       else
-        count mustBe 0  // when driver not available, not Application instance should be created at all.
+        count mustBe 0 // when driver not available, not Application instance should be created at all.
     }
     import Helpers._
     "send 404 on a bad request" in new InternetExplorer {
@@ -406,8 +406,8 @@ class MixedFixtureSpec extends MixedSpec {
   }
   "Any old thing" must {
     "be doable without much boilerplate" in { () =>
-       1 + 1 mustEqual 2
-     }
+      1 + 1 mustEqual 2
+    }
   }
 }
 

@@ -19,10 +19,10 @@ import play.api.test._
 import org.scalatest._
 import org.scalatestplus.play._
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
-import play.api.{Application, Play}
+import play.api.{ Application, Play }
 import play.api.inject.guice._
 
- // This is the "master" suite
+// This is the "master" suite
 class NestedExampleSpec extends Suites(
   new OneSpec,
   new TwoSpec,
@@ -33,7 +33,7 @@ class NestedExampleSpec extends Suites(
   override def fakeApplication(): Application =
     new GuiceApplicationBuilder().configure(Map("ehcacheplugin" -> "disabled")).build()
 }
- 
+
 // These are the nested suites
 @DoNotDiscover class OneSpec extends PlaySpec with ConfiguredServer
 @DoNotDiscover class TwoSpec extends PlaySpec with ConfiguredServer

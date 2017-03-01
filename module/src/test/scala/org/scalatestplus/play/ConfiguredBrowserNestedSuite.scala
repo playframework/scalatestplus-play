@@ -18,7 +18,7 @@ package org.scalatestplus.play
 import play.api.test._
 import org.scalatest._
 import events._
-import play.api.{Play, Application}
+import play.api.{ Play, Application }
 import scala.collection.mutable.ListBuffer
 import org.openqa.selenium.WebDriver
 

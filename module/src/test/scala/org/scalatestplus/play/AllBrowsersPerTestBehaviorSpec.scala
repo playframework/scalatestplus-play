@@ -17,7 +17,7 @@ package org.scalatestplus.play
 
 import org.scalatest._
 import org.openqa.selenium.chrome.ChromeDriver
-import org.openqa.selenium.firefox.{FirefoxDriver, FirefoxProfile}
+import org.openqa.selenium.firefox.{ FirefoxDriver, FirefoxProfile }
 import org.openqa.selenium.ie.InternetExplorerDriver
 import org.openqa.selenium.safari.SafariDriver
 import org.openqa.selenium.htmlunit.HtmlUnitDriver
@@ -30,16 +30,16 @@ class AllBrowsersPerTestBehaviorSpec extends WordSpec {
   class TestSpec extends UnitSpec with GuiceOneServerPerTest with AllBrowsersPerTest {
     def sharedTests(browser: BrowserInfo) = {
       "test 1 " + browser.name in {}
-      "test 2 " + browser.name taggedAs(ChosenTest) in {}
+      "test 2 " + browser.name taggedAs (ChosenTest) in {}
     }
-    "test 3" taggedAs(ChosenTest) in {}
+    "test 3" taggedAs (ChosenTest) in {}
   }
 
   "The AllBrowsersPerTest trait" must {
 
     val chrome = try { val d = new ChromeDriver(); d.quit(); 1 } catch { case ex: Throwable => 0 }
     val firefox = try { val d = new FirefoxDriver(new FirefoxProfile); d.quit(); 1 } catch { case ex: Throwable => 0 }
-    val internetExplorer =  try { val d = new InternetExplorerDriver; d.quit(); 1 } catch { case ex: Throwable => 0 }
+    val internetExplorer = try { val d = new InternetExplorerDriver; d.quit(); 1 } catch { case ex: Throwable => 0 }
     val safari = try { val d = new SafariDriver; d.quit(); 1 } catch { case ex: Throwable => 0 }
     val htmlUnit =
       try {
@@ -47,8 +47,7 @@ class AllBrowsersPerTestBehaviorSpec extends WordSpec {
         d.setJavascriptEnabled(true)
         d.quit()
         1
-      }
-      catch {
+      } catch {
         case ex: Throwable => 0
       }
 

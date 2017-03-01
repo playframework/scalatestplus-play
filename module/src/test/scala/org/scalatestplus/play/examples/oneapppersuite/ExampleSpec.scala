@@ -17,7 +17,7 @@ package org.scalatestplus.play.examples.oneapppersuite
 
 import org.scalatestplus.play._
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.{Application, Play}
+import play.api.{ Application, Play }
 import play.api.inject.guice._
 
 class ExampleSpec extends PlaySpec with GuiceOneAppPerSuite {

@@ -5,7 +5,7 @@ package org.scalatestplus.play.examples.mixedfixtures
 
 import play.api.test._
 import org.scalatestplus.play._
-import play.api.{Play, Application}
+import play.api.{ Play, Application }
 import play.api.mvc._
 import play.api.inject.guice._
 import play.api.routing._
@@ -17,7 +17,7 @@ class ExampleSpec extends MixedPlaySpec {
 
   // Some helper methods
   def buildApp[A](elems: (String, String)*) =
-    new GuiceApplicationBuilder().configure(Map(elems:_*)).router(Router.from {
+    new GuiceApplicationBuilder().configure(Map(elems: _*)).router(Router.from {
       case GET(p"/testing") =>
         Action(
           Results.Ok(
@@ -30,7 +30,7 @@ class ExampleSpec extends MixedPlaySpec {
           ).as("text/html")
         )
     }).build()
-  
+
   def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
 
   // If a test just needs an Application, use "new App":
@@ -211,8 +211,8 @@ class ExampleSpec extends MixedPlaySpec {
   // write "in { () => ..."
   "Any old thing" must {
     "be doable without much boilerplate" in { () =>
-       1 + 1 mustEqual 2
-     }
+      1 + 1 mustEqual 2
+    }
   }
 }
 // #scalafunctionaltest-mixedfixtures

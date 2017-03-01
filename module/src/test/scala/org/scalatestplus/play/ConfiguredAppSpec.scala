@@ -19,7 +19,7 @@ import play.api.test._
 import org.scalatest._
 import events._
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.{Application, Play}
+import play.api.{ Application, Play }
 
 import play.api.inject.guice._
 

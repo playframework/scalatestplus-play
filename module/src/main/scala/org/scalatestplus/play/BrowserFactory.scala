@@ -22,7 +22,7 @@ import org.openqa.selenium.WebDriver
  * and an abstract `unableToCreateDriverErrorMessage` method that provides an appropriate error message if the driver
  * is not available on the current platform.
  *
- * Traits [[org.scalatestplus.play.OneBrowserPerSuite OneBrowserPerSuite]] and 
+ * Traits [[org.scalatestplus.play.OneBrowserPerSuite OneBrowserPerSuite]] and
  * [[org.scalatestplus.play.OneBrowserPerTest OneBrowserPerTest]] extend `BrowserFactory` and therefore require
  * you to fill in the `createWebDriver` method, usually by mixing in one of the `BrowserFactory` subtraits.
  */
@@ -43,7 +43,7 @@ trait BrowserFactory {
 import org.openqa.selenium._
 
 /**
- * Companion object to trait `BrowserFactory` that holds a `UnavailableDriver` object that implements 
+ * Companion object to trait `BrowserFactory` that holds a `UnavailableDriver` object that implements
  * the Selenium `WebDriver` interface by throwing `UnsupportedOperationException`. This is
  * used as a placeholder when a driver is not available on the host platform.
  */
@@ -74,57 +74,57 @@ object BrowserFactory {
      * Throws `UnsupportedOperationException`.
      */
     final def findElement(by: By): WebElement = complain()
-  
+
     /**
      * Throws `UnsupportedOperationException`.
      */
     final def findElements(by: By): java.util.List[WebElement] = complain()
-  
+
     /**
      * Throws `UnsupportedOperationException`.
      */
     final def get(url: String): Unit = complain()
-  
+
     /**
      * Throws `UnsupportedOperationException`.
      */
     final def getCurrentUrl(): String = complain()
-  
+
     /**
      * Throws `UnsupportedOperationException`.
      */
     final def getPageSource(): String = complain()
-  
+
     /**
      * Throws `UnsupportedOperationException`.
      */
     final def getTitle(): String = complain()
-  
+
     /**
      * Throws `UnsupportedOperationException`.
      */
     final def getWindowHandle(): String = complain()
-  
+
     /**
      * Throws `UnsupportedOperationException`.
      */
     final def getWindowHandles(): java.util.Set[java.lang.String] = complain()
-  
+
     /**
      * Throws `UnsupportedOperationException`.
      */
     final def manage(): WebDriver.Options = complain()
-  
+
     /**
      * Throws `UnsupportedOperationException`.
      */
     final def navigate(): WebDriver.Navigation = complain()
-  
+
     /**
      * Throws `UnsupportedOperationException`.
      */
     final def quit(): Unit = complain()
-  
+
     /**
      * Throws `UnsupportedOperationException`.
      */
@@ -141,7 +141,7 @@ object BrowserFactory {
    * and cancels the tests.
    *
    * This is an example of the "Null Object Pattern." We use this pattern to avoid initializing with `null` instead of making the driver type
-   * an `Option[WebDriver]` for two reasons: 1) the type of the implicit needed by Selenium is `WebDriver`, not `Option[WebDriver]`, and 2) 
+   * an `Option[WebDriver]` for two reasons: 1) the type of the implicit needed by Selenium is `WebDriver`, not `Option[WebDriver]`, and 2)
    * the Null Object we provide also carries an optional exception and user-friendly error message.
    *
    * @param ex: the `Throwable`, if any, that was thrown when attempting to use the requested driver
@@ -150,7 +150,7 @@ object BrowserFactory {
   case class UnavailableDriver(ex: Option[Throwable], errorMessage: String) extends GrumpyDriver {
     protected def complain(): Nothing =
       ex match {
-        case Some(cause) => 
+        case Some(cause) =>
           throw new UnsupportedOperationException(errorMessage, cause)
         case None =>
           throw new UnsupportedOperationException(errorMessage)
@@ -167,7 +167,7 @@ object BrowserFactory {
    * and cancels the tests.
    *
    * This is an example of the "Null Object Pattern." We use this pattern to avoid initializing with `null` instead of making the driver type
-   * an `Option[WebDriver]` for two reasons: 1) the type of the implicit needed by Selenium is `WebDriver`, not `Option[WebDriver]`, and 2) 
+   * an `Option[WebDriver]` for two reasons: 1) the type of the implicit needed by Selenium is `WebDriver`, not `Option[WebDriver]`, and 2)
    * the `UnsupportedOperationException` thrown by the methods of the Null Object we provide carries a user-friendly error message.
    */
   case object UnneededDriver extends GrumpyDriver {
@@ -183,7 +183,7 @@ object BrowserFactory {
    * their `webDriver` field with this value (to avoid initializing with `null`).
    *
    * This is an example of the "Null Object Pattern." We use this pattern to avoid initializing with `null` instead of making the driver type
-   * an `Option[WebDriver]` for two reasons: 1) the type of the implicit needed by Selenium is `WebDriver`, not `Option[WebDriver]`, and 2) 
+   * an `Option[WebDriver]` for two reasons: 1) the type of the implicit needed by Selenium is `WebDriver`, not `Option[WebDriver]`, and 2)
    * the `UnsupportedOperationException` thrown by the methods of the Null Object we provide carries a user-friendly error message.
    */
   case object UninitializedDriver extends GrumpyDriver {

@@ -5,9 +5,10 @@ jdk:
   - oraclejdk8
 env:
   # Define scripts here so they run concurrently
-  - SCRIPT="sbt -Dwebdriver.gecko.driver=$HOME/tmp/bin/geckodriver -Dwebdriver.chrome.driver=$HOME/tmp/bin/chromedriver test"
-  - SCRIPT="sbt -Dwebdriver.gecko.driver=$HOME/tmp/bin/geckodriver -Dwebdriver.chrome.driver=$HOME/tmp/bin/chromedriver docs/test"
-  - SCRIPT="sbt docs/validateDocs"
+  - SCRIPT=scripts/test
+  - SCRIPT=scripts/testDocs
+  - SCRIPT=scripts/validateDocs
+  - SCRIPT=scripts/validateCode
 before_script:
   # See https://github.com/SeleniumHQ/docker-selenium/issues/87
   - export DBUS_SESSION_BUS_ADDRESS=/dev/null
@@ -19,8 +20,7 @@ before_script:
   - "pushd ~/tmp/bin && wget -c https://chromedriver.storage.googleapis.com/2.27/chromedriver_linux64.zip && unzip chromedriver_linux64.zip && popd"
   - "pushd ~/tmp/bin && wget -c https://github.com/mozilla/geckodriver/releases/download/v0.14.0/geckodriver-v0.14.0-linux64.tar.gz && tar -xzvf geckodriver-v0.14.0-linux64.tar.gz && popd"
   - "chmod -vv +x ~/tmp/bin/*"
-  - "ls -alho ~/tmp/bin"
-  - "export PATH=/tmp/bin:$PATH"
+  - "export PATH=$HOME/tmp/bin:$PATH"
 script:
   - $SCRIPT
 cache:

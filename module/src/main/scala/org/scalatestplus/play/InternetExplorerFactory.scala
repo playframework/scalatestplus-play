@@ -28,7 +28,7 @@ import BrowserFactory.UnavailableDriver
  * Factory whose `createWebDriver` method will either return a new Selenium `InternetExplorerDriver`, or
  * [[org.scalatestplus.play.BrowserFactory.UnavailableDriver UnavailableDriver]], if Internet Explorer is not available on the host platform.
  *
- * Traits [[org.scalatestplus.play.OneBrowserPerSuite OneBrowserPerSuite]] and 
+ * Traits [[org.scalatestplus.play.OneBrowserPerSuite OneBrowserPerSuite]] and
  * [[org.scalatestplus.play.OneBrowserPerTest OneBrowserPerTest]] extend `BrowserFactory` and therefore require
  * you to fill in the `createWebDriver` method, usually by mixing in one of the `BrowserFactory` subtraits such as
  * `InternetExplorerFactory`.
@@ -46,8 +46,7 @@ trait InternetExplorerFactory extends BrowserFactory {
   def createWebDriver(): WebDriver =
     try {
       new InternetExplorerDriver()
-    }
-    catch {
+    } catch {
       case ex: Throwable => UnavailableDriver(Some(ex), Resources("cantCreateInternetExplorerDriver", ex.getMessage))
     }
 }

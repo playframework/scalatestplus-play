@@ -19,7 +19,7 @@ import play.api.test._
 import org.scalatest._
 import org.scalatestplus.play._
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
-import play.api.{Application, Play}
+import play.api.{ Application, Play }
 import play.api.inject.guice._
 import play.api.routing._
 
@@ -34,7 +34,7 @@ class NestedExampleSpec extends Suites(
   override def fakeApplication(): Application =
     new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(TestRoutes.router).build()
 }
- 
+
 // These are the nested suites
 @DoNotDiscover class OneSpec extends PlaySpec with ConfiguredServer with ConfiguredBrowser
 @DoNotDiscover class TwoSpec extends PlaySpec with ConfiguredServer with ConfiguredBrowser
