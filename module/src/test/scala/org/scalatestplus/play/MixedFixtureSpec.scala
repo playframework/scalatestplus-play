@@ -30,7 +30,7 @@ import scala.concurrent.Future
 class MixedFixtureSpec extends MixedSpec {
 
   def buildApp[A](elems: (String, String)*) =
-    new GuiceApplicationBuilder().configure(Map(elems:_*)).router(Router.from(TestRoute)).build()
+    new GuiceApplicationBuilder().configure(Map(elems:_*)).router(TestRoutes.router).build()
   def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
 
   "The App function" must {

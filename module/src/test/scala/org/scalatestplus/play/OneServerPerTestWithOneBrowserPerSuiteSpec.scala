@@ -25,8 +25,13 @@ import play.api.routing._
 
 class OneServerPerTestWithOneBrowserPerSuiteSpec extends UnitSpec with GuiceOneServerPerTest with OneBrowserPerSuite with FirefoxFactory {
 
-  override def newAppForTest(testData: TestData) =
-    new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(Router.from(TestRoute)).build()
+  override def newAppForTest(testData: TestData) = {
+    new GuiceApplicationBuilder()
+      .configure("foo" -> "bar", "ehcacheplugin" -> "disabled")
+      .router(TestRoutes.router)
+      .build()
+  }
+
   def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
 
   // Doesn't need synchronization because set by withFixture and checked by the test

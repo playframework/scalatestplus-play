@@ -48,7 +48,7 @@ import org.scalatest._
  *   // Override newAppForTest or use GuiceOneServerPerTest
  *   implicit override def newAppForTest(testData: TestData): Application = new GuiceApplicationBuilder()
  *     .configure(Map("ehcacheplugin" -> "disabled"))
- *     .router(Router.from(TestRoute))
+ *     .router(TestRoutes.router)
  *     .build()
  *
  *   "The OneServerPerTest trait" must {

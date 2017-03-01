@@ -68,7 +68,7 @@ import scala.util.Try
  *   // Override fakeApplication() if you need a Application with other than non-default parameters.
  *   def fakeApplication(): Application = new GuiceApplicationBuilder()
  *     .configure("foo" -> "bar", "ehcacheplugin" -> "disabled")
- *     .router(Router.from(TestRoute))
+ *     .router(TestRoutes.router)
  *     .build()
  *
  *   "The OneBrowserPerSuite trait" must {

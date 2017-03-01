@@ -88,6 +88,7 @@ import org.openqa.selenium.firefox.FirefoxProfile
  *
  * import play.api.test._
  * import org.scalatestplus.play._
+ * import org.scalatestplus.play.guice._
  * import play.api.{Play, Application}
  * import play.api.inject.guice._
  * import play.api.routing._
@@ -100,7 +101,7 @@ import org.openqa.selenium.firefox.FirefoxProfile
  *   def fakeApplication() = new GuiceApplicationBuilder()
  *     .disable[EhCacheModule]
  *     .configure("foo" -> "bar")
- *     .router(Router.from(TestRoute))
+ *     .router(TestRoutes.router)
  *     .build()
  *
  *   // Place tests you want run in different browsers in the `sharedTests` method:

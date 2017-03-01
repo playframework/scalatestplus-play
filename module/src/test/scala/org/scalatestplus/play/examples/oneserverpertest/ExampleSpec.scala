@@ -28,7 +28,7 @@ class ExampleSpec extends PlaySpec with GuiceOneServerPerTest {
   override def newAppForTest(testData: TestData): Application = {
       new GuiceApplicationBuilder()
         .configure(Map("ehcacheplugin" -> "disabled"))
-        .router(Router.from(TestRoute))
+        .router(TestRoutes.router)
         .build()
   }
 

@@ -24,7 +24,7 @@ import play.api.routing._
 class OneServerPerSuiteWithAllBrowsersPerTestSpec extends UnitSpec with GuiceOneServerPerSuite with AllBrowsersPerTest {
 
   override def fakeApplication() =
-    new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(Router.from(TestRoute)).build()
+    new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(TestRoutes.router).build()
   def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
 
   def sharedTests(browser: BrowserInfo) = {
