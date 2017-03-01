@@ -21,7 +21,6 @@ import org.openqa.selenium.firefox.{FirefoxDriver, FirefoxProfile}
 import org.openqa.selenium.ie.InternetExplorerDriver
 import org.openqa.selenium.safari.SafariDriver
 import org.openqa.selenium.htmlunit.HtmlUnitDriver
-import org.openqa.selenium.WebDriver
 import org.scalatestplus.play.guice.GuiceOneServerPerTest
 
 class AllBrowsersPerSuiteBehaviorSpec extends WordSpec {
@@ -81,7 +80,7 @@ class AllBrowsersPerSuiteBehaviorSpec extends WordSpec {
       assert(testStartingEventsReceived(9).testName == "test 2 [HtmlUnit]")
       assert(testStartingEventsReceived(10).testName == "test 3")
 
-      assert(rep.alertProvidedEventsReceived.length == 0)
+      assert(rep.alertProvidedEventsReceived.isEmpty)
     }
 
     "run only chosen test when ChosenTest tag is passed in" in {
@@ -245,7 +244,7 @@ class AllBrowsersPerSuiteBehaviorSpec extends WordSpec {
       assert(rep.testCanceledEventsReceived.length == expectedTestCanceledCount)
     }
 
-    "run only Firefox and non-browser tests when browsers is overriden to include FirefoxInfo only" in {
+    "run only Firefox and non-browser tests when browsers is overridden to include FirefoxInfo only" in {
       class FirefoxTestSpec extends TestSpec {
         override lazy val browsers: IndexedSeq[BrowserInfo] =
           Vector(
@@ -271,7 +270,7 @@ class AllBrowsersPerSuiteBehaviorSpec extends WordSpec {
     }
 
     // XXX This and the previous one leave a browser hanging. Why?
-    "run only Safari and non-browser tests when browsers is overriden to include SafariInfo only" in {
+    "run only Safari and non-browser tests when browsers is overridden to include SafariInfo only" in {
       class SafariTestSpec extends TestSpec {
         override lazy val browsers: IndexedSeq[BrowserInfo] =
           Vector(
@@ -296,7 +295,7 @@ class AllBrowsersPerSuiteBehaviorSpec extends WordSpec {
       assert(testStartingEventsReceived(2).testName == "test 3")
     }
 
-    "run only InternetExplorer and non-browser tests when browsers is overriden to include InternetExplorerInfo only" in {
+    "run only InternetExplorer and non-browser tests when browsers is overridden to include InternetExplorerInfo only" in {
       class InternetExplorerTestSpec extends TestSpec {
         override lazy val browsers: IndexedSeq[BrowserInfo] =
           Vector(
@@ -321,7 +320,7 @@ class AllBrowsersPerSuiteBehaviorSpec extends WordSpec {
       assert(testStartingEventsReceived(2).testName == "test 3")
     }
 
-    "run only Chrome and non-browser tests when browsers is overriden to include ChromeInfo only" in {
+    "run only Chrome and non-browser tests when browsers is overridden to include ChromeInfo only" in {
       class ChromeTestSpec extends TestSpec {
         override lazy val browsers: IndexedSeq[BrowserInfo] =
           Vector(
@@ -346,7 +345,7 @@ class AllBrowsersPerSuiteBehaviorSpec extends WordSpec {
       assert(testStartingEventsReceived(2).testName == "test 3")
     }
 
-    "run only HtmlUnit and non-browser tests when browsers is overriden to include HtmlUnitInfo only" in {
+    "run only HtmlUnit and non-browser tests when browsers is overridden to include HtmlUnitInfo only" in {
       class HtmlUnitTestSpec extends TestSpec {
         override lazy val browsers: IndexedSeq[BrowserInfo] =
           Vector(
