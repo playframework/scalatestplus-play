@@ -47,10 +47,10 @@ class ExampleSpec extends PlaySpec with GuiceOneServerPerSuite with AllBrowsersP
   // in the constructor, the usual place for tests in a `PlaySpec`
   "The AllBrowsersPerSuite trait" must {
     "provide an Application" in {
-      app.configuration.getString("foo") mustBe Some("bar")
+      app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
     "make the Application available implicitly" in {
-      def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
+      def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
       getConfig("foo") mustBe Some("bar")
     }
     "start the Application" in {

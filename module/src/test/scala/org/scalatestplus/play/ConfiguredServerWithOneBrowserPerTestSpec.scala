@@ -32,11 +32,11 @@ class ConfiguredServerWithOneBrowserPerTestSpec extends Suites(
 @DoNotDiscover
 class ConfiguredServerWithOneBrowserPerTestNestedSpec extends UnitSpec with ConfiguredServer with OneBrowserPerTest with FirefoxFactory {
 
-  def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
+  def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
 
   "The OneBrowserPerTest trait" must {
     "provide a FakeApplication" in {
-      app.configuration.getString("foo") mustBe Some("bar")
+      app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
     "make the FakeApplication available implicitly" in {
       getConfig("foo") mustBe Some("bar")

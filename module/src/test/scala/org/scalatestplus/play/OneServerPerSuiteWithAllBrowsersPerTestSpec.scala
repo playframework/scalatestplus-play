@@ -25,7 +25,7 @@ class OneServerPerSuiteWithAllBrowsersPerTestSpec extends UnitSpec with GuiceOne
 
   override def fakeApplication() =
     new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(Router.from(TestRoute)).build()
-  def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
+  def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
 
   def sharedTests(browser: BrowserInfo) = {
 
@@ -41,7 +41,7 @@ class OneServerPerSuiteWithAllBrowsersPerTestSpec extends UnitSpec with GuiceOne
 
   "The AllBrowsersPerTest trait" must {
     "provide an Application" in {
-      app.configuration.getString("foo") mustBe Some("bar")
+      app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
     "make the Application available implicitly" in {
       getConfig("foo") mustBe Some("bar")

@@ -17,17 +17,18 @@ package org.scalatestplus.play
 
 import play.api.test._
 import org.scalatest._
-import play.api.{Play, Application}
+import org.scalatestplus.play.guice.GuiceOneServerPerTest
+import play.api.{Application, Play}
 import play.api.inject.guice._
 
-class OneServerPerTestSpec extends UnitSpec with OneServerPerTest {
+class OneServerPerTestSpec extends UnitSpec with GuiceOneServerPerTest {
 
   implicit override def newAppForTest(testData: TestData): Application = new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").build()
-  def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
+  def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
 
   "The OneServerPerTest trait" must {
     "provide an Application" in {
-      app.configuration.getString("foo") mustBe Some("bar")
+      app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
     "make the Application available implicitly" in {
       getConfig("foo") mustBe Some("bar")

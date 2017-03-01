@@ -93,7 +93,7 @@ import org.openqa.selenium.firefox.FirefoxProfile
  * import play.api.routing._
  * import play.api.cache.ehcache.EhCacheModule
  *
- * class ExampleSpec extends PlaySpec with OneServerPerSuite with AllBrowsersPerSuite {
+ * class ExampleSpec extends PlaySpec with GuiceOneServerPerSuite with AllBrowsersPerSuite {
  *
  *   // Override fakeApplication if you need an Application with other than
  *   // default parameters.
@@ -120,10 +120,10 @@ import org.openqa.selenium.firefox.FirefoxProfile
  *   // in the constructor, the usual place for tests in a `PlaySpec`
  *   "The AllBrowsersPerSuite trait" must {
  *     "provide an Application" in {
- *       app.configuration.getString("foo") mustBe Some("bar")
+ *       app.configuration.getOptional[String]("foo") mustBe Some("bar")
  *     }
  *     "make the Application available implicitly" in {
- *       def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
+ *       def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
  *       getConfig("foo") mustBe Some("bar")
  *     }
  *     "start the Application" in {

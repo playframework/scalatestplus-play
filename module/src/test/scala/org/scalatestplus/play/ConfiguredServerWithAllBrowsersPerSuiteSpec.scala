@@ -34,7 +34,7 @@ with GuiceOneServerPerSuite with TestSuite {
 @DoNotDiscover
 class ConfiguredServerWithAllBrowsersPerSuiteNestedSpec extends UnitSpec with ConfiguredServer with AllBrowsersPerSuite {
 
-  def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
+  def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
 
   var theWebDriver: WebDriver = _
 
@@ -58,7 +58,7 @@ class ConfiguredServerWithAllBrowsersPerSuiteNestedSpec extends UnitSpec with Co
 
   "The AllBrowsersPerSuite trait" must {
     "provide an Application" in {
-      app.configuration.getString("foo") mustBe Some("bar")
+      app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
     "make the Application available implicitly" in {
       getConfig("foo") mustBe Some("bar")
