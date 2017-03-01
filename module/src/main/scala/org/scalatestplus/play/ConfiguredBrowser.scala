@@ -34,7 +34,7 @@ import BrowserFactory.UninitializedDriver
  *
  * This trait's self-type, [[org.scalatestplus.play.ServerProvider ServerProvider]],  will ensure 
  * a `TestServer` and `Application` are available to each test. The self-type will require that you mix in either
- * [[org.scalatestplus.play.guice.GuiceOneServerPerSuite GuiceOneServerPerSuite]], [[org.scalatestplus.play.OneServerPerTest OneServerPerTest]],
+ * [[org.scalatestplus.play.guice.GuiceOneServerPerSuite GuiceOneServerPerSuite]], [[org.scalatestplus.play.guice.GuiceOneServerPerTest GuiceOneServerPerTest]],
  * [[org.scalatestplus.play.ConfiguredServer ConfiguredServer]] before you mix in this trait. Your choice among these three
  * `ServerProvider`s will determine the extent to which one or more `TestServer`s are shared by multiple tests.
  *
@@ -116,7 +116,7 @@ trait ConfiguredBrowser extends TestSuiteMixin with WebBrowser with Eventually w
    * @param args the `Args` for this run
    * @return a `Status` object that indicates when all tests and nested suites started by this method have completed, and whether or not a failure occurred.
    *         
-   * @throws IllegalArgumentException if the `WebDriver` does not appear in `args.configMap` under the expected key
+   * @throws java.lang.IllegalArgumentException if the `WebDriver` does not appear in `args.configMap` under the expected key
    */
   abstract override def run(testName: Option[String], args: Args): Status = {
     args.configMap.getOptional[WebDriver]("org.scalatestplus.play.webDriver") match {

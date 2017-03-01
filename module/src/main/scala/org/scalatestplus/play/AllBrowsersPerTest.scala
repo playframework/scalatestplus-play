@@ -42,7 +42,7 @@ import org.openqa.selenium.chrome.ChromeDriver
  * instance before executing each test that needs a browser, closing it after the test completes, and overrides the `tags` lifecycle method to tag the shared tests so you can
  * filter them by browser type.  This trait's self-type, [[org.scalatestplus.play.ServerProvider ServerProvider]],  will ensure 
  * a `TestServer` and `Application` are available to each test. The self-type will require that you mix in either
- * [[org.scalatestplus.play.guice.GuiceOneServerPerSuite GuiceOneServerPerSuite]], [[org.scalatestplus.play.OneServerPerTest OneServerPerTest]],
+ * [[org.scalatestplus.play.guice.GuiceOneServerPerSuite GuiceOneServerPerSuite]], [[org.scalatestplus.play.guice.GuiceOneServerPerTest GuiceOneServerPerTest]],
  * [[org.scalatestplus.play.ConfiguredServer ConfiguredServer]] before you mix in this trait. Your choice among these three
  * `ServerProvider`s will determine the extent to which a `TestServer` is shared by multiple tests.
  *

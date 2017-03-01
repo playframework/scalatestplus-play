@@ -40,7 +40,7 @@ import org.openqa.selenium.firefox.FirefoxProfile
  * to share the same browser), and overrides the `tags` lifecycle method to tag the shared tests so you can
  * filter them by browser type.  This trait's self-type, [[org.scalatestplus.play.ServerProvider ServerProvider]],  will ensure 
  * a `TestServer` and `Application` are available to each test. The self-type will require that you mix in either
- * [[org.scalatestplus.play.guice.GuiceOneServerPerSuite GuiceOneServerPerSuite]], [[org.scalatestplus.play.OneServerPerTest OneServerPerTest]],
+ * [[org.scalatestplus.play.guice.GuiceOneServerPerSuite GuiceOneServerPerSuite]], [[org.scalatestplus.play.guice.GuiceOneServerPerTest GuiceOneServerPerTest]],
  * [[org.scalatestplus.play.ConfiguredServer ConfiguredServer]] before you mix in this trait. Your choice among these three
  * `ServerProvider`s will determine the extent to which a `TestServer` is shared by multiple tests.
  *
@@ -340,7 +340,7 @@ trait AllBrowsersPerSuite extends TestSuiteMixin with WebBrowser with Eventually
   /**
    * Invokes `super.runTests`, ensuring that the currently installed `WebDriver` (returned
    * by `webDriver`) is closed, if necessary. For more information on how this behavior
-   * fits into the big picture, see the documentatio for the `withFixture` method.
+   * fits into the big picture, see the documentation for the `withFixture` method.
    *
    * @param testName an optional name of one test to run. If `None`, all relevant tests should be run.
    *                 I.e., `None` acts like a wildcard that means run all relevant tests in this `Suite`.
