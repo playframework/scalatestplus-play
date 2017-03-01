@@ -16,7 +16,7 @@
 package org.scalatestplus.play
 
 import play.api.test._
-import play.api.{Application, Play}
+import play.api.{ Application, Play }
 import org.openqa.selenium.WebDriver
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.inject.guice._
@@ -69,7 +69,7 @@ class OneServerPerSuiteWithAllBrowsersPerSuiteSpec extends UnitSpec with GuiceOn
       finally con.disconnect()
     }
     "provide an UnneededDriver to non-shared test whose methods throw UnsupportedOperationException with an error message that gives a hint to put the test into the sharedTests method" in {
-      the [UnsupportedOperationException] thrownBy webDriver.get("funky") must have message Resources("webDriverUsedFromUnsharedTest")
+      the[UnsupportedOperationException] thrownBy webDriver.get("funky") must have message Resources("webDriverUsedFromUnsharedTest")
     }
   }
 }

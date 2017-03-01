@@ -19,7 +19,7 @@ import play.api.test.Helpers
 import org.scalatest.tags.FirefoxBrowser
 import org.scalatestplus.play._
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
-import play.api.{Application, Play}
+import play.api.{ Application, Play }
 import play.api.inject.guice._
 import play.api.routing._
 

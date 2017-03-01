@@ -15,8 +15,8 @@
  */
 package org.scalatestplus.play
 
-import org.scalatest.{Args, Status, TestSuite, TestSuiteMixin}
-import play.api.{Application, Play}
+import org.scalatest.{ Args, Status, TestSuite, TestSuiteMixin }
+import play.api.{ Application, Play }
 
 /**
  * The base abstract trait for one app per suite.
@@ -46,8 +46,7 @@ trait BaseOneAppPerSuite extends TestSuiteMixin { this: TestSuite with FakeAppli
       val status = super.run(testName, newArgs)
       status.whenCompleted { _ => Play.stop(app) }
       status
-    }
-    catch { // In case the suite aborts, ensure the app is stopped
+    } catch { // In case the suite aborts, ensure the app is stopped
       case ex: Throwable =>
         Play.stop(app)
         throw ex

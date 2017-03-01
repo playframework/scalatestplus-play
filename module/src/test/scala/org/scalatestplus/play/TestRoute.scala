@@ -29,7 +29,7 @@ object TestRoutes {
             "<body>" +
             "<input type='button' name='b' value='Click Me' onclick='document.title=\"scalatest\"' />" +
             "</body>" +
-          "</html>"
+            "</html>"
         ).as("text/html")
       }
     }

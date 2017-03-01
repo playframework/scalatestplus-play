@@ -19,17 +19,17 @@ import play.api.test._
 import org.scalatest._
 import org.scalatestplus.play._
 import org.scalatestplus.play.guice._
-import play.api.{Play, Application}
+import play.api.{ Play, Application }
 import play.api.inject.guice._
 
 class ExampleSpec extends PlaySpec with GuiceOneServerPerTest {
 
   // Override newAppForTest if you need a test with other than non-default parameters, or use GuiceOneServerPerTest.
   override def newAppForTest(testData: TestData): Application = {
-      new GuiceApplicationBuilder()
-        .configure(Map("ehcacheplugin" -> "disabled"))
-        .router(TestRoutes.router)
-        .build()
+    new GuiceApplicationBuilder()
+      .configure(Map("ehcacheplugin" -> "disabled"))
+      .router(TestRoutes.router)
+      .build()
   }
 
   "The OneServerPerTest trait" must {

@@ -25,7 +25,7 @@ import selenium.WebBrowser
 import concurrent.Eventually
 import concurrent.IntegrationPatience
 import org.openqa.selenium.WebDriver
-import org.openqa.selenium.firefox.{FirefoxOptions, FirefoxProfile}
+import org.openqa.selenium.firefox.{ FirefoxOptions, FirefoxProfile }
 import org.openqa.selenium.safari.SafariDriver
 import org.openqa.selenium.chrome.ChromeDriver
 
@@ -41,7 +41,7 @@ import org.openqa.selenium.chrome.ChromeDriver
  * The `AllBrowsersPerSuite` and `AllBrowsersPerTest` traits use the  tag name to automatically tag any tests that use
  * a particular `WebDriver` with the appropriate tag so that tests can be dynamically filtered by the browser the use.
  *
- * `BrowserInfo` is not sealed so that you can extend it if you need other Browser types, for example, 
+ * `BrowserInfo` is not sealed so that you can extend it if you need other Browser types, for example,
  * Firefox browsers with different profiles (English, Japanese, etc.).
  *
  * @param name the browser name, surrounded by square brackets
@@ -132,7 +132,7 @@ case object InternetExplorerInfo extends BrowserInfo("[InternetExplorer]", "org.
    * error message.
    *
    * @return an new instance of a Selenium `InternetExplorerDriver`, or a [[org.scalatestplus.play.BrowserFactory.UnavailableDriver BrowserFactory.UnavailableDriver]] if Internet Explorer
-   was not available on the host platform.
+   * was not available on the host platform.
    */
   def createWebDriver(): WebDriver = InternetExplorerFactory.createWebDriver()
 }

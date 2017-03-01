@@ -37,7 +37,7 @@ import org.openqa.selenium.safari.SafariDriver
  *
  * Trait `MixedFixtures` can be mixed into any `fixture.Suite`. For convenience it is
  * mixed into [[org.scalatestplus.play.MixedPlaySpec MixedPlaySpec]]. In a `fixture.Suite`, tests can
- * take a no-arg function. `MixedFixtures` provides several no-arg function classes (classes extending `Function0`) that 
+ * take a no-arg function. `MixedFixtures` provides several no-arg function classes (classes extending `Function0`) that
  * can be used to provide different fixtures for different tests.
  *
  * If a test needs a `Application`, use the `App` function, like this:
@@ -59,12 +59,12 @@ import org.openqa.selenium.safari.SafariDriver
  *   finally con.disconnect()
  * }
  * </pre>
- * 
+ *
  * If a test needs an `Application`, running `TestServer`, and Selenium driver, use
  * one of functions `Chrome`, `Firefox`, `HtmlUnit`, `InternetExplorer`, or `Safari`.
  * If the chosen Selenium driver is unavailable on the host platform, the test will
  * be automatically canceled. Here's an example that uses the `Safari` function:
- * 
+ *
  * <pre class="stHighlight">
  * "provide a web driver" in new Safari(fakeApp()) {
  *   go to ("http://localhost:" + port + "/testing")
@@ -73,7 +73,7 @@ import org.openqa.selenium.safari.SafariDriver
  *   eventually { pageTitle mustBe "scalatest" }
  * }
  * </pre>
- * 
+ *
  * Here's a complete example:
  *
  * <pre class="stHighlight">
@@ -278,7 +278,7 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: fixt
      * Runs the passed in `Application` before executing the test body, ensuring it is closed after the test body completes.
      */
     override def apply() {
-      def callSuper = super.apply()  // this is needed for Scala 2.10 to work
+      def callSuper = super.apply() // this is needed for Scala 2.10 to work
       Helpers.running(app)(callSuper)
     }
   }
@@ -308,7 +308,7 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: fixt
      * test body, ensuring both are stopped after the test body completes.
      */
     override def apply() {
-      def callSuper = super.apply()  // this is needed for Scala 2.10 to work
+      def callSuper = super.apply() // this is needed for Scala 2.10 to work
       Helpers.running(TestServer(port, app))(callSuper)
     }
   }
@@ -319,7 +319,7 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: fixt
    */
   abstract class HtmlUnit(appFun: => Application = new GuiceApplicationBuilder().build(), val port: Int = Helpers.testServerPort) extends WebBrowser with NoArg with HtmlUnitFactory {
     /**
-     * A lazy implicit instance of `HtmlUnitDriver`. It will hold `UnavailableDriver` if `HtmlUnitDriver` 
+     * A lazy implicit instance of `HtmlUnitDriver`. It will hold `UnavailableDriver` if `HtmlUnitDriver`
      * is not available in the running machine.
      */
     implicit lazy val webDriver: WebDriver = createWebDriver()
@@ -353,7 +353,7 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: fixt
             case None => cancel(errorMessage)
           }
         case _ =>
-          def callSuper = super.apply()  // this is needed for Scala 2.10 to work
+          def callSuper = super.apply() // this is needed for Scala 2.10 to work
           try Helpers.running(TestServer(port, app))(callSuper)
           finally webDriver.quit()
       }
@@ -367,7 +367,7 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: fixt
   abstract class Firefox(appFun: => Application = new GuiceApplicationBuilder().build(), val port: Int = Helpers.testServerPort) extends WebBrowser with NoArg with FirefoxFactory {
 
     /**
-     * A lazy implicit instance of `FirefoxDriver`, it will hold `UnavailableDriver` if `FirefoxDriver` 
+     * A lazy implicit instance of `FirefoxDriver`, it will hold `UnavailableDriver` if `FirefoxDriver`
      * is not available in the running machine.
      */
     implicit lazy val webDriver: WebDriver = createWebDriver()
@@ -401,7 +401,7 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: fixt
             case None => cancel(errorMessage)
           }
         case _ =>
-          def callSuper = super.apply()  // this is needed for Scala 2.10 to work
+          def callSuper = super.apply() // this is needed for Scala 2.10 to work
           try Helpers.running(TestServer(port, app))(callSuper)
           finally webDriver.quit()
       }
@@ -414,7 +414,7 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: fixt
    */
   abstract class Safari(appFun: => Application = new GuiceApplicationBuilder().build(), val port: Int = Helpers.testServerPort) extends WebBrowser with NoArg with SafariFactory {
     /**
-     * A lazy implicit instance of `SafariDriver`, it will hold `UnavailableDriver` if `SafariDriver` 
+     * A lazy implicit instance of `SafariDriver`, it will hold `UnavailableDriver` if `SafariDriver`
      * is not available in the running machine.
      */
     implicit lazy val webDriver: WebDriver = createWebDriver()
@@ -448,7 +448,7 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: fixt
             case None => cancel(errorMessage)
           }
         case _ =>
-          def callSuper = super.apply()  // this is needed for Scala 2.10 to work
+          def callSuper = super.apply() // this is needed for Scala 2.10 to work
           try Helpers.running(TestServer(port, app))(callSuper)
           finally webDriver.quit()
       }
@@ -461,7 +461,7 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: fixt
    */
   abstract class Chrome(appFun: => Application = new GuiceApplicationBuilder().build(), val port: Int = Helpers.testServerPort) extends WebBrowser with NoArg with ChromeFactory {
     /**
-     * A lazy implicit instance of `ChromeDriver`, it will hold `UnavailableDriver` if `ChromeDriver` 
+     * A lazy implicit instance of `ChromeDriver`, it will hold `UnavailableDriver` if `ChromeDriver`
      * is not available in the running machine.
      */
     implicit lazy val webDriver: WebDriver = createWebDriver()
@@ -495,7 +495,7 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: fixt
             case None => cancel(errorMessage)
           }
         case _ =>
-          def callSuper = super.apply()  // this is needed for Scala 2.10 to work
+          def callSuper = super.apply() // this is needed for Scala 2.10 to work
           try Helpers.running(TestServer(port, app))(callSuper)
           finally webDriver.quit()
       }
@@ -508,7 +508,7 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: fixt
    */
   abstract class InternetExplorer(appFun: => Application = new GuiceApplicationBuilder().build(), val port: Int = Helpers.testServerPort) extends WebBrowser with NoArg with InternetExplorerFactory {
     /**
-     * A lazy implicit instance of `InternetExplorerDriver`, it will hold `UnavailableDriver` if `InternetExplorerDriver` 
+     * A lazy implicit instance of `InternetExplorerDriver`, it will hold `UnavailableDriver` if `InternetExplorerDriver`
      * is not available in the running machine.
      */
     implicit lazy val webDriver: WebDriver = createWebDriver()
@@ -542,7 +542,7 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: fixt
             case None => cancel(errorMessage)
           }
         case _ =>
-          def callSuper = super.apply()  // this is needed for Scala 2.10 to work
+          def callSuper = super.apply() // this is needed for Scala 2.10 to work
           try Helpers.running(TestServer(port, app))(callSuper)
           finally webDriver.quit()
       }

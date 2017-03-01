@@ -18,11 +18,11 @@ package org.scalatestplus.play.examples.allbrowserspersuite
 import play.api.test._
 import org.scalatestplus.play._
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
-import play.api.{Application, Play}
+import play.api.{ Application, Play }
 import play.api.inject.guice._
 import play.api.routing._
 import play.api.cache.ehcache.EhCacheModule
- 
+
 class ExampleSpec extends PlaySpec with GuiceOneServerPerSuite with AllBrowsersPerSuite {
 
   // Override app if you need an Application with other than

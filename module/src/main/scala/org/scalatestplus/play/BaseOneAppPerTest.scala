@@ -1,9 +1,8 @@
 package org.scalatestplus.play
 
-import org.scalatest.{TestSuite, TestSuiteMixin, TestData}
+import org.scalatest.{ TestSuite, TestSuiteMixin, TestData }
 import play.api.Application
 import play.api.test.Helpers
-
 
 /**
  * Trait that provides a new `Application` instance for each test.

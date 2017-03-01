@@ -17,7 +17,7 @@ package org.scalatestplus.play.examples.mixedfixtures
 
 import play.api.test._
 import org.scalatestplus.play._
-import play.api.{Play, Application}
+import play.api.{ Play, Application }
 import play.api.inject.guice._
 import play.api.routing._
 
@@ -25,7 +25,7 @@ class ExampleSpec extends MixedPlaySpec {
 
   // Some helper methods
   def buildApp[A](elems: (String, String)*) =
-    new GuiceApplicationBuilder().configure(Map(elems:_*)).router(TestRoutes.router).build()
+    new GuiceApplicationBuilder().configure(Map(elems: _*)).router(TestRoutes.router).build()
   def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
 
   "The App function" must {
@@ -185,8 +185,8 @@ class ExampleSpec extends MixedPlaySpec {
   }
   "Any old thing" must {
     "be doable without much boilerplate" in { () =>
-       1 + 1 mustEqual 2
-     }
+      1 + 1 mustEqual 2
+    }
   }
 }
 

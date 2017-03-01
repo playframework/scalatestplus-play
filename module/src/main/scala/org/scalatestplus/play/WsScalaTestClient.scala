@@ -15,7 +15,7 @@
  */
 package org.scalatestplus.play
 
-import play.api.libs.ws.{WSClient, WSRequest}
+import play.api.libs.ws.{ WSClient, WSRequest }
 import play.api.mvc.Call
 
 /**

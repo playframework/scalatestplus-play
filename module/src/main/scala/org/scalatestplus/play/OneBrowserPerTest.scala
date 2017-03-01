@@ -27,12 +27,12 @@ import BrowserFactory.UninitializedDriver
 
 /**
  * Trait that provides a new Selenium `WebDriver` instance for each test executed in a ScalaTest `Suite`.
- * 
- * This trait overrides ScalaTest's `withFixture` method to create a new `WebDriver` instance 
+ *
+ * This trait overrides ScalaTest's `withFixture` method to create a new `WebDriver` instance
  * before each test, and ensure it is closed after the test has completed.
  * The `WebDriver` is available (implicitly) from method `webDriver`.
  *
- * This trait's self-type, [[org.scalatestplus.play.ServerProvider ServerProvider]],  will ensure 
+ * This trait's self-type, [[org.scalatestplus.play.ServerProvider ServerProvider]],  will ensure
  * a `TestServer` and `Application` are available to each test. The self-type will require that you mix in either
  * [[org.scalatestplus.play.guice.GuiceOneServerPerSuite GuiceOneServerPerSuite]], [[org.scalatestplus.play.guice.GuiceOneServerPerTest OneServerPerTest]],
  * [[org.scalatestplus.play.ConfiguredServer ConfiguredServer]] before you mix in this trait. Your choice among these three
@@ -104,9 +104,9 @@ trait OneBrowserPerTest extends TestSuiteMixin with WebBrowser with Eventually w
   implicit def webDriver: WebDriver = synchronized { privateWebDriver }
 
   /**
-   * Creates a new instance of `WebDriver` before 
-   * running each test, ensuring it is closed after the test completes. 
-   * If an error occurs when attempting to creat the `WebDriver`, [[org.scalatestplus.play.BrowserFactory.UnavailableDriver BrowserFactory.UnavailableDriver]] 
+   * Creates a new instance of `WebDriver` before
+   * running each test, ensuring it is closed after the test completes.
+   * If an error occurs when attempting to creat the `WebDriver`, [[org.scalatestplus.play.BrowserFactory.UnavailableDriver BrowserFactory.UnavailableDriver]]
    * will be used instead and all tests will be canceled automatically.
    *
    * @param test the no-arg test function to run with a fixture
@@ -125,8 +125,7 @@ trait OneBrowserPerTest extends TestSuiteMixin with WebBrowser with Eventually w
           }
         case _ => super.withFixture(test)
       }
-    }
-    finally {
+    } finally {
       privateWebDriver match {
         case _: UnavailableDriver => // do nothing
         case _ => privateWebDriver.quit()

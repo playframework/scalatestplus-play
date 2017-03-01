@@ -20,7 +20,7 @@ import org.scalatest._
 import org.scalatest.tags.FirefoxBrowser
 import org.scalatestplus.play._
 import org.scalatestplus.play.guice._
-import play.api.{Play, Application}
+import play.api.{ Play, Application }
 import play.api.inject.guice._
 import play.api.routing._
 

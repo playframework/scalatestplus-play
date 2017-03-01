@@ -18,7 +18,7 @@ package org.scalatestplus.play
 import java.util.logging.Level
 
 import org.openqa.selenium.WebDriver
-import org.openqa.selenium.firefox.{FirefoxBinary, FirefoxDriver, FirefoxOptions, FirefoxProfile}
+import org.openqa.selenium.firefox.{ FirefoxBinary, FirefoxDriver, FirefoxOptions, FirefoxProfile }
 import BrowserFactory.UnavailableDriver
 import org.openqa.selenium.remote.DesiredCapabilities
 
@@ -27,7 +27,7 @@ import org.openqa.selenium.remote.DesiredCapabilities
  * using the profile specified by `firefoxProfile`), or
  * [[org.scalatestplus.play.BrowserFactory.UnavailableDriver UnavailableDriver]], if Firefox is not available on the host platform.
  *
- * Traits [[org.scalatestplus.play.OneBrowserPerSuite OneBrowserPerSuite]] and 
+ * Traits [[org.scalatestplus.play.OneBrowserPerSuite OneBrowserPerSuite]] and
  * [[org.scalatestplus.play.OneBrowserPerTest OneBrowserPerTest]] extend `BrowserFactory` and therefore require
  * you to fill in the `createWebDriver` method, usually by mixing in one of the `BrowserFactory` subtraits such as
  * `FirefoxFactory`.
@@ -72,8 +72,7 @@ object FirefoxFactory extends FirefoxFactory {
   def createWebDriver(firefoxProfile: FirefoxProfile): WebDriver = {
     try {
       new FirefoxDriver(firefoxProfile)
-    }
-    catch {
+    } catch {
       case ex: Throwable => UnavailableDriver(Some(ex), Resources("cantCreateFirefoxDriver", ex.getMessage))
     }
   }

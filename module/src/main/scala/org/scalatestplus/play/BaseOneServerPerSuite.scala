@@ -21,7 +21,7 @@ import org.scalatest._
 
 /**
  * Trait that provides a new `Application` and running `TestServer` instance per ScalaTest `Suite`.
- * 
+ *
  * By default, this trait creates a new `Application` for the `Suite` using default parameter values, which
  * is made available via the `app` field defined in this trait and a new `TestServer` for the `Suite` using the port number provided by
  * its `port` field and the `Application` provided by its `app` field. If your `Suite` needs a
@@ -32,7 +32,7 @@ import org.scalatest._
  * before executing the `Suite` via a call to `super.run`.
  * In addition, it places a reference to the `Application` provided by `app` into the `ConfigMap`
  * under the key `org.scalatestplus.play.app` and to the port number provided by `port` under the key
- * `org.scalatestplus.play.port`.  This allows any nested `Suite`s to access the `Suite`'s 
+ * `org.scalatestplus.play.port`.  This allows any nested `Suite`s to access the `Suite`'s
  * `Application` and port number as well, most easily by having the nested `Suite`s mix in the
  * [[org.scalatestplus.play.ConfiguredServer ConfiguredServer]] trait. On the status returned by `super.run`, this
  * trait's overridden `run` method registers a call to `stop` on the `TestServer` to be executed when the `Status`
@@ -83,7 +83,7 @@ import org.scalatest._
  *
  * If you have many tests that can share the same `Application` and `TestServer`, and you don't want to put them all into one
  * test class, you can place them into different `Suite` classes.
- * These will be your nested suites. Create a master suite that extends `OneServerPerSuite` and declares the nested 
+ * These will be your nested suites. Create a master suite that extends `OneServerPerSuite` and declares the nested
  * `Suite`s. Annotate the nested suites with `@DoNotDiscover` and have them extend `ConfiguredServer`. Here's an example:
  *
  * <pre class="stHighlight">
@@ -141,7 +141,7 @@ import org.scalatest._
  * }
  * </pre>
  */
-trait BaseOneServerPerSuite extends TestSuiteMixin with ServerProvider { this: TestSuite with FakeApplicationFactory  =>
+trait BaseOneServerPerSuite extends TestSuiteMixin with ServerProvider { this: TestSuite with FakeApplicationFactory =>
 
   /**
    * An implicit instance of `Application`.
@@ -175,8 +175,7 @@ trait BaseOneServerPerSuite extends TestSuiteMixin with ServerProvider { this: T
       val status = super.run(testName, newArgs)
       status.whenCompleted { _ => testServer.stop() }
       status
-    }
-    catch { // In case the suite aborts, ensure the server is stopped
+    } catch { // In case the suite aborts, ensure the server is stopped
       case ex: Throwable =>
         testServer.stop()
         throw ex

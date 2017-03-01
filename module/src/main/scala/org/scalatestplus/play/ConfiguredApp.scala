@@ -84,7 +84,7 @@ trait ConfiguredApp extends TestSuiteMixin { this: TestSuite =>
    *                 I.e., `None` acts like a wildcard that means run all relevant tests in this `Suite`.
    * @param args the `Args` for this run
    * @return a `Status` object that indicates when all tests and nested suites started by this method have completed, and whether or not a failure occurred.
-   *         
+   *
    * @throws java.lang.IllegalArgumentException if the `Application` does not appear in `args.configMap` under the expected key
    */
   abstract override def run(testName: Option[String], args: Args): Status = {
