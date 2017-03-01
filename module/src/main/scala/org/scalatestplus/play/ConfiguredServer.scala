@@ -109,7 +109,7 @@ trait ConfiguredServer extends TestSuiteMixin with ServerProvider { this: TestSu
    * @param args the `Args` for this run
    * @return a `Status` object that indicates when all tests and nested suites started by this method have completed, and whether or not a failure occurred.
    *         
-   * @throws IllegalArgumentException if the `Application` and/or port number does not appear in `args.configMap` under the expected keys
+   * @throws java.lang.IllegalArgumentException if the `Application` and/or port number does not appear in `args.configMap` under the expected keys
    */
   abstract override def run(testName: Option[String], args: Args): Status = {
     args.configMap.getOptional[Application]("org.scalatestplus.play.app") match {
