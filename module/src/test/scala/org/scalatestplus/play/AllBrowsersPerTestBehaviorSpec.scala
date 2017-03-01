@@ -244,7 +244,7 @@ class AllBrowsersPerTestBehaviorSpec extends WordSpec {
       assert(rep.testCanceledEventsReceived.length == expectedTestCanceledCount)
     }
 
-    "run only Firefox and non-browser tests when browsers is overriden to include FirefoxInfo only" in {
+    "run only Firefox and non-browser tests when browsers is overridden to include FirefoxInfo only" in {
       class FirefoxTestSpec extends TestSpec {
         override lazy val browsers: IndexedSeq[BrowserInfo] =
           Vector(
@@ -269,7 +269,7 @@ class AllBrowsersPerTestBehaviorSpec extends WordSpec {
       assert(testStartingEventsReceived(2).testName == "test 3")
     }
 
-    "run only Safari and non-browser tests when browsers is overriden to include SafariInfo only" in {
+    "run only Safari and non-browser tests when browsers is overridden to include SafariInfo only" in {
       class SafariTestSpec extends TestSpec {
         override lazy val browsers: IndexedSeq[BrowserInfo] =
           Vector(
@@ -294,7 +294,7 @@ class AllBrowsersPerTestBehaviorSpec extends WordSpec {
       assert(testStartingEventsReceived(2).testName == "test 3")
     }
 
-    "run only InternetExplorer and non-browser tests when browsers is overriden to include InternetExplorerInfo only" in {
+    "run only InternetExplorer and non-browser tests when browsers is overridden to include InternetExplorerInfo only" in {
       class InternetExplorerTestSpec extends TestSpec {
         override lazy val browsers: IndexedSeq[BrowserInfo] =
           Vector(
@@ -319,7 +319,7 @@ class AllBrowsersPerTestBehaviorSpec extends WordSpec {
       assert(testStartingEventsReceived(2).testName == "test 3")
     }
 
-    "run only Chrome and non-browser tests when browsers is overriden to include ChromeInfo only" in {
+    "run only Chrome and non-browser tests when browsers is overridden to include ChromeInfo only" in {
       class ChromeTestSpec extends TestSpec {
         override lazy val browsers: IndexedSeq[BrowserInfo] =
           Vector(
@@ -344,7 +344,7 @@ class AllBrowsersPerTestBehaviorSpec extends WordSpec {
       assert(testStartingEventsReceived(2).testName == "test 3")
     }
 
-    "run only HtmlUnit and non-browser tests when browsers is overriden to include HtmlUnitInfo only" in {
+    "run only HtmlUnit and non-browser tests when browsers is overridden to include HtmlUnitInfo only" in {
       class HtmlUnitTestSpec extends TestSpec {
         override lazy val browsers: IndexedSeq[BrowserInfo] =
           Vector(
