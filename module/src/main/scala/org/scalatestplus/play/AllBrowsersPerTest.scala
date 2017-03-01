@@ -25,8 +25,6 @@ import BrowserFactory.UnavailableDriver
 import BrowserFactory.UnneededDriver
 import BrowserFactory.UninitializedDriver
 import org.openqa.selenium.firefox.FirefoxProfile
-import org.openqa.selenium.safari.SafariDriver
-import org.openqa.selenium.chrome.ChromeDriver
 
 /**
  * Trait that uses a [[http://doc.scalatest.org/3.0.1/index.html#org.scalatest.FlatSpec@sharedTests ''shared test'']] approach to enable
@@ -207,7 +205,8 @@ trait AllBrowsersPerTest extends TestSuiteMixin with WebBrowser with Eventually 
       SafariInfo,
       InternetExplorerInfo,
       ChromeInfo,
-      HtmlUnitInfo(true)
+      HtmlUnitInfo(true),
+      PhantomJSInfo()
     )
 
   private var privateWebDriver: WebDriver = UninitializedDriver
