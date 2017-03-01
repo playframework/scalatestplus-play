@@ -25,7 +25,7 @@ import play.api.routing._
 class OneHtmlUnitFactoryPerTestSpec extends UnitSpec with GuiceOneServerPerTest with OneBrowserPerTest with HtmlUnitFactory {
 
   implicit override def newAppForTest(testData: TestData): Application =
-    new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(Router.from(TestRoute)).build()
+    new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(TestRoutes.router).build()
 
   def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
 

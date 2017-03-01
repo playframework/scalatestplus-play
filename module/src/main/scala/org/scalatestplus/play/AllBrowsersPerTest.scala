@@ -103,7 +103,7 @@ import org.openqa.selenium.chrome.ChromeDriver
  *   override def newAppForTest(testData: TestData): Application = new GuiceApplicationBuilder()
  *     .disable[EhCacheModule]
  *     .configure("foo" -> "bar")
- *     .router(Router.from(TestRoute))
+ *     .router(TestRoutes.router)
  *     .build()
  *
  *   // Place tests you want run in different browsers in the `sharedTests` method:

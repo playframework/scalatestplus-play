@@ -27,7 +27,7 @@ class ConfiguredServerWithOneBrowserPerSuiteSpec extends Suites(
   new ConfiguredServerWithOneBrowserPerSuiteNestedSpec 
 ) with GuiceOneServerPerSuite with TestSuite {
   override def fakeApplication(): Application =
-    new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(Router.from(TestRoute)).build()
+    new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(TestRoutes.router).build()
 }
 
 @DoNotDiscover

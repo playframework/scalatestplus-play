@@ -59,7 +59,7 @@ import BrowserFactory.UninitializedDriver
  *   // Override newAppForTest if you need an Application with other than non-default parameters.
  *   override def newAppForTest(testData: TestData): Application = new GuiceApplicationBuilder()
  *     .configure(Map("ehcacheplugin" -> "disabled"))
- *     .router(Router.from(TestRoute))
+ *     .router(TestRoutes.router)
  *     .build()
  *
  *   "The OneBrowserPerTest trait" must {

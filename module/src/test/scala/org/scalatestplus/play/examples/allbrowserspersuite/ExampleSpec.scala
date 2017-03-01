@@ -28,7 +28,7 @@ class ExampleSpec extends PlaySpec with GuiceOneServerPerSuite with AllBrowsersP
   // Override app if you need an Application with other than
   // default parameters.
   override def fakeApplication(): Application =
-    new GuiceApplicationBuilder().disable[EhCacheModule].configure("foo" -> "bar").router(Router.from(TestRoute)).build()
+    new GuiceApplicationBuilder().disable[EhCacheModule].configure("foo" -> "bar").router(TestRoutes.router).build()
 
   // Place tests you want run in different browsers in the `sharedTests` method:
   def sharedTests(browser: BrowserInfo) = {
