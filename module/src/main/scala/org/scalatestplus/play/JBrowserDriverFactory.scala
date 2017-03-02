@@ -40,11 +40,9 @@ trait JBrowserDriverFactory extends BrowserFactory {
   def createWebDriver(): WebDriver =
     try {
       new com.machinepublishers.jbrowserdriver.JBrowserDriver()
-    }
-    catch {
+    } catch {
       case ex: Throwable => UnavailableDriver(Some(ex), Resources("cantCreateJBrowserDriver", ex.getMessage))
     }
 }
-
 
 object JBrowserDriverFactory extends JBrowserDriverFactory
