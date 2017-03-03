@@ -29,7 +29,7 @@ import org.openqa.selenium.safari.SafariDriver
 import org.openqa.selenium.chrome.ChromeDriver
 
 /**
- * Trait that uses a [[http://doc.scalatest.org/2.1.3/index.html#org.scalatest.FlatSpec@sharedTests ''shared test'']] approach to enable
+ * Trait that uses a [[http://doc.scalatest.org/3.0.1/index.html#org.scalatest.FlatSpec@sharedTests ''shared test'']] approach to enable
  * you to run the same tests on multiple browsers in a ScalaTest `Suite`, where a new browser is started before each test
  * that needs a browser, and stopped after.
  *

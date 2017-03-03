@@ -27,7 +27,7 @@ import BrowserFactory.UninitializedDriver
 import org.openqa.selenium.firefox.FirefoxProfile
 
 /**
- * Trait that uses a [[http://doc.scalatest.org/2.1.3/index.html#org.scalatest.FlatSpec@sharedTests ''shared test'']] approach to enable
+ * Trait that uses a [[http://doc.scalatest.org/3.0.1/index.html#org.scalatest.FlatSpec@sharedTests ''shared test'']] approach to enable
  * you to run the same tests on multiple browsers in a ScalaTest `Suite`, where each kind of browser is started and stopped
  * just once for the whole `Suite`.
  *

@@ -47,7 +47,7 @@ Lastly, if allowing multiple test classes to share the same server will give you
 
 ## Testing with a web browser
 
-The _ScalaTest + Play_ library builds on ScalaTest's [Selenium DSL](http://doc.scalatest.org/2.2.6/index.html#org.scalatest.selenium.WebBrowser) to make it easy to test your Play applications from web browsers.
+The _ScalaTest + Play_ library builds on ScalaTest's [Selenium DSL](http://doc.scalatest.org/3.0.1/index.html#org.scalatest.selenium.WebBrowser) to make it easy to test your Play applications from web browsers.
 
 To run all tests in your test class using a same browser instance, mix [`OneBrowserPerSuite`](api/scala/org/scalatestplus/play/OneBrowserPerSuite.html) into your test class. You'll also need to mix in a [`BrowserFactory`](api/scala/org/scalatestplus/play/BrowserFactory.html) trait that will provide a Selenium web driver: one of [`ChromeFactory`](api/scala/org/scalatestplus/play/ChromeFactory.html), [`FirefoxFactory`](api/scala/org/scalatestplus/play/FirefoxFactory.html), [`HtmlUnitFactory`](api/scala/org/scalatestplus/play/HtmlUnitFactory.html), [`InternetExplorerFactory`](api/scala/org/scalatestplus/play/InternetExplorerFactory.html), [`SafariFactory`](api/scala/org/scalatestplus/play/SafariFactory.html).
 
@@ -95,7 +95,7 @@ You can mix any of the previously mentioned traits into `PlaySpec`.
 
 In all the test classes shown in previous examples, all or most tests in the test class required the same fixtures. While this is common, it is not always the case. If different tests in the same test class need different fixtures, mix in trait [`MixedFixtures`](api/scala/org/scalatestplus/play/MixedFixtures.html). Then give each individual test the fixture it needs using one of these no-arg functions: [App](api/scala/org/scalatestplus/play/MixedFixtures$App.html), [Server](api/scala/org/scalatestplus/play/MixedFixtures$Server.html), [Chrome](api/scala/org/scalatestplus/play/MixedFixtures$Chrome.html), [Firefox](api/scala/org/scalatestplus/play/MixedFixtures$Firefox.html), [HtmlUnit](api/scala/org/scalatestplus/play/MixedFixtures$HtmlUnit.html), [InternetExplorer](api/scala/org/scalatestplus/play/MixedFixtures$InternetExplorer.html), or [Safari](api/scala/org/scalatestplus/play/MixedFixtures$Safari.html).
 
-You cannot mix [`MixedFixtures`](api/scala/org/scalatestplus/play/MixedFixtures.html) into [`PlaySpec`](api/scala/org/scalatestplus/play/PlaySpec.html) because `MixedFixtures` requires a ScalaTest [`fixture.Suite`](http://doc.scalatest.org/2.2.6/index.html#org.scalatest.fixture.Suite) and `PlaySpec` is just a regular [`Suite`](http://doc.scalatest.org/2.2.6/index.html#org.scalatest.Suite). If you want a convenient base class for mixed fixtures, extend [`MixedPlaySpec`](api/scala/org/scalatestplus/play/MixedPlaySpec.html) instead. Here's an example:
+You cannot mix [`MixedFixtures`](api/scala/org/scalatestplus/play/MixedFixtures.html) into [`PlaySpec`](api/scala/org/scalatestplus/play/PlaySpec.html) because `MixedFixtures` requires a ScalaTest [`fixture.Suite`](http://doc.scalatest.org/3.0.1/index.html#org.scalatest.fixture.Suite) and `PlaySpec` is just a regular [`Suite`](http://doc.scalatest.org/3.0.1/index.html#org.scalatest.Suite). If you want a convenient base class for mixed fixtures, extend [`MixedPlaySpec`](api/scala/org/scalatestplus/play/MixedPlaySpec.html) instead. Here's an example:
 
 @[scalafunctionaltest-mixedfixtures](code/mixedfixtures/ExampleSpec.scala)
 
