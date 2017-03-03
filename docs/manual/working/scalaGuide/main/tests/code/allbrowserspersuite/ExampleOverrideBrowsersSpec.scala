@@ -17,7 +17,7 @@ class ExampleOverrideBrowsersSpec extends PlaySpec with GuiceOneServerPerSuite w
   override lazy val browsers =
     Vector(
       FirefoxInfo(firefoxProfile),
-      ChromeInfo
+      ChromeInfo()
     )
 
   // Override app if you need an Application with other than

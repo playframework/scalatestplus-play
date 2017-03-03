@@ -15,6 +15,7 @@
  */
 package org.scalatestplus.play
 
+import com.machinepublishers.jbrowserdriver.{ JBrowserDriver, Settings }
 import org.openqa.selenium.WebDriver
 import org.scalatestplus.play.BrowserFactory.UnavailableDriver
 
@@ -29,6 +30,16 @@ import org.scalatestplus.play.BrowserFactory.UnavailableDriver
  */
 trait JBrowserDriverFactory extends BrowserFactory {
 
+  lazy val settings: Settings = {
+    Settings.builder()
+      .headless(true)
+      .javascript(true)
+      .javaOptions(
+        "-Dprism.verbose=true",
+        "-Dprism.useFontConfig=false"
+      ).build()
+  }
+
   /**
    * Creates a new instance of a Selenium `JBrowserDriver`, or returns a [[org.scalatestplus.play.BrowserFactory.UnavailableDriver BrowserFactory.UnavailableDriver]] that includes
    * the exception that indicated the driver was not supported on the host platform and an appropriate
@@ -39,7 +50,7 @@ trait JBrowserDriverFactory extends BrowserFactory {
    */
   def createWebDriver(): WebDriver =
     try {
-      new com.machinepublishers.jbrowserdriver.JBrowserDriver()
+      new JBrowserDriver(settings)
     } catch {
       case ex: Throwable => UnavailableDriver(Some(ex), Resources("cantCreateJBrowserDriver", ex.getMessage))
     }
