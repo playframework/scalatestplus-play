@@ -17,11 +17,14 @@ import interplay.ScalaVersions._
 
 resolvers ++= DefaultOptions.resolvers(snapshot = true)
 
-val PlayVersion = playVersion("2.6.0-M1")
-
-val ScalatestVersion = "3.0.1"
-val SeleniumVersion = "3.2.0"
-val HtmlUnitVersion = "2.24"
+val Versions = new {
+  val play = playVersion("2.6.0-M1")
+  val scalatest = "3.0.1"
+  val selenium = "3.2.0"
+  val htmlUnitDriver = "2.24"
+  val phantomJsDriver = "1.4.0"
+  val jbrowserDriver = "0.17.5"
+}
 
 lazy val commonSettings = Seq(
   scalaVersion := scala212,
@@ -44,14 +47,15 @@ lazy val `scalatestplus-play` = project
   .settings(
     organization := "org.scalatestplus.play",
     libraryDependencies ++= Seq(
-      "org.scalatest" %% "scalatest" % ScalatestVersion,
-      "org.seleniumhq.selenium" % "selenium-java" % SeleniumVersion exclude(org = "com.codeborne", name = "phantomjsdriver"),
-      "org.seleniumhq.selenium" % "htmlunit-driver" % HtmlUnitVersion,
-      "com.codeborne" % "phantomjsdriver" % "1.4.0",
-      "com.typesafe.play" %% "play-test" % PlayVersion,
-      "com.typesafe.play" %% "play-ws" % PlayVersion,
-      "com.typesafe.play" %% "play-ahc-ws" % PlayVersion,
-      "com.typesafe.play" %% "play-cache" % PlayVersion % Test
+      "org.scalatest" %% "scalatest" % Versions.scalatest,
+      "org.seleniumhq.selenium" % "selenium-java" % Versions.selenium exclude(org = "com.codeborne", name = "phantomjsdriver"),
+      "org.seleniumhq.selenium" % "htmlunit-driver" % Versions.htmlUnitDriver,
+      "com.machinepublishers" % "jbrowserdriver" % Versions.jbrowserDriver,
+      "com.codeborne" % "phantomjsdriver" % Versions.phantomJsDriver,
+      "com.typesafe.play" %% "play-test" % Versions.play,
+      "com.typesafe.play" %% "play-ws" % Versions.play,
+      "com.typesafe.play" %% "play-ahc-ws" % Versions.play,
+      "com.typesafe.play" %% "play-cache" % Versions.play % Test
     ),
     scalacOptions in (Compile, doc) := Seq("-doc-title", "ScalaTest + Play, " + releaseVersion),
 
@@ -64,7 +68,7 @@ lazy val docs = project
   .enablePlugins(PlayDocsPlugin, PlayNoPublish)
   .settings(
     libraryDependencies ++= Seq(
-      "com.typesafe.play" %% "play-cache" % PlayVersion % Test,
+      "com.typesafe.play" %% "play-cache" % Versions.play % Test,
       "org.mockito" % "mockito-core" % "1.9.5" % Test
     ),
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2001-2016 Artima, Inc.
+ * Copyright 2016 Lightbend.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,39 +15,45 @@
  */
 package org.scalatestplus.play
 
+import com.machinepublishers.jbrowserdriver.{ JBrowserDriver, Settings }
 import org.openqa.selenium.WebDriver
-import org.openqa.selenium.safari.SafariDriver
-import BrowserFactory.UnavailableDriver
+import org.scalatestplus.play.BrowserFactory.UnavailableDriver
 
 /**
- * Factory whose `createWebDriver` method will either return a new Selenium `SafariDriver`, or
- * [[org.scalatestplus.play.BrowserFactory.UnavailableDriver UnavailableDriver]], if Safari is not available on the host platform.
+ * Factory whose `createWebDriver` method will either return a new Selenium `JBrowserDriverFactory`, or
+ * [[org.scalatestplus.play.BrowserFactory.UnavailableDriver UnavailableDriver]], if Chrome is not available on the host platform.
  *
  * Traits [[org.scalatestplus.play.OneBrowserPerSuite OneBrowserPerSuite]] and
  * [[org.scalatestplus.play.OneBrowserPerTest OneBrowserPerTest]] extend `BrowserFactory` and therefore require
  * you to fill in the `createWebDriver` method, usually by mixing in one of the `BrowserFactory` subtraits such as
- * `SafariFactory`.
+ * `JBrowserDriverFactory`.
  */
-trait SafariFactory extends BrowserFactory {
+trait JBrowserDriverFactory extends BrowserFactory {
+
+  lazy val settings: Settings = {
+    Settings.builder()
+      .headless(true)
+      .javascript(true)
+      .javaOptions(
+        "-Dprism.verbose=true",
+        "-Dprism.useFontConfig=false"
+      ).build()
+  }
 
   /**
-   * Creates a new instance of a Selenium `SafariDriver`, or returns a [[org.scalatestplus.play.BrowserFactory.UnavailableDriver BrowserFactory.UnavailableDriver]] that includes
+   * Creates a new instance of a Selenium `JBrowserDriver`, or returns a [[org.scalatestplus.play.BrowserFactory.UnavailableDriver BrowserFactory.UnavailableDriver]] that includes
    * the exception that indicated the driver was not supported on the host platform and an appropriate
    * error message.
    *
-   * @return an new instance of a Selenium `SafariDriver`, or a `BrowserFactory.UnavailableDriver` if a Safari driver is not
+   * @return an new instance of a Selenium `JBrowserDriver`, or a `BrowserFactory.UnavailableDriver` if it is not
    * available on the host platform.
    */
   def createWebDriver(): WebDriver =
     try {
-      new SafariDriver()
+      new JBrowserDriver(settings)
     } catch {
-      case ex: Throwable => UnavailableDriver(Some(ex), Resources("cantCreateSafariDriver", ex.getMessage))
+      case ex: Throwable => UnavailableDriver(Some(ex), Resources("cantCreateJBrowserDriver", ex.getMessage))
     }
 }
 
-/**
- * Companion object to trait `SafariFactory` that mixes in the trait.
- */
-object SafariFactory extends SafariFactory
-
+object JBrowserDriverFactory extends JBrowserDriverFactory

@@ -17,6 +17,7 @@ package org.scalatestplus.play
 
 import java.util.logging.Level
 
+import com.machinepublishers.jbrowserdriver.Settings
 import play.api.test._
 import org.scalatest._
 import org.scalatest.events._
@@ -99,7 +100,7 @@ case class FirefoxInfo(firefoxProfile: FirefoxProfile, firefoxOptions: FirefoxOp
  * The `AllBrowsersPerSuite` and `AllBrowsersPerTest` traits use the  tag name to automatically tag any tests that use
  * a particular `WebDriver` with the appropriate tag so that tests can be dynamically filtered by the browser the use.
  */
-case object SafariInfo extends BrowserInfo("[Safari]", "org.scalatest.tags.SafariBrowser") {
+case class SafariInfo() extends BrowserInfo("[Safari]", "org.scalatest.tags.SafariBrowser") {
 
   /**
    * Creates a new instance of a Selenium `SafariDriver`, or returns a [[org.scalatestplus.play.BrowserFactory.UnavailableDriver BrowserFactory.UnavailableDriver]] that includes
@@ -124,7 +125,7 @@ case object SafariInfo extends BrowserInfo("[Safari]", "org.scalatest.tags.Safar
  * The `AllBrowsersPerSuite` and `AllBrowsersPerTest` traits use the  tag name to automatically tag any tests that use
  * a particular `WebDriver` with the appropriate tag so that tests can be dynamically filtered by the browser the use.
  */
-case object InternetExplorerInfo extends BrowserInfo("[InternetExplorer]", "org.scalatest.tags.InternetExplorerBrowser") {
+case class InternetExplorerInfo() extends BrowserInfo("[InternetExplorer]", "org.scalatest.tags.InternetExplorerBrowser") {
 
   /**
    * Creates a new instance of a Selenium `InternetExplorerDriver`, or returns a [[org.scalatestplus.play.BrowserFactory.UnavailableDriver BrowserFactory.UnavailableDriver]] that includes
@@ -149,7 +150,7 @@ case object InternetExplorerInfo extends BrowserInfo("[InternetExplorer]", "org.
  * The `AllBrowsersPerSuite` and `AllBrowsersPerTest` traits use the  tag name to automatically tag any tests that use
  * a particular `WebDriver` with the appropriate tag so that tests can be dynamically filtered by the browser the use.
  */
-case object ChromeInfo extends BrowserInfo("[Chrome]", "org.scalatest.tags.ChromeBrowser") {
+case class ChromeInfo() extends BrowserInfo("[Chrome]", "org.scalatest.tags.ChromeBrowser") {
 
   /**
    * Creates a new instance of a Selenium `ChromeDriver`, or returns a [[org.scalatestplus.play.BrowserFactory.UnavailableDriver BrowserFactory.UnavailableDriver]] that includes
@@ -160,6 +161,30 @@ case object ChromeInfo extends BrowserInfo("[Chrome]", "org.scalatest.tags.Chrom
    * was not available on the host platform.
    */
   def createWebDriver(): WebDriver = ChromeFactory.createWebDriver()
+}
+
+/**
+ * JBrowserDriver info, which encapsulates the browser name, `"[JBrowserDriver]"`; tag name, `org.scalatest.tags.JBrowserDriverBrowser`; and a factory method that produces a Selenium `ChromeDriver`.
+ *
+ * This object's superclass, `BrowserInfo`, is used by [[org.scalatestplus.play.AllBrowsersPerSuite AllBrowsersPerSuite]] and
+ * [[org.scalatestplus.play.AllBrowsersPerTest AllBrowsersPerTest]]: an `IndexedSeq[BrowserInfo]` is returned
+ * from the `browsers` field of these traits to specify the browsers to share between tests.
+ * When tests are registered, `AllBrowsersPerSuite` and `AllBrowsersPerTest` use the browser name to ensure the tests shared by multiple browsers
+ * have unique names (the name of each shared test is appended with a browser name). When the tests run, these traits
+ * use the `BrowserInfo`'s factory method to create `WebDriver`s as needed.
+ * The `AllBrowsersPerSuite` and `AllBrowsersPerTest` traits use the  tag name to automatically tag any tests that use
+ * a particular `WebDriver` with the appropriate tag so that tests can be dynamically filtered by the browser the use.
+ */
+case class JBrowserDriverInfo(settings: Settings = JBrowserDriverFactory.settings) extends BrowserInfo("[JBrowserDriver]", "org.scalatest.tags.JBrowserDriverBrowser") {
+
+  /**
+   * Creates a new instance of a Selenium `JBrowserDriver`, or returns a [[org.scalatestplus.play.BrowserFactory.UnavailableDriver BrowserFactory.UnavailableDriver]] that includes
+   * the exception that indicates JBrowserDriver was not supported on the host platform and an appropriate
+   * error message.
+   *
+   * @return an new instance of a Selenium `JBrowserDriver`, or a [[org.scalatestplus.play.BrowserFactory.UnavailableDriver BrowserFactory.UnavailableDriver]] if JBrowserDriver was not available on the host platform.
+   */
+  def createWebDriver(): WebDriver = JBrowserDriverFactory.createWebDriver()
 }
 
 /**
@@ -174,7 +199,7 @@ case object ChromeInfo extends BrowserInfo("[Chrome]", "org.scalatest.tags.Chrom
  * The `AllBrowsersPerSuite` and `AllBrowsersPerTest` traits use the  tag name to automatically tag any tests that use
  * a particular `WebDriver` with the appropriate tag so that tests can be dynamically filtered by the browser the use.
  */
-case class HtmlUnitInfo(enableJavascript: Boolean) extends BrowserInfo("[HtmlUnit]", "org.scalatest.tags.HtmlUnitBrowser") {
+case class HtmlUnitInfo(enableJavascript: Boolean = true) extends BrowserInfo("[HtmlUnit]", "org.scalatest.tags.HtmlUnitBrowser") {
 
   /**
    * Creates a new instance of a Selenium `HtmlUnitDriver`, or returns a [[org.scalatestplus.play.BrowserFactory.UnavailableDriver BrowserFactory.UnavailableDriver]] that includes

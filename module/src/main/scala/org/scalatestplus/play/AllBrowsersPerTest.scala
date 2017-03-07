@@ -204,10 +204,11 @@ trait AllBrowsersPerTest extends TestSuiteMixin with WebBrowser with Eventually 
   protected lazy val browsers: IndexedSeq[BrowserInfo] =
     Vector(
       FirefoxInfo(firefoxProfile),
-      SafariInfo,
-      InternetExplorerInfo,
-      ChromeInfo,
-      HtmlUnitInfo(true)
+      SafariInfo(),
+      InternetExplorerInfo(),
+      ChromeInfo(),
+      JBrowserDriverInfo(),
+      HtmlUnitInfo()
     )
 
   private var privateWebDriver: WebDriver = UninitializedDriver
