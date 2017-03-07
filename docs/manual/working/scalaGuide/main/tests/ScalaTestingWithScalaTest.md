@@ -39,7 +39,7 @@ You can run your tests with Play itself, or in IntelliJ IDEA (using the [Scala p
 
 ### Matchers
 
-`PlaySpec` mixes in ScalaTest's [`MustMatchers`](http://doc.scalatest.org/2.2.6/index.html#org.scalatest.MustMatchers), so you can write assertions using ScalaTest's matchers DSL:
+`PlaySpec` mixes in ScalaTest's [`MustMatchers`](http://doc.scalatest.org/3.0.1/index.html#org.scalatest.MustMatchers), so you can write assertions using ScalaTest's matchers DSL:
 
 ```scala
 import play.api.test.Helpers._
@@ -47,13 +47,13 @@ import play.api.test.Helpers._
 "Hello world" must endWith ("world")
 ```
 
-For more information, see the documentation for [`MustMatchers`](http://doc.scalatest.org/2.2.6/index.html#org.scalatest.MustMatchers).
+For more information, see the documentation for [`MustMatchers`](http://doc.scalatest.org/3.0.1/index.html#org.scalatest.MustMatchers).
 
 ### Mockito
 
 You can use mocks to isolate unit tests against external dependencies.  For example, if your class depends on an external `DataService` class, you can feed appropriate data to your class without instantiating a `DataService` object.
 
-ScalaTest provides integration with [Mockito](https://github.com/mockito/mockito) via its [`MockitoSugar`](http://doc.scalatest.org/2.2.6/index.html#org.scalatest.mock.MockitoSugar) trait.
+ScalaTest provides integration with [Mockito](https://github.com/mockito/mockito) via its [`MockitoSugar`](http://doc.scalatest.org/3.0.1/index.html#org.scalatest.mock.MockitoSugar) trait.
 
 To use Mockito, mix `MockitoSugar` into your test class and then use the Mockito library to mock dependencies:
 
