@@ -23,6 +23,7 @@ val ScalatestVersion = "3.0.1"
 
 lazy val commonSettings = Seq(
   scalaVersion := scala211,
+  crossScalaVersions := Seq(scala211),
   parallelExecution in Test := false
 )
 
