@@ -127,10 +127,10 @@ If you are using an SQL database, you can replace the database connection with a
 
 If you are calling a web service, you can use [`WSTestClient`](api/scala/play/api/test/WsTestClient.html).  There are two calls available, `wsCall` and `wsUrl` that will take a Call or a string, respectively.  Note that they expect to be called in the context of a running application.
 
-```
+```scala
 wsCall(controllers.routes.Application.index()).get()
 ```
 
-```
+```scala
 wsUrl("http://localhost:9000").get()
 ```
