@@ -23,19 +23,21 @@ To use _ScalaTest + Play_, you'll need to add it to your build, by changing `bui
 
 ```scala
 libraryDependencies ++= Seq(
-  "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.0" % "test"
+  "org.scalatestplus.play" %% "scalatestplus-play" % "x.x.x" % "test"
 )
 ```
 
-You do not need to add ScalaTest to your build explicitly. The proper version of ScalaTest will be brought in automatically as a transitive dependency of _ScalaTest + Play_. You will, however, need to select a version of _ScalaTest + Play_ that matches your Play version. You can do so by checking the [Versions, Versions, Versions](http://www.scalatest.org/plus/play/versions) page for _ScalaTest + Play_.
+Where `x.x.x` is a specific version os `scalatestplus-play` artifact, for example `3.0.0`. See the [available releases here](https://github.com/playframework/scalatestplus-play#releases).
 
-In [_ScalaTest + Play_](http://scalatest.org/plus/play), you define test classes by extending the [`PlaySpec`](api/scala/org/scalatestplus/play/PlaySpec.html) trait. Here's an example:
+You do not need to add ScalaTest to your build explicitly. The proper version of ScalaTest will be brought in automatically as a transitive dependency of _ScalaTest + Play_. You will, however, need to select a version of _ScalaTest + Play_ that matches your Play version. You can do so by checking the [releases compatibility](https://github.com/playframework/scalatestplus-play#releases) matrix for _ScalaTest + Play_.
+
+In _ScalaTest + Play_, you define test classes by extending the [`PlaySpec`](api/scala/org/scalatestplus/play/PlaySpec.html) trait. Here's an example:
 
 @[scalatest-stackspec](code/StackSpec.scala)
 
 You can alternatively [define your own base classes](http://scalatest.org/user_guide/defining_base_classes) instead of using `PlaySpec`.
 
-You can run your tests with Play itself, or in IntelliJ IDEA (using the [Scala plugin](https://blog.jetbrains.com/scala/)) or in Eclipse (using the [Scala IDE](http://scala-ide.org/) and the [ScalaTest Eclipse plugin](http://scalatest.org/user_guide/using_scalatest_with_eclipse)).  Please see the [[IDE page|IDE]] for more details.
+You can run your tests with Play itself, or in IntelliJ IDEA (using the [Scala plugin](https://confluence.jetbrains.com/display/SCA/Scala+Plugin+for+IntelliJ+IDEA)) or in Eclipse (using the [Scala IDE](http://scala-ide.org/) and the [ScalaTest Eclipse plugin](http://scalatest.org/user_guide/using_scalatest_with_eclipse)).  Please see the [[IDE page|IDE]] for more details.
 
 ### Matchers
 
