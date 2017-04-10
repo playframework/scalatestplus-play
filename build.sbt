@@ -16,7 +16,7 @@
 
 resolvers ++= DefaultOptions.resolvers(snapshot = true)
 
-val PlayVersion = playVersion("2.6.0-M1")
+val PlayVersion = playVersion("2.6.0-M4")
 
 val ScalatestVersion = "3.0.1"
 val SeleniumVersion = "3.0.1"
@@ -62,7 +62,7 @@ lazy val docs = project
   .settings(
     libraryDependencies ++= Seq(
       "com.typesafe.play" %% "play-cache" % PlayVersion % Test,
-      "org.mockito" % "mockito-core" % "1.9.5" % Test
+      "org.mockito" % "mockito-core" % "2.7.22" % Test
     ),
 
     PlayDocsKeys.scalaManualSourceDirectories := (baseDirectory.value / "manual" / "working" / "scalaGuide" ** "code").get,
