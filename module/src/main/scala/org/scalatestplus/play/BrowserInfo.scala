@@ -15,17 +15,11 @@
  */
 package org.scalatestplus.play
 
-import play.api.test._
-import org.scalatest._
-import org.scalatest.events._
-import org.scalatest.tags._
-import selenium.WebBrowser
-import concurrent.Eventually
-import concurrent.IntegrationPatience
+import java.util.logging.Level
+
 import org.openqa.selenium.WebDriver
-import org.openqa.selenium.firefox.FirefoxProfile
-import org.openqa.selenium.safari.SafariDriver
-import org.openqa.selenium.chrome.ChromeDriver
+import org.openqa.selenium.firefox.{ FirefoxOptions, FirefoxProfile }
+import org.openqa.selenium.remote.DesiredCapabilities
 
 /**
  * Abstract class that encapsulates a browser name, tag name, and Selenium `WebDriver` factory method.
@@ -39,7 +33,7 @@ import org.openqa.selenium.chrome.ChromeDriver
  * The `AllBrowsersPerSuite` and `AllBrowsersPerTest` traits use the  tag name to automatically tag any tests that use
  * a particular `WebDriver` with the appropriate tag so that tests can be dynamically filtered by the browser the use.
  *
- * `BrowserInfo` is not sealed so that you can extend it if you need other Browser types, for example, 
+ * `BrowserInfo` is not sealed so that you can extend it if you need other Browser types, for example,
  * Firefox browsers with different profiles (English, Japanese, etc.).
  *
  * @param name the browser name, surrounded by square brackets
@@ -72,7 +66,7 @@ abstract class BrowserInfo(val name: String, val tagName: String) {
  *
  * @param firefoxProfile the `FirefoxProfile` to use when creating new `FirefoxDriver`s in the `createWebDriver` factory method.
  */
-case class FirefoxInfo(firefoxProfile: FirefoxProfile) extends BrowserInfo("[Firefox]", "org.scalatest.tags.FirefoxBrowser") {
+case class FirefoxInfo(firefoxProfile: FirefoxProfile, firefoxOptions: FirefoxOptions = new FirefoxOptions().setLogLevel(Level.WARNING)) extends BrowserInfo("[Firefox]", "org.scalatest.tags.FirefoxBrowser") {
 
   /**
    * Creates a new instance of a Selenium `FirefoxDriver`, or returns a [[org.scalatestplus.play.BrowserFactory.UnavailableDriver BrowserFactory.UnavailableDriver]] that includes
@@ -82,7 +76,7 @@ case class FirefoxInfo(firefoxProfile: FirefoxProfile) extends BrowserInfo("[Fir
    * @return an new instance of a Selenium `FirefoxDriver`, or a [[org.scalatestplus.play.BrowserFactory.UnavailableDriver BrowserFactory.UnavailableDriver]] if Firefox
    * was not available on the host platform.
    */
-  def createWebDriver(): WebDriver = FirefoxFactory.createWebDriver(firefoxProfile)
+  def createWebDriver(): WebDriver = FirefoxFactory.createWebDriver(firefoxProfile, firefoxOptions)
 }
 
 /**
@@ -130,7 +124,7 @@ case object InternetExplorerInfo extends BrowserInfo("[InternetExplorer]", "org.
    * error message.
    *
    * @return an new instance of a Selenium `InternetExplorerDriver`, or a [[org.scalatestplus.play.BrowserFactory.UnavailableDriver BrowserFactory.UnavailableDriver]] if Internet Explorer
-   was not available on the host platform.
+   * was not available on the host platform.
    */
   def createWebDriver(): WebDriver = InternetExplorerFactory.createWebDriver()
 }
@@ -185,3 +179,30 @@ case class HtmlUnitInfo(enableJavascript: Boolean) extends BrowserInfo("[HtmlUni
   def createWebDriver(): WebDriver = HtmlUnitFactory.createWebDriver(enableJavascript)
 }
 
+/**
+ * PhantomJS browser info, which encapsulates the browser name, `"[PhantomJS]"`; tag name, `org.scalatest.tags.PhantomJS`; and a factory method that produces a Selenium [[org.openqa.selenium.phantomjs.PhantomJSDriver]].
+ *
+ * This class's superclass, `BrowserInfo`, is used by [[org.scalatestplus.play.AllBrowsersPerSuite AllBrowsersPerSuite]] and
+ * [[org.scalatestplus.play.AllBrowsersPerTest AllBrowsersPerTest]]: an `IndexedSeq[BrowserInfo]` is returned
+ * from the `browsers` field of these traits to specify the browsers to share between tests.
+ * When tests are registered, `AllBrowsersPerSuite` and `AllBrowsersPerTest` use the browser name to ensure the tests shared by multiple browsers
+ * have unique names (the name of each shared test is appended with a browser name). When the tests run, these traits
+ * use the `BrowserInfo`'s factory method to create `WebDriver`s as needed.
+ * The `AllBrowsersPerSuite` and `AllBrowsersPerTest` traits use the  tag name to automatically tag any tests that use
+ * a particular `WebDriver` with the appropriate tag so that tests can be dynamically filtered by the browser the use.
+ *
+ * @param phantomCapabilities the [[DesiredCapabilities]] to use when creating new [[org.openqa.selenium.phantomjs.PhantomJSDriver]]
+ *                            in the `createWebDriver` factory method.
+ */
+case class PhantomJSInfo(phantomCapabilities: DesiredCapabilities = DesiredCapabilities.phantomjs()) extends BrowserInfo("[PhantomJS]", "org.scalatest.tags.PhantomJSBrowser") {
+
+  /**
+   * Creates a new instance of a Selenium [[org.openqa.selenium.phantomjs.PhantomJSDriver]], or returns a [[org.scalatestplus.play.BrowserFactory.UnavailableDriver BrowserFactory.UnavailableDriver]] that includes
+   * the exception that indicates Firefox was not supported on the host platform and an appropriate
+   * error message.
+   *
+   * @return an new instance of a Selenium [[org.openqa.selenium.phantomjs.PhantomJSDriver]], or a [[org.scalatestplus.play.BrowserFactory.UnavailableDriver BrowserFactory.UnavailableDriver]] if PhantomJS
+   * was not available on the host platform.
+   */
+  def createWebDriver(): WebDriver = PhantomJSFactory.createWebDriver(phantomCapabilities)
+}

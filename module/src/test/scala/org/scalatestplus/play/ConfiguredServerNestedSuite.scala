@@ -18,13 +18,13 @@ package org.scalatestplus.play
 import play.api.test._
 import org.scalatest._
 import events._
-import play.api.{Play, Application}
+import play.api.{ Play, Application }
 import scala.collection.mutable.ListBuffer
 
 @DoNotDiscover
 class ConfiguredServerNestedSuite extends UnitSpec with ConfiguredServer {
 
-  def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
+  def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
 
   // Doesn't need synchronization because set by withFixture and checked by the test
   // invoked inside same withFixture with super.withFixture(test)
@@ -37,7 +37,7 @@ class ConfiguredServerNestedSuite extends UnitSpec with ConfiguredServer {
 
   "The ConfiguredServer trait" must {
     "provide an Application" in {
-      app.configuration.getString("foo") mustBe Some("bar")
+      app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
     "make the Application available implicitly" in {
       getConfig("foo") mustBe Some("bar")

@@ -18,7 +18,7 @@ package org.scalatestplus.play.examples.oneserverpersuite
 import play.api.test._
 import org.scalatestplus.play._
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
-import play.api.{Application, Play}
+import play.api.{ Application, Play }
 import play.api.inject.guice._
 
 class ExampleSpec extends PlaySpec with GuiceOneServerPerSuite {
@@ -29,10 +29,10 @@ class ExampleSpec extends PlaySpec with GuiceOneServerPerSuite {
 
   "The OneServerPerSuite trait" must {
     "provide an Application" in {
-      app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
+      app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
     }
     "make the Application available implicitly" in {
-      def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
+      def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
       getConfig("ehcacheplugin") mustBe Some("disabled")
     }
     "start the Application" in {

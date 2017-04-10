@@ -18,7 +18,7 @@ class ExampleSpec extends PlaySpec with GuiceOneAppPerTest {
 
   "The OneAppPerTest trait" must {
     "provide a new Application for each test" in {
-      app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
+      app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
     }
     "start the Application" in {
       Play.maybeApplication mustBe Some(app)

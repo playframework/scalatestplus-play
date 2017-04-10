@@ -17,15 +17,15 @@ package org.scalatestplus.play
 
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.test._
-import play.api.{Application, Play}
+import play.api.{ Application, Play }
 import play.api.inject.guice._
 import play.api.routing._
 
 class OneServerPerSuiteWithAllBrowsersPerTestSpec extends UnitSpec with GuiceOneServerPerSuite with AllBrowsersPerTest {
 
   override def fakeApplication() =
-    new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(Router.from(TestRoute)).build()
-  def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
+    new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(TestRoutes.router).build()
+  def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
 
   def sharedTests(browser: BrowserInfo) = {
 
@@ -41,7 +41,7 @@ class OneServerPerSuiteWithAllBrowsersPerTestSpec extends UnitSpec with GuiceOne
 
   "The AllBrowsersPerTest trait" must {
     "provide an Application" in {
-      app.configuration.getString("foo") mustBe Some("bar")
+      app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
     "make the Application available implicitly" in {
       getConfig("foo") mustBe Some("bar")
@@ -60,7 +60,7 @@ class OneServerPerSuiteWithAllBrowsersPerTestSpec extends UnitSpec with GuiceOne
       finally con.disconnect()
     }
     "provide an UnneededDriver to non-shared test whose methods throw UnsupportedOperationException with an error message that gives a hint to put the test into the sharedTests method" in {
-      the [UnsupportedOperationException] thrownBy webDriver.get("funky") must have message Resources("webDriverUsedFromUnsharedTest")
+      the[UnsupportedOperationException] thrownBy webDriver.get("funky") must have message Resources("webDriverUsedFromUnsharedTest")
     }
   }
 }

@@ -18,26 +18,26 @@ package org.scalatestplus.play.examples.oneserverpertest
 import play.api.test._
 import org.scalatest._
 import org.scalatestplus.play._
-import play.api.{Play, Application}
+import org.scalatestplus.play.guice._
+import play.api.{ Play, Application }
 import play.api.inject.guice._
-import play.api.routing._
 
-class ExampleSpec extends PlaySpec with OneServerPerTest {
+class ExampleSpec extends PlaySpec with GuiceOneServerPerTest {
 
   // Override newAppForTest if you need a test with other than non-default parameters, or use GuiceOneServerPerTest.
   override def newAppForTest(testData: TestData): Application = {
-      new GuiceApplicationBuilder()
-        .configure(Map("ehcacheplugin" -> "disabled"))
-        .router(Router.from(TestRoute))
-        .build()
+    new GuiceApplicationBuilder()
+      .configure(Map("ehcacheplugin" -> "disabled"))
+      .router(TestRoutes.router)
+      .build()
   }
 
   "The OneServerPerTest trait" must {
     "provide a FakeApplication" in {
-      app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
+      app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
     }
     "make the FakeApplication available implicitly" in {
-      def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
+      def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
       getConfig("ehcacheplugin") mustBe Some("disabled")
     }
     "start the FakeApplication" in {
@@ -47,7 +47,6 @@ class ExampleSpec extends PlaySpec with OneServerPerTest {
       port mustBe Helpers.testServerPort
     }
     "provide an actual running server" in {
-      import Helpers._
       import java.net._
       val url = new URL("http://localhost:" + port + "/boum")
       val con = url.openConnection().asInstanceOf[HttpURLConnection]

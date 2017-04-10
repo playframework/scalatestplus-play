@@ -13,17 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import interplay.ScalaVersions._
 
 resolvers ++= DefaultOptions.resolvers(snapshot = true)
 
 val PlayVersion = playVersion("2.6.0-M4")
 
 val ScalatestVersion = "3.0.1"
-val SeleniumVersion = "3.0.1"
-val HtmlUnitVersion = "2.23.2"
+val SeleniumVersion = "3.3.1"
+val HtmlUnitVersion = "2.25"
+val PhantomJsDriverVersion = "1.4.1"
 
 lazy val commonSettings = Seq(
-  scalaVersion := "2.12.1",
+  scalaVersion := scala212,
+  fork in Test := false,
   parallelExecution in Test := false,
   testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oTK")
 )
@@ -43,8 +46,9 @@ lazy val `scalatestplus-play` = project
     organization := "org.scalatestplus.play",
     libraryDependencies ++= Seq(
       "org.scalatest" %% "scalatest" % ScalatestVersion,
-      "org.seleniumhq.selenium" % "selenium-java" % SeleniumVersion,
+      "org.seleniumhq.selenium" % "selenium-java" % SeleniumVersion exclude(org = "com.codeborne", name = "phantomjsdriver"),
       "org.seleniumhq.selenium" % "htmlunit-driver" % HtmlUnitVersion,
+      "com.codeborne" % "phantomjsdriver" % PhantomJsDriverVersion,
       "com.typesafe.play" %% "play-test" % PlayVersion,
       "com.typesafe.play" %% "play-ws" % PlayVersion,
       "com.typesafe.play" %% "play-ahc-ws" % PlayVersion,
@@ -108,3 +112,20 @@ lazy val PomExtra = {
   </developers>
 }
 
+lazy val checkCodeFormat = taskKey[Unit]("Check that code format is following Scalariform rules")
+
+checkCodeFormat := {
+  val exitCode = "git diff --exit-code".!
+  if (exitCode != 0) {
+    sys.error(
+      """
+        |ERROR: Scalariform check failed, see differences above.
+        |To fix, format your sources using sbt scalariformFormat test:scalariformFormat before submitting a pull request.
+        |Additionally, please squash your commits (eg, use git commit --amend) if you're going to update this pull request.
+        |""".stripMargin)
+  }
+}
+
+addCommandAlias("validateCode",
+  ";scalariformFormat;test:scalariformFormat;docs/scalariformFormat;docs/test:scalariformFormat;checkCodeFormat"
+)

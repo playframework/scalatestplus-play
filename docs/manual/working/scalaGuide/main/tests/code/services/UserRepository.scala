@@ -9,8 +9,7 @@ import models._
 
 // #scalatest-repository
 trait UserRepository {
-  def roles(user:User) : Set[Role]
+  def roles(user: User): Set[Role]
 }
 // #scalatest-repository
-
 

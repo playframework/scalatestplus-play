@@ -32,9 +32,9 @@ import BrowserFactory.UninitializedDriver
  * information represents the "configured browser" that is passed from the enclosing suite to the nested suites. Trait `ConfiguredBrowser` extracts this information from
  * from the `ConfigMap` and makes the `WebDriver` available implicitly from the `webDriver` method.
  *
- * This trait's self-type, [[org.scalatestplus.play.ServerProvider ServerProvider]],  will ensure 
+ * This trait's self-type, [[org.scalatestplus.play.ServerProvider ServerProvider]],  will ensure
  * a `TestServer` and `Application` are available to each test. The self-type will require that you mix in either
- * [[org.scalatestplus.play.guice.GuiceOneServerPerSuite GuiceOneServerPerSuite]], [[org.scalatestplus.play.OneServerPerTest OneServerPerTest]],
+ * [[org.scalatestplus.play.guice.GuiceOneServerPerSuite GuiceOneServerPerSuite]], [[org.scalatestplus.play.guice.GuiceOneServerPerTest GuiceOneServerPerTest]],
  * [[org.scalatestplus.play.ConfiguredServer ConfiguredServer]] before you mix in this trait. Your choice among these three
  * `ServerProvider`s will determine the extent to which one or more `TestServer`s are shared by multiple tests.
  *
@@ -57,15 +57,15 @@ import BrowserFactory.UninitializedDriver
  *   // Override fakeApplication() if you need a Application with other than non-default parameters.
  *   def fakeApplication(): Application = new GuiceApplicationBuilder()
  *       .configure("foo" -> "bar", "ehcacheplugin" -> "disabled")
- *       .router(Router.from(TestRoute))
+ *       .router(TestRoutes.router)
  *       .build()
  *
  *   "The OneBrowserPerSuite trait" must {
  *     "provide an Application" in {
- *       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
+ *       app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
  *     }
  *     "make the Application available implicitly" in {
- *       def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
+ *       def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
  *       getConfig("ehcacheplugin") mustBe Some("disabled")
  *     }
  *     "start the Application" in {
@@ -100,7 +100,7 @@ trait ConfiguredBrowser extends TestSuiteMixin with WebBrowser with Eventually w
    *
    * @return the configured port number
    */
-  implicit def webDriver: WebDriver = synchronized { configuredWebDriver } 
+  implicit def webDriver: WebDriver = synchronized { configuredWebDriver }
 
   /**
    * Looks in `args.configMap` for a key named "org.scalatestplus.play.webDriver" whose value is a `WebDriver`,
@@ -115,8 +115,8 @@ trait ConfiguredBrowser extends TestSuiteMixin with WebBrowser with Eventually w
    *                 I.e., `None` acts like a wildcard that means run all relevant tests in this `Suite`.
    * @param args the `Args` for this run
    * @return a `Status` object that indicates when all tests and nested suites started by this method have completed, and whether or not a failure occurred.
-   *         
-   * @throws IllegalArgumentException if the `WebDriver` does not appear in `args.configMap` under the expected key
+   *
+   * @throws java.lang.IllegalArgumentException if the `WebDriver` does not appear in `args.configMap` under the expected key
    */
   abstract override def run(testName: Option[String], args: Args): Status = {
     args.configMap.getOptional[WebDriver]("org.scalatestplus.play.webDriver") match {

@@ -15,19 +15,18 @@
  */
 package org.scalatestplus.play
 
-import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
+import org.scalatest.concurrent.{ IntegrationPatience, ScalaFutures }
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.mvc.Call
 import play.api.inject.guice._
 import play.api.libs.ws.WSClient
-import play.api.routing._
 
 class WsScalaTestClientSpec extends UnitSpec with GuiceOneServerPerSuite with ScalaFutures with IntegrationPatience {
 
   override def fakeApplication() =
     new GuiceApplicationBuilder()
       .configure("foo" -> "bar", "ehcacheplugin" -> "disabled")
-      .router(SimpleRouter(TestRoute))
+      .router(TestRoutes.router)
       .build()
 
   "WsScalaTestClient's" must {
@@ -38,11 +37,11 @@ class WsScalaTestClientSpec extends UnitSpec with GuiceOneServerPerSuite with Sc
       val body = futureResult.futureValue.body
       val expectedBody =
         "<html>" +
-        "<head><title>Test Page</title></head>" +
-        "<body>" +
-        "<input type='button' name='b' value='Click Me' onclick='document.title=\"scalatest\"' />" +
-        "</body>" +
-        "</html>"
+          "<head><title>Test Page</title></head>" +
+          "<body>" +
+          "<input type='button' name='b' value='Click Me' onclick='document.title=\"scalatest\"' />" +
+          "</body>" +
+          "</html>"
       assert(body == expectedBody)
     }
 
@@ -53,11 +52,11 @@ class WsScalaTestClientSpec extends UnitSpec with GuiceOneServerPerSuite with Sc
       val body = futureResult.futureValue.body
       val expectedBody =
         "<html>" +
-        "<head><title>Test Page</title></head>" +
-        "<body>" +
-        "<input type='button' name='b' value='Click Me' onclick='document.title=\"scalatest\"' />" +
-        "</body>" +
-        "</html>"
+          "<head><title>Test Page</title></head>" +
+          "<body>" +
+          "<input type='button' name='b' value='Click Me' onclick='document.title=\"scalatest\"' />" +
+          "</body>" +
+          "</html>"
       assert(body == expectedBody)
     }
   }

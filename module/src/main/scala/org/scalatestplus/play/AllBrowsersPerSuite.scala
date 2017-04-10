@@ -27,9 +27,9 @@ import BrowserFactory.UninitializedDriver
 import org.openqa.selenium.firefox.FirefoxProfile
 
 /**
- * Trait that uses a [[http://doc.scalatest.org/2.1.3/index.html#org.scalatest.FlatSpec@sharedTests ''shared test'']] approach to enable
+ * Trait that uses a [[http://doc.scalatest.org/3.0.1/index.html#org.scalatest.FlatSpec@sharedTests ''shared test'']] approach to enable
  * you to run the same tests on multiple browsers in a ScalaTest `Suite`, where each kind of browser is started and stopped
- * just once for the whole `Suite`. 
+ * just once for the whole `Suite`.
  *
  * Note: the difference between this trait and [[org.scalatestplus.play.AllBrowsersPerTest AllBrowsersPerTest]] is that
  * this trait will allow you to write tests that rely on maintaining browser state between the tests. This is a good fit
@@ -38,25 +38,25 @@ import org.openqa.selenium.firefox.FirefoxProfile
  * This trait overrides `Suite`'s `withFixture` lifecycle method to create a new `WebDriver`
  * instance the first time it is needed  by each test, and close it the first time it is not needed (thus allowing multiple tests
  * to share the same browser), and overrides the `tags` lifecycle method to tag the shared tests so you can
- * filter them by browser type.  This trait's self-type, [[org.scalatestplus.play.ServerProvider ServerProvider]],  will ensure 
+ * filter them by browser type.  This trait's self-type, [[org.scalatestplus.play.ServerProvider ServerProvider]],  will ensure
  * a `TestServer` and `Application` are available to each test. The self-type will require that you mix in either
- * [[org.scalatestplus.play.guice.GuiceOneServerPerSuite GuiceOneServerPerSuite]], [[org.scalatestplus.play.OneServerPerTest OneServerPerTest]],
+ * [[org.scalatestplus.play.guice.GuiceOneServerPerSuite GuiceOneServerPerSuite]], [[org.scalatestplus.play.guice.GuiceOneServerPerTest GuiceOneServerPerTest]],
  * [[org.scalatestplus.play.ConfiguredServer ConfiguredServer]] before you mix in this trait. Your choice among these three
  * `ServerProvider`s will determine the extent to which a `TestServer` is shared by multiple tests.
  *
  * You'll need to place any tests that you want executed by multiple browsers in a `sharedTests` method. Because all tests in a ScalaTest `Suite`
  * must have unique names, you'll need to append the browser name (available from the `BrowserInfo` passed
  * to `sharedTests`) to each test name:
- * 
+ *
  * <pre class="stHighlight">
  * def sharedTests(browser: BrowserInfo) {
  *   "The blog app home page" must {
  *     "have the correct title " + browser.name in {
  *        go to (host + "index.html")
  *        pageTitle must be ("Awesome Blog")
- *     } 
+ *     }
  * </pre>
- * 
+ *
  * All tests registered via `sharedTests` will be registered for each desired `WebDriver`, as specified by the `browsers` field. When
  * running, any tests for browser drivers that are unavailable on the current platform will be canceled.
  * All tests registered under `sharedTests` will be
@@ -88,19 +88,20 @@ import org.openqa.selenium.firefox.FirefoxProfile
  *
  * import play.api.test._
  * import org.scalatestplus.play._
+ * import org.scalatestplus.play.guice._
  * import play.api.{Play, Application}
  * import play.api.inject.guice._
  * import play.api.routing._
  * import play.api.cache.ehcache.EhCacheModule
  *
- * class ExampleSpec extends PlaySpec with OneServerPerSuite with AllBrowsersPerSuite {
+ * class ExampleSpec extends PlaySpec with GuiceOneServerPerSuite with AllBrowsersPerSuite {
  *
  *   // Override fakeApplication if you need an Application with other than
  *   // default parameters.
  *   def fakeApplication() = new GuiceApplicationBuilder()
  *     .disable[EhCacheModule]
  *     .configure("foo" -> "bar")
- *     .router(Router.from(TestRoute))
+ *     .router(TestRoutes.router)
  *     .build()
  *
  *   // Place tests you want run in different browsers in the `sharedTests` method:
@@ -120,10 +121,10 @@ import org.openqa.selenium.firefox.FirefoxProfile
  *   // in the constructor, the usual place for tests in a `PlaySpec`
  *   "The AllBrowsersPerSuite trait" must {
  *     "provide an Application" in {
- *       app.configuration.getString("foo") mustBe Some("bar")
+ *       app.configuration.getOptional[String]("foo") mustBe Some("bar")
  *     }
  *     "make the Application available implicitly" in {
- *       def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
+ *       def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
  *       getConfig("foo") mustBe Some("bar")
  *     }
  *     "start the Application" in {
@@ -204,7 +205,8 @@ trait AllBrowsersPerSuite extends TestSuiteMixin with WebBrowser with Eventually
       SafariInfo,
       InternetExplorerInfo,
       ChromeInfo,
-      HtmlUnitInfo(true)
+      HtmlUnitInfo(true),
+      PhantomJSInfo()
     )
 
   private var privateWebDriver: WebDriver = UninitializedDriver
@@ -232,9 +234,9 @@ trait AllBrowsersPerSuite extends TestSuiteMixin with WebBrowser with Eventually
    *     "have the correct title " + browser.name in {
    *        go to (host + "index.html")
    *        pageTitle must be ("Awesome Blog")
-   *     } 
+   *     }
    * </pre>
-   * 
+   *
    * If you don't append `browser.name` to each test name you'll likely be rewarded with
    * a `DuplicateTestNameException` when you attempt to run the suite.
    *
@@ -252,7 +254,7 @@ trait AllBrowsersPerSuite extends TestSuiteMixin with WebBrowser with Eventually
    * ends in `[Firefox]`, it will be tagged with `org.scalatest.tags.FirefoxBrowser`. The browser tags will be merged with
    * tags returned from `super.tags`, so no existing tags will be lost when the browser tags are added.
    *
-   * @return `super.tags` with additional browser tags added for any browser-specific tests 
+   * @return `super.tags` with additional browser tags added for any browser-specific tests
    */
   abstract override def tags: Map[String, Set[String]] = {
 
@@ -267,8 +269,9 @@ trait AllBrowsersPerSuite extends TestSuiteMixin with WebBrowser with Eventually
         case None => (tn, Set.empty[String])
       }
     }
-    mergeMap(List(super.tags, generatedBrowserTags.filter(_._2.nonEmpty))) { case (s1, s2) =>
-      s1 ++ s2  // just add the 2 sets together
+    mergeMap(List(super.tags, generatedBrowserTags.filter(_._2.nonEmpty))) {
+      case (s1, s2) =>
+        s1 ++ s2 // just add the 2 sets together
     }
   }
 
@@ -280,7 +283,7 @@ trait AllBrowsersPerSuite extends TestSuiteMixin with WebBrowser with Eventually
   }
 
   /**
-   * Inspects the current test name and if it ends with the name of one of the `BrowserInfo`s 
+   * Inspects the current test name and if it ends with the name of one of the `BrowserInfo`s
    * mentioned in the `browsers` `IndexedSeq`; if so, and a `WebDriver` of that type is already
    * installed and being returned by `webDriver`, does nothing so that the current test can reuse
    * the same browser used by the previous test; otherwise, closes the currently installed `WebDriver`,
@@ -297,7 +300,7 @@ trait AllBrowsersPerSuite extends TestSuiteMixin with WebBrowser with Eventually
    * Note that unlike [[org.scalatestplus.play.AllBrowsersPerTest AllBrowsersPerTest]], this trait's `withFixture` method
    * does not ensure that the `WebDriver` is closed after `super.withFixture` returns. Instead, this trait will close the
    * currently installed `WebDriver` only when it needs to replace the currently installed driver with a new one. This
-   * just-in-time approach to closing `WebDriver`s is how this trait allows its shared tests to reuse the same browser, 
+   * just-in-time approach to closing `WebDriver`s is how this trait allows its shared tests to reuse the same browser,
    * but will at the end of the day, leave the last `WebDriver` unclosed after `withFixture` returns for the last time.
    * This last-used `WebDriver` will be closed, if necessary, by `runTests` instead.
    *
@@ -340,7 +343,7 @@ trait AllBrowsersPerSuite extends TestSuiteMixin with WebBrowser with Eventually
   /**
    * Invokes `super.runTests`, ensuring that the currently installed `WebDriver` (returned
    * by `webDriver`) is closed, if necessary. For more information on how this behavior
-   * fits into the big picture, see the documentatio for the `withFixture` method.
+   * fits into the big picture, see the documentation for the `withFixture` method.
    *
    * @param testName an optional name of one test to run. If `None`, all relevant tests should be run.
    *                 I.e., `None` acts like a wildcard that means run all relevant tests in this `Suite`.

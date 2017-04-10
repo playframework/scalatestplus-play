@@ -17,7 +17,7 @@ package org.scalatestplus.play.examples.mixedfixtures
 
 import play.api.test._
 import org.scalatestplus.play._
-import play.api.{Play, Application}
+import play.api.{ Play, Application }
 import play.api.inject.guice._
 import play.api.routing._
 
@@ -25,12 +25,12 @@ class ExampleSpec extends MixedPlaySpec {
 
   // Some helper methods
   def buildApp[A](elems: (String, String)*) =
-    new GuiceApplicationBuilder().configure(Map(elems:_*)).router(Router.from(TestRoute)).build()
-  def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
+    new GuiceApplicationBuilder().configure(Map(elems: _*)).router(TestRoutes.router).build()
+  def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
 
   "The App function" must {
     "provide an Application" in new App(buildApp("ehcacheplugin" -> "disabled")) {
-      app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
+      app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
     }
     "make the Application available implicitly" in new App(buildApp("ehcacheplugin" -> "disabled")) {
       getConfig("ehcacheplugin") mustBe Some("disabled")
@@ -41,7 +41,7 @@ class ExampleSpec extends MixedPlaySpec {
   }
   "The Server function" must {
     "provide an Application" in new Server(buildApp("ehcacheplugin" -> "disabled")) {
-      app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
+      app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
     }
     "make the Application available implicitly" in new Server(buildApp("ehcacheplugin" -> "disabled")) {
       getConfig("ehcacheplugin") mustBe Some("disabled")
@@ -60,7 +60,7 @@ class ExampleSpec extends MixedPlaySpec {
   }
   "The HtmlUnit function" must {
     "provide an Application" in new HtmlUnit(buildApp("ehcacheplugin" -> "disabled")) {
-      app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
+      app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
     }
     "make the Application available implicitly" in new HtmlUnit(buildApp("ehcacheplugin" -> "disabled")) {
       getConfig("ehcacheplugin") mustBe Some("disabled")
@@ -85,7 +85,7 @@ class ExampleSpec extends MixedPlaySpec {
   }
   "The Firefox function" must {
     "provide an Application" in new Firefox(buildApp("ehcacheplugin" -> "disabled")) {
-      app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
+      app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
     }
     "make the Application available implicitly" in new Firefox(buildApp("ehcacheplugin" -> "disabled")) {
       getConfig("ehcacheplugin") mustBe Some("disabled")
@@ -110,7 +110,7 @@ class ExampleSpec extends MixedPlaySpec {
   }
   "The Safari function" must {
     "provide an Application" in new Safari(buildApp("ehcacheplugin" -> "disabled")) {
-      app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
+      app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
     }
     "make the Application available implicitly" in new Safari(buildApp("ehcacheplugin" -> "disabled")) {
       getConfig("ehcacheplugin") mustBe Some("disabled")
@@ -135,7 +135,7 @@ class ExampleSpec extends MixedPlaySpec {
   }
   "The Chrome function" must {
     "provide an Application" in new Chrome(buildApp("ehcacheplugin" -> "disabled")) {
-      app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
+      app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
     }
     "make the Application available implicitly" in new Chrome(buildApp("ehcacheplugin" -> "disabled")) {
       getConfig("ehcacheplugin") mustBe Some("disabled")
@@ -160,7 +160,7 @@ class ExampleSpec extends MixedPlaySpec {
   }
   "The InternetExplorer function" must {
     "provide an Application" in new InternetExplorer(buildApp("ehcacheplugin" -> "disabled")) {
-      app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
+      app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
     }
     "make the Application available implicitly" in new InternetExplorer(buildApp("ehcacheplugin" -> "disabled")) {
       getConfig("ehcacheplugin") mustBe Some("disabled")
@@ -185,8 +185,8 @@ class ExampleSpec extends MixedPlaySpec {
   }
   "Any old thing" must {
     "be doable without much boilerplate" in { () =>
-       1 + 1 mustEqual 2
-     }
+      1 + 1 mustEqual 2
+    }
   }
 }
 

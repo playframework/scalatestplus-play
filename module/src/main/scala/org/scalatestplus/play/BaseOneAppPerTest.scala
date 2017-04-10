@@ -1,9 +1,8 @@
 package org.scalatestplus.play
 
-import org.scalatest.{TestSuite, TestSuiteMixin, TestData}
+import org.scalatest.{ TestSuite, TestSuiteMixin, TestData }
 import play.api.Application
 import play.api.test.Helpers
-
 
 /**
  * Trait that provides a new `Application` instance for each test.
@@ -34,10 +33,10 @@ import play.api.test.Helpers
  *
  *   "The OneAppPerTest trait" must {
  *     "provide an Application" in {
- *       app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
+ *       app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
  *     }
  *     "make the Application available implicitly" in {
- *       def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
+ *       def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
  *       getConfig("ehcacheplugin") mustBe Some("disabled")
  *     }
  *     "start the Application" in {

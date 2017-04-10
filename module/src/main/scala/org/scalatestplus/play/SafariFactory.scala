@@ -28,7 +28,7 @@ import BrowserFactory.UnavailableDriver
  * Factory whose `createWebDriver` method will either return a new Selenium `SafariDriver`, or
  * [[org.scalatestplus.play.BrowserFactory.UnavailableDriver UnavailableDriver]], if Safari is not available on the host platform.
  *
- * Traits [[org.scalatestplus.play.OneBrowserPerSuite OneBrowserPerSuite]] and 
+ * Traits [[org.scalatestplus.play.OneBrowserPerSuite OneBrowserPerSuite]] and
  * [[org.scalatestplus.play.OneBrowserPerTest OneBrowserPerTest]] extend `BrowserFactory` and therefore require
  * you to fill in the `createWebDriver` method, usually by mixing in one of the `BrowserFactory` subtraits such as
  * `SafariFactory`.
@@ -40,14 +40,13 @@ trait SafariFactory extends BrowserFactory {
    * the exception that indicated the driver was not supported on the host platform and an appropriate
    * error message.
    *
-   * @return an new instance of a Selenium `SafariDriver`, or a `BrowserFactory.UnavailableDriver` if a Safari driver is not 
+   * @return an new instance of a Selenium `SafariDriver`, or a `BrowserFactory.UnavailableDriver` if a Safari driver is not
    * available on the host platform.
    */
   def createWebDriver(): WebDriver =
     try {
       new SafariDriver()
-    }
-    catch {
+    } catch {
       case ex: Throwable => UnavailableDriver(Some(ex), Resources("cantCreateSafariDriver", ex.getMessage))
     }
 }

@@ -17,7 +17,7 @@ package org.scalatestplus.play
 
 import play.api.test._
 import org.scalatest._
-import play.api.{Application, Play}
+import play.api.{ Application, Play }
 import org.openqa.selenium.WebDriver
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.inject.guice._
@@ -28,15 +28,15 @@ class ConfiguredServerWithConfiguredBrowserSpec extends UnitSpec with Sequential
   override def nestedSuites = Vector(new ConfiguredServerWithConfiguredBrowserNestedSpec)
 
   override def fakeApplication(): Application =
-    new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(Router.from(TestRoute)).build()
+    new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(TestRoutes.router).build()
 
-  def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
+  def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
 }
 
 @DoNotDiscover
 class ConfiguredServerWithConfiguredBrowserNestedSpec extends UnitSpec with ConfiguredServer with ConfiguredBrowser {
 
-  def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
+  def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
 
   // Doesn't need synchronization because set by withFixture and checked by the test
   // invoked inside same withFixture with super.withFixture(test)
@@ -49,7 +49,7 @@ class ConfiguredServerWithConfiguredBrowserNestedSpec extends UnitSpec with Conf
 
   "The ConfiguredBrowser trait" must {
     "provide an Application" in {
-      app.configuration.getString("foo") mustBe Some("bar")
+      app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
     "make the Application available implicitly" in {
       getConfig("foo") mustBe Some("bar")

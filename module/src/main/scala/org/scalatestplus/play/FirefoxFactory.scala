@@ -15,22 +15,19 @@
  */
 package org.scalatestplus.play
 
-import play.api.test._
-import org.scalatest._
-import selenium.WebBrowser
-import concurrent.Eventually
-import concurrent.IntegrationPatience
+import java.util.logging.Level
+
 import org.openqa.selenium.WebDriver
-import org.openqa.selenium.firefox.FirefoxDriver
-import org.openqa.selenium.firefox.FirefoxProfile
+import org.openqa.selenium.firefox.{ FirefoxBinary, FirefoxDriver, FirefoxOptions, FirefoxProfile }
 import BrowserFactory.UnavailableDriver
+import org.openqa.selenium.remote.DesiredCapabilities
 
 /**
  * Factory whose `createWebDriver` method will either return a new Selenium `FirefoxDriver` (created
  * using the profile specified by `firefoxProfile`), or
  * [[org.scalatestplus.play.BrowserFactory.UnavailableDriver UnavailableDriver]], if Firefox is not available on the host platform.
  *
- * Traits [[org.scalatestplus.play.OneBrowserPerSuite OneBrowserPerSuite]] and 
+ * Traits [[org.scalatestplus.play.OneBrowserPerSuite OneBrowserPerSuite]] and
  * [[org.scalatestplus.play.OneBrowserPerTest OneBrowserPerTest]] extend `BrowserFactory` and therefore require
  * you to fill in the `createWebDriver` method, usually by mixing in one of the `BrowserFactory` subtraits such as
  * `FirefoxFactory`.
@@ -41,7 +38,9 @@ trait FirefoxFactory extends BrowserFactory {
    * 'FirefoxProfile' that is used to create new instance of 'FirefoxDriver'.
    * Override to provide a different `FirefoxProfile`.
    */
-  lazy val firefoxProfile = new FirefoxProfile()
+  lazy val firefoxProfile: FirefoxProfile = new FirefoxProfile()
+
+  lazy val firefoxOptions: FirefoxOptions = new FirefoxOptions().setLogLevel(Level.WARNING)
 
   /**
    * Creates a new instance of a Selenium `FirefoxDriver` (using the `FirefoxProfile` provided by
@@ -52,7 +51,7 @@ trait FirefoxFactory extends BrowserFactory {
    * @return an new instance of a Selenium `FirefoxDriver` or a `BrowserFactory.UnavailableDriver` if a Firefox
    * driver is not available on the host platform.
    */
-  def createWebDriver(): WebDriver = FirefoxFactory.createWebDriver(firefoxProfile)
+  def createWebDriver(): WebDriver = FirefoxFactory.createWebDriver(firefoxProfile, firefoxOptions)
 }
 
 /**
@@ -70,11 +69,20 @@ object FirefoxFactory extends FirefoxFactory {
    * @return a new instance of a Selenium `FirefoxDriver`, using the specified `FirefoxProfile`,
    *   or a `BrowserFactory.UnavailableDriver` if a Firefox driver is not available on the host platform.
    */
-  def createWebDriver(firefoxProfile: FirefoxProfile): WebDriver =
+  def createWebDriver(firefoxProfile: FirefoxProfile): WebDriver = {
     try {
       new FirefoxDriver(firefoxProfile)
-    }
-    catch {
+    } catch {
       case ex: Throwable => UnavailableDriver(Some(ex), Resources("cantCreateFirefoxDriver", ex.getMessage))
     }
+  }
+
+  def createWebDriver(firefoxProfile: FirefoxProfile, options: FirefoxOptions): WebDriver = {
+    try {
+      val binary = new FirefoxBinary()
+      new FirefoxDriver(binary, firefoxProfile, options.addTo(DesiredCapabilities.firefox()))
+    } catch {
+      case ex: Throwable => UnavailableDriver(Some(ex), Resources("cantCreateFirefoxDriver", ex.getMessage))
+    }
+  }
 }

@@ -15,14 +15,18 @@
  */
 package org.scalatestplus.play
 
+import play.api.test._
 import org.scalatest._
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.{ Application, Play }
+import play.api.Application
+import org.openqa.selenium.WebDriver
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.inject.guice._
 
-class OneAppPerSuiteSpec extends UnitSpec with GuiceOneAppPerSuite {
+class PhantomJSFactorySpec extends UnitSpec with GuiceOneServerPerSuite with OneBrowserPerSuite with PhantomJSFactory {
 
-  override def fakeApplication() = new GuiceApplicationBuilder().configure(Map("foo" -> "bar", "ehcacheplugin" -> "disabled")).build()
+  override def fakeApplication(): Application =
+    new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(TestRoutes.router).build()
+
   def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
 
   // Doesn't need synchronization because set by withFixture and checked by the test
@@ -34,20 +38,40 @@ class OneAppPerSuiteSpec extends UnitSpec with GuiceOneAppPerSuite {
     super.withFixture(test)
   }
 
-  "The GuiceOneAppPerSuite trait" must {
+  "The PhantomJSFactory trait" must {
     "provide an Application" in {
       app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
     "make the Application available implicitly" in {
       getConfig("foo") mustBe Some("bar")
     }
-    "start the Application" in {
-      Play.maybeApplication mustBe Some(app)
+    "provide the port" in {
+      port mustBe Helpers.testServerPort
+    }
+    "send 404 on a bad request" in {
+      import java.net._
+      val url = new URL("http://localhost:" + port + "/boum")
+      val con = url.openConnection().asInstanceOf[HttpURLConnection]
+      try con.getResponseCode mustBe 404
+      finally con.disconnect()
     }
     "put the app in the configMap" in {
       val configuredApp = configMap.getOptional[Application]("org.scalatestplus.play.app")
       configuredApp.value must be theSameInstanceAs app
     }
+    "put the port in the configMap" in {
+      val configuredPort = configMap.getOptional[Int]("org.scalatestplus.play.port")
+      configuredPort.value mustEqual port
+    }
+    "put the webDriver in the configMap" in {
+      val configuredApp = configMap.getOptional[WebDriver]("org.scalatestplus.play.webDriver")
+      configuredApp mustBe defined
+    }
+    "provide a web driver" in {
+      go to ("http://localhost:" + port + "/testing")
+      pageTitle mustBe "Test Page"
+      click on find(name("b")).value
+      eventually { pageTitle mustBe "scalatest" }
+    }
   }
 }
-

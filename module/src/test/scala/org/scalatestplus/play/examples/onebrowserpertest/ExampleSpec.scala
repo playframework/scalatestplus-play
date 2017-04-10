@@ -19,23 +19,24 @@ import play.api.test._
 import org.scalatest._
 import org.scalatest.tags.FirefoxBrowser
 import org.scalatestplus.play._
-import play.api.{Play, Application}
+import org.scalatestplus.play.guice._
+import play.api.{ Play, Application }
 import play.api.inject.guice._
 import play.api.routing._
 
 @FirefoxBrowser
-class ExampleSpec extends PlaySpec with OneServerPerTest with OneBrowserPerTest with FirefoxFactory {
+class ExampleSpec extends PlaySpec with GuiceOneServerPerTest with OneBrowserPerTest with FirefoxFactory {
 
   // Override newAppForTest if you need an Application with other than non-default parameters.
   override def newAppForTest(testData: TestData): Application =
-    new GuiceApplicationBuilder().configure(Map("ehcacheplugin" -> "disabled")).router(Router.from(TestRoute)).build()
+    new GuiceApplicationBuilder().configure(Map("ehcacheplugin" -> "disabled")).router(TestRoutes.router).build()
 
   "The OneBrowserPerTest trait" must {
     "provide an Application" in {
-      app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
+      app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
     }
     "make the Application available implicitly" in {
-      def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
+      def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
       getConfig("ehcacheplugin") mustBe Some("disabled")
     }
     "start the Application" in {

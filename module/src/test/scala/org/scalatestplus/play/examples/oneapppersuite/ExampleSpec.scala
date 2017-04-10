@@ -17,7 +17,7 @@ package org.scalatestplus.play.examples.oneapppersuite
 
 import org.scalatestplus.play._
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.{Application, Play}
+import play.api.{ Application, Play }
 import play.api.inject.guice._
 
 class ExampleSpec extends PlaySpec with GuiceOneAppPerSuite {
@@ -28,10 +28,10 @@ class ExampleSpec extends PlaySpec with GuiceOneAppPerSuite {
 
   "The GuiceOneAppPerSuite trait" must {
     "provide a FakeApplication" in {
-      app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
+      app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
     }
     "make the FakeApplication available implicitly" in {
-      def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
+      def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
       getConfig("ehcacheplugin") mustBe Some("disabled")
     }
     "start the FakeApplication" in {

@@ -17,23 +17,23 @@ package org.scalatestplus.play
 
 import play.api.test._
 import org.scalatest._
-import play.api.{Application, Play}
+import play.api.{ Application, Play }
 import org.openqa.selenium.WebDriver
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.inject.guice._
 import play.api.routing._
 
 class ConfiguredServerWithOneBrowserPerSuiteSpec extends Suites(
-  new ConfiguredServerWithOneBrowserPerSuiteNestedSpec 
+  new ConfiguredServerWithOneBrowserPerSuiteNestedSpec
 ) with GuiceOneServerPerSuite with TestSuite {
   override def fakeApplication(): Application =
-    new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(Router.from(TestRoute)).build()
+    new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(TestRoutes.router).build()
 }
 
 @DoNotDiscover
 class ConfiguredServerWithOneBrowserPerSuiteNestedSpec extends UnitSpec with ConfiguredServer with OneBrowserPerSuite with FirefoxFactory {
 
-  def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
+  def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
 
   // Doesn't need synchronization because set by withFixture and checked by the test
   // invoked inside same withFixture with super.withFixture(test)
@@ -46,7 +46,7 @@ class ConfiguredServerWithOneBrowserPerSuiteNestedSpec extends UnitSpec with Con
 
   "The OneBrowserPerSuite trait" must {
     "provide an Application" in {
-      app.configuration.getString("foo") mustBe Some("bar")
+      app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
     "make the Application available implicitly" in {
       getConfig("foo") mustBe Some("bar")
@@ -84,5 +84,4 @@ class ConfiguredServerWithOneBrowserPerSuiteNestedSpec extends UnitSpec with Con
     }
   }
 }
-
 

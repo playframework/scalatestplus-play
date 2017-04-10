@@ -17,20 +17,20 @@ package org.scalatestplus.play
 
 import play.api.test._
 import org.scalatest._
-import play.api.{Play, Application}
+import play.api.{ Play, Application }
 import play.api.inject.guice._
 import play.api.routing._
 
 class OneSafariBrowserPerTestSpec extends UnitSpec with OneServerPerTest with OneBrowserPerTest with SafariFactory {
 
   implicit override def newAppForTest(testData: TestData) =
-    new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(Router.from(TestRoute)).build()
+    new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(TestRoutes.router).build()
 
-  def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
+  def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
 
   "The OneBrowserPerTest trait" must {
     "provide an Application" in {
-      app.configuration.getString("foo") mustBe Some("bar")
+      app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
     "make the Application available implicitly" in {
       getConfig("foo") mustBe Some("bar")

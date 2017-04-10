@@ -38,7 +38,7 @@ trait DataService {
 
 class MyService {
   import java.util._
-  
+
   def dataService: DataService = null // implementation reference...
 
   def isDailyData: Boolean = {

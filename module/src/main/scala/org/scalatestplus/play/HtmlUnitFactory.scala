@@ -28,7 +28,7 @@ import BrowserFactory.UnavailableDriver
  * Factory whose `createWebDriver` method will either return a new Selenium `HtmlUnitDriver`, or
  * [[org.scalatestplus.play.BrowserFactory.UnavailableDriver UnavailableDriver]], if HtmlUnit is not available on the host platform.
  *
- * Traits [[org.scalatestplus.play.OneBrowserPerSuite OneBrowserPerSuite]] and 
+ * Traits [[org.scalatestplus.play.OneBrowserPerSuite OneBrowserPerSuite]] and
  * [[org.scalatestplus.play.OneBrowserPerTest OneBrowserPerTest]] extend `BrowserFactory` and therefore require
  * you to fill in the `createWebDriver` method, usually by mixing in one of the `BrowserFactory` subtraits such as
  * `HtmlUnitFactory`.
@@ -40,7 +40,7 @@ trait HtmlUnitFactory extends BrowserFactory {
    * [[org.scalatestplus.play.BrowserFactory.UnavailableDriver BrowserFactory.UnavailableDriver]] that includes the exception that indicated the driver was not
    * supported on the host platform and an appropriate error message.
    *
-   * @return an new instance of a Selenium `HtmlUnitDriver`, or a `BrowserFactory.UnavailableDriver` if an HtmlUnit driver is not 
+   * @return an new instance of a Selenium `HtmlUnitDriver`, or a `BrowserFactory.UnavailableDriver` if an HtmlUnit driver is not
    * available on the host platform.
    */
   def createWebDriver(): WebDriver = HtmlUnitFactory.createWebDriver(true)
@@ -56,7 +56,7 @@ object HtmlUnitFactory extends HtmlUnitFactory {
    * the passed flag, or returns a `BrowserFactory.UnavailableDriver` that includes the exception that indicated the
    * driver was not supported on the host platform and an appropriate error message.
    *
-   * @return an new instance of a Selenium `HtmlUnitDriver`, or a `BrowserFactory.UnavailableDriver` if an HtmlUnit driver is not 
+   * @return an new instance of a Selenium `HtmlUnitDriver`, or a `BrowserFactory.UnavailableDriver` if an HtmlUnit driver is not
    * available on the host platform.
    */
   def createWebDriver(enableJavascript: Boolean): WebDriver =
@@ -64,8 +64,7 @@ object HtmlUnitFactory extends HtmlUnitFactory {
       val htmlUnitDriver = new HtmlUnitDriver()
       htmlUnitDriver.setJavascriptEnabled(enableJavascript)
       htmlUnitDriver
-    }
-    catch {
+    } catch {
       case ex: Throwable => UnavailableDriver(Some(ex), Resources("cantCreateHtmlUnitDriver", ex.getMessage))
     }
 }

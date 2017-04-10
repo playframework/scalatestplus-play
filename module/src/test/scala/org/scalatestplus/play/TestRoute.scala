@@ -15,15 +15,14 @@
  */
 package org.scalatestplus.play
 
-import play.api.mvc.{RequestHeader, Handler, Action, Results}
+import play.api.mvc._
 import play.api.routing.Router
 import play.api.routing.sird._
 
-object TestRoute extends PartialFunction[RequestHeader, Handler] {
-
-  def apply(v1: RequestHeader): Handler = v1 match {
-    case GET(p"/testing") =>
-      Action(
+object TestRoutes {
+  def router: Router = {
+    Router.from {
+      case GET(p"/testing") => Action {
         Results.Ok(
           "<html>" +
             "<head><title>Test Page</title></head>" +
@@ -32,9 +31,7 @@ object TestRoute extends PartialFunction[RequestHeader, Handler] {
             "</body>" +
             "</html>"
         ).as("text/html")
-      )
+      }
+    }
   }
-
-  def isDefinedAt(x: RequestHeader): Boolean = x.method == "GET" && x.path == "/testing"
-
 }

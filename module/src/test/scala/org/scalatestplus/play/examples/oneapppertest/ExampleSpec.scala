@@ -18,7 +18,7 @@ package org.scalatestplus.play.examples.oneapppertest
 import org.scalatest._
 import org.scalatestplus.play._
 import org.scalatestplus.play.guice.GuiceOneAppPerTest
-import play.api.{Application, Play}
+import play.api.{ Application, Play }
 import play.api.inject.guice._
 
 class ExampleSpec extends PlaySpec with GuiceOneAppPerTest {
@@ -29,10 +29,10 @@ class ExampleSpec extends PlaySpec with GuiceOneAppPerTest {
 
   "The OneAppPerTest trait" must {
     "provide an Application" in {
-      app.configuration.getString("ehcacheplugin") mustBe Some("disabled")
+      app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
     }
     "make the Application available implicitly" in {
-      def getConfig(key: String)(implicit app: Application) = app.configuration.getString(key)
+      def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
       getConfig("ehcacheplugin") mustBe Some("disabled")
     }
     "start the Application" in {
