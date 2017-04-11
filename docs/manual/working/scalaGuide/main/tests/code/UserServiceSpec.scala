@@ -4,11 +4,11 @@
 package scalaguide.tests.scalatest
 
 import org.scalatest._
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play._
 
 import org.mockito.Mockito._
-import org.mockito.Matchers._
+import org.mockito.ArgumentMatchers._
 
 import scalaguide.tests.models._
 import scalaguide.tests.services._
