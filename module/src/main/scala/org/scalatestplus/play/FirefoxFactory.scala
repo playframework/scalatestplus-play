@@ -80,7 +80,11 @@ object FirefoxFactory extends FirefoxFactory {
   def createWebDriver(firefoxProfile: FirefoxProfile, options: FirefoxOptions): WebDriver = {
     try {
       val binary = new FirefoxBinary()
-      new FirefoxDriver(binary, firefoxProfile, options.addTo(DesiredCapabilities.firefox()))
+      val options = new FirefoxOptions()
+        .setBinary(binary)
+        .setProfile(firefoxProfile)
+        .addCapabilities(DesiredCapabilities.firefox())
+      new FirefoxDriver(options)
     } catch {
       case ex: Throwable => UnavailableDriver(Some(ex), Resources("cantCreateFirefoxDriver", ex.getMessage))
     }

@@ -17,12 +17,13 @@ import interplay.ScalaVersions._
 
 resolvers ++= DefaultOptions.resolvers(snapshot = true)
 
-val PlayVersion = playVersion("2.6.0-M4")
+val PlayVersion = playVersion("2.6.0-M5")
 
-val ScalatestVersion = "3.0.1"
-val SeleniumVersion = "3.3.1"
-val HtmlUnitVersion = "2.25"
-val PhantomJsDriverVersion = "1.4.1"
+val ScalatestVersion = "3.0.3"
+val SeleniumVersion = "3.4.0"
+val HtmlUnitVersion = "2.26"
+val PhantomJsDriverVersion = "1.4.2"
+val MockitoVersion = "2.7.22"
 
 lazy val commonSettings = Seq(
   scalaVersion := scala212,
@@ -52,8 +53,9 @@ lazy val `scalatestplus-play` = project
       "com.typesafe.play" %% "play-test" % PlayVersion,
       "com.typesafe.play" %% "play-ws" % PlayVersion,
       "com.typesafe.play" %% "play-ahc-ws" % PlayVersion,
-      "com.typesafe.play" %% "play-cache" % PlayVersion % Test
-    ),
+      "com.typesafe.play" %% "play-cache" % PlayVersion % Test,
+      "com.typesafe.play" %% "play-ehcache" % PlayVersion % Test
+),
     scalacOptions in (Compile, doc) := Seq("-doc-title", "ScalaTest + Play, " + releaseVersion),
 
     pomExtra := PomExtra
@@ -66,7 +68,8 @@ lazy val docs = project
   .settings(
     libraryDependencies ++= Seq(
       "com.typesafe.play" %% "play-cache" % PlayVersion % Test,
-      "org.mockito" % "mockito-core" % "2.7.22" % Test
+      "com.typesafe.play" %% "play-ehcache" % PlayVersion % Test,
+      "org.mockito" % "mockito-core" % MockitoVersion % Test
     ),
 
     PlayDocsKeys.scalaManualSourceDirectories := (baseDirectory.value / "manual" / "working" / "scalaGuide" ** "code").get,
