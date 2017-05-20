@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2009-2016 Typesafe Inc. <http://www.typesafe.com>
  */
-package org.scalatestplus.play.examples.mixedfixtures
+package org.scalatestplus.play.examples.guice.mixedfixtures
 
 import play.api.test._
 import org.scalatestplus.play._

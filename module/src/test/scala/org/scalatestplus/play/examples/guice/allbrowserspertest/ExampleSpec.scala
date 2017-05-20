@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.scalatestplus.play.examples.oneserverpertest
+package org.scalatestplus.play.examples.guice.allbrowserspertest
 
 import play.api.test._
 import org.scalatest._
@@ -21,29 +21,42 @@ import org.scalatestplus.play._
 import org.scalatestplus.play.guice._
 import play.api.{ Play, Application }
 import play.api.inject.guice._
+import play.api.routing._
+import play.api.cache.ehcache.EhCacheModule
 
-class ExampleSpec extends PlaySpec with GuiceOneServerPerTest {
+class ExampleSpec extends PlaySpec with GuiceOneServerPerTest with AllBrowsersPerTest {
 
-  // Override newAppForTest if you need a test with other than non-default parameters, or use GuiceOneServerPerTest.
-  override def newAppForTest(testData: TestData): Application = {
-    new GuiceApplicationBuilder()
-      .configure(Map("ehcacheplugin" -> "disabled"))
-      .router(TestRoutes.router)
-      .build()
+  // Override newAppForTest if you need a Application with other than non-default parameters.
+  override def newAppForTest(testData: TestData): Application =
+    new GuiceApplicationBuilder().disable[EhCacheModule].configure("foo" -> "bar").router(TestRoutes.router).build()
+
+  // Place tests you want run in different browsers in the `sharedTests` method:
+  def sharedTests(browser: BrowserInfo) = {
+
+    "The AllBrowsersPerTest trait" must {
+      "provide a web driver " + browser.name in {
+        go to ("http://localhost:" + port + "/testing")
+        pageTitle mustBe "Test Page"
+        click on find(name("b")).value
+        eventually { pageTitle mustBe "scalatest" }
+      }
+    }
   }
 
-  "The OneServerPerTest trait" must {
+  // Place tests you want run just once outside the `sharedTests` method
+  // in the constructor, the usual place for tests in a `PlaySpec`
+  "The AllBrowsersPerTest trait" must {
     "provide a FakeApplication" in {
-      app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
+      app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
     "make the FakeApplication available implicitly" in {
       def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
-      getConfig("ehcacheplugin") mustBe Some("disabled")
+      getConfig("foo") mustBe Some("bar")
     }
     "start the FakeApplication" in {
       Play.maybeApplication mustBe Some(app)
     }
-    "provide the port number" in {
+    "provide the port" in {
       port mustBe Helpers.testServerPort
     }
     "provide an actual running server" in {

@@ -13,36 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.scalatestplus.play.examples.oneserverpersuite
+package org.scalatestplus.play.examples.guice.onebrowserpersuite
 
 import play.api.test._
 import org.scalatest._
+import tags._
 import org.scalatestplus.play._
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.{ Application, Play }
 import play.api.inject.guice._
+import play.api.routing._
 
-// This is the "master" suite
-class NestedExampleSpec extends Suites(
-  new OneSpec,
-  new TwoSpec,
-  new RedSpec,
-  new BlueSpec
-) with GuiceOneServerPerSuite with TestSuite {
+// Place your tests in an abstract class
+abstract class MultiBrowserExampleSpec extends PlaySpec with GuiceOneServerPerSuite with OneBrowserPerSuite {
+
   // Override app if you need an Application with other than non-default parameters.
   override def fakeApplication(): Application =
-    new GuiceApplicationBuilder().configure(Map("ehcacheplugin" -> "disabled")).build()
-}
+    new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(TestRoutes.router).build()
 
-// These are the nested suites
-@DoNotDiscover class OneSpec extends PlaySpec with ConfiguredServer
-@DoNotDiscover class TwoSpec extends PlaySpec with ConfiguredServer
-@DoNotDiscover class RedSpec extends PlaySpec with ConfiguredServer
-
-@DoNotDiscover
-class BlueSpec extends PlaySpec with ConfiguredServer {
-
-  "The OneServerPerSuite trait" must {
+  "The OneBrowserPerSuite trait" must {
     "provide an Application" in {
       app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
     }
@@ -57,11 +46,27 @@ class BlueSpec extends PlaySpec with ConfiguredServer {
       port mustBe Helpers.testServerPort
     }
     "provide an actual running server" in {
+      import Helpers._
       import java.net._
       val url = new URL("http://localhost:" + port + "/boum")
       val con = url.openConnection().asInstanceOf[HttpURLConnection]
       try con.getResponseCode mustBe 404
       finally con.disconnect()
     }
+    "provide a web driver" in {
+      go to ("http://localhost:" + port + "/testing")
+      pageTitle mustBe "Test Page"
+      click on find(name("b")).value
+      eventually { pageTitle mustBe "scalatest" }
+    }
   }
 }
+
+// Then make a subclass that mixes in the factory for each
+// Selenium driver you want to test with.
+@FirefoxBrowser class FirefoxExampleSpec extends MultiBrowserExampleSpec with FirefoxFactory
+@SafariBrowser class SafariExampleSpec extends MultiBrowserExampleSpec with SafariFactory
+@InternetExplorerBrowser class InternetExplorerExampleSpec extends MultiBrowserExampleSpec with InternetExplorerFactory
+@ChromeBrowser class ChromeExampleSpec extends MultiBrowserExampleSpec with ChromeFactory
+@HtmlUnitBrowser class HtmlUnitExampleSpec extends MultiBrowserExampleSpec with HtmlUnitFactory
+

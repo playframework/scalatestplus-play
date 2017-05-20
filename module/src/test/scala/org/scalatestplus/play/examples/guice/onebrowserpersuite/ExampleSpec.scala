@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.scalatestplus.play.examples.onebrowserpersuite
+package org.scalatestplus.play.examples.guice.onebrowserpersuite
 
 import play.api.test.Helpers
 import org.scalatest.tags.FirefoxBrowser

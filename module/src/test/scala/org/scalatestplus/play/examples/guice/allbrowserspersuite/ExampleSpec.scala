@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.scalatestplus.play.examples.allbrowserspersuite
+package org.scalatestplus.play.examples.guice.allbrowserspersuite
 
 import play.api.test._
 import org.scalatestplus.play._

@@ -13,20 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.scalatestplus.play.examples.oneapppersuite
+package org.scalatestplus.play.examples.guice.oneserverpertest
 
+import play.api.test._
+import org.scalatest._
 import org.scalatestplus.play._
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.{ Application, Play }
+import org.scalatestplus.play.guice._
+import play.api.{ Play, Application }
 import play.api.inject.guice._
 
-class ExampleSpec extends PlaySpec with GuiceOneAppPerSuite {
+class ExampleSpec extends PlaySpec with GuiceOneServerPerTest {
 
-  // Override app if you need an Application with other than non-default parameters.
-  override def fakeApplication(): Application =
-    new GuiceApplicationBuilder().configure(Map("ehcacheplugin" -> "disabled")).build()
+  // Override newAppForTest if you need a test with other than non-default parameters, or use GuiceOneServerPerTest.
+  override def newAppForTest(testData: TestData): Application = {
+    new GuiceApplicationBuilder()
+      .configure(Map("ehcacheplugin" -> "disabled"))
+      .router(TestRoutes.router)
+      .build()
+  }
 
-  "The GuiceOneAppPerSuite trait" must {
+  "The OneServerPerTest trait" must {
     "provide a FakeApplication" in {
       app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
     }
@@ -37,6 +43,15 @@ class ExampleSpec extends PlaySpec with GuiceOneAppPerSuite {
     "start the FakeApplication" in {
       Play.maybeApplication mustBe Some(app)
     }
+    "provide the port number" in {
+      port mustBe Helpers.testServerPort
+    }
+    "provide an actual running server" in {
+      import java.net._
+      val url = new URL("http://localhost:" + port + "/boum")
+      val con = url.openConnection().asInstanceOf[HttpURLConnection]
+      try con.getResponseCode mustBe 404
+      finally con.disconnect()
+    }
   }
 }
-

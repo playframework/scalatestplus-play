@@ -13,21 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.scalatestplus.play.examples.oneapppertest
+package org.scalatestplus.play.examples.guice.oneapppersuite
 
 import org.scalatest._
 import org.scalatestplus.play._
-import org.scalatestplus.play.guice.GuiceOneAppPerTest
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.{ Application, Play }
 import play.api.inject.guice._
 
-class ExampleSpec extends PlaySpec with GuiceOneAppPerTest {
-
-  // Override newAppForTest if you need a FakeApplication with other than non-default parameters.
-  override def newAppForTest(testData: TestData): Application =
+// This is the "master" suite
+class NestedExampleSpec extends Suites(
+  new OneSpec,
+  new TwoSpec,
+  new RedSpec,
+  new BlueSpec
+) with GuiceOneAppPerSuite with TestSuite {
+  // Override fakeApplication if you need an Application with other than non-default parameters.
+  override def fakeApplication(): Application =
     new GuiceApplicationBuilder().configure(Map("ehcacheplugin" -> "disabled")).build()
+}
 
-  "The OneAppPerTest trait" must {
+// These are the nested suites
+@DoNotDiscover class OneSpec extends PlaySpec with ConfiguredApp
+@DoNotDiscover class TwoSpec extends PlaySpec with ConfiguredApp
+@DoNotDiscover class RedSpec extends PlaySpec with ConfiguredApp
+
+@DoNotDiscover
+class BlueSpec extends PlaySpec with ConfiguredApp {
+
+  "The GuiceOneAppPerSuite trait" must {
     "provide an Application" in {
       app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
     }
@@ -40,4 +54,3 @@ class ExampleSpec extends PlaySpec with GuiceOneAppPerTest {
     }
   }
 }
-
