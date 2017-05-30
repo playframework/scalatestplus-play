@@ -7,7 +7,7 @@ import play.api.{ Application, BuiltInComponents }
 /**
  * An extension of [[BaseOneAppPerTest]] providing Compile-time DI.
  */
-trait OneAppPerTestWithComponents[T <: BuiltInComponents]
+trait OneAppPerTestWithComponents
     extends BaseOneAppPerTest
     with WithApplicationComponents
     with FakeApplicationFactory with TestSuiteMixin {

@@ -7,7 +7,7 @@ import play.api.{ Application, BuiltInComponents }
 /**
  * An extension of [[BaseOneServerPerSuite]] providing Compile-time DI.
  */
-trait OneServerPerSuiteWithComponents[T <: BuiltInComponents]
+trait OneServerPerSuiteWithComponents
     extends BaseOneServerPerSuite
     with WithApplicationComponents
     with FakeApplicationFactory {
