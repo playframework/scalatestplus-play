@@ -24,6 +24,14 @@ Where version is one of the listed below, according to your needs.
 | 1.4.x   | 2.4.x | 2.2.x     | [docs](https://www.playframework.com/documentation/2.4.x/ScalaTestingWithScalaTest) |
 | 1.3.x   | 2.2.x | 2.2.x     | [docs](https://www.playframework.com/documentation/2.2.x/ScalaTestingWithScalaTest) |
 
+## Contributions
+
+The following tips may be useful for all welcome contributions:
+ * Raise a Pull Request against the relevant branch
+ * The Pull Request will be validated & tested in Travis-CI
+ * Builds which don't meet the style guidelines will fail, we recommend running `sbt scalariformFormat test:scalariformFormat validateCode` before pushing
+ * Please squash your commits in the pull request (eg, use git commit --amend)
+
 ## License
 
 ScalaTest _Plus_ Play is licensed under the Apache license, version 2. See the LICENSE.txt file for more information.
