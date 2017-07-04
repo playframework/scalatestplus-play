@@ -18,14 +18,16 @@ import play.api.{ BuiltInComponents, _ }
 trait WithApplicationComponents {
 
   /**
-   * @return The current components
+   * Override this function to instantiate the components - a factory of sorts.
+   *
+   * @return the components to be used by the application
    */
   def components: BuiltInComponents
 
   /**
    * @return new application instance and set the components. This must be called for components to be properly set up.
    */
-  lazy val newApplication: Application = components.application
+  final def newApplication: Application = components.application
 
   /**
    * @return a context to use to create the application.
