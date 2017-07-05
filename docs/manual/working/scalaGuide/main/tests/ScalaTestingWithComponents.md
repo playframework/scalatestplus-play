@@ -1,87 +1,47 @@
 <!--- Copyright (C) 2009-2017 Lightbend Inc. <https://www.lightbend.com> -->
-# Testing with Guice
+# Testing without Guice
+If you're manually wiring up your application or using [[compile time dependency injection|ScalaCompileTimeDependencyInjection]] then you can directly use and customise your application components, or create a test variant specific to your test case. You can also modify and override filters, define routes, and specify configuration.
 
-If you're using Guice for [[dependency injection|ScalaDependencyInjection]] then you can directly configure how components and applications are created for tests. This includes adding extra bindings or overriding existing bindings.
+## BuiltInComponentsFromContext
+[BuiltInComponentsFromContext](api/scala/play/api/BuiltInComponentsFromContext.html)  gives us an easy way to bootstrap your components. Given the context, this provides all required built in components: `environment`, `configuration`, `applicationLifecycle`, etc.
 
-## GuiceApplicationBuilder
+As described in the [[compile time dependency injection|ScalaCompileTimeDependencyInjection]], this is the most common way of wiring up the application manually.
 
-[GuiceApplicationBuilder](api/scala/play/api/inject/guice/GuiceApplicationBuilder.html) provides a builder API for configuring the dependency injection and creation of an [Application](api/scala/play/api/Application.html).
+When testing, we can use the real components which allows us to start the complete application for full functional testing, or we can create a test components which starts a subset of the application as required.
 
-### Environment
+## WithApplicationComponents
+Key to testing the components is the [WithApplicationComponents](api/scala/org/scalatestplus/play/components/WithApplicationComponents.scala) trait. This sets up the application, server and context ready for testing. Similar to when [[ScalaTestingWithGuice:Testing with Guice]], there are a number of `sub-traits` available to mixin depending on your testing strategy
+* [OneAppPerSuiteWithComponents](api/scala/org/scalatestplus/play/components/OneAppPerSuiteWithComponents.scala)
+* [OneAppPerTestWithComponents](api/scala/org/scalatestplus/play/components/OneAppPerTestWithComponents.scala)
+* [OneServerPerSuiteWithComponents](api/scala/org/scalatestplus/play/components/OneServerPerSuiteWithComponents.scala)
+* [OneServerPerTestWithComponents](api/scala/org/scalatestplus/play/components/OneServerPerTestWithComponents.scala)
 
-The [Environment](api/scala/play/api/Environment.html), or parts of the environment such as the root path, mode, or class loader for an application, can be specified. The configured environment will be used for loading the application configuration, it will be used when loading modules and passed when deriving bindings from Play modules, and it will be injectable into other components.
+It is recommend to familiarise yourself with the documentation of each `trait` in order to decide which best fits your needs.
 
-@[builder-imports](code/tests/guice/ScalaGuiceApplicationBuilderSpec.scala)
-@[set-environment](code/tests/guice/ScalaGuiceApplicationBuilderSpec.scala)
-@[set-environment-values](code/tests/guice/ScalaGuiceApplicationBuilderSpec.scala)
+### Defining the components inline
+As discussed, the components can be defined in line within the test. To do this, simply override the components and complete the implementation of the [BuiltInComponentsFromContext](api/scala/play/api/BuiltInComponentsFromContext.html) , providing the router.
 
-### Configuration
+@[scalacomponentstest-inlinecomponents](code/oneapppersuite/ExampleComponentsSpec.scala)
 
-Additional configuration can be added. This configuration will always be in addition to the configuration loaded automatically for the application. When existing keys are used the new configuration will be preferred.
+Above:
+* We define the imports within the implementation to prevent conflicts between the `sird` and `play.api.http` packages when asserting verbs.
+* We define a test router and implement the appropriate routes, in this case we match the root patch.
+* We override the configuration to provide additional values to be used within the test, this is of course optional.
 
-@[add-configuration](code/tests/guice/ScalaGuiceApplicationBuilderSpec.scala)
+### Using existing components
 
-The automatic loading of configuration from the application environment can also be overridden. This will completely replace the application configuration. For example:
+If we want to use our existing application components, we can simply instantiate those within the test. 
 
-@[override-configuration](code/tests/guice/ScalaGuiceApplicationBuilderSpec.scala)
+@[scalacomponentstest-predefinedcomponents](code/oneapppertest/ExamplePreDefinedComponentsSpec.scala)
 
-### Bindings and Modules
+Additionally, it’s possible to override any definitions within the `components `at this stage, to  provide additional configuration or mock a database for example.
 
-The bindings used for dependency injection are completely configurable. The builder methods support [[Play Modules and Bindings|ScalaDependencyInjection]] and also Guice Modules.
+@[scalacomponentstest-predefinedcomponentsoverride](code/oneapppertest/ExamplePreDefinedOverrideComponentsSpec.scala)
 
-#### Additional bindings
+## Complete Example
+@[scalacomponentstest-oneapppersuite](code/oneapppersuite/ExampleComponentsSpec.scala)
 
-Additional bindings, via Play modules, Play bindings, or Guice modules, can be added:
+## Nested Specs
+If you have many tests that can share the same `Application`, and you don't want to put them all into one test class, you can place them into different `Suite` classes. These will be your nested suites. Create a master suite that extends the appropriate `trait`, for example`OneAppPerSuiteWithComponents`, and declares the nested `Suite`s. Finally, annotate the nested suites with `@DoNotDiscover` and have them extend `ConfiguredApp`. Here's an example:
 
-@[bind-imports](code/tests/guice/ScalaGuiceApplicationBuilderSpec.scala)
-@[add-bindings](code/tests/guice/ScalaGuiceApplicationBuilderSpec.scala)
-
-#### Override bindings
-
-Bindings can be overridden using Play bindings, or modules that provide  bindings. For example:
-
-@[override-bindings](code/tests/guice/ScalaGuiceApplicationBuilderSpec.scala)
-
-#### Disable modules
-
-Any loaded modules can be disabled by class name:
-
-@[disable-modules](code/tests/guice/ScalaGuiceApplicationBuilderSpec.scala)
-
-#### Loaded modules
-
-Modules are automatically loaded from the classpath based on the `play.modules.enabled` configuration. This default loading of modules can be overridden. For example:
-
-@[load-modules](code/tests/guice/ScalaGuiceApplicationBuilderSpec.scala)
-
-
-## GuiceInjectorBuilder
-
-[GuiceInjectorBuilder](api/scala/play/api/inject/guice/GuiceInjectorBuilder.html) provides a builder API for configuring Guice dependency injection more generally. This builder does not load configuration or modules automatically from the environment like `GuiceApplicationBuilder`, but provides a completely clean state for adding configuration and bindings. The common interface for both builders can be found in [GuiceBuilder](api/scala/play/api/inject/guice/GuiceBuilder.html). A Play [Injector](api/scala/play/api/inject/Injector.html) is created. Here's an example of instantiating a component using the injector builder:
-
-@[injector-imports](code/tests/guice/ScalaGuiceApplicationBuilderSpec.scala)
-@[bind-imports](code/tests/guice/ScalaGuiceApplicationBuilderSpec.scala)
-@[injector-builder](code/tests/guice/ScalaGuiceApplicationBuilderSpec.scala)
-
-
-## Overriding bindings in a functional test
-
-Here is a full example of replacing a component with a mock component for testing. Let's start with a component, that has a default implementation and a mock implementation for testing:
-
-@[component](code/tests/guice/Component.scala)
-
-This component is loaded automatically using a module:
-
-@[component-module](code/tests/guice/Component.scala)
-
-And the component is used in a controller:
-
-@[controller](code/tests/guice/controllers/Application.scala)
-
-To build an `Application` to use in functional tests we can simply override the binding for the component:
-
-@[builder-imports](code/tests/guice/ScalaGuiceApplicationBuilderSpec.scala)
-@[bind-imports](code/tests/guice/ScalaGuiceApplicationBuilderSpec.scala)
-@[override-bindings](code/tests/guice/ScalaGuiceApplicationBuilderSpec.scala)
-
-The created application can be used with the functional testing helpers for [[Specs2|ScalaFunctionalTestingWithSpecs2]] and [[ScalaTest|ScalaFunctionalTestingWithScalaTest]].
+@[scalacomponentstest-nestedsuites](code/oneapppersuite/NestedExampleComponentsSpec.scala)

@@ -1,8 +1,9 @@
 /*
  * Copyright (C) 2009-2016 Typesafe Inc. <http://www.typesafe.com>
  */
-package org.scalatestplus.play.examples.components.oneapppersuite
+package scalaguide.tests.scalatest.oneapppersuite
 
+import org.scalatest.{ ConfigMap, Outcome }
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.components.OneAppPerSuiteWithComponents
 import play.api._
@@ -12,8 +13,10 @@ import play.api.test.{ FakeRequest, Helpers }
 
 import scala.concurrent.Future
 
-class ExampleSpec extends PlaySpec with OneAppPerSuiteWithComponents {
+// #scalacomponentstest-oneapppersuite
+class ExampleComponentsSpec extends PlaySpec with OneAppPerSuiteWithComponents {
 
+  // #scalacomponentstest-inlinecomponents
   override def components: BuiltInComponents = new BuiltInComponentsFromContext(context) with NoHttpFiltersComponents {
 
     import play.api.mvc.Results
@@ -27,6 +30,7 @@ class ExampleSpec extends PlaySpec with OneAppPerSuiteWithComponents {
     })
     override lazy val configuration: Configuration = context.initialConfiguration ++ Configuration("foo" -> "bar", "ehcacheplugin" -> "disabled")
   }
+  // #scalacomponentstest-inlinecomponents
 
   "The OneAppPerSuiteWithComponents trait" must {
     "provide an Application" in {
@@ -39,3 +43,5 @@ class ExampleSpec extends PlaySpec with OneAppPerSuiteWithComponents {
     }
   }
 }
+// #scalacomponentstest-oneapppersuite
+

@@ -1,9 +1,9 @@
-package org.scalatestplus.play.examples.components
+package oneapppertest
 
 import play.api.ApplicationLoader.Context
-import play.api.{ BuiltInComponentsFromContext, Configuration, NoHttpFiltersComponents }
-import play.api.mvc.{ Action, Results }
+import play.api.mvc.Results
 import play.api.routing.Router
+import play.api.{ BuiltInComponentsFromContext, Configuration, NoHttpFiltersComponents }
 
 /**
  * Simple components class which instantiates an application with a simple router
