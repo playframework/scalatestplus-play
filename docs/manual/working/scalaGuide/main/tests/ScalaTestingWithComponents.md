@@ -5,7 +5,7 @@ If you're manually wiring up your application or using [[compile time dependency
 ## BuiltInComponentsFromContext
 [BuiltInComponentsFromContext](api/scala/play/api/BuiltInComponentsFromContext.html)  gives us an easy way to bootstrap your components. Given the context, this provides all required built in components: `environment`, `configuration`, `applicationLifecycle`, etc.
 
-As described in the [[compile time dependency injection|ScalaCompileTimeDependencyInjection]], this is the most common way of wiring up the application manually.
+As described in [[compile time dependency injection|ScalaCompileTimeDependencyInjection]], this is the most common way of wiring up the application manually.
 
 When testing, we can use the real components which allows us to start the complete application for full functional testing, or we can create a test components which starts a subset of the application as required.
 
