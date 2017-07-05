@@ -29,8 +29,8 @@ Where version is one of the listed below, according to your needs.
 The following tips may be useful for all welcome contributions:
  * Raise a Pull Request against the relevant branch
  * The Pull Request will be validated & tested in Travis-CI
- * Builds which don't meet the style guidelines will fail, we recommend running `sbt scalariformFormat test:scalariformFormat validateCode` before pushing
- * Please squash your commits in the pull request (eg, use git commit --amend)
+ * Builds which don't meet the style guidelines will fail, we recommend running `sbt validateCode` before pushing
+ * Please use descriptive commit messages
 
 ## License
 

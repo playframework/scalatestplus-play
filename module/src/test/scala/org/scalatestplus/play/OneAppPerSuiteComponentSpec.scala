@@ -20,25 +20,24 @@ import org.scalatestplus.play.components.OneAppPerSuiteWithComponents
 import play.api.mvc.Result
 import play.api.test.Helpers._
 import play.api.test.{ FakeRequest, Helpers }
-import play.api.{ Application, BuiltInComponents, BuiltInComponentsFromContext, Play }
+import play.api._
 
 import scala.concurrent.Future
 
 class OneAppPerSuiteComponentSpec extends UnitSpec with OneAppPerSuiteWithComponents {
 
-  override def components: BuiltInComponents = new BuiltInComponentsFromContext(context) {
+  override def components: BuiltInComponents = new BuiltInComponentsFromContext(context) with NoHttpFiltersComponents {
 
     import play.api.mvc.{ Action, Results }
     import play.api.routing.Router
     import play.api.routing.sird._
 
     lazy val router: Router = Router.from({
-      case GET(p"/") => Action {
+      case GET(p"/") => defaultActionBuilder {
         Results.Ok("success!")
       }
     })
-
-    override lazy val httpFilters = Seq()
+    override lazy val configuration: Configuration = context.initialConfiguration ++ Configuration("foo" -> "bar", "ehcacheplugin" -> "disabled")
   }
 
   def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
@@ -57,6 +56,9 @@ class OneAppPerSuiteComponentSpec extends UnitSpec with OneAppPerSuiteWithCompon
       import play.api.test.Helpers.{ GET, route }
       val Some(result): Option[Future[Result]] = route(app, FakeRequest(GET, "/"))
       Helpers.contentAsString(result) must be("success!")
+    }
+    "override the configuration" in {
+      app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
     "start the Application" in {
       Play.maybeApplication mustBe Some(app)

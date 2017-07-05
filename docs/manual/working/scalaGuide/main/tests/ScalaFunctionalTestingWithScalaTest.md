@@ -28,7 +28,7 @@ If you need each test to get its own `Application`, instead of sharing the same 
 @[scalafunctionaltest-oneapppertest](code/oneapppertest/ExampleSpec.scala)
 
 The reason _ScalaTest + Play_ provides both `GuiceOneAppPerSuite` and `OneAppPerTest` is to allow you to select the sharing strategy that makes your tests run fastest. If you want application state maintained between successive tests, you'll need to use `GuiceOneAppPerSuite`. If each test needs a clean slate, however, you could either use `OneAppPerTest` or use `GuiceOneAppPerSuite`, but clear any state at the end of each test. Furthermore, if your test suite will run fastest if multiple test classes share the same application, you can define a master suite that mixes in [`GuiceOneAppPerSuite`](api/scala/org/scalatestplus/play/guice/GuiceOneAppPerSuite.html) and nested suites that mix in [`ConfiguredApp`](api/scala/org/scalatestplus/play/ConfiguredApp.html), as shown in the example in the [documentation for `ConfiguredApp`](api/scala/org/scalatestplus/play/ConfiguredApp.html). You can use whichever strategy makes your test suite run the fastest.
-
+0
 ## Testing with a server
 
 Sometimes you want to test with the real HTTP stack. If all tests in your test class can reuse the same server instance, you can mix in [`OneServerPerSuite`](api/scala/org/scalatestplus/play/OneServerPerSuite.html) (which will also provide a new `Application` for the suite):

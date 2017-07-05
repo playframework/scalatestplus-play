@@ -26,21 +26,20 @@ import scala.concurrent.Future
 
 class OneServerPerSuiteComponentSpec extends UnitSpec with OneServerPerSuiteWithComponents {
 
-  override def components: BuiltInComponents = new BuiltInComponentsFromContext(context) {
+  override def components: BuiltInComponents = new BuiltInComponentsFromContext(context) with NoHttpFiltersComponents {
 
     import play.api.mvc.{ Action, Results }
     import play.api.routing.Router
     import play.api.routing.sird._
 
     lazy val router: Router = Router.from({
-      case GET(p"/") => Action {
+      case GET(p"/") => defaultActionBuilder {
         Results.Ok("success!")
       }
     })
 
     override lazy val configuration: Configuration = context.initialConfiguration ++ Configuration("foo" -> "bar", "ehcacheplugin" -> "disabled")
 
-    override lazy val httpFilters = Seq()
   }
 
   // Doesn't need synchronization because set by withFixture and checked by the test
