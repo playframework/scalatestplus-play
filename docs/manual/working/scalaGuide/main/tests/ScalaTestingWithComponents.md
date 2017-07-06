@@ -1,5 +1,5 @@
 <!--- Copyright (C) 2009-2017 Lightbend Inc. <https://www.lightbend.com> -->
-# Testing without Guice
+# Testing with compile-time Dependency Injection
 If you're manually wiring up your application or using [[compile time dependency injection|ScalaCompileTimeDependencyInjection]] then you can directly use and customise your application components, or create a test variant specific to your test case. You can also modify and override filters, define routes, and specify configuration.
 
 ## BuiltInComponentsFromContext
@@ -10,7 +10,7 @@ As described in [[compile time dependency injection|ScalaCompileTimeDependencyIn
 When testing, we can use the real components which allows us to start the complete application for full functional testing, or we can create a test components which starts a subset of the application as required.
 
 ## WithApplicationComponents
-Key to testing the components is the [WithApplicationComponents](api/scala/org/scalatestplus/play/components/WithApplicationComponents.html) trait. This sets up the application, server and context ready for testing. Similar to when [[Testing with Guice|ScalaTestingWithGuice]], there are a number of `sub-traits` available to mixin depending on your testing strategy
+Key to testing the components is the [WithApplicationComponents](api/scala/org/scalatestplus/play/components/WithApplicationComponents.html) trait. This sets up the application, server and context ready for testing. There are a number of `sub-traits` available to mixin depending on your testing strategy
 * [OneAppPerSuiteWithComponents](api/scala/org/scalatestplus/play/components/OneAppPerSuiteWithComponents.html)
 * [OneAppPerTestWithComponents](api/scala/org/scalatestplus/play/components/OneAppPerTestWithComponents.html)
 * [OneServerPerSuiteWithComponents](api/scala/org/scalatestplus/play/components/OneServerPerSuiteWithComponents.html)
