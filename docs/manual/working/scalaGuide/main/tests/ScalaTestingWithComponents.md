@@ -10,11 +10,11 @@ As described in [[compile time dependency injection|ScalaCompileTimeDependencyIn
 When testing, we can use the real components which allows us to start the complete application for full functional testing, or we can create a test components which starts a subset of the application as required.
 
 ## WithApplicationComponents
-Key to testing the components is the [WithApplicationComponents](api/scala/org/scalatestplus/play/components/WithApplicationComponents.scala) trait. This sets up the application, server and context ready for testing. Similar to when [[ScalaTestingWithGuice:Testing with Guice]], there are a number of `sub-traits` available to mixin depending on your testing strategy
-* [OneAppPerSuiteWithComponents](api/scala/org/scalatestplus/play/components/OneAppPerSuiteWithComponents.scala)
-* [OneAppPerTestWithComponents](api/scala/org/scalatestplus/play/components/OneAppPerTestWithComponents.scala)
-* [OneServerPerSuiteWithComponents](api/scala/org/scalatestplus/play/components/OneServerPerSuiteWithComponents.scala)
-* [OneServerPerTestWithComponents](api/scala/org/scalatestplus/play/components/OneServerPerTestWithComponents.scala)
+Key to testing the components is the [WithApplicationComponents](api/scala/org/scalatestplus/play/components/WithApplicationComponents.html) trait. This sets up the application, server and context ready for testing. Similar to when [[Testing with Guice|ScalaTestingWithGuice]], there are a number of `sub-traits` available to mixin depending on your testing strategy
+* [OneAppPerSuiteWithComponents](api/scala/org/scalatestplus/play/components/OneAppPerSuiteWithComponents.html)
+* [OneAppPerTestWithComponents](api/scala/org/scalatestplus/play/components/OneAppPerTestWithComponents.html)
+* [OneServerPerSuiteWithComponents](api/scala/org/scalatestplus/play/components/OneServerPerSuiteWithComponents.html)
+* [OneServerPerTestWithComponents](api/scala/org/scalatestplus/play/components/OneServerPerTestWithComponents.html)
 
 It is recommend to familiarise yourself with the documentation of each `trait` in order to decide which best fits your needs.
 
