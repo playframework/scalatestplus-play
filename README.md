@@ -1,4 +1,4 @@
-[![Gitter](https://img.shields.io/gitter/room/gitterHQ/gitter.svg)](https://gitter.im/playframework/playframework?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [<img src="https://img.shields.io/travis/playframework/playframework.svg"/>](https://travis-ci.org/playframework/scalatestplus-play) [![Maven](https://img.shields.io/maven-central/v/org.scalatestplus.play/scalatestplus-play_2.11.svg)](http://mvnrepository.com/artifact/org.scalatestplus.play/scalatestplus-play_2.11)
+[![Gitter](https://img.shields.io/gitter/room/gitterHQ/gitter.svg)](https://gitter.im/playframework/playframework?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [<img src="https://img.shields.io/travis/playframework/playframework.svg"/>](https://travis-ci.org/playframework/scalatestplus-play) [![Maven](https://img.shields.io/maven-central/v/org.scalatestplus.play/scalatestplus-play_2.12.svg)](http://mvnrepository.com/artifact/org.scalatestplus.play/scalatestplus-play_2.12)
 
 # ScalaTest _Plus_ Play
 
@@ -27,10 +27,13 @@ Where version is one of the listed below, according to your needs.
 ## Contributions
 
 The following tips may be useful for all welcome contributions:
- * Raise a Pull Request against the relevant branch
- * The Pull Request will be validated & tested in Travis-CI
- * Builds which don't meet the style guidelines will fail, we recommend running `sbt validateCode` before pushing
- * Please use descriptive commit messages
+
+* Raise a Pull Request against the relevant branch
+* The Pull Request will be validated & tested in Travis-CI
+* Builds which don't meet the style guidelines will fail, we recommend running `sbt validateCode` before pushing
+* Please use descriptive commit messages
+
+See more details [here](https://playframework.com/contributing).
 
 ## License
 
