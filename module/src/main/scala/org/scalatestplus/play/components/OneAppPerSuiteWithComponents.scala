@@ -23,7 +23,6 @@ import play.api.Application
  *
  * Here's an example that demonstrates some of the services provided by this trait:
  *
- * TODO
  * <pre class="stHighlight">
  * import org.scalatestplus.play.PlaySpec
  * import org.scalatestplus.play.components.OneServerPerSuiteWithComponents
