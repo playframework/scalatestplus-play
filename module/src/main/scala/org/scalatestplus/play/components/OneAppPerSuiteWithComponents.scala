@@ -69,7 +69,6 @@ import play.api.Application
  * These will be your nested suites. Create a master suite that extends `OneAppPerSuiteWithComponents` and declares the nested
  * `Suite`s. Annotate the nested suites with `@DoNotDiscover` and have them extend `ConfiguredApp`. Here's an example:
  *
- * TODO
  * <pre class="stHighlight">
  * import org.scalatest.{DoNotDiscover, Suites, TestSuite}
  * import org.scalatestplus.play.components.OneAppPerSuiteWithComponents
