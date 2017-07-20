@@ -17,7 +17,7 @@ import interplay.ScalaVersions._
 
 resolvers ++= DefaultOptions.resolvers(snapshot = true)
 
-val PlayVersion = playVersion("2.6.0")
+val PlayVersion = playVersion("2.6.2")
 
 val ScalatestVersion = "3.0.3"
 val SeleniumVersion = "3.4.0"
@@ -55,8 +55,8 @@ lazy val `scalatestplus-play` = project
       "com.typesafe.play" %% "play-ahc-ws" % PlayVersion,
       "com.typesafe.play" %% "play-cache" % PlayVersion % Test,
       "com.typesafe.play" %% "play-ehcache" % PlayVersion % Test
-),
-    scalacOptions in (Compile, doc) := Seq("-doc-title", "ScalaTest + Play, " + releaseVersion),
+    ),
+    scalacOptions in(Compile, doc) := Seq("-doc-title", "ScalaTest + Play, " + releaseVersion),
 
     pomExtra := PomExtra
   )
@@ -99,20 +99,20 @@ lazy val PomExtra = {
       scm:git:git@github.com:playframework/scalatestplus-play.git
     </developerConnection>
   </scm>
-  <developers>
-    <developer>
-      <id>bvenners</id>
-      <name>Bill Venners</name>
-    </developer>
-    <developer>
-      <id>gcberger</id>
-      <name>George Berger</name>
-    </developer>
-    <developer>
-      <id>cheeseng</id>
-      <name>Chua Chee Seng</name>
-    </developer>
-  </developers>
+    <developers>
+      <developer>
+        <id>bvenners</id>
+        <name>Bill Venners</name>
+      </developer>
+      <developer>
+        <id>gcberger</id>
+        <name>George Berger</name>
+      </developer>
+      <developer>
+        <id>cheeseng</id>
+        <name>Chua Chee Seng</name>
+      </developer>
+    </developers>
 }
 
 lazy val checkCodeFormat = taskKey[Unit]("Check that code format is following Scalariform rules")
