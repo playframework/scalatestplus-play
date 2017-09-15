@@ -80,8 +80,7 @@ object FirefoxFactory extends FirefoxFactory {
         .setBinary(binary)
         .setLogLevel(Level.WARNING)
         .setProfile(firefoxProfile)
-        .addCapabilities(DesiredCapabilities.firefox())
-      )
+        .addCapabilities(DesiredCapabilities.firefox()))
     } catch {
       case ex: Throwable => UnavailableDriver(Some(ex), Resources("cantCreateFirefoxDriver", ex.getMessage))
     }
