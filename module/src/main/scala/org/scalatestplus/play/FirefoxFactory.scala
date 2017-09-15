@@ -71,7 +71,7 @@ object FirefoxFactory extends FirefoxFactory {
    */
   def createWebDriver(firefoxProfile: FirefoxProfile): WebDriver = {
     try {
-      new FirefoxDriver(firefoxProfile)
+      new FirefoxDriver(new FirefoxOptions().setProfile(firefoxProfile))
     } catch {
       case ex: Throwable => UnavailableDriver(Some(ex), Resources("cantCreateFirefoxDriver", ex.getMessage))
     }
