@@ -70,22 +70,18 @@ object FirefoxFactory extends FirefoxFactory {
    *   or a `BrowserFactory.UnavailableDriver` if a Firefox driver is not available on the host platform.
    */
   def createWebDriver(firefoxProfile: FirefoxProfile): WebDriver = {
-    try {
-      new FirefoxDriver(new FirefoxOptions().setProfile(firefoxProfile))
-    } catch {
-      case ex: Throwable => UnavailableDriver(Some(ex), Resources("cantCreateFirefoxDriver", ex.getMessage))
-    }
+    createWebDriver(firefoxProfile, firefoxOptions)
   }
 
   def createWebDriver(firefoxProfile: FirefoxProfile, options: FirefoxOptions): WebDriver = {
     try {
       val binary = new FirefoxBinary()
-      val options = new FirefoxOptions()
+      new FirefoxDriver(options
         .setBinary(binary)
-        .setLogLevel(Level.INFO)
+        .setLogLevel(Level.WARNING)
         .setProfile(firefoxProfile)
         .addCapabilities(DesiredCapabilities.firefox())
-      new FirefoxDriver(options)
+      )
     } catch {
       case ex: Throwable => UnavailableDriver(Some(ex), Resources("cantCreateFirefoxDriver", ex.getMessage))
     }
