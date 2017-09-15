@@ -82,6 +82,7 @@ object FirefoxFactory extends FirefoxFactory {
       val binary = new FirefoxBinary()
       val options = new FirefoxOptions()
         .setBinary(binary)
+        .setLogLevel(Level.INFO)
         .setProfile(firefoxProfile)
         .addCapabilities(DesiredCapabilities.firefox())
       new FirefoxDriver(options)
