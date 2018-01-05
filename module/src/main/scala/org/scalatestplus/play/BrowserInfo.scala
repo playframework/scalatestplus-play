@@ -144,7 +144,7 @@ case object InternetExplorerInfo extends BrowserInfo("[InternetExplorer]", "org.
  *
  * @param chromeOptions the `ChromeOptions` to use when creating new `ChromeDriver`s in the `createWebDriver` factory method.
  */
-case class ChromeInfo(chromeOptions: ChromeOptions = new ChromeOptions()) extends BrowserInfo("[Chrome]", "org.scalatest.tags.ChromeBrowser") {
+case class ChromeInfo(chromeOptions: ChromeOptions = ChromeFactory.createChromeOptions(true)) extends BrowserInfo("[Chrome]", "org.scalatest.tags.ChromeBrowser") {
 
   /**
    * Creates a new instance of a Selenium `ChromeDriver`, or returns a [[org.scalatestplus.play.BrowserFactory.UnavailableDriver BrowserFactory.UnavailableDriver]] that includes

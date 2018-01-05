@@ -34,7 +34,7 @@ trait ChromeFactory extends BrowserFactory {
    * 'ChromeOptions' that is used to create new instance of 'ChromeDriver'.
    * Override to provide a different `ChromeOptions`.
    */
-  lazy val chromeOptions: ChromeOptions = new ChromeOptions()
+  lazy val chromeOptions: ChromeOptions = ChromeFactory.createChromeOptions(true)
 
   /**
    * Creates a new instance of a Selenium `ChromeDriver`, or returns a [[org.scalatestplus.play.BrowserFactory.UnavailableDriver BrowserFactory.UnavailableDriver]] that includes
@@ -55,5 +55,22 @@ trait ChromeFactory extends BrowserFactory {
 /**
  * Companion object to trait `ChromeFactory` that mixes in the trait.
  */
-object ChromeFactory extends ChromeFactory
+object ChromeFactory extends ChromeFactory {
 
+  /**
+   * Creates a new instance of `ChromeOptions`.
+   *
+   * @param headless whether or not to run Chrome in headless mode
+   * @return a new instance of `ChromeOptions`
+   */
+  def createChromeOptions(headless: Boolean): ChromeOptions = {
+    val options = new ChromeOptions
+    if (headless) {
+      // Windows environment requires `--disable-gpu` for now.
+      // See https://developers.google.com/web/updates/2017/04/headless-chrome?hl=en#cli
+      options.addArguments("--headless", "--disable-gpu")
+    }
+    options
+  }
+
+}
