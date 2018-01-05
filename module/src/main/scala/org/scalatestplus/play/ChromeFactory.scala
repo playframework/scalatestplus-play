@@ -16,7 +16,7 @@
 package org.scalatestplus.play
 
 import org.openqa.selenium.WebDriver
-import org.openqa.selenium.chrome.ChromeDriver
+import org.openqa.selenium.chrome.{ ChromeDriver, ChromeOptions }
 import BrowserFactory.UnavailableDriver
 
 /**
@@ -31,6 +31,12 @@ import BrowserFactory.UnavailableDriver
 trait ChromeFactory extends BrowserFactory {
 
   /**
+   * 'ChromeOptions' that is used to create new instance of 'ChromeDriver'.
+   * Override to provide a different `ChromeOptions`.
+   */
+  lazy val chromeOptions: ChromeOptions = new ChromeOptions()
+
+  /**
    * Creates a new instance of a Selenium `ChromeDriver`, or returns a [[org.scalatestplus.play.BrowserFactory.UnavailableDriver BrowserFactory.UnavailableDriver]] that includes
    * the exception that indicated the driver was not supported on the host platform and an appropriate
    * error message.
@@ -40,7 +46,7 @@ trait ChromeFactory extends BrowserFactory {
    */
   def createWebDriver(): WebDriver =
     try {
-      new ChromeDriver()
+      new ChromeDriver(chromeOptions)
     } catch {
       case ex: Throwable => UnavailableDriver(Some(ex), Resources("cantCreateChromeDriver", ex.getMessage))
     }

@@ -328,7 +328,7 @@ class AllBrowsersPerTestBehaviorSpec extends WordSpec {
       class ChromeTestSpec extends TestSpec {
         override lazy val browsers: IndexedSeq[BrowserInfo] =
           Vector(
-            ChromeInfo
+            ChromeInfo()
           )
       }
 
