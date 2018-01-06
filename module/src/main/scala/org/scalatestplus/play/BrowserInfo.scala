@@ -18,6 +18,7 @@ package org.scalatestplus.play
 import java.util.logging.Level
 
 import org.openqa.selenium.WebDriver
+import org.openqa.selenium.chrome.ChromeOptions
 import org.openqa.selenium.firefox.{ FirefoxOptions, FirefoxProfile }
 import org.openqa.selenium.remote.DesiredCapabilities
 
@@ -140,8 +141,10 @@ case object InternetExplorerInfo extends BrowserInfo("[InternetExplorer]", "org.
  * use the `BrowserInfo`'s factory method to create `WebDriver`s as needed.
  * The `AllBrowsersPerSuite` and `AllBrowsersPerTest` traits use the  tag name to automatically tag any tests that use
  * a particular `WebDriver` with the appropriate tag so that tests can be dynamically filtered by the browser the use.
+ *
+ * @param chromeOptions the `ChromeOptions` to use when creating new `ChromeDriver`s in the `createWebDriver` factory method.
  */
-case object ChromeInfo extends BrowserInfo("[Chrome]", "org.scalatest.tags.ChromeBrowser") {
+case class ChromeInfo(chromeOptions: ChromeOptions = ChromeFactory.createChromeOptions(true)) extends BrowserInfo("[Chrome]", "org.scalatest.tags.ChromeBrowser") {
 
   /**
    * Creates a new instance of a Selenium `ChromeDriver`, or returns a [[org.scalatestplus.play.BrowserFactory.UnavailableDriver BrowserFactory.UnavailableDriver]] that includes
