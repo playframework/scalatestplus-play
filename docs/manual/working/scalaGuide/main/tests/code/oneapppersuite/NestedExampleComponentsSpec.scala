@@ -18,8 +18,7 @@ class NestedExampleSpec extends Suites(
   new OneSpec,
   new TwoSpec,
   new RedSpec,
-  new BlueSpec
-) with OneAppPerSuiteWithComponents with TestSuite {
+  new BlueSpec) with OneAppPerSuiteWithComponents with TestSuite {
 
   override def components: BuiltInComponents = new BuiltInComponentsFromContext(context) with NoHttpFiltersComponents {
 

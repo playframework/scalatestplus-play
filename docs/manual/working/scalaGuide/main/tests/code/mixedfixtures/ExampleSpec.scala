@@ -187,7 +187,7 @@ class ExampleSpec extends MixedPlaySpec {
     }
   }
 
-  // If a test does not need any special fixtures, just 
+  // If a test does not need any special fixtures, just
   // write "in { () => ..."
   "Any old thing" must {
     "be doable without much boilerplate" in { () =>
