@@ -81,6 +81,7 @@ lazy val `scalatestplus-play` = project
 lazy val docs = project
   .in(file("docs"))
   .enablePlugins(PlayDocsPlugin, PlayNoPublish)
+  .configs(Docs)
   .settings(
     libraryDependencies ++= Seq(
       "com.typesafe.play" %% "play-cache" % PlayVersion % Test,
