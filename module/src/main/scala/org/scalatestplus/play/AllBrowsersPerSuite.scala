@@ -336,8 +336,7 @@ trait AllBrowsersPerSuite extends TestSuiteMixin with WebBrowser with Eventually
               closeWebDriverIfNecessary()
               b.createWebDriver()
             },
-            Some(b.name)
-          )
+            Some(b.name))
         case None =>
           closeWebDriverIfNecessary()
           (UnneededDriver, None)

@@ -133,9 +133,9 @@ import play.api.Application
  * </pre>
  */
 trait OneAppPerSuiteWithComponents
-    extends BaseOneAppPerSuite
-    with WithApplicationComponents
-    with FakeApplicationFactory {
+  extends BaseOneAppPerSuite
+  with WithApplicationComponents
+  with FakeApplicationFactory {
   this: TestSuite =>
 
   override def fakeApplication(): Application = newApplication

@@ -8,7 +8,6 @@ import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api._
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.DefaultActionBuilder
-import play.api.routing.Router
 
 // #scalafunctionaltest-allbrowserspertest
 class ExampleSpec extends PlaySpec with GuiceOneServerPerSuite with AllBrowsersPerTest {
