@@ -30,6 +30,7 @@ import org.openqa.selenium.remote.DesiredCapabilities
  * you to fill in the `createWebDriver` method, usually by mixing in one of the `BrowserFactory` subtraits such as
  * `PhantomJSFactory`.
  */
+@deprecated("PhantomJS is no longer actively developed, and support will eventually be dropped", "4.0.0")
 trait PhantomJSFactory extends BrowserFactory {
 
   /**
@@ -57,6 +58,7 @@ trait PhantomJSFactory extends BrowserFactory {
 /**
  * Companion object to trait `PhantomJSFactory` that mixes in the trait.
  */
+@deprecated("PhantomJS is no longer actively developed, and support will eventually be dropped", "4.0.0")
 object PhantomJSFactory extends PhantomJSFactory {
 
   /**

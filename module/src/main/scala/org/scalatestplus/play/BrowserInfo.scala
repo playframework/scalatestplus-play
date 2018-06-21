@@ -194,6 +194,7 @@ case class HtmlUnitInfo(enableJavascript: Boolean) extends BrowserInfo("[HtmlUni
  * @param phantomCapabilities the [[DesiredCapabilities]] to use when creating new [[org.openqa.selenium.phantomjs.PhantomJSDriver]]
  *                            in the `createWebDriver` factory method.
  */
+@deprecated("PhantomJS is no longer actively developed, and support will eventually be dropped", "4.0.0")
 case class PhantomJSInfo(phantomCapabilities: DesiredCapabilities = DesiredCapabilities.phantomjs()) extends BrowserInfo("[PhantomJS]", "org.scalatest.tags.PhantomJSBrowser") {
 
   /**
