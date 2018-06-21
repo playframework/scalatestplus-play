@@ -26,7 +26,7 @@ class OneServerPerTestWithOneBrowserPerSuiteSpec extends UnitSpec with GuiceOneS
 
   override def newAppForTest(testData: TestData): Application = {
     GuiceApplicationBuilder()
-      .configure("foo" -> "bar", "ehcacheplugin" -> "disabled")
+      .configure("foo" -> "bar")
       .appRoutes(app => TestRoutes.router(app))
       .build()
   }

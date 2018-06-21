@@ -31,7 +31,7 @@ class NestedExampleSpec extends Suites(
 ) with GuiceOneServerPerSuite with TestSuite {
   // Override app if you need an Application with other than non-default parameters.
   override def fakeApplication(): Application = {
-    GuiceApplicationBuilder().configure(Map("ehcacheplugin" -> "disabled")).build()
+    GuiceApplicationBuilder().configure("foo" -> "bar").build()
   }
 }
 
@@ -45,11 +45,11 @@ class BlueSpec extends PlaySpec with ConfiguredServer {
 
   "The OneServerPerSuite trait" must {
     "provide an Application" in {
-      app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
+      app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
     "make the Application available implicitly" in {
       def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
-      getConfig("ehcacheplugin") mustBe Some("disabled")
+      getConfig("foo") mustBe Some("bar")
     }
     "provide the port number" in {
       port mustBe Helpers.testServerPort

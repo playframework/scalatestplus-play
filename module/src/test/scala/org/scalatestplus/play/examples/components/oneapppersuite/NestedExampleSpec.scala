@@ -32,7 +32,7 @@ class NestedExampleSpec extends Suites(
       }
     })
 
-    override lazy val configuration: Configuration = context.initialConfiguration ++ Configuration("ehcacheplugin" -> "disabled")
+    override lazy val configuration: Configuration = context.initialConfiguration ++ Configuration("foo" -> "bar")
   }
 }
 
@@ -40,9 +40,9 @@ class NestedExampleSpec extends Suites(
 @DoNotDiscover class OneSpec extends PlaySpec with ConfiguredApp {
   "OneSpec" must {
     "make the Application available implicitly" in {
-      def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
+      def getConfig(key: String)(implicit app: Application): Option[String] = app.configuration.getOptional[String](key)
 
-      getConfig("ehcacheplugin") mustBe Some("disabled")
+      getConfig("foo") mustBe Some("bar")
     }
   }
 

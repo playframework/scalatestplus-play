@@ -17,10 +17,10 @@ package org.scalatestplus.play
 
 import org.scalatest.{ ConfigMap, Outcome }
 import org.scalatestplus.play.components.OneAppPerSuiteWithComponents
+import play.api._
 import play.api.mvc.Result
 import play.api.test.Helpers._
 import play.api.test.{ FakeRequest, Helpers }
-import play.api._
 
 import scala.concurrent.Future
 
@@ -28,7 +28,7 @@ class OneAppPerSuiteComponentSpec extends UnitSpec with OneAppPerSuiteWithCompon
 
   override def components: BuiltInComponents = new BuiltInComponentsFromContext(context) with NoHttpFiltersComponents {
 
-    import play.api.mvc.{ Action, Results }
+    import play.api.mvc.Results
     import play.api.routing.Router
     import play.api.routing.sird._
 
@@ -37,7 +37,7 @@ class OneAppPerSuiteComponentSpec extends UnitSpec with OneAppPerSuiteWithCompon
         Results.Ok("success!")
       }
     })
-    override lazy val configuration: Configuration = context.initialConfiguration ++ Configuration("foo" -> "bar", "ehcacheplugin" -> "disabled")
+    override lazy val configuration: Configuration = context.initialConfiguration ++ Configuration("foo" -> "bar")
   }
 
   def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)

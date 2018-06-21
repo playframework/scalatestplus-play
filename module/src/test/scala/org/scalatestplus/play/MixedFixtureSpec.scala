@@ -38,13 +38,13 @@ class MixedFixtureSpec extends MixedSpec {
   def getConfig(key: String)(implicit app: Application): Option[String] = app.configuration.getOptional[String](key)
 
   "The App function" must {
-    "provide a Application" in new App(buildApp("foo" -> "bar", "ehcacheplugin" -> "disabled")) {
+    "provide a Application" in new App(buildApp("foo" -> "bar")) {
       app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
-    "make the Application available implicitly" in new App(buildApp("foo" -> "bar", "ehcacheplugin" -> "disabled")) {
+    "make the Application available implicitly" in new App(buildApp("foo" -> "bar")) {
       getConfig("foo") mustBe Some("bar")
     }
-    "start the Application lazily" in new App(buildApp("foo" -> "bar", "ehcacheplugin" -> "disabled")) {
+    "start the Application lazily" in new App(buildApp("foo" -> "bar")) {
       var count = 0
       class TestApplication extends Application {
         count = count + 1
@@ -74,13 +74,13 @@ class MixedFixtureSpec extends MixedSpec {
     }
   }
   "The Server function" must {
-    "provide a Application" in new Server(buildApp("foo" -> "bar", "ehcacheplugin" -> "disabled")) {
+    "provide a Application" in new Server(buildApp("foo" -> "bar")) {
       app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
-    "make the Application available implicitly" in new Server(buildApp("foo" -> "bar", "ehcacheplugin" -> "disabled")) {
+    "make the Application available implicitly" in new Server(buildApp("foo" -> "bar")) {
       getConfig("foo") mustBe Some("bar")
     }
-    "start the Application lazily" in new App(buildApp("foo" -> "bar", "ehcacheplugin" -> "disabled")) {
+    "start the Application lazily" in new App(buildApp("foo" -> "bar")) {
       var count = 0
       class TestApplication extends Application {
         count = count + 1
@@ -117,13 +117,13 @@ class MixedFixtureSpec extends MixedSpec {
     }
   }
   "The HtmlUnit function" must {
-    "provide an Application" in new HtmlUnit(buildApp("foo" -> "bar", "ehcacheplugin" -> "disabled")) {
+    "provide an Application" in new HtmlUnit(buildApp("foo" -> "bar")) {
       app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
-    "make the Application available implicitly" in new HtmlUnit(buildApp("foo" -> "bar", "ehcacheplugin" -> "disabled")) {
+    "make the Application available implicitly" in new HtmlUnit(buildApp("foo" -> "bar")) {
       getConfig("foo") mustBe Some("bar")
     }
-    "start the Application lazily" in new App(buildApp("foo" -> "bar", "ehcacheplugin" -> "disabled")) {
+    "start the Application lazily" in new App(buildApp("foo" -> "bar")) {
       var count = 0
       class TestApplication extends Application {
         count = count + 1
@@ -170,13 +170,13 @@ class MixedFixtureSpec extends MixedSpec {
     }
   }
   "The Firefox function" must {
-    "provide an Application" in new Firefox(buildApp("foo" -> "bar", "ehcacheplugin" -> "disabled")) {
+    "provide an Application" in new Firefox(buildApp("foo" -> "bar")) {
       app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
-    "make the Application available implicitly" in new Firefox(buildApp("foo" -> "bar", "ehcacheplugin" -> "disabled")) {
+    "make the Application available implicitly" in new Firefox(buildApp("foo" -> "bar")) {
       getConfig("foo") mustBe Some("bar")
     }
-    "start the Application lazily" in new App(buildApp("foo" -> "bar", "ehcacheplugin" -> "disabled")) {
+    "start the Application lazily" in new App(buildApp("foo" -> "bar")) {
       var count = 0
       class TestApplication extends Application {
         count = count + 1
@@ -223,13 +223,13 @@ class MixedFixtureSpec extends MixedSpec {
     }
   }
   "The Safari function" must {
-    "provide an Application" in new Safari(buildApp("foo" -> "bar", "ehcacheplugin" -> "disabled")) {
+    "provide an Application" in new Safari(buildApp("foo" -> "bar")) {
       app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
-    "make the Application available implicitly" in new Safari(buildApp("foo" -> "bar", "ehcacheplugin" -> "disabled")) {
+    "make the Application available implicitly" in new Safari(buildApp("foo" -> "bar")) {
       getConfig("foo") mustBe Some("bar")
     }
-    "start the Application lazily" in new App(buildApp("foo" -> "bar", "ehcacheplugin" -> "disabled")) {
+    "start the Application lazily" in new App(buildApp("foo" -> "bar")) {
       var count = 0
       class TestApplication extends Application {
         count = count + 1
@@ -276,13 +276,13 @@ class MixedFixtureSpec extends MixedSpec {
     }
   }
   "The Chrome function" must {
-    "provide an Application" in new Chrome(buildApp("foo" -> "bar", "ehcacheplugin" -> "disabled")) {
+    "provide an Application" in new Chrome(buildApp("foo" -> "bar")) {
       app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
-    "make the Application available implicitly" in new Chrome(buildApp("foo" -> "bar", "ehcacheplugin" -> "disabled")) {
+    "make the Application available implicitly" in new Chrome(buildApp("foo" -> "bar")) {
       getConfig("foo") mustBe Some("bar")
     }
-    "start the Application lazily" in new App(buildApp("foo" -> "bar", "ehcacheplugin" -> "disabled")) {
+    "start the Application lazily" in new App(buildApp("foo" -> "bar")) {
       var count = 0
       class TestApplication extends Application {
         count = count + 1
@@ -329,13 +329,13 @@ class MixedFixtureSpec extends MixedSpec {
     }
   }
   "The InternetExplorer function" must {
-    "provide an Application" in new InternetExplorer(buildApp("foo" -> "bar", "ehcacheplugin" -> "disabled")) {
+    "provide an Application" in new InternetExplorer(buildApp("foo" -> "bar")) {
       app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
-    "make the Application available implicitly" in new InternetExplorer(buildApp("foo" -> "bar", "ehcacheplugin" -> "disabled")) {
+    "make the Application available implicitly" in new InternetExplorer(buildApp("foo" -> "bar")) {
       getConfig("foo") mustBe Some("bar")
     }
-    "start the Application lazily" in new App(buildApp("foo" -> "bar", "ehcacheplugin" -> "disabled")) {
+    "start the Application lazily" in new App(buildApp("foo" -> "bar")) {
       var count = 0
       class TestApplication extends Application {
         count = count + 1

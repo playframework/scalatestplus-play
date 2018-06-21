@@ -55,9 +55,7 @@ lazy val `scalatestplus-play` = project
       "com.codeborne" % "phantomjsdriver" % PhantomJsDriverVersion,
       "com.typesafe.play" %% "play-test" % PlayVersion,
       "com.typesafe.play" %% "play-ws" % PlayVersion,
-      "com.typesafe.play" %% "play-ahc-ws" % PlayVersion,
-      "com.typesafe.play" %% "play-cache" % PlayVersion % Test,
-      "com.typesafe.play" %% "play-ehcache" % PlayVersion % Test
+      "com.typesafe.play" %% "play-ahc-ws" % PlayVersion
     ),
     scalacOptions in(Compile, doc) := Seq("-doc-title", "ScalaTest + Play, " + releaseVersion),
 

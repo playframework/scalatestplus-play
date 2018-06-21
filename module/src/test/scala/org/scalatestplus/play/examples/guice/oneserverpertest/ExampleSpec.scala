@@ -27,18 +27,18 @@ class ExampleSpec extends PlaySpec with GuiceOneServerPerTest {
   // Override newAppForTest if you need a test with other than non-default parameters, or use GuiceOneServerPerTest.
   override def newAppForTest(testData: TestData): Application = {
     new GuiceApplicationBuilder()
-      .configure(Map("ehcacheplugin" -> "disabled"))
+      .configure("foo" -> "bar")
       .appRoutes(app => TestRoutes.router(app))
       .build()
   }
 
   "The OneServerPerTest trait" must {
     "provide a FakeApplication" in {
-      app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
+      app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
     "make the FakeApplication available implicitly" in {
       def getConfig(key: String)(implicit app: Application): Option[String] = app.configuration.getOptional[String](key)
-      getConfig("ehcacheplugin") mustBe Some("disabled")
+      getConfig("foo") mustBe Some("bar")
     }
     "provide the port number" in {
       port mustBe Helpers.testServerPort

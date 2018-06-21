@@ -24,16 +24,16 @@ class ExampleSpec extends PlaySpec with GuiceOneAppPerSuite {
 
   // Override app if you need an Application with other than non-default parameters.
   override def fakeApplication(): Application = {
-    GuiceApplicationBuilder().configure(Map("ehcacheplugin" -> "disabled")).build()
+    GuiceApplicationBuilder().configure("foo" -> "bar").build()
   }
 
   "The GuiceOneAppPerSuite trait" must {
     "provide a FakeApplication" in {
-      app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
+      app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
     "make the FakeApplication available implicitly" in {
       def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
-      getConfig("ehcacheplugin") mustBe Some("disabled")
+      getConfig("foo") mustBe Some("bar")
     }
   }
 }

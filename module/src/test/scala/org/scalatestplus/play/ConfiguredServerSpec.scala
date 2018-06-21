@@ -15,7 +15,6 @@
  */
 package org.scalatestplus.play
 
-import play.api.test._
 import org.scalatest._
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.Application
@@ -25,6 +24,9 @@ class ConfiguredServerSpec extends UnitSpec with SequentialNestedSuiteExecution 
 
   override def nestedSuites = Vector(new ConfiguredServerNestedSuite)
 
-  override def fakeApplication(): Application = new GuiceApplicationBuilder().configure(Map("foo" -> "bar", "ehcacheplugin" -> "disabled")).build()
-  def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
+  override def fakeApplication(): Application = {
+    GuiceApplicationBuilder().configure("foo" -> "bar").build()
+  }
+
+  def getConfig(key: String)(implicit app: Application): Option[String] = app.configuration.getOptional[String](key)
 }

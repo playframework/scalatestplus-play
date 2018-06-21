@@ -25,16 +25,16 @@ class ExampleSpec extends PlaySpec with GuiceOneServerPerSuite {
 
   // Override fakeApplication() if you need a Application with other than non-default parameters.
   implicit override def fakeApplication(): Application = {
-    GuiceApplicationBuilder().configure("ehcacheplugin" -> "disabled").build()
+    GuiceApplicationBuilder().configure("foo" -> "bar").build()
   }
 
   "The OneServerPerSuite trait" must {
     "provide an Application" in {
-      app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
+      app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
     "make the Application available implicitly" in {
       def getConfig(key: String)(implicit app: Application): Option[String] = app.configuration.getOptional[String](key)
-      getConfig("ehcacheplugin") mustBe Some("disabled")
+      getConfig("foo") mustBe Some("bar")
     }
     "provide the port number" in {
       port mustBe Helpers.testServerPort

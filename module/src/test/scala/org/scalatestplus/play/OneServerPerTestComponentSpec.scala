@@ -37,7 +37,7 @@ class OneServerPerTestComponentSpec extends UnitSpec with OneServerPerTestWithCo
       }
     })
 
-    override lazy val configuration: Configuration = context.initialConfiguration ++ Configuration("foo" -> "bar", "ehcacheplugin" -> "disabled")
+    override lazy val configuration: Configuration = context.initialConfiguration ++ Configuration("foo" -> "bar")
   }
 
   "The OneServerPerTestWithComponents trait" must {

@@ -26,7 +26,7 @@ class OneServerPerSuiteWithOneBrowserPerSuiteSpec extends UnitSpec with GuiceOne
 
   override def fakeApplication(): Application = {
     GuiceApplicationBuilder()
-      .configure("foo" -> "bar", "ehcacheplugin" -> "disabled")
+      .configure("foo" -> "bar")
       .appRoutes(app => TestRoutes.router(app))
       .build()
   }

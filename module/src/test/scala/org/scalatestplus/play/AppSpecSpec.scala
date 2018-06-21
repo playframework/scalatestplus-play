@@ -22,7 +22,7 @@ import play.api.inject.guice._
 class AppSpecSpec extends AppSpec {
 
   override def newAppForTest(testData: TestData): Application = {
-    GuiceApplicationBuilder().configure(Map("foo" -> "bar", "ehcacheplugin" -> "disabled")).build()
+    GuiceApplicationBuilder().configure("foo" -> "bar").build()
   }
 
   def getConfig(key: String)(implicit app: Application): Option[String] = app.configuration.getOptional[String](key)

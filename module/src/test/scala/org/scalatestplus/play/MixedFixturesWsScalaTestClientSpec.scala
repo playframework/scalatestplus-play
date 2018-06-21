@@ -17,16 +17,15 @@ package org.scalatestplus.play
 
 import org.scalatest.concurrent.ScalaFutures
 import play.api.Application
-import play.api.mvc.Call
 import play.api.inject.guice._
 import play.api.libs.ws.WSClient
-import play.api.routing._
+import play.api.mvc.Call
 
 class MixedFixturesWsScalaTestClientSpec extends MixedSpec with ScalaFutures {
 
   def app: Application = {
     GuiceApplicationBuilder()
-      .configure("foo" -> "bar", "ehcacheplugin" -> "disabled")
+      .configure("foo" -> "bar")
       .appRoutes(app => TestRoutes.router(app))
       .build()
   }

@@ -51,7 +51,7 @@ class ConfiguredAppSpec extends UnitSpec with SequentialNestedSuiteExecution wit
   override def nestedSuites = Vector(new NestedSuite)
 
   override def fakeApplication(): Application = {
-    GuiceApplicationBuilder().configure(Map("foo" -> "bar", "ehcacheplugin" -> "disabled")).build()
+    GuiceApplicationBuilder().configure("foo" -> "bar").build()
   }
 
   def getConfig(key: String)(implicit app: Application): Option[String] = app.configuration.getOptional[String](key)

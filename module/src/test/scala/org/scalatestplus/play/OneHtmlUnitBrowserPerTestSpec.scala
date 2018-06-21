@@ -15,18 +15,17 @@
  */
 package org.scalatestplus.play
 
-import play.api.test._
 import org.scalatest._
 import org.scalatestplus.play.guice.GuiceOneServerPerTest
-import play.api.{ Application, Play }
+import play.api.Application
 import play.api.inject.guice._
-import play.api.routing._
+import play.api.test._
 
 class OneHtmlUnitBrowserPerTestSpec extends UnitSpec with GuiceOneServerPerTest with OneBrowserPerTest with HtmlUnitFactory {
 
   override def newAppForTest(testData: TestData): Application = {
     GuiceApplicationBuilder()
-      .configure("foo" -> "bar", "ehcacheplugin" -> "disabled")
+      .configure("foo" -> "bar")
       .appRoutes(app => TestRoutes.router(app))
       .build()
   }

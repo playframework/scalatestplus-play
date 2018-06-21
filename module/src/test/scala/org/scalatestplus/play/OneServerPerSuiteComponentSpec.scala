@@ -38,7 +38,7 @@ class OneServerPerSuiteComponentSpec extends UnitSpec with OneServerPerSuiteWith
       }
     })
 
-    override lazy val configuration: Configuration = context.initialConfiguration ++ Configuration("foo" -> "bar", "ehcacheplugin" -> "disabled")
+    override lazy val configuration: Configuration = context.initialConfiguration ++ Configuration("foo" -> "bar")
 
   }
 

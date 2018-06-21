@@ -28,18 +28,18 @@ class ExampleSpec extends PlaySpec with GuiceOneServerPerSuite with OneBrowserPe
   // Override fakeApplication or use GuiceOneServerPerSuite if you need a Application with other than non-default parameters.
   override def fakeApplication(): Application = {
     GuiceApplicationBuilder()
-      .configure("foo" -> "bar", "ehcacheplugin" -> "disabled")
+      .configure("foo" -> "bar")
       .appRoutes(app => TestRoutes.router(app))
       .build()
   }
 
   "The OneBrowserPerSuite trait" must {
     "provide an Application" in {
-      app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
+      app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
     "make the Application available implicitly" in {
       def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
-      getConfig("ehcacheplugin") mustBe Some("disabled")
+      getConfig("foo") mustBe Some("bar")
     }
     "provide the port number" in {
       port mustBe Helpers.testServerPort

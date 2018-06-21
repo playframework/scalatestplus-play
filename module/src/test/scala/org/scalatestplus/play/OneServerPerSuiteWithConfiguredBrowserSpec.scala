@@ -28,7 +28,7 @@ class OneServerPerSuiteWithConfiguredBrowserSpec extends UnitSpec with Sequentia
 
   override def fakeApplication(): Application = {
     GuiceApplicationBuilder()
-      .configure("foo" -> "bar", "ehcacheplugin" -> "disabled")
+      .configure("foo" -> "bar")
       .appRoutes(app => TestRoutes.router(app))
       .build()
   }

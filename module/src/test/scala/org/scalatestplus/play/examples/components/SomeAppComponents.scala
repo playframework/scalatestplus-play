@@ -1,9 +1,9 @@
 package org.scalatestplus.play.examples.components
 
 import play.api.ApplicationLoader.Context
-import play.api.{ BuiltInComponentsFromContext, Configuration, NoHttpFiltersComponents }
 import play.api.mvc.Results
 import play.api.routing.Router
+import play.api.{ BuiltInComponentsFromContext, NoHttpFiltersComponents }
 
 /**
  * Simple components class which instantiates an application with a simple router
@@ -18,6 +18,4 @@ protected class SomeAppComponents(context: Context) extends BuiltInComponentsFro
       Results.Ok("success!")
     }
   })
-
-  override lazy val configuration: Configuration = context.initialConfiguration ++ Configuration("ehcacheplugin" -> "disabled")
 }

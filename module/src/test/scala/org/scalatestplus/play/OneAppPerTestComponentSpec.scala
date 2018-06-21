@@ -16,10 +16,10 @@
 package org.scalatestplus.play
 
 import org.scalatestplus.play.components.OneAppPerTestWithComponents
+import play.api._
 import play.api.mvc.Result
 import play.api.test.Helpers._
 import play.api.test.{ FakeRequest, Helpers }
-import play.api._
 
 import scala.concurrent.Future
 
@@ -27,7 +27,7 @@ class OneAppPerTestComponentSpec extends UnitSpec with OneAppPerTestWithComponen
 
   override def components: BuiltInComponents = new BuiltInComponentsFromContext(context) with NoHttpFiltersComponents {
 
-    import play.api.mvc.{ Action, Results }
+    import play.api.mvc.Results
     import play.api.routing.Router
     import play.api.routing.sird._
 
@@ -37,7 +37,7 @@ class OneAppPerTestComponentSpec extends UnitSpec with OneAppPerTestWithComponen
       }
     })
 
-    override lazy val configuration: Configuration = context.initialConfiguration ++ Configuration("foo" -> "bar", "ehcacheplugin" -> "disabled")
+    override lazy val configuration: Configuration = context.initialConfiguration ++ Configuration("foo" -> "bar")
 
   }
 

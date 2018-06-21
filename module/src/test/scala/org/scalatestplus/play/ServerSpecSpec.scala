@@ -15,15 +15,15 @@
  */
 package org.scalatestplus.play
 
-import play.api.test._
 import org.scalatest._
-import play.api.{ Play, Application }
+import play.api.Application
 import play.api.inject.guice._
+import play.api.test._
 
 class ServerSpecSpec extends ServerSpec {
 
   override def newAppForTest(testData: TestData): Application = {
-    GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").build()
+    GuiceApplicationBuilder().configure("foo" -> "bar").build()
   }
 
   def getConfig(key: String)(implicit app: Application): Option[String] = app.configuration.getOptional[String](key)

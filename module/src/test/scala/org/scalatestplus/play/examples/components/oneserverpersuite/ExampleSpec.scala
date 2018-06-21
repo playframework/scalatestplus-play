@@ -26,7 +26,7 @@ class ExampleSpec extends PlaySpec with OneServerPerSuiteWithComponents {
       }
     })
 
-    override lazy val configuration: Configuration = context.initialConfiguration ++ Configuration("foo" -> "bar", "ehcacheplugin" -> "disabled")
+    override lazy val configuration: Configuration = context.initialConfiguration ++ Configuration("foo" -> "bar")
   }
 
   "The OneServerPerSuiteWithComponents trait" must {

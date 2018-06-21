@@ -32,7 +32,7 @@ class NestedExampleSpec extends Suites(
       }
     })
 
-    override lazy val configuration: Configuration = context.initialConfiguration ++ Configuration("ehcacheplugin" -> "disabled")
+    override lazy val configuration: Configuration = context.initialConfiguration ++ Configuration("foo" -> "bar")
 
   }
 }
@@ -43,7 +43,7 @@ class NestedExampleSpec extends Suites(
     "make the Application available implicitly" in {
       def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
 
-      getConfig("ehcacheplugin") mustBe Some("disabled")
+      getConfig("foo") mustBe Some("bar")
     }
   }
 
