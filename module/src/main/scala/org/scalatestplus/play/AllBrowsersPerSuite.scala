@@ -15,16 +15,13 @@
  */
 package org.scalatestplus.play
 
-import org.scalatest._
-import selenium.WebBrowser
-import concurrent.Eventually
-import concurrent.IntegrationPatience
 import org.openqa.selenium.WebDriver
-import BrowserFactory.GrumpyDriver
-import BrowserFactory.UnavailableDriver
-import BrowserFactory.UnneededDriver
-import BrowserFactory.UninitializedDriver
-import org.openqa.selenium.firefox.FirefoxProfile
+import org.openqa.selenium.chrome.{ ChromeDriverService, ChromeOptions }
+import org.openqa.selenium.firefox.{ FirefoxOptions, FirefoxProfile }
+import org.scalatest._
+import org.scalatest.concurrent.{ Eventually, IntegrationPatience }
+import org.scalatest.selenium.WebBrowser
+import org.scalatestplus.play.BrowserFactory.{ GrumpyDriver, UnavailableDriver, UninitializedDriver, UnneededDriver }
 
 /**
  * Trait that uses a [[http://doc.scalatest.org/3.0.1/index.html#org.scalatest.FlatSpec@sharedTests ''shared test'']] approach to enable
@@ -191,14 +188,22 @@ trait AllBrowsersPerSuite extends TestSuiteMixin with WebBrowser with Eventually
    *
    * @return an instance of `FirefoxProfile`
    */
-  protected lazy val firefoxProfile: FirefoxProfile = new FirefoxProfile
+  protected lazy val firefoxProfile: FirefoxProfile = FirefoxFactory.firefoxProfile
+
+  /**
+   * Method to provide `FirefoxOptions` for creating `FirefoxDriver`, you can override this method to
+   * provide a customized instance of `FirefoxOptions`
+   *
+   * @return an instance of `FirefoxOptions`
+   */
+  protected lazy val firefoxOptions: FirefoxOptions = FirefoxFactory.firefoxOptions
 
   /**
    * Info for available browsers. Override to add in custom `BrowserInfo` implementations.
    */
   protected lazy val browsers: IndexedSeq[BrowserInfo] =
     Vector(
-      FirefoxInfo(firefoxProfile),
+      FirefoxInfo(firefoxProfile, firefoxOptions),
       SafariInfo,
       InternetExplorerInfo,
       ChromeInfo,

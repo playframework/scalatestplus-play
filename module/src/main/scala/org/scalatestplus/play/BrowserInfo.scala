@@ -15,8 +15,6 @@
  */
 package org.scalatestplus.play
 
-import java.util.logging.Level
-
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.firefox.{ FirefoxOptions, FirefoxProfile }
 import org.openqa.selenium.remote.DesiredCapabilities
@@ -66,7 +64,7 @@ abstract class BrowserInfo(val name: String, val tagName: String) {
  *
  * @param firefoxProfile the `FirefoxProfile` to use when creating new `FirefoxDriver`s in the `createWebDriver` factory method.
  */
-case class FirefoxInfo(firefoxProfile: FirefoxProfile, firefoxOptions: FirefoxOptions = new FirefoxOptions().setLogLevel(Level.WARNING)) extends BrowserInfo("[Firefox]", "org.scalatest.tags.FirefoxBrowser") {
+case class FirefoxInfo(firefoxProfile: FirefoxProfile, firefoxOptions: FirefoxOptions = FirefoxFactory.firefoxOptions) extends BrowserInfo("[Firefox]", "org.scalatest.tags.FirefoxBrowser") {
 
   /**
    * Creates a new instance of a Selenium `FirefoxDriver`, or returns a [[org.scalatestplus.play.BrowserFactory.UnavailableDriver BrowserFactory.UnavailableDriver]] that includes
