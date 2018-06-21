@@ -199,6 +199,22 @@ trait AllBrowsersPerSuite extends TestSuiteMixin with WebBrowser with Eventually
   protected lazy val firefoxOptions: FirefoxOptions = FirefoxFactory.firefoxOptions
 
   /**
+   * Method to provide `ChromeOptions` for creating `ChromeDriver`, you can override this method to
+   * provide a customized instance of `ChromeOptions`
+   *
+   * @return an instance of `ChromeOptions`
+   */
+  protected lazy val chromeOptions: ChromeOptions = ChromeFactory.chromeOptions
+
+  /**
+   * Method to provide `ChromeDriverService` for creating `ChromeDriver`, you can override this method to
+   * provide a customized instance of `ChromeDriverService`
+   *
+   * @return an instance of `ChromeDriverService`
+   */
+  protected lazy val chromeDriverService: ChromeDriverService = ChromeFactory.chromeDriverService
+
+  /**
    * Info for available browsers. Override to add in custom `BrowserInfo` implementations.
    */
   protected lazy val browsers: IndexedSeq[BrowserInfo] =
@@ -206,9 +222,8 @@ trait AllBrowsersPerSuite extends TestSuiteMixin with WebBrowser with Eventually
       FirefoxInfo(firefoxProfile, firefoxOptions),
       SafariInfo,
       InternetExplorerInfo,
-      ChromeInfo,
-      HtmlUnitInfo(true),
-      PhantomJSInfo()
+      ChromeInfo(chromeDriverService, chromeOptions),
+      HtmlUnitInfo(true)
     )
 
   private var privateWebDriver: WebDriver = UninitializedDriver
