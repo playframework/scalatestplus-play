@@ -16,19 +16,23 @@
 package org.scalatestplus.play
 
 import play.api.test._
-import play.api.{ Application, Play }
+import play.api.Application
 import org.openqa.selenium.WebDriver
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.inject.guice._
-import play.api.routing._
 
 class OneServerPerSuiteWithAllBrowsersPerSuiteSpec extends UnitSpec with GuiceOneServerPerSuite with AllBrowsersPerSuite {
 
-  override def fakeApplication() =
-    new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(TestRoutes.router).build()
-  def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
+  override def fakeApplication(): Application = {
+    GuiceApplicationBuilder()
+      .configure("foo" -> "bar", "ehcacheplugin" -> "disabled")
+      .appRoutes(app => TestRoutes.router(app))
+      .build()
+  }
 
-  var theWebDriver: WebDriver = null
+  def getConfig(key: String)(implicit app: Application): Option[String] = app.configuration.getOptional[String](key)
+
+  var theWebDriver: WebDriver = _
 
   def sharedTests(browser: BrowserInfo) = {
 
@@ -54,9 +58,6 @@ class OneServerPerSuiteWithAllBrowsersPerSuiteSpec extends UnitSpec with GuiceOn
     }
     "make the Application available implicitly" in {
       getConfig("foo") mustBe Some("bar")
-    }
-    "start the Application" in {
-      Play.maybeApplication mustBe Some(app)
     }
     "provide the port" in {
       port mustBe Helpers.testServerPort

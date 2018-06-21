@@ -16,7 +16,7 @@ class ExampleControllerSpec extends PlaySpec with Results {
 
   "Example Page#index" should {
     "should be valid" in {
-      val controller = new ExampleController()
+      val controller = new ExampleController(Helpers.stubControllerComponents())
       val result: Future[Result] = controller.index().apply(FakeRequest())
       val bodyText: String = contentAsString(result)
       bodyText mustBe "ok"
@@ -26,7 +26,7 @@ class ExampleControllerSpec extends PlaySpec with Results {
 // #scalatest-examplecontrollerspec
 
 // #scalatest-examplecontroller
-class ExampleController extends Controller {
+class ExampleController(val controllerComponents: ControllerComponents) extends BaseController {
   def index() = Action {
     Ok("ok")
   }

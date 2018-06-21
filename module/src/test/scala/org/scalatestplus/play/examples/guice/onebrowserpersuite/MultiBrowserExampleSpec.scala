@@ -20,33 +20,32 @@ import org.scalatest._
 import tags._
 import org.scalatestplus.play._
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
-import play.api.{ Application, Play }
+import play.api.Application
 import play.api.inject.guice._
-import play.api.routing._
 
 // Place your tests in an abstract class
 abstract class MultiBrowserExampleSpec extends PlaySpec with GuiceOneServerPerSuite with OneBrowserPerSuite {
 
   // Override app if you need an Application with other than non-default parameters.
-  override def fakeApplication(): Application =
-    new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(TestRoutes.router).build()
+  override def fakeApplication(): Application = {
+    GuiceApplicationBuilder()
+      .configure("foo" -> "bar", "ehcacheplugin" -> "disabled")
+      .appRoutes(app => TestRoutes.router(app))
+      .build()
+  }
 
   "The OneBrowserPerSuite trait" must {
     "provide an Application" in {
       app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
     }
     "make the Application available implicitly" in {
-      def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
+      def getConfig(key: String)(implicit app: Application): Option[String] = app.configuration.getOptional[String](key)
       getConfig("ehcacheplugin") mustBe Some("disabled")
-    }
-    "start the Application" in {
-      Play.maybeApplication mustBe Some(app)
     }
     "provide the port number" in {
       port mustBe Helpers.testServerPort
     }
     "provide an actual running server" in {
-      import Helpers._
       import java.net._
       val url = new URL("http://localhost:" + port + "/boum")
       val con = url.openConnection().asInstanceOf[HttpURLConnection]

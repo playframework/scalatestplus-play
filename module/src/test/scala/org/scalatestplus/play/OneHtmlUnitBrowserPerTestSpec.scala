@@ -22,12 +22,16 @@ import play.api.{ Application, Play }
 import play.api.inject.guice._
 import play.api.routing._
 
-class OneHtmlUnitFactoryPerTestSpec extends UnitSpec with GuiceOneServerPerTest with OneBrowserPerTest with HtmlUnitFactory {
+class OneHtmlUnitBrowserPerTestSpec extends UnitSpec with GuiceOneServerPerTest with OneBrowserPerTest with HtmlUnitFactory {
 
-  implicit override def newAppForTest(testData: TestData): Application =
-    new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(TestRoutes.router).build()
+  override def newAppForTest(testData: TestData): Application = {
+    GuiceApplicationBuilder()
+      .configure("foo" -> "bar", "ehcacheplugin" -> "disabled")
+      .appRoutes(app => TestRoutes.router(app))
+      .build()
+  }
 
-  def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
+  def getConfig(key: String)(implicit app: Application): Option[String] = app.configuration.getOptional[String](key)
 
   "The OneBrowserPerTest trait" must {
     "provide an Application" in {
@@ -35,9 +39,6 @@ class OneHtmlUnitFactoryPerTestSpec extends UnitSpec with GuiceOneServerPerTest 
     }
     "make the Application available implicitly" in {
       getConfig("foo") mustBe Some("bar")
-    }
-    "start the Application" in {
-      Play.maybeApplication mustBe Some(app)
     }
     "provide the port" in {
       port mustBe Helpers.testServerPort

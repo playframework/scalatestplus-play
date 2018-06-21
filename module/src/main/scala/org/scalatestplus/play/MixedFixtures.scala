@@ -102,9 +102,6 @@ import org.openqa.selenium.safari.SafariDriver
  *     "make the Application available implicitly" in new App(buildApp("ehcacheplugin" -> "disabled")) {
  *       getConfig("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "start the Application" in new App(buildApp("ehcacheplugin" -> "disabled")) {
- *       Play.maybeApplication mustBe Some(app)
- *     }
  *   }
  *   "The Server function" must {
  *     "provide an Application" in new Server(buildApp("ehcacheplugin" -> "disabled")) {
@@ -112,9 +109,6 @@ import org.openqa.selenium.safari.SafariDriver
  *     }
  *     "make the Application available implicitly" in new Server(buildApp("ehcacheplugin" -> "disabled")) {
  *       getConfig("ehcacheplugin") mustBe Some("disabled")
- *     }
- *     "start the Application" in new Server(buildApp("ehcacheplugin" -> "disabled")) {
- *       Play.maybeApplication mustBe Some(app)
  *     }
  *     import Helpers._
  *     "send 404 on a bad request" in new Server {
@@ -131,9 +125,6 @@ import org.openqa.selenium.safari.SafariDriver
  *     }
  *     "make the Application available implicitly" in new HtmlUnit(buildApp("ehcacheplugin" -> "disabled")) {
  *       getConfig("ehcacheplugin") mustBe Some("disabled")
- *     }
- *     "start the Application" in new HtmlUnit(buildApp("ehcacheplugin" -> "disabled")) {
- *       Play.maybeApplication mustBe Some(app)
  *     }
  *     import Helpers._
  *     "send 404 on a bad request" in new HtmlUnit {
@@ -157,9 +148,6 @@ import org.openqa.selenium.safari.SafariDriver
  *     "make the Application available implicitly" in new Firefox(buildApp("ehcacheplugin" -> "disabled")) {
  *       getConfig("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "start the Application" in new Firefox(buildApp("ehcacheplugin" -> "disabled")) {
- *       Play.maybeApplication mustBe Some(app)
- *     }
  *     import Helpers._
  *     "send 404 on a bad request" in new Firefox {
  *       import java.net._
@@ -181,9 +169,6 @@ import org.openqa.selenium.safari.SafariDriver
  *     }
  *     "make the Application available implicitly" in new Safari(buildApp("ehcacheplugin" -> "disabled")) {
  *       getConfig("ehcacheplugin") mustBe Some("disabled")
- *     }
- *     "start the Application" in new Safari(buildApp("ehcacheplugin" -> "disabled")) {
- *       Play.maybeApplication mustBe Some(app)
  *     }
  *     import Helpers._
  *     "send 404 on a bad request" in new Safari {
@@ -207,9 +192,6 @@ import org.openqa.selenium.safari.SafariDriver
  *     "make the Application available implicitly" in new Chrome(buildApp("ehcacheplugin" -> "disabled")) {
  *       getConfig("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "start the Application" in new Chrome(buildApp("ehcacheplugin" -> "disabled")) {
- *       Play.maybeApplication mustBe Some(app)
- *     }
  *     import Helpers._
  *     "send 404 on a bad request" in new Chrome {
  *       import java.net._
@@ -231,9 +213,6 @@ import org.openqa.selenium.safari.SafariDriver
  *     }
  *     "make the Application available implicitly" in new InternetExplorer(buildApp("ehcacheplugin" -> "disabled")) {
  *       getConfig("ehcacheplugin") mustBe Some("disabled")
- *     }
- *     "start the Application" in new InternetExplorer(buildApp("ehcacheplugin" -> "disabled")) {
- *       Play.maybeApplication mustBe Some(app)
  *     }
  *     import Helpers._
  *     "send 404 on a bad request" in new InternetExplorer {

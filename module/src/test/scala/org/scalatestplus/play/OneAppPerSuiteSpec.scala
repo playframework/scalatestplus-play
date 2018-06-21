@@ -41,9 +41,6 @@ class OneAppPerSuiteSpec extends UnitSpec with GuiceOneAppPerSuite {
     "make the Application available implicitly" in {
       getConfig("foo") mustBe Some("bar")
     }
-    "start the Application" in {
-      Play.maybeApplication mustBe Some(app)
-    }
     "put the app in the configMap" in {
       val configuredApp = configMap.getOptional[Application]("org.scalatestplus.play.app")
       configuredApp.value must be theSameInstanceAs app

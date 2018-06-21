@@ -39,9 +39,6 @@ import play.api.test.Helpers
  *       def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
  *       getConfig("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "start the Application" in {
- *       Play.maybeApplication mustBe Some(app)
- *     }
  *   }
  * }
  * </pre>

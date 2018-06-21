@@ -19,16 +19,18 @@ import play.api.test._
 import org.scalatest._
 import org.scalatestplus.play._
 import org.scalatestplus.play.guice._
-import play.api.{ Play, Application }
+import play.api.Application
 import play.api.inject.guice._
-import play.api.routing._
-import play.api.cache.ehcache.EhCacheModule
 
 class ExampleSpec extends PlaySpec with GuiceOneServerPerTest with AllBrowsersPerTest {
 
   // Override newAppForTest if you need a Application with other than non-default parameters.
-  override def newAppForTest(testData: TestData): Application =
-    new GuiceApplicationBuilder().disable[EhCacheModule].configure("foo" -> "bar").router(TestRoutes.router).build()
+  override def newAppForTest(testData: TestData): Application = {
+    GuiceApplicationBuilder()
+      .configure("foo" -> "bar", "ehcacheplugin" -> "disabled")
+      .appRoutes(app => TestRoutes.router(app))
+      .build()
+  }
 
   // Place tests you want run in different browsers in the `sharedTests` method:
   def sharedTests(browser: BrowserInfo) = {
@@ -52,9 +54,6 @@ class ExampleSpec extends PlaySpec with GuiceOneServerPerTest with AllBrowsersPe
     "make the FakeApplication available implicitly" in {
       def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
       getConfig("foo") mustBe Some("bar")
-    }
-    "start the FakeApplication" in {
-      Play.maybeApplication mustBe Some(app)
     }
     "provide the port" in {
       port mustBe Helpers.testServerPort

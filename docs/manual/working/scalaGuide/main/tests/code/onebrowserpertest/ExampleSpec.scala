@@ -3,33 +3,40 @@
  */
 package scalaguide.tests.scalatest.onebrowserpertest
 
-import org.scalatest._
+import org.scalatest.TestData
 import org.scalatestplus.play._
-import play.api.mvc._
-import play.api.inject.guice._
-import play.api.routing._
-import play.api.routing.sird._
-import play.api.cache.ehcache.EhCacheModule
+import org.scalatestplus.play.guice.GuiceOneServerPerTest
+import play.api._
+import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.mvc.DefaultActionBuilder
 
 // #scalafunctionaltest-onebrowserpertest
-class ExampleSpec extends PlaySpec with OneServerPerTest with OneBrowserPerTest with HtmlUnitFactory {
+class ExampleSpec extends PlaySpec with GuiceOneServerPerTest with OneBrowserPerTest with HtmlUnitFactory {
 
-  // Override newAppForTest if you need a Application with other than
+  // Override app if you need an Application with other than
   // default parameters.
-  override def newAppForTest(testData: TestData) =
-    new GuiceApplicationBuilder().disable[EhCacheModule].router(Router.from {
-      case GET(p"/testing") =>
-        Action(
-          Results.Ok(
-            "<html>" +
-              "<head><title>Test Page</title></head>" +
-              "<body>" +
-              "<input type='button' name='b' value='Click Me' onclick='document.title=\"scalatest\"' />" +
-              "</body>" +
-              "</html>"
-          ).as("text/html")
-        )
-    }).build()
+  override def newAppForTest(testData: TestData): Application = {
+    import play.api.http.MimeTypes._
+    import play.api.mvc.Results._
+
+    GuiceApplicationBuilder()
+      .appRoutes(app => {
+        case ("GET", "/testing") => app.injector.instanceOf(classOf[DefaultActionBuilder]) {
+          Ok(
+            """
+              |<html>
+              | <head>
+              |   <title>Test Page</title>
+              |   <body>
+              |     <input type='button' name='b' value='Click Me' onclick='document.title="scalatest"' />
+              |   </body>
+              | </head>
+              |</html>
+            """.stripMargin
+          ).as(HTML)
+        }
+      }).build()
+  }
 
   "The OneBrowserPerTest trait" must {
     "provide a web driver" in {

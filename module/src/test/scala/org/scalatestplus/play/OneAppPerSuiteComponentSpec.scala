@@ -60,9 +60,6 @@ class OneAppPerSuiteComponentSpec extends UnitSpec with OneAppPerSuiteWithCompon
     "override the configuration" in {
       app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
-    "start the Application" in {
-      Play.maybeApplication mustBe Some(app)
-    }
     "put the app in the configMap" in {
       val configuredApp = configMap.getOptional[Application]("org.scalatestplus.play.app")
       configuredApp.value must be theSameInstanceAs app

@@ -22,8 +22,11 @@ import play.api.inject.guice._
 
 class ServerSpecSpec extends ServerSpec {
 
-  implicit override def newAppForTest(testData: TestData): Application = new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").build()
-  def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
+  override def newAppForTest(testData: TestData): Application = {
+    GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").build()
+  }
+
+  def getConfig(key: String)(implicit app: Application): Option[String] = app.configuration.getOptional[String](key)
 
   "The ServerFixture" must {
     "provide an Application" in {
@@ -32,13 +35,9 @@ class ServerSpecSpec extends ServerSpec {
     "make the Application available implicitly" in {
       getConfig("foo") mustBe Some("bar")
     }
-    "start the Application" in {
-      Play.maybeApplication mustBe Some(app)
-    }
     "provide the port" in {
       port mustBe Helpers.testServerPort
     }
-    import Helpers._
     "send 404 on a bad request" in {
       import java.net._
       val url = new URL("http://localhost:" + port + "/boum")

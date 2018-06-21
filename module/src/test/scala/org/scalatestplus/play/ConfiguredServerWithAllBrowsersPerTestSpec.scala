@@ -26,8 +26,12 @@ class ConfiguredServerWithAllBrowsersPerTestSpec extends Suites(
   new ConfiguredServerWithAllBrowsersPerTestNestedSpec
 )
     with GuiceOneServerPerSuite with TestSuite {
-  override def fakeApplication(): Application =
-    new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(TestRoutes.router).build()
+  override def fakeApplication(): Application = {
+    GuiceApplicationBuilder()
+      .configure("foo" -> "bar", "ehcacheplugin" -> "disabled")
+      .appRoutes(app => TestRoutes.router(app))
+      .build()
+  }
 }
 
 @DoNotDiscover
@@ -53,9 +57,6 @@ class ConfiguredServerWithAllBrowsersPerTestNestedSpec extends UnitSpec with Con
     }
     "make the Application available implicitly" in {
       getConfig("foo") mustBe Some("bar")
-    }
-    "start the Application" in {
-      Play.maybeApplication mustBe Some(app)
     }
     "provide the port" in {
       port mustBe Helpers.testServerPort

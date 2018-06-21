@@ -2,7 +2,7 @@ package org.scalatestplus.play.examples.components
 
 import play.api.ApplicationLoader.Context
 import play.api.{ BuiltInComponentsFromContext, Configuration, NoHttpFiltersComponents }
-import play.api.mvc.{ Action, Results }
+import play.api.mvc.Results
 import play.api.routing.Router
 
 /**

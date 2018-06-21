@@ -70,9 +70,6 @@ import BrowserFactory.UninitializedDriver
  *       def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
  *       getConfig("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "start the Application" in {
- *       Play.maybeApplication mustBe Some(app)
- *     }
  *     "provide the port number" in {
  *       port mustBe Helpers.testServerPort
  *     }

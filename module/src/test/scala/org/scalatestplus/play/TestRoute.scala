@@ -15,22 +15,33 @@
  */
 package org.scalatestplus.play
 
+import play.api._
+import play.api.http.MimeTypes
 import play.api.mvc._
 import play.api.routing.Router
 import play.api.routing.sird._
 
 object TestRoutes {
-  def router: Router = {
+
+  private val Success = Results.Ok(
+    "<html>" +
+      "<head><title>Test Page</title></head>" +
+      "<body>" +
+      "<input type='button' name='b' value='Click Me' onclick='document.title=\"scalatest\"' />" +
+      "</body>" +
+      "</html>"
+  ).as(MimeTypes.HTML)
+
+  def router(implicit app: Application): PartialFunction[(String, String), Handler] = {
+    case ("GET", "/testing") => app.injector.instanceOf(classOf[DefaultActionBuilder]) {
+      Success
+    }
+  }
+
+  def router(Action: DefaultActionBuilder): Router = {
     Router.from {
       case GET(p"/testing") => Action {
-        Results.Ok(
-          "<html>" +
-            "<head><title>Test Page</title></head>" +
-            "<body>" +
-            "<input type='button' name='b' value='Click Me' onclick='document.title=\"scalatest\"' />" +
-            "</body>" +
-            "</html>"
-        ).as("text/html")
+        Success
       }
     }
   }

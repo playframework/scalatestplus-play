@@ -24,8 +24,12 @@ import play.api.inject.guice._
 
 class PhantomJSFactorySpec extends UnitSpec with GuiceOneServerPerSuite with OneBrowserPerSuite with PhantomJSFactory {
 
-  override def fakeApplication(): Application =
-    new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(TestRoutes.router).build()
+  override def fakeApplication(): Application = {
+    GuiceApplicationBuilder()
+      .configure("foo" -> "bar", "ehcacheplugin" -> "disabled")
+      .appRoutes(app => TestRoutes.router(app))
+      .build()
+  }
 
   def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
 

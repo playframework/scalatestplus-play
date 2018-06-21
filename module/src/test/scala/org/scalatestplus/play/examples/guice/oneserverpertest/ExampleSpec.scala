@@ -19,7 +19,7 @@ import play.api.test._
 import org.scalatest._
 import org.scalatestplus.play._
 import org.scalatestplus.play.guice._
-import play.api.{ Play, Application }
+import play.api.Application
 import play.api.inject.guice._
 
 class ExampleSpec extends PlaySpec with GuiceOneServerPerTest {
@@ -28,7 +28,7 @@ class ExampleSpec extends PlaySpec with GuiceOneServerPerTest {
   override def newAppForTest(testData: TestData): Application = {
     new GuiceApplicationBuilder()
       .configure(Map("ehcacheplugin" -> "disabled"))
-      .router(TestRoutes.router)
+      .appRoutes(app => TestRoutes.router(app))
       .build()
   }
 
@@ -37,11 +37,8 @@ class ExampleSpec extends PlaySpec with GuiceOneServerPerTest {
       app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
     }
     "make the FakeApplication available implicitly" in {
-      def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
+      def getConfig(key: String)(implicit app: Application): Option[String] = app.configuration.getOptional[String](key)
       getConfig("ehcacheplugin") mustBe Some("disabled")
-    }
-    "start the FakeApplication" in {
-      Play.maybeApplication mustBe Some(app)
     }
     "provide the port number" in {
       port mustBe Helpers.testServerPort

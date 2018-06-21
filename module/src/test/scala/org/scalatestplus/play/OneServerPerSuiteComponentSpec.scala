@@ -28,7 +28,7 @@ class OneServerPerSuiteComponentSpec extends UnitSpec with OneServerPerSuiteWith
 
   override def components: BuiltInComponents = new BuiltInComponentsFromContext(context) with NoHttpFiltersComponents {
 
-    import play.api.mvc.{ Action, Results }
+    import play.api.mvc.Results
     import play.api.routing.Router
     import play.api.routing.sird._
 
@@ -59,9 +59,6 @@ class OneServerPerSuiteComponentSpec extends UnitSpec with OneServerPerSuiteWith
     }
     "override the configuration" in {
       app.configuration.getOptional[String]("foo") mustBe Some("bar")
-    }
-    "start the Application" in {
-      Play.maybeApplication mustBe Some(app)
     }
     "provide the port" in {
       port mustBe Helpers.testServerPort

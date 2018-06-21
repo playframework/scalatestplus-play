@@ -50,10 +50,6 @@ class OneAppPerTestComponentSpec extends UnitSpec with OneAppPerTestWithComponen
     "override the configuration" in {
       app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
-    "start the Application" in {
-      Play.maybeApplication mustBe Some(app)
-    }
-
   }
 }
 

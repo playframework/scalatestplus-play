@@ -127,9 +127,6 @@ import org.openqa.selenium.firefox.FirefoxProfile
  *       def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
  *       getConfig("foo") mustBe Some("bar")
  *     }
- *     "start the Application" in {
- *       Play.maybeApplication mustBe Some(app)
- *     }
  *     "provide the port" in {
  *       port mustBe Helpers.testServerPort
  *     }

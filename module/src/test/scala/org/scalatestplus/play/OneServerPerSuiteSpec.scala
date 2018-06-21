@@ -18,13 +18,16 @@ package org.scalatestplus.play
 import play.api.test._
 import org.scalatest._
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
-import play.api.{ Application, Play }
+import play.api.Application
 import play.api.inject.guice._
 
 class OneServerPerSuiteSpec extends UnitSpec with GuiceOneServerPerSuite {
 
-  override def fakeApplication() = new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").build()
-  def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
+  override def fakeApplication(): Application = {
+    GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").build()
+  }
+
+  def getConfig(key: String)(implicit app: Application): Option[String] = app.configuration.getOptional[String](key)
 
   // Doesn't need synchronization because set by withFixture and checked by the test
   // invoked inside same withFixture with super.withFixture(test)
@@ -42,13 +45,9 @@ class OneServerPerSuiteSpec extends UnitSpec with GuiceOneServerPerSuite {
     "make the Application available implicitly" in {
       getConfig("foo") mustBe Some("bar")
     }
-    "start the Application" in {
-      Play.maybeApplication mustBe Some(app)
-    }
     "provide the port" in {
       port mustBe Helpers.testServerPort
     }
-    import Helpers._
     "send 404 on a bad request" in {
       import java.net._
       val url = new URL("http://localhost:" + port + "/boum")
