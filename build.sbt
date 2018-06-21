@@ -24,6 +24,7 @@ val SeleniumVersion = "3.5.3"
 val HtmlUnitVersion = "2.31.0"
 val PhantomJsDriverVersion = "1.4.4"
 val MockitoVersion = "2.18.3"
+val CssParserVersion = "1.0.0"
 
 lazy val commonSettings = Seq(
   scalaVersion := scala212,
@@ -50,6 +51,7 @@ lazy val `scalatestplus-play` = project
       "org.scalatest" %% "scalatest" % ScalatestVersion,
       "org.seleniumhq.selenium" % "selenium-java" % SeleniumVersion exclude(org = "com.codeborne", name = "phantomjsdriver"),
       "org.seleniumhq.selenium" % "htmlunit-driver" % HtmlUnitVersion,
+      "net.sourceforge.htmlunit" % "htmlunit-cssparser" % CssParserVersion,
       "com.codeborne" % "phantomjsdriver" % PhantomJsDriverVersion,
       "com.typesafe.play" %% "play-test" % PlayVersion,
       "com.typesafe.play" %% "play-ws" % PlayVersion,
