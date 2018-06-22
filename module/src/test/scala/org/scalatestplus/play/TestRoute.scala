@@ -29,8 +29,7 @@ object TestRoutes {
       "<body>" +
       "<input type='button' name='b' value='Click Me' onclick='document.title=\"scalatest\"' />" +
       "</body>" +
-      "</html>"
-  ).as(MimeTypes.HTML)
+      "</html>").as(MimeTypes.HTML)
 
   def router(implicit app: Application): PartialFunction[(String, String), Handler] = {
     case ("GET", "/testing") => app.injector.instanceOf(classOf[DefaultActionBuilder]) {

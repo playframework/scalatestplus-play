@@ -222,8 +222,7 @@ trait AllBrowsersPerSuite extends TestSuiteMixin with WebBrowser with Eventually
       SafariInfo,
       InternetExplorerInfo,
       ChromeInfo(chromeDriverService, chromeOptions),
-      HtmlUnitInfo(true)
-    )
+      HtmlUnitInfo(true))
 
   private var privateWebDriver: WebDriver = UninitializedDriver
 
