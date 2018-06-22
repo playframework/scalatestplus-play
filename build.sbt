@@ -84,8 +84,6 @@ lazy val docs = project
   .configs(Docs)
   .settings(
     libraryDependencies ++= Seq(
-      "com.typesafe.play" %% "play-cache" % PlayVersion % Test,
-      "com.typesafe.play" %% "play-ehcache" % PlayVersion % Test,
       "org.mockito" % "mockito-core" % MockitoVersion % Test
     ),
 
