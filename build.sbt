@@ -17,16 +17,18 @@ import interplay.ScalaVersions._
 
 resolvers ++= DefaultOptions.resolvers(snapshot = true)
 
-val PlayVersion = playVersion("2.6.5")
+val PlayVersion = playVersion("2.7.0-M1")
 
-val ScalatestVersion = "3.0.4"
+val ScalatestVersion = "3.0.5-M1"
 val SeleniumVersion = "3.5.3"
-val HtmlUnitVersion = "2.27"
-val PhantomJsDriverVersion = "1.4.3"
-val MockitoVersion = "2.7.22"
+val HtmlUnitVersion = "2.31.0"
+val PhantomJsDriverVersion = "1.4.4"
+val MockitoVersion = "2.18.3"
+val CssParserVersion = "1.0.0"
 
 lazy val commonSettings = Seq(
   scalaVersion := scala212,
+  crossScalaVersions := Seq(scala211, scala212, "2.13.0-M3"),
   fork in Test := false,
   parallelExecution in Test := false,
   testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oTK")
@@ -49,12 +51,11 @@ lazy val `scalatestplus-play` = project
       "org.scalatest" %% "scalatest" % ScalatestVersion,
       "org.seleniumhq.selenium" % "selenium-java" % SeleniumVersion exclude(org = "com.codeborne", name = "phantomjsdriver"),
       "org.seleniumhq.selenium" % "htmlunit-driver" % HtmlUnitVersion,
+      "net.sourceforge.htmlunit" % "htmlunit-cssparser" % CssParserVersion,
       "com.codeborne" % "phantomjsdriver" % PhantomJsDriverVersion,
       "com.typesafe.play" %% "play-test" % PlayVersion,
       "com.typesafe.play" %% "play-ws" % PlayVersion,
-      "com.typesafe.play" %% "play-ahc-ws" % PlayVersion,
-      "com.typesafe.play" %% "play-cache" % PlayVersion % Test,
-      "com.typesafe.play" %% "play-ehcache" % PlayVersion % Test
+      "com.typesafe.play" %% "play-ahc-ws" % PlayVersion
     ),
     scalacOptions in(Compile, doc) := Seq("-doc-title", "ScalaTest + Play, " + releaseVersion),
 

@@ -3,35 +3,42 @@
  */
 package org.scalatestplus.play.examples.guice.mixedfixtures
 
-import play.api.test._
 import org.scalatestplus.play._
-import play.api.{ Play, Application }
-import play.api.mvc._
-import play.api.inject.guice._
-import play.api.routing._
-import play.api.routing.sird._
+import play.api._
+import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.mvc.DefaultActionBuilder
 
 // #scalafunctionaltest-mixedfixtures
 // MixedPlaySpec already mixes in MixedFixtures
 class ExampleSpec extends MixedPlaySpec {
 
   // Some helper methods
-  def buildApp[A](elems: (String, String)*) =
-    new GuiceApplicationBuilder().configure(Map(elems: _*)).router(Router.from {
-      case GET(p"/testing") =>
-        Action(
-          Results.Ok(
-            "<html>" +
-              "<head><title>Test Page</title></head>" +
-              "<body>" +
-              "<input type='button' name='b' value='Click Me' onclick='document.title=\"scalatest\"' />" +
-              "</body>" +
-              "</html>"
-          ).as("text/html")
-        )
-    }).build()
+  def buildApp[A](elems: (String, String)*): Application = {
+    import play.api.http.MimeTypes._
+    import play.api.mvc.Results._
 
-  def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
+    GuiceApplicationBuilder()
+      .appRoutes(app => {
+        case ("GET", "/testing") => app.injector.instanceOf(classOf[DefaultActionBuilder]) {
+          Ok(
+            """
+              |<html>
+              | <head>
+              |   <title>Test Page</title>
+              |   <body>
+              |     <input type='button' name='b' value='Click Me' onclick='document.title="scalatest"' />
+              |   </body>
+              | </head>
+              |</html>
+            """.stripMargin
+          ).as(HTML)
+        }
+      })
+      .configure(Map(elems: _*))
+      .build()
+  }
+
+  def getConfig(key: String)(implicit app: Application): Option[String] = app.configuration.getOptional[String](key)
 
   // If a test just needs an Application, use "new App":
   "The App function" must {
@@ -40,9 +47,6 @@ class ExampleSpec extends MixedPlaySpec {
     }
     "make the Application available implicitly" in new App(buildApp("ehcacheplugin" -> "disabled")) {
       getConfig("ehcacheplugin") mustBe Some("disabled")
-    }
-    "start the Application" in new App(buildApp("ehcacheplugin" -> "disabled")) {
-      Play.maybeApplication mustBe Some(app)
     }
   }
 
@@ -54,14 +58,10 @@ class ExampleSpec extends MixedPlaySpec {
     "make the Application available implicitly" in new Server(buildApp("ehcacheplugin" -> "disabled")) {
       getConfig("ehcacheplugin") mustBe Some("disabled")
     }
-    "start the Application" in new Server(buildApp("ehcacheplugin" -> "disabled")) {
-      Play.maybeApplication mustBe Some(app)
-    }
-    import Helpers._
     "send 404 on a bad request" in new Server {
       import java.net._
       val url = new URL("http://localhost:" + port + "/boom")
-      val con = url.openConnection().asInstanceOf[HttpURLConnection]
+      val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
       try con.getResponseCode mustBe 404
       finally con.disconnect()
     }
@@ -76,14 +76,10 @@ class ExampleSpec extends MixedPlaySpec {
     "make the Application available implicitly" in new HtmlUnit(buildApp("ehcacheplugin" -> "disabled")) {
       getConfig("ehcacheplugin") mustBe Some("disabled")
     }
-    "start the Application" in new HtmlUnit(buildApp("ehcacheplugin" -> "disabled")) {
-      Play.maybeApplication mustBe Some(app)
-    }
-    import Helpers._
     "send 404 on a bad request" in new HtmlUnit {
       import java.net._
       val url = new URL("http://localhost:" + port + "/boom")
-      val con = url.openConnection().asInstanceOf[HttpURLConnection]
+      val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
       try con.getResponseCode mustBe 404
       finally con.disconnect()
     }
@@ -104,14 +100,10 @@ class ExampleSpec extends MixedPlaySpec {
     "make the Application available implicitly" in new Firefox(buildApp("ehcacheplugin" -> "disabled")) {
       getConfig("ehcacheplugin") mustBe Some("disabled")
     }
-    "start the Application" in new Firefox(buildApp("ehcacheplugin" -> "disabled")) {
-      Play.maybeApplication mustBe Some(app)
-    }
-    import Helpers._
     "send 404 on a bad request" in new Firefox {
       import java.net._
       val url = new URL("http://localhost:" + port + "/boom")
-      val con = url.openConnection().asInstanceOf[HttpURLConnection]
+      val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
       try con.getResponseCode mustBe 404
       finally con.disconnect()
     }
@@ -132,14 +124,10 @@ class ExampleSpec extends MixedPlaySpec {
     "make the Application available implicitly" in new Safari(buildApp("ehcacheplugin" -> "disabled")) {
       getConfig("ehcacheplugin") mustBe Some("disabled")
     }
-    "start the Application" in new Safari(buildApp("ehcacheplugin" -> "disabled")) {
-      Play.maybeApplication mustBe Some(app)
-    }
-    import Helpers._
     "send 404 on a bad request" in new Safari {
       import java.net._
       val url = new URL("http://localhost:" + port + "/boom")
-      val con = url.openConnection().asInstanceOf[HttpURLConnection]
+      val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
       try con.getResponseCode mustBe 404
       finally con.disconnect()
     }
@@ -160,14 +148,10 @@ class ExampleSpec extends MixedPlaySpec {
     "make the Application available implicitly" in new Chrome(buildApp("ehcacheplugin" -> "disabled")) {
       getConfig("ehcacheplugin") mustBe Some("disabled")
     }
-    "start the Application" in new Chrome(buildApp("ehcacheplugin" -> "disabled")) {
-      Play.maybeApplication mustBe Some(app)
-    }
-    import Helpers._
     "send 404 on a bad request" in new Chrome {
       import java.net._
       val url = new URL("http://localhost:" + port + "/boom")
-      val con = url.openConnection().asInstanceOf[HttpURLConnection]
+      val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
       try con.getResponseCode mustBe 404
       finally con.disconnect()
     }
@@ -188,14 +172,10 @@ class ExampleSpec extends MixedPlaySpec {
     "make the Application available implicitly" in new InternetExplorer(buildApp("ehcacheplugin" -> "disabled")) {
       getConfig("ehcacheplugin") mustBe Some("disabled")
     }
-    "start the Application" in new InternetExplorer(buildApp("ehcacheplugin" -> "disabled")) {
-      Play.maybeApplication mustBe Some(app)
-    }
-    import Helpers._
     "send 404 on a bad request" in new InternetExplorer {
       import java.net._
       val url = new URL("http://localhost:" + port + "/boom")
-      val con = url.openConnection().asInstanceOf[HttpURLConnection]
+      val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
       try con.getResponseCode mustBe 404
       finally con.disconnect()
     }

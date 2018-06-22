@@ -15,17 +15,17 @@
  */
 package org.scalatestplus.play
 
-import play.api.test._
 import org.scalatest._
-import play.api.{ Play, Application }
+import play.api.Application
 import play.api.inject.guice._
 
 class AppSpecSpec extends AppSpec {
 
-  override def newAppForTest(testData: TestData): Application =
-    new GuiceApplicationBuilder().configure(Map("foo" -> "bar", "ehcacheplugin" -> "disabled")).build()
+  override def newAppForTest(testData: TestData): Application = {
+    GuiceApplicationBuilder().configure("foo" -> "bar").build()
+  }
 
-  def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
+  def getConfig(key: String)(implicit app: Application): Option[String] = app.configuration.getOptional[String](key)
 
   "The AppFixture" must {
     "provide an Application" in {
@@ -33,9 +33,6 @@ class AppSpecSpec extends AppSpec {
     }
     "make the Application available implicitly" in {
       getConfig("foo") mustBe Some("bar")
-    }
-    "start the Application" in {
-      Play.maybeApplication mustBe Some(app)
     }
   }
 }

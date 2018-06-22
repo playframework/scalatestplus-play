@@ -15,28 +15,31 @@
  */
 package org.scalatestplus.play
 
-import play.api.test._
-import org.scalatest._
-import play.api.{ Application, Play }
 import org.openqa.selenium.WebDriver
+import org.scalatest._
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
+import play.api.Application
 import play.api.inject.guice._
-import play.api.routing._
+import play.api.test._
 
 class ConfiguredServerWithConfiguredBrowserSpec extends UnitSpec with SequentialNestedSuiteExecution with GuiceOneServerPerSuite with OneBrowserPerSuite with HtmlUnitFactory {
 
   override def nestedSuites = Vector(new ConfiguredServerWithConfiguredBrowserNestedSpec)
 
-  override def fakeApplication(): Application =
-    new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(TestRoutes.router).build()
+  override def fakeApplication(): Application = {
+    GuiceApplicationBuilder()
+      .configure("foo" -> "bar")
+      .appRoutes(app => TestRoutes.router(app))
+      .build()
+  }
 
-  def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
+  def getConfig(key: String)(implicit app: Application): Option[String] = app.configuration.getOptional[String](key)
 }
 
 @DoNotDiscover
 class ConfiguredServerWithConfiguredBrowserNestedSpec extends UnitSpec with ConfiguredServer with ConfiguredBrowser {
 
-  def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
+  def getConfig(key: String)(implicit app: Application): Option[String] = app.configuration.getOptional[String](key)
 
   // Doesn't need synchronization because set by withFixture and checked by the test
   // invoked inside same withFixture with super.withFixture(test)
@@ -54,9 +57,6 @@ class ConfiguredServerWithConfiguredBrowserNestedSpec extends UnitSpec with Conf
     "make the Application available implicitly" in {
       getConfig("foo") mustBe Some("bar")
     }
-    "start the Application" in {
-      Play.maybeApplication mustBe Some(app)
-    }
     "put the app in the configMap" in {
       val configuredApp = configMap.getOptional[Application]("org.scalatestplus.play.app")
       configuredApp.value must be theSameInstanceAs app
@@ -68,7 +68,6 @@ class ConfiguredServerWithConfiguredBrowserNestedSpec extends UnitSpec with Conf
     "provide the port" in {
       port mustBe Helpers.testServerPort
     }
-    import Helpers._
     "send 404 on a bad request" in {
       import java.net._
       val url = new URL("http://localhost:" + port + "/boum")

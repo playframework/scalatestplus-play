@@ -15,14 +15,9 @@
  */
 package org.scalatestplus.play
 
-import play.api.test._
-import org.scalatest._
-import selenium.WebBrowser
-import concurrent.Eventually
-import concurrent.IntegrationPatience
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.htmlunit.HtmlUnitDriver
-import BrowserFactory.UnavailableDriver
+import org.scalatestplus.play.BrowserFactory.UnavailableDriver
 
 /**
  * Factory whose `createWebDriver` method will either return a new Selenium `HtmlUnitDriver`, or

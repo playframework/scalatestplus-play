@@ -23,9 +23,6 @@ class ExamplePreDefinedSpec extends PlaySpec with OneAppPerTestWithComponents {
       val Some(result): Option[Future[Result]] = route(app, FakeRequest(GET, "/"))
       Helpers.contentAsString(result) must be("success!")
     }
-    "define the db" in {
-      app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
-    }
   }
 }
 

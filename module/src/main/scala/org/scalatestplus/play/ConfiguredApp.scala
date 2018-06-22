@@ -52,9 +52,6 @@ import play.api.Application
  *       def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
  *       getConfig("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "start the FakeApplication" in {
- *       Play.maybeApplication mustBe Some(app)
- *     }
  *   }
  * }
  * </pre>

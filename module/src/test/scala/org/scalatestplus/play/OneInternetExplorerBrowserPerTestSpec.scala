@@ -18,16 +18,19 @@ package org.scalatestplus.play
 import play.api.test._
 import org.scalatest._
 import org.scalatestplus.play.guice.GuiceOneServerPerTest
-import play.api.{ Application, Play }
+import play.api.Application
 import play.api.inject.guice._
-import play.api.routing._
 
-class OneInternetExplorerFactoryPerTestSpec extends UnitSpec with GuiceOneServerPerTest with OneBrowserPerTest with InternetExplorerFactory {
+class OneInternetExplorerBrowserPerTestSpec extends UnitSpec with GuiceOneServerPerTest with OneBrowserPerTest with InternetExplorerFactory {
 
-  implicit override def newAppForTest(testData: TestData) =
-    new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(TestRoutes.router).build()
+  override def newAppForTest(testData: TestData): Application = {
+    GuiceApplicationBuilder()
+      .configure("foo" -> "bar")
+      .appRoutes(app => TestRoutes.router(app))
+      .build()
+  }
 
-  def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
+  def getConfig(key: String)(implicit app: Application): Option[String] = app.configuration.getOptional[String](key)
 
   "The OneBrowserPerTest trait" must {
     "provide an Application" in {
@@ -36,13 +39,9 @@ class OneInternetExplorerFactoryPerTestSpec extends UnitSpec with GuiceOneServer
     "make the Application available implicitly" in {
       getConfig("foo") mustBe Some("bar")
     }
-    "start the Application" in {
-      Play.maybeApplication mustBe Some(app)
-    }
     "provide the port" in {
       port mustBe Helpers.testServerPort
     }
-    import Helpers._
     "send 404 on a bad request" in {
       import java.net._
       val url = new URL("http://localhost:" + port + "/boum")

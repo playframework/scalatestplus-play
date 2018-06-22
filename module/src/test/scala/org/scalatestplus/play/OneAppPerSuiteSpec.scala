@@ -17,13 +17,16 @@ package org.scalatestplus.play
 
 import org.scalatest._
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.{ Application, Play }
+import play.api.Application
 import play.api.inject.guice._
 
 class OneAppPerSuiteSpec extends UnitSpec with GuiceOneAppPerSuite {
 
-  override def fakeApplication() = new GuiceApplicationBuilder().configure(Map("foo" -> "bar", "ehcacheplugin" -> "disabled")).build()
-  def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
+  override def fakeApplication(): Application = {
+    GuiceApplicationBuilder().configure("foo" -> "bar").build()
+  }
+
+  def getConfig(key: String)(implicit app: Application): Option[String] = app.configuration.getOptional[String](key)
 
   // Doesn't need synchronization because set by withFixture and checked by the test
   // invoked inside same withFixture with super.withFixture(test)
@@ -40,9 +43,6 @@ class OneAppPerSuiteSpec extends UnitSpec with GuiceOneAppPerSuite {
     }
     "make the Application available implicitly" in {
       getConfig("foo") mustBe Some("bar")
-    }
-    "start the Application" in {
-      Play.maybeApplication mustBe Some(app)
     }
     "put the app in the configMap" in {
       val configuredApp = configMap.getOptional[Application]("org.scalatestplus.play.app")

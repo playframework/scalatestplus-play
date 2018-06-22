@@ -2,6 +2,9 @@
 
 # Copyright (C) 2009-2017 Lightbend Inc. <https://www.lightbend.com>
 
+# 1. webdriver.firefox.logfile=/dev/null disable GeckoDriver logs which are polluting Travis logs
+export ADDITIONAL_SBT_ARGUMENTS="-Dwebdriver.firefox.logfile=/dev/null"
+
 . "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/build"
 
 build docs/test

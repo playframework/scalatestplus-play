@@ -24,7 +24,7 @@ import scala.collection.mutable.ListBuffer
 @DoNotDiscover
 class ConfiguredServerNestedSuite extends UnitSpec with ConfiguredServer {
 
-  def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
+  def getConfig(key: String)(implicit app: Application): Option[String] = app.configuration.getOptional[String](key)
 
   // Doesn't need synchronization because set by withFixture and checked by the test
   // invoked inside same withFixture with super.withFixture(test)
@@ -42,9 +42,6 @@ class ConfiguredServerNestedSuite extends UnitSpec with ConfiguredServer {
     "make the Application available implicitly" in {
       getConfig("foo") mustBe Some("bar")
     }
-    "start the Application" in {
-      Play.maybeApplication mustBe Some(app)
-    }
     "put the app in the configMap" in {
       val configuredApp = configMap.getOptional[Application]("org.scalatestplus.play.app")
       configuredApp.value must be theSameInstanceAs app
@@ -56,7 +53,6 @@ class ConfiguredServerNestedSuite extends UnitSpec with ConfiguredServer {
     "provide the port" in {
       port mustBe Helpers.testServerPort
     }
-    import Helpers._
     "send 404 on a bad request" in {
       import java.net._
       val url = new URL("http://localhost:" + port + "/boum")

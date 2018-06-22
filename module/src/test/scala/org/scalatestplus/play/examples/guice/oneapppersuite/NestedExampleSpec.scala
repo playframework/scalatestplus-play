@@ -18,7 +18,7 @@ package org.scalatestplus.play.examples.guice.oneapppersuite
 import org.scalatest._
 import org.scalatestplus.play._
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.{ Application, Play }
+import play.api.Application
 import play.api.inject.guice._
 
 // This is the "master" suite
@@ -29,8 +29,9 @@ class NestedExampleSpec extends Suites(
   new BlueSpec
 ) with GuiceOneAppPerSuite with TestSuite {
   // Override fakeApplication if you need an Application with other than non-default parameters.
-  override def fakeApplication(): Application =
-    new GuiceApplicationBuilder().configure(Map("ehcacheplugin" -> "disabled")).build()
+  override def fakeApplication(): Application = {
+    GuiceApplicationBuilder().configure("foo" -> "bar").build()
+  }
 }
 
 // These are the nested suites
@@ -43,14 +44,11 @@ class BlueSpec extends PlaySpec with ConfiguredApp {
 
   "The GuiceOneAppPerSuite trait" must {
     "provide an Application" in {
-      app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
+      app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
     "make the Application available implicitly" in {
       def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
-      getConfig("ehcacheplugin") mustBe Some("disabled")
-    }
-    "start the Application" in {
-      Play.maybeApplication mustBe Some(app)
+      getConfig("foo") mustBe Some("bar")
     }
   }
 }

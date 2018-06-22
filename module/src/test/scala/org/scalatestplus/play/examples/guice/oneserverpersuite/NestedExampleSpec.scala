@@ -19,7 +19,7 @@ import play.api.test._
 import org.scalatest._
 import org.scalatestplus.play._
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
-import play.api.{ Application, Play }
+import play.api.Application
 import play.api.inject.guice._
 
 // This is the "master" suite
@@ -30,8 +30,9 @@ class NestedExampleSpec extends Suites(
   new BlueSpec
 ) with GuiceOneServerPerSuite with TestSuite {
   // Override app if you need an Application with other than non-default parameters.
-  override def fakeApplication(): Application =
-    new GuiceApplicationBuilder().configure(Map("ehcacheplugin" -> "disabled")).build()
+  override def fakeApplication(): Application = {
+    GuiceApplicationBuilder().configure("foo" -> "bar").build()
+  }
 }
 
 // These are the nested suites
@@ -44,14 +45,11 @@ class BlueSpec extends PlaySpec with ConfiguredServer {
 
   "The OneServerPerSuite trait" must {
     "provide an Application" in {
-      app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
+      app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
     "make the Application available implicitly" in {
       def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
-      getConfig("ehcacheplugin") mustBe Some("disabled")
-    }
-    "start the Application" in {
-      Play.maybeApplication mustBe Some(app)
+      getConfig("foo") mustBe Some("bar")
     }
     "provide the port number" in {
       port mustBe Helpers.testServerPort

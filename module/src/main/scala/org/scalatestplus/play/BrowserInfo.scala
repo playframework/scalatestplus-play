@@ -15,9 +15,8 @@
  */
 package org.scalatestplus.play
 
-import java.util.logging.Level
-
 import org.openqa.selenium.WebDriver
+import org.openqa.selenium.chrome.{ ChromeDriverService, ChromeOptions }
 import org.openqa.selenium.firefox.{ FirefoxOptions, FirefoxProfile }
 import org.openqa.selenium.remote.DesiredCapabilities
 
@@ -66,7 +65,7 @@ abstract class BrowserInfo(val name: String, val tagName: String) {
  *
  * @param firefoxProfile the `FirefoxProfile` to use when creating new `FirefoxDriver`s in the `createWebDriver` factory method.
  */
-case class FirefoxInfo(firefoxProfile: FirefoxProfile, firefoxOptions: FirefoxOptions = new FirefoxOptions().setLogLevel(Level.WARNING)) extends BrowserInfo("[Firefox]", "org.scalatest.tags.FirefoxBrowser") {
+case class FirefoxInfo(firefoxProfile: FirefoxProfile, firefoxOptions: FirefoxOptions = FirefoxFactory.firefoxOptions) extends BrowserInfo("[Firefox]", "org.scalatest.tags.FirefoxBrowser") {
 
   /**
    * Creates a new instance of a Selenium `FirefoxDriver`, or returns a [[org.scalatestplus.play.BrowserFactory.UnavailableDriver BrowserFactory.UnavailableDriver]] that includes
@@ -141,7 +140,7 @@ case object InternetExplorerInfo extends BrowserInfo("[InternetExplorer]", "org.
  * The `AllBrowsersPerSuite` and `AllBrowsersPerTest` traits use the  tag name to automatically tag any tests that use
  * a particular `WebDriver` with the appropriate tag so that tests can be dynamically filtered by the browser the use.
  */
-case object ChromeInfo extends BrowserInfo("[Chrome]", "org.scalatest.tags.ChromeBrowser") {
+case class ChromeInfo(service: ChromeDriverService = ChromeFactory.chromeDriverService, options: ChromeOptions = ChromeFactory.chromeOptions) extends BrowserInfo("[Chrome]", "org.scalatest.tags.ChromeBrowser") {
 
   /**
    * Creates a new instance of a Selenium `ChromeDriver`, or returns a [[org.scalatestplus.play.BrowserFactory.UnavailableDriver BrowserFactory.UnavailableDriver]] that includes
@@ -151,7 +150,7 @@ case object ChromeInfo extends BrowserInfo("[Chrome]", "org.scalatest.tags.Chrom
    * @return an new instance of a Selenium `ChromeDriver`, or a [[org.scalatestplus.play.BrowserFactory.UnavailableDriver BrowserFactory.UnavailableDriver]] if Chrome
    * was not available on the host platform.
    */
-  def createWebDriver(): WebDriver = ChromeFactory.createWebDriver()
+  def createWebDriver(): WebDriver = ChromeFactory.createWebDriver(service, options)
 }
 
 /**
@@ -194,6 +193,7 @@ case class HtmlUnitInfo(enableJavascript: Boolean) extends BrowserInfo("[HtmlUni
  * @param phantomCapabilities the [[DesiredCapabilities]] to use when creating new [[org.openqa.selenium.phantomjs.PhantomJSDriver]]
  *                            in the `createWebDriver` factory method.
  */
+@deprecated("PhantomJS is no longer actively developed, and support will eventually be dropped", "4.0.0")
 case class PhantomJSInfo(phantomCapabilities: DesiredCapabilities = DesiredCapabilities.phantomjs()) extends BrowserInfo("[PhantomJS]", "org.scalatest.tags.PhantomJSBrowser") {
 
   /**

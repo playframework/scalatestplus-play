@@ -34,6 +34,6 @@ trait WithApplicationComponents {
    */
   lazy val context: ApplicationLoader.Context = {
     val env = Environment.simple()
-    ApplicationLoader.createContext(env)
+    ApplicationLoader.Context.create(env)
   }
 }

@@ -18,21 +18,24 @@ package org.scalatestplus.play
 import play.api.test._
 import org.scalatest._
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
-import play.api.{ Application, Play }
+import play.api.Application
 import play.api.inject.guice._
-import play.api.routing._
 
 class ConfiguredServerWithOneBrowserPerTestSpec extends Suites(
   new ConfiguredServerWithOneBrowserPerTestNestedSpec
 ) with GuiceOneServerPerSuite with TestSuite {
-  override def fakeApplication(): Application =
-    new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(TestRoutes.router).build()
+  override def fakeApplication(): Application = {
+    GuiceApplicationBuilder()
+      .configure("foo" -> "bar")
+      .appRoutes(app => TestRoutes.router(app))
+      .build()
+  }
 }
 
 @DoNotDiscover
 class ConfiguredServerWithOneBrowserPerTestNestedSpec extends UnitSpec with ConfiguredServer with OneBrowserPerTest with FirefoxFactory {
 
-  def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
+  def getConfig(key: String)(implicit app: Application): Option[String] = app.configuration.getOptional[String](key)
 
   "The OneBrowserPerTest trait" must {
     "provide a FakeApplication" in {
@@ -40,9 +43,6 @@ class ConfiguredServerWithOneBrowserPerTestNestedSpec extends UnitSpec with Conf
     }
     "make the FakeApplication available implicitly" in {
       getConfig("foo") mustBe Some("bar")
-    }
-    "start the FakeApplication" in {
-      Play.maybeApplication mustBe Some(app)
     }
     "provide the port" in {
       port mustBe Helpers.testServerPort

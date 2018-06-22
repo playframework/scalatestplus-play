@@ -17,15 +17,19 @@ package org.scalatestplus.play
 
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.test._
-import play.api.{ Application, Play }
+import play.api.Application
 import play.api.inject.guice._
-import play.api.routing._
 
 class OneServerPerSuiteWithAllBrowsersPerTestSpec extends UnitSpec with GuiceOneServerPerSuite with AllBrowsersPerTest {
 
-  override def fakeApplication() =
-    new GuiceApplicationBuilder().configure("foo" -> "bar", "ehcacheplugin" -> "disabled").router(TestRoutes.router).build()
-  def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
+  override def fakeApplication(): Application = {
+    GuiceApplicationBuilder()
+      .configure("foo" -> "bar")
+      .appRoutes(app => TestRoutes.router(app))
+      .build()
+  }
+
+  def getConfig(key: String)(implicit app: Application): Option[String] = app.configuration.getOptional[String](key)
 
   def sharedTests(browser: BrowserInfo) = {
 
@@ -45,9 +49,6 @@ class OneServerPerSuiteWithAllBrowsersPerTestSpec extends UnitSpec with GuiceOne
     }
     "make the Application available implicitly" in {
       getConfig("foo") mustBe Some("bar")
-    }
-    "start the Application" in {
-      Play.maybeApplication mustBe Some(app)
     }
     "provide the port" in {
       port mustBe Helpers.testServerPort

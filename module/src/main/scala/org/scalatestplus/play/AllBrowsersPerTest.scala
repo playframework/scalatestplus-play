@@ -127,9 +127,6 @@ import org.openqa.selenium.firefox.FirefoxProfile
  *        def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
  *       getConfig("foo") mustBe Some("bar")
  *     }
- *     "start the FakeApplication" in {
- *       Play.maybeApplication mustBe Some(app)
- *     }
  *     "provide the port" in {
  *       port mustBe Helpers.testServerPort
  *     }
@@ -204,9 +201,8 @@ trait AllBrowsersPerTest extends TestSuiteMixin with WebBrowser with Eventually 
       FirefoxInfo(firefoxProfile),
       SafariInfo,
       InternetExplorerInfo,
-      ChromeInfo,
-      HtmlUnitInfo(true),
-      PhantomJSInfo()
+      ChromeInfo(),
+      HtmlUnitInfo(true)
     )
 
   private var privateWebDriver: WebDriver = UninitializedDriver

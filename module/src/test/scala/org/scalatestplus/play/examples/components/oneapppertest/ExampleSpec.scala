@@ -26,7 +26,7 @@ class ExampleSpec extends PlaySpec with OneAppPerTestWithComponents {
       }
     })
 
-    override lazy val configuration: Configuration = context.initialConfiguration ++ Configuration("foo" -> "bar", "ehcacheplugin" -> "disabled")
+    override lazy val configuration: Configuration = context.initialConfiguration ++ Configuration("foo" -> "bar")
   }
 
   "The OneAppPerTestWithComponents trait" must {
@@ -36,7 +36,7 @@ class ExampleSpec extends PlaySpec with OneAppPerTestWithComponents {
       Helpers.contentAsString(result) must be("success!")
     }
     "override the configuration" in {
-      app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
+      app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
   }
 }

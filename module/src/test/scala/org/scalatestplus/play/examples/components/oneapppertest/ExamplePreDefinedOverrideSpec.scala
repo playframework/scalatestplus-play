@@ -16,7 +16,7 @@ import scala.concurrent.Future
 class ExamplePreDefinedOverrideSpec extends PlaySpec with OneAppPerTestWithComponents {
 
   override def components: BuiltInComponents = new SomeAppComponents(context) {
-    override lazy val configuration: Configuration = context.initialConfiguration ++ Configuration("ehcacheplugin" -> "enabled")
+    override lazy val configuration: Configuration = context.initialConfiguration ++ Configuration("foo" -> "bar")
   }
 
   "The OneAppPerTestWithComponents trait" must {
@@ -26,7 +26,7 @@ class ExamplePreDefinedOverrideSpec extends PlaySpec with OneAppPerTestWithCompo
       Helpers.contentAsString(result) must be("success!")
     }
     "override the configuration" in {
-      app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("enabled")
+      app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
   }
 }
