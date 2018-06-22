@@ -32,8 +32,7 @@ class ExampleSpec extends PlaySpec with GuiceOneServerPerTest with OneBrowserPer
               |   </body>
               | </head>
               |</html>
-            """.stripMargin
-          ).as(HTML)
+            """.stripMargin).as(HTML)
         }
       }).build()
   }

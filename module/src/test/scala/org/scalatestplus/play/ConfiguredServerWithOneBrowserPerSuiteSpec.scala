@@ -22,8 +22,7 @@ import play.api.Application
 import play.api.inject.guice._
 
 class ConfiguredServerWithOneBrowserPerSuiteSpec extends Suites(
-  new ConfiguredServerWithOneBrowserPerSuiteNestedSpec
-) with GuiceOneServerPerSuite with TestSuite {
+  new ConfiguredServerWithOneBrowserPerSuiteNestedSpec) with GuiceOneServerPerSuite with TestSuite {
   override def fakeApplication(): Application = {
     GuiceApplicationBuilder()
       .configure("foo" -> "bar")

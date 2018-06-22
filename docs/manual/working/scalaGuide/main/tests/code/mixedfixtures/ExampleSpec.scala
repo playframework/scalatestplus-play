@@ -30,8 +30,7 @@ class ExampleSpec extends MixedPlaySpec {
               |   </body>
               | </head>
               |</html>
-            """.stripMargin
-          ).as(HTML)
+            """.stripMargin).as(HTML)
         }
       })
       .configure(Map(elems: _*))
