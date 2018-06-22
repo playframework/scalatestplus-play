@@ -145,5 +145,5 @@ checkCodeFormat := {
 }
 
 addCommandAlias("validateCode",
-  ";scalariformFormat;test:scalariformFormat;docs/scalariformFormat;docs/test:scalariformFormat;checkCodeFormat"
+  ";scalariformFormat;test:scalariformFormat;checkCodeFormat"
 )
