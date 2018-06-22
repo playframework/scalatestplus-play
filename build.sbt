@@ -101,6 +101,9 @@ lazy val docs = project
     SettingKey[Seq[File]]("migrationManualSources") := Nil
   )
   .settings(commonSettings: _*)
+  .settings(
+    crossScalaVersions := Seq(scala211, scala212),
+  )
   .dependsOn(`scalatestplus-play`)
 
 playBuildRepoName in ThisBuild := "scalatestplus-play"
