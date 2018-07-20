@@ -17,7 +17,7 @@ package org.scalatestplus.play
 
 import java.util.concurrent.atomic.AtomicInteger
 
-import akka.actor.ActorSystem
+import akka.actor.{ ActorSystem, CoordinatedShutdown }
 import akka.stream.Materializer
 import play.api.http.{ HttpErrorHandler, HttpRequestHandler }
 import play.api.inject.Injector
@@ -38,6 +38,7 @@ class MixedFixtureSpec extends MixedSpec {
     override def mode: Mode = app.mode
     override def configuration: Configuration = app.configuration
     override def actorSystem: ActorSystem = app.actorSystem
+    override def coordinatedShutdown: CoordinatedShutdown = CoordinatedShutdown(app.actorSystem)
     override def requestHandler: HttpRequestHandler = app.requestHandler
     override def errorHandler: HttpErrorHandler = app.errorHandler
     override def stop(): Future[_] = app.stop()
