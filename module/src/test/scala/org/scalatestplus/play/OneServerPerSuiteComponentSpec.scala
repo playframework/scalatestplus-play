@@ -54,7 +54,7 @@ class OneServerPerSuiteComponentSpec extends UnitSpec with OneServerPerSuiteWith
   "The OneServerPerSuiteWithComponents trait" must {
     "provide an Application" in {
       import play.api.test.Helpers.{ GET, route }
-      val Some(result): Option[Future[Result]] = route(app, FakeRequest(GET, "/"))
+      val Some(result: Future[Result]) = route(app, FakeRequest(GET, "/"))
       Helpers.contentAsString(result) must be("success!")
     }
     "override the configuration" in {
