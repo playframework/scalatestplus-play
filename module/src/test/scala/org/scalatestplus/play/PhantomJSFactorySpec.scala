@@ -22,6 +22,7 @@ import org.openqa.selenium.WebDriver
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.inject.guice._
 
+@deprecated("PhantomJS is no longer actively developed, and support will eventually be dropped", "4.0.0")
 class PhantomJSFactorySpec extends UnitSpec with GuiceOneServerPerSuite with OneBrowserPerSuite with PhantomJSFactory {
 
   override def fakeApplication(): Application = {
