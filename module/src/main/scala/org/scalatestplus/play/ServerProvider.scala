@@ -16,6 +16,7 @@
 package org.scalatestplus.play
 
 import play.api.Application
+import play.api.test.RunningServer
 
 /**
  * Trait that defines abstract methods that providing a port number and implicit `Application` and a concrete
@@ -38,10 +39,13 @@ trait ServerProvider {
    */
   implicit def app: Application
 
+  implicit protected def runningServer: RunningServer
+
   /**
    * The port used by the `TestServer`.
    */
-  def port: Int
+  // TODO: Document that this has been converted to a final method
+  final def port: Int = portNumber.value
 
   /**
    * Implicit `PortNumber` instance that wraps `port`. The value returned from `portNumber.value`
@@ -49,6 +53,11 @@ trait ServerProvider {
    *
    * @return the configured port number, wrapped in a `PortNumber`
    */
-  implicit final lazy val portNumber: PortNumber = PortNumber(port)
+  implicit def portNumber: PortNumber = {
+    val httpEndpoint = runningServer.endpoints.httpEndpoint
+    val port = httpEndpoint
+      .fold(throw new IllegalStateException("No HTTP port available for test server"))(_.port)
+    PortNumber(port)
+  }
 }
 

@@ -142,11 +142,7 @@ trait BaseOneServerPerSuite extends TestSuiteMixin with ServerProvider { this: T
    */
   implicit lazy val app: Application = fakeApplication()
 
-  /**
-   * The port used by the `TestServer`.  By default this will be set to the result returned from
-   * `Helpers.testServerPort`. You can override this to provide a different port number.
-   */
-  lazy val port: Int = Helpers.testServerPort
+  implicit protected lazy val runningServer: RunningServer = DefaultTestServerFactory.start(app)
 
   /**
    * Invokes `start` on a new `TestServer` created with the `Application` provided by `app` and the
@@ -161,17 +157,15 @@ trait BaseOneServerPerSuite extends TestSuiteMixin with ServerProvider { this: T
    * @return a `Status` object that indicates when all tests and nested suites started by this method have completed, and whether or not a failure occurred.
    */
   abstract override def run(testName: Option[String], args: Args): Status = {
-    val testServer = TestServer(port, app)
-    testServer.start()
     try {
       val newConfigMap = args.configMap + ("org.scalatestplus.play.app" -> app) + ("org.scalatestplus.play.port" -> port)
       val newArgs = args.copy(configMap = newConfigMap)
       val status = super.run(testName, newArgs)
-      status.whenCompleted { _ => testServer.stop() }
+      status.whenCompleted { _ => runningServer.stopServer.close() }
       status
     } catch { // In case the suite aborts, ensure the server is stopped
       case ex: Throwable =>
-        testServer.stop()
+        runningServer.stopServer.close()
         throw ex
     }
   }

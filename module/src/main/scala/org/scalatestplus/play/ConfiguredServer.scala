@@ -17,6 +17,8 @@ package org.scalatestplus.play
 
 import org.scalatest._
 import play.api.Application
+import play.api.test.RunningServer
+import play.core.server.{ ServerEndpoint, ServerEndpoints }
 
 /**
  * Trait that provides a configured `Application` and server port number to the suite into which it is mixed.
@@ -81,14 +83,29 @@ trait ConfiguredServer extends TestSuiteMixin with ServerProvider { this: TestSu
    */
   implicit final def app: Application = synchronized { configuredApp }
 
-  private var configuredPort: Int = -1
+  implicit protected lazy val runningServer: RunningServer =
+    RunningServer(
+      app,
+      ServerEndpoints(Seq(ServerEndpoint(
+        description = "ConfiguredServer endpoint",
+        scheme = "http",
+        host = "localhost",
+        port = configuredPort,
+        expectedHttpVersions = Set.empty,
+        expectedServerAttr = None,
+        ssl = None
+      ))),
+      new AutoCloseable { def close() = () }
+    )
+
+  private var _configuredPort: Int = -1
 
   /**
    * The "configured" port number, passed into `run` via the `ConfigMap`, at which the `TestServer` is running.
    *
    * @return the configured port number
    */
-  def port: Int = synchronized { configuredPort }
+  final protected def configuredPort: Int = synchronized { _configuredPort }
 
   /**
    * Looks in `args.configMap` for a key named "org.scalatestplus.play.app" whose value is a `Application`,
@@ -105,7 +122,6 @@ trait ConfiguredServer extends TestSuiteMixin with ServerProvider { this: TestSu
    *                 I.e., `None` acts like a wildcard that means run all relevant tests in this `Suite`.
    * @param args the `Args` for this run
    * @return a `Status` object that indicates when all tests and nested suites started by this method have completed, and whether or not a failure occurred.
-   *
    * @throws java.lang.IllegalArgumentException if the `Application` and/or port number does not appear in `args.configMap` under the expected keys
    */
   abstract override def run(testName: Option[String], args: Args): Status = {
@@ -114,7 +130,7 @@ trait ConfiguredServer extends TestSuiteMixin with ServerProvider { this: TestSu
       case None => throw new Exception("Trait ConfiguredServer needs an Application value associated with key \"org.scalatestplus.play.app\" in the config map. Did you forget to annotate a nested suite with @DoNotDiscover?")
     }
     args.configMap.getOptional[Int]("org.scalatestplus.play.port") match {
-      case Some(cp) => synchronized { configuredPort = cp }
+      case Some(cp) => synchronized { _configuredPort = cp }
       case None => throw new Exception("Trait ConfiguredServer needs an Int value associated with key \"org.scalatestplus.play.port\" in the config map. Did you forget to annotate a nested suite with @DoNotDiscover?")
     }
     super.run(testName, args)
