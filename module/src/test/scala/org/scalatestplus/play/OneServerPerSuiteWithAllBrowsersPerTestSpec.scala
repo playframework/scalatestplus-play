@@ -16,7 +16,6 @@
 package org.scalatestplus.play
 
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
-import play.api.test._
 import play.api.Application
 import play.api.inject.guice._
 
@@ -50,8 +49,8 @@ class OneServerPerSuiteWithAllBrowsersPerTestSpec extends UnitSpec with GuiceOne
     "make the Application available implicitly" in {
       getConfig("foo") mustBe Some("bar")
     }
-    "provide the port" in {
-      port mustBe Helpers.testServerPort
+    "provide an http endpoint" in {
+      runningServer.endpoints.httpEndpoint must not be empty
     }
     "send 404 on a bad request" in {
       import java.net._

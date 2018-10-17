@@ -39,8 +39,8 @@ class OneChromeBrowserPerTestSpec extends UnitSpec with GuiceOneServerPerTest wi
     "make the Application available implicitly" in {
       getConfig("foo") mustBe Some("bar")
     }
-    "provide the port" in {
-      port mustBe Helpers.testServerPort
+    "provide an http endpoint" in {
+      runningServer.endpoints.httpEndpoint must not be empty
     }
     "send 404 on a bad request" in {
       import java.net._

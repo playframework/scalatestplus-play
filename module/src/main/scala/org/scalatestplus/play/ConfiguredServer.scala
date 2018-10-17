@@ -57,8 +57,8 @@ import play.core.server.{ ServerEndpoint, ServerEndpoints }
  *       def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
  *       getConfig("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "provide the port number" in {
- *       port mustBe Helpers.testServerPort
+ *     "provide an http endpoint" in {
+ *       runningServer.endpoints.httpEndpoint must not be empty
  *     }
  *     "provide an actual running server" in {
  *       import Helpers._

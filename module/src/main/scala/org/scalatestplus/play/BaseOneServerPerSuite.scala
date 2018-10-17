@@ -63,8 +63,8 @@ import org.scalatest._
  *       def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
  *       getConfig("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "provide the port number" in {
- *       port mustBe Helpers.testServerPort
+ *     "provide an http endpoint" in {
+ *       runningServer.endpoints.httpEndpoint must not be empty
  *     }
  *     "provide an actual running server" in {
  *       import Helpers._
@@ -86,7 +86,6 @@ import org.scalatest._
  * <pre class="stHighlight">
  * package org.scalatestplus.play.examples.oneserverpersuite
  *
- * import play.api.test._
  * import org.scalatest._
  * import org.scalatestplus.play._
  * import play.api.{Play, Application}
@@ -120,8 +119,8 @@ import org.scalatest._
  *       def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
  *       getConfig("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "provide the port number" in {
- *       port mustBe Helpers.testServerPort
+ *     "provide an http endpoint" in {
+ *       runningServer.endpoints.httpEndpoint must not be empty
  *     }
  *     "provide an actual running server" in {
  *       import Helpers._

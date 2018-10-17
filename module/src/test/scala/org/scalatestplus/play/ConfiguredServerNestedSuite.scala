@@ -15,11 +15,8 @@
  */
 package org.scalatestplus.play
 
-import play.api.test._
 import org.scalatest._
-import events._
-import play.api.{ Play, Application }
-import scala.collection.mutable.ListBuffer
+import play.api.Application
 
 @DoNotDiscover
 class ConfiguredServerNestedSuite extends UnitSpec with ConfiguredServer {
@@ -50,8 +47,8 @@ class ConfiguredServerNestedSuite extends UnitSpec with ConfiguredServer {
       val configuredPort = configMap.getOptional[Int]("org.scalatestplus.play.port")
       configuredPort.value mustEqual port
     }
-    "provide the port" in {
-      port mustBe Helpers.testServerPort
+    "provide an http endpoint" in {
+      runningServer.endpoints.httpEndpoint must not be empty
     }
     "send 404 on a bad request" in {
       import java.net._

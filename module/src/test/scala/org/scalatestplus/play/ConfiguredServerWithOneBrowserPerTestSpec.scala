@@ -15,7 +15,6 @@
  */
 package org.scalatestplus.play
 
-import play.api.test._
 import org.scalatest._
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.Application
@@ -44,8 +43,8 @@ class ConfiguredServerWithOneBrowserPerTestNestedSpec extends UnitSpec with Conf
     "make the FakeApplication available implicitly" in {
       getConfig("foo") mustBe Some("bar")
     }
-    "provide the port" in {
-      port mustBe Helpers.testServerPort
+    "provide an http endpoint" in {
+      runningServer.endpoints.httpEndpoint must not be empty
     }
     "send 404 on a bad request" in {
       import java.net._
