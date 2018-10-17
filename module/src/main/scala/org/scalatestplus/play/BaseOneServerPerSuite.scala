@@ -142,7 +142,9 @@ trait BaseOneServerPerSuite extends TestSuiteMixin with ServerProvider { this: T
    */
   implicit lazy val app: Application = fakeApplication()
 
-  implicit protected lazy val runningServer: RunningServer = DefaultTestServerFactory.start(app)
+  implicit protected lazy val runningServer: RunningServer = new DefaultTestServerFactory {
+    override def serverProvider(app: Application) = play.core.server.NettyServer.provider
+  }.start(app)
 
   /**
    * Invokes `start` on a new `TestServer` created with the `Application` provided by `app` and the
