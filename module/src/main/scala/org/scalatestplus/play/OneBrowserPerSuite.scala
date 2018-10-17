@@ -55,7 +55,6 @@ import scala.util.Try
  * <pre class="stHighlight">
  * package org.scalatestplus.play.examples.onebrowserpersuite
  *
- * import play.api.test.Helpers
  * import org.scalatest.tags.FirefoxBrowser
  * import org.scalatestplus.play._
  * import play.api.{Play, Application}
@@ -79,8 +78,8 @@ import scala.util.Try
  *       def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
  *       getConfig("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "provide the port number" in {
- *       port mustBe Helpers.testServerPort
+ *     "provide an http endpoint" in {
+ *       runningServer.endpoints.httpEndpoint must not be empty
  *     }
  *     "provide an actual running server" in {
  *       import java.net._
@@ -107,7 +106,6 @@ import scala.util.Try
  * <pre class="stHighlight">
  * package org.scalatestplus.play.examples.onebrowserpersuite
  *
- * import play.api.test._
  * import org.scalatest._
  * import tags.FirefoxBrowser
  * import org.scalatestplus.play._
@@ -144,8 +142,8 @@ import scala.util.Try
  *       def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
  *       getConfig("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "provide the port number" in {
- *       port mustBe Helpers.testServerPort
+ *     "provide an http endpoint" in {
+ *       runningServer.endpoints.httpEndpoint must not be empty
  *     }
  *     "provide an actual running server" in {
  *       import Helpers._
@@ -193,8 +191,8 @@ import scala.util.Try
  *       def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
  *       getConfig("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "provide the port number" in {
- *       port mustBe Helpers.testServerPort
+ *     "provide an http endpoint" in {
+ *       runningServer.endpoints.httpEndpoint must not be empty
  *     }
  *     "provide an actual running server" in {
  *       import Helpers._

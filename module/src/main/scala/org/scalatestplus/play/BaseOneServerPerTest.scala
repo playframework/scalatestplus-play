@@ -36,7 +36,6 @@ import org.scalatest._
  * <pre class="stHighlight">
  * package org.scalatestplus.play.examples.oneserverpertest
  *
- * import play.api.test._
  * import org.scalatest._
  * import org.scalatestplus.play._
  * import play.api.{Play, Application}
@@ -59,8 +58,8 @@ import org.scalatest._
  *       def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
  *       getConfig("ehcacheplugin") mustBe Some("disabled")
  *     }
- *     "provide the port number" in {
- *       port mustBe Helpers.testServerPort
+ *     "provide an http endpoint" in {
+ *       runningServer.endpoints.httpEndpoint must not be empty
  *     }
  *     "provide an actual running server" in {
  *       import Helpers._
@@ -76,12 +75,23 @@ import org.scalatest._
  */
 trait BaseOneServerPerTest extends TestSuiteMixin with ServerProvider { this: TestSuite with FakeApplicationFactory =>
 
-  private var privateApp: Application = _
+  @volatile private var privateApp: Application = _
+  @volatile private var privateServer: RunningServer = _
 
   /**
    * Implicit method that returns the `Application` instance for the current test.
    */
-  implicit final def app: Application = synchronized { privateApp }
+  implicit final def app: Application = {
+    val a = privateApp
+    if (a == null) { throw new IllegalStateException("Test isn't running yet so application is not available") }
+    a
+  }
+
+  implicit final def runningServer: RunningServer = {
+    val rs = privateServer
+    if (rs == null) { throw new IllegalStateException("Test isn't running yet so the server endpoints are not available") }
+    privateServer
+  }
 
   /**
    * Creates new instance of `Application` with parameters set to their defaults. Override this method if you
@@ -89,11 +99,10 @@ trait BaseOneServerPerTest extends TestSuiteMixin with ServerProvider { this: Te
    */
   def newAppForTest(testData: TestData): Application = fakeApplication()
 
-  /**
-   * The port used by the `TestServer`.  By default this will be set to the result returned from
-   * `Helpers.testServerPort`. You can override this to provide a different port number.
-   */
-  lazy val port: Int = Helpers.testServerPort
+  protected def newServerForTest(app: Application, testData: TestData): RunningServer =
+    new DefaultTestServerFactory {
+      override def serverProvider(app: Application) = play.core.server.NettyServer.provider
+    }.start(app)
 
   /**
    * Creates new `Application` and running `TestServer` instances before executing each test, and
@@ -104,9 +113,18 @@ trait BaseOneServerPerTest extends TestSuiteMixin with ServerProvider { this: Te
    * @return the `Outcome` of the test execution
    */
   abstract override def withFixture(test: NoArgTest) = {
-    synchronized { privateApp = newAppForTest(test) }
-    Helpers.running(TestServer(port, app)) {
-      super.withFixture(test)
+    // Need to synchronize within a suite because we store current app/server in fields in the class
+    // Could possibly pass app/server info in a ScalaTest object?
+    synchronized {
+      privateApp = newAppForTest(test)
+      privateServer = newServerForTest(app, test)
+      try super.withFixture(test) finally {
+        val rs = privateServer // Store before nulling fields
+        privateApp = null
+        privateServer = null
+        // Stop server and release locks
+        rs.stopServer.close()
+      }
     }
   }
 }

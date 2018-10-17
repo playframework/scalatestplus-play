@@ -20,7 +20,6 @@ import org.scalatest._
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.Application
 import play.api.inject.guice._
-import play.api.test._
 
 class ConfiguredServerWithAllBrowsersPerSuiteSpec extends Suites(
   new ConfiguredServerWithAllBrowsersPerSuiteNestedSpec
@@ -66,8 +65,8 @@ class ConfiguredServerWithAllBrowsersPerSuiteNestedSpec extends UnitSpec with Co
     "make the Application available implicitly" in {
       getConfig("foo") mustBe Some("bar")
     }
-    "provide the port" in {
-      port mustBe Helpers.testServerPort
+    "provide an http endpoint" in {
+      runningServer.endpoints.httpEndpoint must not be empty
     }
     "send 404 on a bad request" in {
       import java.net._

@@ -15,7 +15,6 @@
  */
 package org.scalatestplus.play.examples.guice.allbrowserspersuite
 
-import play.api.test._
 import org.scalatestplus.play._
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.Application
@@ -55,8 +54,8 @@ class ExampleSpec extends PlaySpec with GuiceOneServerPerSuite with AllBrowsersP
       def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
       getConfig("foo") mustBe Some("bar")
     }
-    "provide the port" in {
-      port mustBe Helpers.testServerPort
+    "provide an http endpoint" in {
+      runningServer.endpoints.httpEndpoint must not be empty
     }
     "provide an actual running server" in {
       import java.net._

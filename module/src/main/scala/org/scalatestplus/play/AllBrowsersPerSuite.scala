@@ -83,7 +83,6 @@ import org.scalatestplus.play.BrowserFactory.{ GrumpyDriver, UnavailableDriver, 
  * <pre class="stHighlight">
  * package org.scalatestplus.play.examples.allbrowserspersuite
  *
- * import play.api.test._
  * import org.scalatestplus.play._
  * import org.scalatestplus.play.guice._
  * import play.api.{Play, Application}
@@ -124,8 +123,8 @@ import org.scalatestplus.play.BrowserFactory.{ GrumpyDriver, UnavailableDriver, 
  *       def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
  *       getConfig("foo") mustBe Some("bar")
  *     }
- *     "provide the port" in {
- *       port mustBe Helpers.testServerPort
+ *     "provide an http endpoint" in {
+ *       runningServer.endpoints.httpEndpoint must not be empty
  *     }
  *     "provide an actual running server" in {
  *       import java.net._
