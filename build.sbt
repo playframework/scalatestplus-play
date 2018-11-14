@@ -17,9 +17,9 @@ import interplay.ScalaVersions._
 
 resolvers ++= DefaultOptions.resolvers(snapshot = true)
 
-val PlayVersion = playVersion("2.7.0-M4")
+val PlayVersion = playVersion("2.7.0-RC3")
 
-val ScalatestVersion = "3.0.5-M1"
+val ScalatestVersion = "3.0.5"
 val SeleniumVersion = "3.5.3"
 val HtmlUnitVersion = "2.31.0"
 val PhantomJsDriverVersion = "1.4.4"
@@ -28,7 +28,7 @@ val CssParserVersion = "1.0.0"
 
 lazy val commonSettings = Seq(
   scalaVersion := scala212,
-  crossScalaVersions := Seq(scala211, scala212, "2.13.0-M3"),
+  crossScalaVersions := Seq(scala211, scala212),
   fork in Test := false,
   parallelExecution in Test := false,
   testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oTK")
