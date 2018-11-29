@@ -18,7 +18,7 @@ Where version is one of the listed below, according to your needs.
 
 | Release | Play  | Scalatest | Documentation                                                                       |
 |:--------|:------|:----------|:------------------------------------------------------------------------------------|
-| 4.0.0-RC1   | 2.7.0-RC3 | 3.0.x     | [docs](https://www.playframework.com/documentation/2.7.0-RC3/ScalaTestingWithScalaTest) |
+| 4.0.0-RC2*   | 2.7.0-RC8 | 3.0.x     | [docs](https://www.playframework.com/documentation/2.7.0-RC8/ScalaTestingWithScalaTest) |
 | 3.1.x   | 2.6.x | 3.0.x     | [docs](https://www.playframework.com/documentation/2.6.x/ScalaTestingWithScalaTest) |
 | 3.0.x   | 2.6.x | 3.0.x     | [docs](https://www.playframework.com/documentation/2.6.x/ScalaTestingWithScalaTest) |
 | 2.0.x   | 2.5.x | 3.0.x     | [docs](https://www.playframework.com/documentation/2.5.x/ScalaTestingWithScalaTest) |

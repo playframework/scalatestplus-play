@@ -17,14 +17,14 @@ import interplay.ScalaVersions._
 
 resolvers ++= DefaultOptions.resolvers(snapshot = true)
 
-val PlayVersion = playVersion("2.7.0-RC3")
+val PlayVersion = playVersion("2.7.0-RC8")
 
 val ScalatestVersion = "3.0.5"
-val SeleniumVersion = "3.5.3"
-val HtmlUnitVersion = "2.31.0"
+val SeleniumVersion = "3.141.59"
+val HtmlUnitVersion = "2.33.0"
 val PhantomJsDriverVersion = "1.4.4"
 val MockitoVersion = "2.18.3"
-val CssParserVersion = "1.0.0"
+val CssParserVersion = "1.2.0"
 
 lazy val commonSettings = Seq(
   scalaVersion := scala212,
