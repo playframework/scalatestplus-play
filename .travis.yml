@@ -16,9 +16,13 @@ matrix:
 jobs:
   include:
     - script: scripts/test
+      name: tests
     - script: scripts/testDocs
+      name: testDocs
     - script: scripts/validateDocs
+      name: validateDocs
     - script: scripts/validateCode
+      name: validateCode
 
 before_install:
   - curl -sL https://github.com/shyiko/jabba/raw/master/install.sh | bash && . ~/.jabba/jabba.sh
