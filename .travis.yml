@@ -42,6 +42,8 @@ before_script:
   - "chmod -vv +x ~/tmp/bin/*"
   - "export PATH=$HOME/tmp/bin:$PATH"
 
+script: $SCRIPT
+
 addons:
   firefox: "latest"
   chrome: stable
