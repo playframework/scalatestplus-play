@@ -37,8 +37,8 @@ before_script:
   - "Xvfb :99 +extension RANDR &"
   - sleep 5 # give xvfb some time to start
   - "mkdir -p ~/tmp/bin"
-  - "pushd ~/tmp/bin && wget -c https://chromedriver.storage.googleapis.com/2.32/chromedriver_linux64.zip && unzip chromedriver_linux64.zip && popd"
-  - "pushd ~/tmp/bin && wget -c https://github.com/mozilla/geckodriver/releases/download/v0.18.0/geckodriver-v0.18.0-linux64.tar.gz && tar -xzvf geckodriver-v0.18.0-linux64.tar.gz && popd"
+  - "pushd ~/tmp/bin && wget -c https://chromedriver.storage.googleapis.com/2.45/chromedriver_linux64.zip && unzip chromedriver_linux64.zip && popd"
+  - "pushd ~/tmp/bin && wget -c https://github.com/mozilla/geckodriver/releases/download/v0.23.0/geckodriver-v0.23.0-linux64.tar.gz && tar -xzvf geckodriver-v0.23.0-linux64.tar.gz && popd"
   - "chmod -vv +x ~/tmp/bin/*"
   - "export PATH=$HOME/tmp/bin:$PATH"
 
