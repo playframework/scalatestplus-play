@@ -17,7 +17,7 @@ import interplay.ScalaVersions._
 
 resolvers ++= DefaultOptions.resolvers(snapshot = true)
 
-val PlayVersion = playVersion("2.7.0-RC8")
+val PlayVersion = playVersion("2.7.0-SNAPSHOT")
 
 val ScalatestVersion = "3.0.5"
 val SeleniumVersion = "3.141.59"
