@@ -1,55 +1,74 @@
 language: scala
+
 scala:
-- 2.12.3
-- 2.11.11
-sudo: false
-dist: trusty
-jdk:
-  - oraclejdk8
+  - 2.12.8
+  - 2.11.12
+
 env:
-  # Define scripts here so they run concurrently
-  - SCRIPT=scripts/test
-  - SCRIPT=scripts/testDocs
-  - SCRIPT=scripts/validateDocs
-  - SCRIPT=scripts/validateCode
+  - SCRIPT=scripts/test         TRAVIS_JDK=adopt@1.8.192-12
+  - SCRIPT=scripts/test         TRAVIS_JDK=adopt@1.11.0-1
+  - SCRIPT=scripts/testDocs     TRAVIS_JDK=adopt@1.8.192-12
+  - SCRIPT=scripts/testDocs     TRAVIS_JDK=adopt@1.11.0-1
+  - SCRIPT=scripts/validateDocs TRAVIS_JDK=adopt@1.8.192-12
+  - SCRIPT=scripts/validateDocs TRAVIS_JDK=adopt@1.11.0-1
+  - SCRIPT=scripts/validateCode TRAVIS_JDK=adopt@1.8.192-12
+  - SCRIPT=scripts/validateCode TRAVIS_JDK=adopt@1.11.0-1
+
+matrix:
+  fast_finish: true
+  allow_failures:
+    - env: SCRIPT=scripts/test         TRAVIS_JDK=adopt@1.11.0-1 # not fully supported but allows problem discovery
+    - env: SCRIPT=scripts/testDocs     TRAVIS_JDK=adopt@1.11.0-1 # not fully supported but allows problem discovery
+    - env: SCRIPT=scripts/validateDocs TRAVIS_JDK=adopt@1.11.0-1 # not fully supported but allows problem discovery
+    - env: SCRIPT=scripts/validateCode TRAVIS_JDK=adopt@1.11.0-1 # not fully supported but allows problem discovery
+
+before_install:
+  - curl -sL https://github.com/shyiko/jabba/raw/master/install.sh | bash && . ~/.jabba/jabba.sh
+
+install:
+  - $JABBA_HOME/bin/jabba install $TRAVIS_JDK
+  - export JAVA_HOME="$JABBA_HOME/jdk/$TRAVIS_JDK" && export PATH="$JAVA_HOME/bin:$PATH" && java -Xmx32m -version
+
 before_script:
   # See https://github.com/SeleniumHQ/docker-selenium/issues/87
   - export DBUS_SESSION_BUS_ADDRESS=/dev/null
   - export CHROME_BIN=/usr/bin/google-chrome
   - "export DISPLAY=:99.0"
-  - "Xvfb :99 +extension RANDR &"
+  - "Xvfb :99 +extension RANDR 2>/dev/null &"
   - sleep 5 # give xvfb some time to start
   - "mkdir -p ~/tmp/bin"
-  - "pushd ~/tmp/bin && wget -c https://chromedriver.storage.googleapis.com/2.32/chromedriver_linux64.zip && unzip chromedriver_linux64.zip && popd"
-  - "pushd ~/tmp/bin && wget -c https://github.com/mozilla/geckodriver/releases/download/v0.18.0/geckodriver-v0.18.0-linux64.tar.gz && tar -xzvf geckodriver-v0.18.0-linux64.tar.gz && popd"
+  - "pushd ~/tmp/bin && wget -c https://chromedriver.storage.googleapis.com/2.45/chromedriver_linux64.zip && unzip chromedriver_linux64.zip && popd"
+  - "pushd ~/tmp/bin && wget -c https://github.com/mozilla/geckodriver/releases/download/v0.23.0/geckodriver-v0.23.0-linux64.tar.gz && tar -xzvf geckodriver-v0.23.0-linux64.tar.gz && popd"
   - "chmod -vv +x ~/tmp/bin/*"
   - "export PATH=$HOME/tmp/bin:$PATH"
-script:
-  - $SCRIPT
-cache:
-  directories:
-    - $HOME/.ivy2
-    - $HOME/.sbt
-before_cache:
-  # Ensure changes to the cache aren't persisted
-  - rm -rf $HOME/.ivy2/cache/org.scalatestplus.play/scalatestplus-play*
-  # Delete all ivydata files since ivy touches them on each build
-  - find $HOME/.ivy2/cache -name "ivydata-*.properties" | xargs rm
-notifications:
-  slack:
-    secure: irCWE97/NCRRJinXNh+cJ9BUG3PtMOynN9/2VP80KUK1oxvrr8GtJmMT8b/tMg9JFVifWrrU/gepdVwetXbWUZjik0HnFFlGusQvwqVBeRgHZKqAy1GHQAuKz59SXOuJ/rHOPVZ28GmT8VmUB/LpHw527dmuJJ79OCcE8NEVE8w=
-  webhooks:
-    urls:
-      - https://webhooks.gitter.im/e/d2c8a242a2615f659595
-    on_success: always
-    on_failure: always
+
+script: $SCRIPT
+
 addons:
   firefox: "latest"
+  chrome: stable
   apt:
     packages:
-    - google-chrome-stable
     - unzip
     - dbus-x11
   sauce_connect:
     username: will_sargent
     access_key: d809febf-5037-4857-aefb-ac652b4c5315
+
+cache:
+  directories:
+    - $HOME/.ivy2
+    - $HOME/.jabba/jdk
+    - $HOME/.sbt
+
+before_cache:
+  - find $HOME/.ivy2 -name "ivydata-*.properties" -delete
+  - find $HOME/.sbt -name "*.lock" -delete
+
+notifications:
+  slack:
+    secure: irCWE97/NCRRJinXNh+cJ9BUG3PtMOynN9/2VP80KUK1oxvrr8GtJmMT8b/tMg9JFVifWrrU/gepdVwetXbWUZjik0HnFFlGusQvwqVBeRgHZKqAy1GHQAuKz59SXOuJ/rHOPVZ28GmT8VmUB/LpHw527dmuJJ79OCcE8NEVE8w=
+  webhooks:
+    urls: https://webhooks.gitter.im/e/d2c8a242a2615f659595
+    on_success: always
+    on_failure: always
