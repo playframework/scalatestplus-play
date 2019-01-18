@@ -1,6 +1,6 @@
 package org.scalatestplus.play
 
-import org.scalatest.{ TestSuite, TestSuiteMixin, TestData }
+import org.scalatest.{ TestData, TestSuite, TestSuiteMixin }
 import play.api.Application
 import play.api.test.Helpers
 

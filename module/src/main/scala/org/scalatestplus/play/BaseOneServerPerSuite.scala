@@ -15,11 +15,9 @@
  */
 package org.scalatestplus.play
 
+import org.scalatest._
 import play.api.Application
 import play.api.test._
-import org.scalatest._
-import play.core.server.ServerProvider
-import sun.net.httpserver.DefaultHttpServerProvider
 
 /**
  * Trait that provides a new `Application` and running `TestServer` instance per ScalaTest `Suite`.
