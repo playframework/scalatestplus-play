@@ -18,11 +18,11 @@ import interplay.ScalaVersions._
 resolvers ++= DefaultOptions.resolvers(snapshot = true)
 resolvers += Resolver.sonatypeRepo("snapshots")
 
-val PlayVersion = playVersion("2.7.0-2019-01-29-d4eab88-SNAPSHOT")
+val PlayVersion = playVersion("2.7.0")
 
 val ScalatestVersion = "3.0.5"
 val SeleniumVersion = "3.141.59"
-val HtmlUnitVersion = "2.33.0"
+val HtmlUnitVersion = "2.33.3"
 val PhantomJsDriverVersion = "1.4.4"
 val MockitoVersion = "2.18.3"
 val CssParserVersion = "1.2.0"
