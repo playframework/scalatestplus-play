@@ -100,9 +100,7 @@ trait BaseOneServerPerTest extends TestSuiteMixin with ServerProvider { this: Te
   def newAppForTest(testData: TestData): Application = fakeApplication()
 
   protected def newServerForTest(app: Application, testData: TestData): RunningServer =
-    new DefaultTestServerFactory {
-      override def serverProvider(app: Application) = play.core.server.NettyServer.provider
-    }.start(app)
+    DefaultTestServerFactory.start(app)
 
   /**
    * Creates new `Application` and running `TestServer` instances before executing each test, and

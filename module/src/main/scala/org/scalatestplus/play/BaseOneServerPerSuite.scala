@@ -15,9 +15,9 @@
  */
 package org.scalatestplus.play
 
+import org.scalatest._
 import play.api.Application
 import play.api.test._
-import org.scalatest._
 
 /**
  * Trait that provides a new `Application` and running `TestServer` instance per ScalaTest `Suite`.
@@ -141,9 +141,8 @@ trait BaseOneServerPerSuite extends TestSuiteMixin with ServerProvider { this: T
    */
   implicit lazy val app: Application = fakeApplication()
 
-  implicit protected lazy val runningServer: RunningServer = new DefaultTestServerFactory {
-    override def serverProvider(app: Application) = play.core.server.NettyServer.provider
-  }.start(app)
+  implicit protected lazy val runningServer: RunningServer =
+    DefaultTestServerFactory.start(app)
 
   /**
    * Invokes `start` on a new `TestServer` created with the `Application` provided by `app` and the
