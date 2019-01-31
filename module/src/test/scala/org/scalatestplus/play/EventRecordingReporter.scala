@@ -167,7 +167,7 @@ class EventRecordingReporter extends Reporter {
       case _ => throw new RuntimeException("should never happen")
     }
   }
-  def apply(event: Event) {
+  def apply(event: Event): Unit = {
     eventList ::= event
   }
 }

@@ -16,8 +16,8 @@
  */
 package org.scalatestplus.play
 
-import java.util.ResourceBundle
 import java.text.MessageFormat
+import java.util.ResourceBundle
 
 /**
  * Resources for internationalization.
