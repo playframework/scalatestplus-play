@@ -27,7 +27,13 @@ val PhantomJsDriverVersion = "1.4.4"
 val MockitoVersion = "2.18.3"
 val CssParserVersion = "1.2.0"
 
-lazy val commonSettings = Seq(
+val PreviousVersion = "4.0.0"
+
+lazy val mimaSettings = Seq(
+  mimaPreviousArtifacts := Set(organization.value %% name.value % PreviousVersion)
+)
+
+lazy val commonSettings = mimaSettings ++ Seq(
   scalaVersion := scala212,
   crossScalaVersions := Seq(scala211, scala212),
   fork in Test := false,
@@ -39,8 +45,11 @@ lazy val `scalatestplus-play-root` = project
   .in(file("."))
   .enablePlugins(PlayRootProject)
   .aggregate(`scalatestplus-play`)
-  .settings(sonatypeProfileName := "org.scalatestplus.play")
   .settings(commonSettings: _*)
+  .settings(
+    sonatypeProfileName := "org.scalatestplus.play",
+    mimaPreviousArtifacts := Set.empty
+  )
 
 
 lazy val `scalatestplus-play` = project
