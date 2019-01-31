@@ -67,7 +67,7 @@ class ConfiguredServerWithAllBrowsersPerTestNestedSpec extends UnitSpec with Con
       finally con.disconnect()
     }
     "provide an UnneededDriver to non-shared test whose methods throw UnsupportedOperationException with an error message that gives a hint to put the test into the sharedTests method" in {
-      the[UnsupportedOperationException] thrownBy webDriver.get("funky") must have message Resources("webDriverUsedFromUnsharedTest")
+      the[UnsupportedOperationException] thrownBy webDriver.get("funky") must have message org.scalatestplus.play.Resources("webDriverUsedFromUnsharedTest")
     }
   }
 }

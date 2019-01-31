@@ -15,21 +15,14 @@
  */
 package org.scalatestplus.play
 
+import org.openqa.selenium.WebDriver
+import org.scalatest._
+import org.scalatest.fixture._
+import org.scalatest.selenium.WebBrowser
+import org.scalatestplus.play.BrowserFactory.UnavailableDriver
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test._
-import org.scalatest._
-import fixture._
-import selenium.WebBrowser
-import org.openqa.selenium.WebDriver
-import org.openqa.selenium.firefox.FirefoxDriver
-import org.openqa.selenium.firefox.FirefoxProfile
-import org.openqa.selenium.htmlunit.HtmlUnitDriver
-import org.openqa.selenium.safari.SafariDriver
-import org.openqa.selenium.chrome.ChromeDriver
-import org.openqa.selenium.ie.InternetExplorerDriver
-import BrowserFactory.UnavailableDriver
-import org.openqa.selenium.safari.SafariDriver
 
 /**
  * Trait that helps you provide different fixtures to different tests: a `Application`, a `TestServer`, or one
@@ -256,8 +249,8 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: fixt
     /**
      * Runs the passed in `Application` before executing the test body, ensuring it is closed after the test body completes.
      */
-    override def apply() {
-      def callSuper = super.apply() // this is needed for Scala 2.10 to work
+    override def apply(): Unit = {
+      def callSuper: Unit = super.apply() // this is needed for Scala 2.10 to work
       Helpers.running(app)(callSuper)
     }
   }
@@ -286,8 +279,8 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: fixt
      * Runs a `TestServer` using the passed-in `Application` and  port before executing the
      * test body, ensuring both are stopped after the test body completes.
      */
-    override def apply() {
-      def callSuper = super.apply() // this is needed for Scala 2.10 to work
+    override def apply(): Unit = {
+      def callSuper: Unit = super.apply() // this is needed for Scala 2.10 to work
       Helpers.running(TestServer(port, app))(callSuper)
     }
   }
@@ -324,7 +317,7 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: fixt
      * test body, which can use the `HtmlUnitDriver` provided by `webDriver`, ensuring all
      * are are stopped after the test body completes.
      */
-    override def apply() {
+    override def apply(): Unit = {
       webDriver match {
         case UnavailableDriver(ex, errorMessage) =>
           ex match {
@@ -372,7 +365,7 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: fixt
      * test body, which can use the `FirefoxDriver` provided by `webDriver`, ensuring all
      * are are stopped after the test body completes.
      */
-    override def apply() {
+    override def apply(): Unit = {
       webDriver match {
         case UnavailableDriver(ex, errorMessage) =>
           ex match {
@@ -419,7 +412,7 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: fixt
      * test body, which can use the `SafariDriver` provided by `webDriver`, ensuring all
      * are are stopped after the test body completes.
      */
-    override def apply() {
+    override def apply(): Unit = {
       webDriver match {
         case UnavailableDriver(ex, errorMessage) =>
           ex match {
@@ -466,7 +459,7 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: fixt
      * test body, which can use the `ChromeDriver` provided by `webDriver`, ensuring all
      * are are stopped after the test body completes.
      */
-    override def apply() {
+    override def apply(): Unit = {
       webDriver match {
         case UnavailableDriver(ex, errorMessage) =>
           ex match {
@@ -513,7 +506,7 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: fixt
      * test body, which can use the `InternetExplorerDriver` provided by `webDriver`, ensuring all
      * are are stopped after the test body completes.
      */
-    override def apply() {
+    override def apply(): Unit = {
       webDriver match {
         case UnavailableDriver(ex, errorMessage) =>
           ex match {

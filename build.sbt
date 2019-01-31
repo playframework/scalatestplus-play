@@ -20,7 +20,6 @@ resolvers += Resolver.sonatypeRepo("snapshots")
 
 val PlayVersion = playVersion("2.7.0")
 
-val ScalatestVersion = "3.0.5"
 val SeleniumVersion = "3.141.59"
 val HtmlUnitVersion = "2.33.3"
 val PhantomJsDriverVersion = "1.4.4"
@@ -33,9 +32,11 @@ lazy val mimaSettings = Seq(
   mimaPreviousArtifacts := Set(organization.value %% name.value % PreviousVersion)
 )
 
+def ScalatestVersion(scalaVer: String): String = if(scalaVer.equals(scala213)) "3.0.6-SNAP6" else "3.0.5"
+
 lazy val commonSettings = mimaSettings ++ Seq(
   scalaVersion := scala212,
-  crossScalaVersions := Seq(scala211, scala212),
+  crossScalaVersions := Seq(scala211, scala212, scala213),
   fork in Test := false,
   parallelExecution in Test := false,
   testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oTK")
@@ -58,7 +59,7 @@ lazy val `scalatestplus-play` = project
   .settings(
     organization := "org.scalatestplus.play",
     libraryDependencies ++= Seq(
-      "org.scalatest" %% "scalatest" % ScalatestVersion,
+      "org.scalatest" %% "scalatest" % ScalatestVersion(scalaVersion.value),
       "org.seleniumhq.selenium" % "selenium-java" % SeleniumVersion exclude(org = "com.codeborne", name = "phantomjsdriver"),
       "org.seleniumhq.selenium" % "htmlunit-driver" % HtmlUnitVersion,
       "net.sourceforge.htmlunit" % "htmlunit-cssparser" % CssParserVersion,
