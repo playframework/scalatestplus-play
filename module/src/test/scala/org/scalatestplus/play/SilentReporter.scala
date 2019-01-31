@@ -18,5 +18,5 @@ package org.scalatestplus.play
 import org.scalatest._
 
 object SilentReporter extends Reporter {
-  def apply(event: events.Event) {}
+  def apply(event: events.Event): Unit = {}
 }
