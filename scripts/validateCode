@@ -6,4 +6,4 @@
 
 build validateCode
 
-build +mimaReportBinaryIssues
+build mimaReportBinaryIssues
