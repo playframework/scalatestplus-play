@@ -78,6 +78,8 @@ trait BaseOneServerPerTest extends TestSuiteMixin with ServerProvider { this: Te
   @volatile private var privateApp: Application = _
   @volatile private var privateServer: RunningServer = _
 
+  private[this] val lock = new Object()
+
   /**
    * Implicit method that returns the `Application` instance for the current test.
    */
@@ -113,7 +115,7 @@ trait BaseOneServerPerTest extends TestSuiteMixin with ServerProvider { this: Te
   abstract override def withFixture(test: NoArgTest) = {
     // Need to synchronize within a suite because we store current app/server in fields in the class
     // Could possibly pass app/server info in a ScalaTest object?
-    synchronized {
+    lock.synchronized {
       privateApp = newAppForTest(test)
       privateServer = newServerForTest(app, test)
       try super.withFixture(test) finally {
