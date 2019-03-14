@@ -32,7 +32,7 @@ trait WithApplicationComponents {
   /**
    * @return a context to use to create the application.
    */
-  lazy val context: ApplicationLoader.Context = {
+  def context: ApplicationLoader.Context = {
     val env = Environment.simple()
     ApplicationLoader.Context.create(env)
   }
