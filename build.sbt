@@ -93,7 +93,7 @@ lazy val docs = project
       val mappings = (apiDocs.allPaths.filter(!_.isDirectory).get pair relativeTo(apiDocs)).map {
         case (file, path) => file -> apiDocsStage / "api" / "scala" / path
       }
-      Sync(CacheStore(cacheFile))(mappings)
+      Sync.sync(CacheStore(cacheFile))(mappings)
       PlayDocsDirectoryResource(apiDocsStage)
     },
     SettingKey[Seq[File]]("migrationManualSources") := Nil
