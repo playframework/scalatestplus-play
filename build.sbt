@@ -34,7 +34,7 @@ lazy val mimaSettings = Seq(
   mimaPreviousArtifacts := Set(organization.value %% name.value % PreviousVersion)
 )
 
-def ScalatestVersion(scalaVer: String): String = if (scalaVer.equals(scala213)) "3.0.6-SNAP6" else "3.0.5"
+def ScalatestVersion(scalaVer: String): String = if (scalaVer.equals(scala213)) "3.0.6-SNAP6" else "3.0.7"
 
 lazy val commonSettings = mimaSettings ++ Seq(
   scalaVersion := scala212,
