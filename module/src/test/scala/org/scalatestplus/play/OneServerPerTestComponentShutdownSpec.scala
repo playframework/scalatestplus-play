@@ -43,7 +43,6 @@ class OneServerPerTestComponentShutdownSpec extends UnitSpec with OneServerPerTe
     })
   }
 
-
   override protected def afterAll(): Unit = {
     shutDownCounter.get() mustBe 2
     super.afterAll()
@@ -60,7 +59,6 @@ class OneServerPerTestComponentShutdownSpec extends UnitSpec with OneServerPerTe
       app
     }
   }
-
 
 }
 
