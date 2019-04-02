@@ -46,7 +46,7 @@ lazy val `scalatestplus-play-root` = project
   .in(file("."))
   .enablePlugins(PlayRootProject)
   .aggregate(`scalatestplus-play`)
-  .settings(commonSettings: _*)
+  .settings(commonSettings)
   .settings(
     sonatypeProfileName := "org.scalatestplus.play",
     mimaPreviousArtifacts := Set.empty
@@ -73,7 +73,7 @@ lazy val `scalatestplus-play` = project
 
     pomExtra := PomExtra
   )
-  .settings(commonSettings: _*)
+  .settings(commonSettings)
 
 lazy val docs = project
   .in(file("docs"))
@@ -98,7 +98,7 @@ lazy val docs = project
     },
     SettingKey[Seq[File]]("migrationManualSources") := Nil
   )
-  .settings(commonSettings: _*)
+  .settings(commonSettings)
   .settings(
     crossScalaVersions := Seq(scala212, scala211),
   )
