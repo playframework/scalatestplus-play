@@ -21,7 +21,7 @@ val SeleniumVersion = "3.141.59"
 val HtmlUnitVersion = "2.33.3"
 val PhantomJsDriverVersion = "1.4.4"
 val MockitoVersion = "2.18.3"
-val CssParserVersion = "1.2.0"
+val CssParserVersion = "1.3.0"
 
 def ScalatestVersion(scalaVer: String): String = if (scalaVer.equals(scala213)) "3.0.6-SNAP6" else "3.0.5"
 
