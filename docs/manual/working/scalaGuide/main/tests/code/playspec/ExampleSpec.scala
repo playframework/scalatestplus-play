@@ -33,8 +33,7 @@ class ExampleSpec extends PlaySpec with GuiceOneServerPerSuite with ScalaFutures
               |     <input type='button' name='b' value='Click Me' onclick='document.title="scalatest"' />
               |   </body>
               | </head>
-              |</html>""".stripMargin
-          ).as(HTML)
+              |</html>""".stripMargin).as(HTML)
         }
       }).build()
   }

@@ -26,8 +26,7 @@ class NestedExampleSpec extends Suites(
   new OneSpec,
   new TwoSpec,
   new RedSpec,
-  new BlueSpec
-) with GuiceOneServerPerSuite with TestSuite {
+  new BlueSpec) with GuiceOneServerPerSuite with TestSuite {
   // Override app if you need an Application with other than non-default parameters.
   override def fakeApplication(): Application = {
     GuiceApplicationBuilder().configure("foo" -> "bar").build()

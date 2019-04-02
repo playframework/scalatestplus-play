@@ -93,10 +93,8 @@ trait ConfiguredServer extends TestSuiteMixin with ServerProvider { this: TestSu
         port = configuredPort,
         expectedHttpVersions = Set.empty,
         expectedServerAttr = None,
-        ssl = None
-      ))),
-      new AutoCloseable { def close() = () }
-    )
+        ssl = None))),
+      new AutoCloseable { def close() = () })
 
   private var _configuredPort: Int = -1
 
