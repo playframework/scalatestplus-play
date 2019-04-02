@@ -13,6 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import sbt.util._
+import scala.sys.process._
+import sbt.io.Path._
 import interplay.ScalaVersions._
 
 resolvers ++= DefaultOptions.resolvers(snapshot = true)
@@ -56,6 +59,7 @@ lazy val `scalatestplus-play-root` = project
 lazy val `scalatestplus-play` = project
   .in(file("module"))
   .enablePlugins(Playdoc, PlayLibrary, PlayReleaseBase)
+  .configs(Docs)
   .settings(
     organization := "org.scalatestplus.play",
     libraryDependencies ++= Seq(
@@ -77,10 +81,9 @@ lazy val `scalatestplus-play` = project
 lazy val docs = project
   .in(file("docs"))
   .enablePlugins(PlayDocsPlugin, PlayNoPublish)
+  .configs(Docs)
   .settings(
     libraryDependencies ++= Seq(
-      "com.typesafe.play" %% "play-cache" % PlayVersion % Test,
-      "com.typesafe.play" %% "play-ehcache" % PlayVersion % Test,
       "org.mockito" % "mockito-core" % MockitoVersion % Test
     ),
 
@@ -90,15 +93,18 @@ lazy val docs = project
       // Copy the docs to a place so they have the correct api/scala prefix
       val apiDocsStage = target.value / "api-docs-stage"
       val cacheFile = streams.value.cacheDirectory / "api-docs-stage"
-      val mappings = (apiDocs.***.filter(!_.isDirectory).get pair relativeTo(apiDocs)).map {
+      val mappings = (apiDocs.allPaths.filter(!_.isDirectory).get pair relativeTo(apiDocs)).map {
         case (file, path) => file -> apiDocsStage / "api" / "scala" / path
       }
-      Sync(cacheFile)(mappings)
+      Sync(CacheStore(cacheFile))(mappings)
       PlayDocsDirectoryResource(apiDocsStage)
     },
     SettingKey[Seq[File]]("migrationManualSources") := Nil
   )
   .settings(commonSettings: _*)
+  .settings(
+    crossScalaVersions := Seq(scala212, scala211),
+  )
   .dependsOn(`scalatestplus-play`)
 
 playBuildRepoName in ThisBuild := "scalatestplus-play"
@@ -142,5 +148,5 @@ checkCodeFormat := {
 }
 
 addCommandAlias("validateCode",
-  ";scalariformFormat;test:scalariformFormat;docs/scalariformFormat;docs/test:scalariformFormat;checkCodeFormat"
+  ";scalariformFormat;test:scalariformFormat;checkCodeFormat"
 )

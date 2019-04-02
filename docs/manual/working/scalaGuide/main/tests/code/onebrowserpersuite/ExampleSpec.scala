@@ -31,8 +31,7 @@ class ExampleSpec extends PlaySpec with GuiceOneServerPerSuite with OneBrowserPe
               |   </body>
               | </head>
               |</html>
-            """.stripMargin
-          ).as(HTML)
+            """.stripMargin).as(HTML)
         }
       }).build()
   }
