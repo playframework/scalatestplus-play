@@ -59,3 +59,14 @@ notifications:
     urls: https://webhooks.gitter.im/e/d2c8a242a2615f659595
     on_success: always
     on_failure: always
+
+addons:
+  firefox: "latest"
+  chrome: stable
+  apt:
+    packages:
+    - unzip
+    - dbus-x11
+  sauce_connect:
+    username: will_sargent
+    access_key: d809febf-5037-4857-aefb-ac652b4c5315

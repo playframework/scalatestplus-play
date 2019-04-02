@@ -59,9 +59,9 @@ import play.api.Application
  * </pre>
  */
 trait OneServerPerTestWithComponents
-    extends BaseOneServerPerTest
-    with WithApplicationComponents
-    with FakeApplicationFactory {
+  extends BaseOneServerPerTest
+  with WithApplicationComponents
+  with FakeApplicationFactory {
   this: TestSuite =>
 
   override def fakeApplication(): Application = newApplication

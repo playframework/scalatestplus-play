@@ -85,8 +85,7 @@ class ScalaFunctionalTestSpec extends MixedPlaySpec with Results {
               |  <a href="/login">click me</a>
               |</body>
               |</html>
-            """.stripMargin
-          ) as "text/html"
+            """.stripMargin) as "text/html"
         }
         case ("GET", "/login") => app.injector.instanceOf(classOf[DefaultActionBuilder]) {
           Ok(
@@ -97,8 +96,7 @@ class ScalaFunctionalTestSpec extends MixedPlaySpec with Results {
               |  <div id="title">Hello Coco, welcome to this website.</div>
               |</body>
               |</html>
-            """.stripMargin
-          ) as "text/html"
+            """.stripMargin) as "text/html"
         }
       }).build()
 
