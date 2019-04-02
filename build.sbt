@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import com.typesafe.tools.mima.core._
 import sbt.util._
+
 import scala.sys.process._
 import sbt.io.Path._
 import interplay.ScalaVersions._
@@ -71,7 +73,12 @@ lazy val `scalatestplus-play` = project
     ),
     scalacOptions in(Compile, doc) := Seq("-doc-title", "ScalaTest + Play, " + releaseVersion),
 
-    pomExtra := PomExtra
+    pomExtra := PomExtra,
+
+    mimaBinaryIssueFilters ++= Seq(
+      ProblemFilters.exclude[ReversedMissingMethodProblem]("org.scalatestplus.play.BaseOneServerPerTest.org$scalatestplus$play$BaseOneServerPerTest$_setter_$org$scalatestplus$play$BaseOneServerPerTest$$lock_="),
+      ProblemFilters.exclude[ReversedMissingMethodProblem]("org.scalatestplus.play.BaseOneServerPerTest.org$scalatestplus$play$BaseOneServerPerTest$$lock")
+    )
   )
   .settings(commonSettings)
 
