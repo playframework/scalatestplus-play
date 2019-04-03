@@ -18,6 +18,9 @@ env:
 before_install: curl -Ls https://git.io/jabba | bash && . ~/.jabba/jabba.sh
 install: jabba install "$TRAVIS_JDK" && jabba use "$_" && java -Xmx32m -version
 
+script:
+  - $SCRIPT
+
 addons:
   firefox: "latest"
   chrome: stable
