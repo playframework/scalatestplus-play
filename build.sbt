@@ -107,7 +107,7 @@ lazy val docs = project
   )
   .settings(commonSettings)
   .settings(
-    crossScalaVersions := Seq(scala212, scala211),
+    crossScalaVersions := Seq(scala212, scala211, scala213),
   )
   .dependsOn(`scalatestplus-play`)
 
