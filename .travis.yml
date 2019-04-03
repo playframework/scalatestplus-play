@@ -15,6 +15,11 @@ env:
   - SCRIPT=scripts/validateCode TRAVIS_JDK=adopt@1.8.202-08
   - SCRIPT=scripts/validateCode TRAVIS_JDK=adopt@1.11.0-2
 
+# The build matrix produced with the settings above causes a rather big number of travis jobs.
+# The sauce_connect addon below has a limit of 5 concurrent connections so this repository uses a Travis-CI.com
+# setting that limits the number of concurrent jobs per repo.
+#  See https://blog.travis-ci.com/2014-07-18-per-repository-concurrency-setting
+
 before_install: curl -Ls https://git.io/jabba | bash && . ~/.jabba/jabba.sh
 install: jabba install "$TRAVIS_JDK" && jabba use "$_" && java -Xmx32m -version
 
