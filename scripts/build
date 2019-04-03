@@ -26,5 +26,9 @@ export JAVA_OPTS="-Xmx2G -Xss2M -XX:MaxMetaspaceSize=512M -XX:ReservedCodeCacheS
 ADDITIONAL_SBT_ARGUMENTS=${ADDITIONAL_SBT_ARGUMENTS:-""}
 
 build() {
-  "$SBT" ${ADDITIONAL_SBT_ARGUMENTS} ++${SCALA_VERSION} "$@" | grep --line-buffered -v 'Resolving \|Generating \|addons\.\|GConf-WARNING'
+#  "$SBT" ${ADDITIONAL_SBT_ARGUMENTS} ++${SCALA_VERSION} "$@" | grep --line-buffered -v 'Resolving \|Generating \|addons\.\|GConf-WARNING'
+  echo ${ADDITIONAL_SBT_ARGUMENTS}
+  echo $TRAVIS_JDK
+  echo $JAVA_OPTS
+  echo ++${SCALA_VERSION} "$@"
 }
