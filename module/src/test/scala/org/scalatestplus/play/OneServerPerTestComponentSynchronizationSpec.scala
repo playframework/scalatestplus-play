@@ -15,20 +15,20 @@
  */
 package org.scalatestplus.play
 
-  import java.util.concurrent.TimeoutException
+import java.util.concurrent.TimeoutException
 
-  import org.scalatest.{FlatSpec, MustMatchers}
-  import org.scalatestplus.play.components.OneServerPerTestWithComponents
-  import play.api.mvc.Results
-  import play.api.routing.Router
-  import play.api.{BuiltInComponents, BuiltInComponentsFromContext, NoHttpFiltersComponents}
+import org.scalatest.{ FlatSpec, MustMatchers }
+import org.scalatestplus.play.components.OneServerPerTestWithComponents
+import play.api.mvc.Results
+import play.api.routing.Router
+import play.api.{ BuiltInComponents, BuiltInComponentsFromContext, NoHttpFiltersComponents }
 
-  import scala.concurrent.ExecutionContext.Implicits.global
-  import scala.concurrent.duration._
-  import scala.concurrent.{Await, Future}
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration._
+import scala.concurrent.{ Await, Future }
 
 class OneServerPerTestComponentSynchronizationSpec extends FlatSpec with MustMatchers
-    with OneServerPerTestWithComponents {
+  with OneServerPerTestWithComponents {
 
   override def components: BuiltInComponents = new BuiltInComponentsFromContext(context) with NoHttpFiltersComponents {
 
@@ -40,7 +40,7 @@ class OneServerPerTestComponentSynchronizationSpec extends FlatSpec with MustMat
 
   }
 
-  lazy val sum: Int = 1+1
+  lazy val sum: Int = 1 + 1
 
   "A asynchronous test based on OneServerPerTestWithComponents trait" must "not result in dead lock when the test initializes lazy val" in {
     val action = Future {
