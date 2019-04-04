@@ -28,10 +28,10 @@ val PhantomJsDriverVersion = "1.4.4"
 val MockitoVersion = "2.18.3"
 val CssParserVersion = "1.2.0"
 
-val PreviousVersion = "4.0.0"
+def previousVersion(scalaVer: String): String  = if(scalaVer.equals(scala213))  "4.0.1" else  "4.0.0"
 
 lazy val mimaSettings = Seq(
-  mimaPreviousArtifacts := Set(organization.value %% name.value % PreviousVersion)
+  mimaPreviousArtifacts := Set(organization.value %% name.value % previousVersion(scalaVersion.value))
 )
 
 def ScalatestVersion(scalaVer: String): String = if (scalaVer.equals(scala213)) "3.0.6-SNAP6" else "3.0.7"
@@ -107,7 +107,7 @@ lazy val docs = project
   )
   .settings(commonSettings)
   .settings(
-    crossScalaVersions := Seq(scala212, scala211),
+    crossScalaVersions := Seq(scala212, scala211, scala213),
   )
   .dependsOn(`scalatestplus-play`)
 
