@@ -26,7 +26,7 @@ val SeleniumVersion = "3.141.59"
 val HtmlUnitVersion = "2.34.0"
 val PhantomJsDriverVersion = "1.4.4"
 val MockitoVersion = "2.18.3"
-val CssParserVersion = "1.2.0"
+val CssParserVersion = "1.4.0"
 
 def previousVersion(scalaVer: String): String  = if(scalaVer.equals(scala213))  "4.0.1" else  "4.0.0"
 
