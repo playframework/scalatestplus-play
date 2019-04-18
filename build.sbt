@@ -20,7 +20,10 @@ import scala.sys.process._
 import sbt.io.Path._
 import interplay.ScalaVersions._
 
-val PlayVersion = playVersion("2.7.0")
+resolvers ++= DefaultOptions.resolvers(snapshot = true)
+resolvers += Resolver.sonatypeRepo("snapshots")
+
+val PlayVersion = playVersion("2.7.1")
 
 val SeleniumVersion = "3.141.59"
 val HtmlUnitVersion = "2.34.0"
