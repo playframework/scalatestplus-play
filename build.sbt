@@ -26,7 +26,7 @@ resolvers += Resolver.sonatypeRepo("snapshots")
 val PlayVersion = playVersion("2.7.1")
 
 val SeleniumVersion = "3.141.59"
-val HtmlUnitVersion = "2.34.0"
+val HtmlUnitVersion = "2.35.0"
 val PhantomJsDriverVersion = "1.4.4"
 val MockitoVersion = "2.18.3"
 val CssParserVersion = "1.4.0"
