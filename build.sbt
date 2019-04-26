@@ -23,7 +23,7 @@ import interplay.ScalaVersions._
 resolvers ++= DefaultOptions.resolvers(snapshot = true)
 resolvers += Resolver.sonatypeRepo("snapshots")
 
-val PlayVersion = playVersion("2.7.1")
+val PlayVersion = playVersion("2.7.2")
 
 val SeleniumVersion = "3.141.59"
 val HtmlUnitVersion = "2.35.1"
