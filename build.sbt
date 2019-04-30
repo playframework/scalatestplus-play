@@ -18,11 +18,10 @@ import sbt.util._
 
 import scala.sys.process._
 import sbt.io.Path._
-import interplay.ScalaVersions._
+import interplay.ScalaVersions.scala212
 
-resolvers ++= DefaultOptions.resolvers(snapshot = true)
-resolvers += Resolver.sonatypeRepo("snapshots")
-
+// TODO remove when adopting Scala 2.13.0-RC* or GA version.
+val scala213 = "2.13.0-M5"
 val PlayVersion = playVersion("2.7.2")
 
 val SeleniumVersion = "3.141.59"
@@ -38,6 +37,9 @@ lazy val mimaSettings = Seq(
 )
 
 def ScalatestVersion(scalaVer: String): String = if (scalaVer.equals(scala213)) "3.0.6-SNAP6" else "3.0.7"
+
+resolvers ++= DefaultOptions.resolvers(snapshot = true)
+resolvers += Resolver.sonatypeRepo("snapshots")
 
 lazy val commonSettings = mimaSettings ++ Seq(
   scalaVersion := scala212,
