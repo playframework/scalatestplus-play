@@ -41,7 +41,7 @@ def ScalatestVersion(scalaVer: String): String = if (scalaVer.equals(scala213)) 
 
 lazy val commonSettings = mimaSettings ++ Seq(
   scalaVersion := scala212,
-  crossScalaVersions := Seq(scala211, scala212, scala213),
+  crossScalaVersions := Seq(scala212, scala213),
   fork in Test := false,
   parallelExecution in Test := false,
   testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oTK")
@@ -110,7 +110,7 @@ lazy val docs = project
   )
   .settings(commonSettings)
   .settings(
-    crossScalaVersions := Seq(scala212, scala211, scala213),
+    crossScalaVersions := Seq(scala212, scala213),
   )
   .dependsOn(`scalatestplus-play`)
 
