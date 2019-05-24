@@ -18,28 +18,28 @@ import sbt.util._
 
 import scala.sys.process._
 import sbt.io.Path._
-import interplay.ScalaVersions.scala212
+import interplay.ScalaVersions._
 
-// TODO remove when adopting Scala 2.13.0-RC* or GA version.
-val scala213 = "2.13.0-M5"
-val PlayVersion = playVersion("2.7.2")
+val PlayVersion = playVersion("2.8.0-M1")
 
 val SeleniumVersion = "3.141.59"
 val HtmlUnitVersion = "2.35.1"
 val PhantomJsDriverVersion = "1.4.4"
 val MockitoVersion = "2.18.3"
 val CssParserVersion = "1.4.0"
+val ScalatestVersion = "3.0.8-RC4"
 
-def previousVersion(scalaVer: String): String  = if(scalaVer.equals(scala213))  "4.0.1" else  "4.0.0"
+def previousVersion(scalaVer: String): Option[String] = if(scalaVer.equals(scala213)) None else Some("4.0.0")
 
 lazy val mimaSettings = Seq(
-  mimaPreviousArtifacts := Set(organization.value %% name.value % previousVersion(scalaVersion.value))
+  mimaPreviousArtifacts := previousVersion(scalaVersion.value)
+    .map(v => Set(organization.value %% name.value % v))
+    .getOrElse(Set.empty)
 )
-
-def ScalatestVersion(scalaVer: String): String = if (scalaVer.equals(scala213)) "3.0.6-SNAP6" else "3.0.7"
 
 resolvers ++= DefaultOptions.resolvers(snapshot = true)
 resolvers += Resolver.sonatypeRepo("snapshots")
+resolvers += Resolver.bintrayRepo("akka", "snapshots")
 
 lazy val commonSettings = mimaSettings ++ Seq(
   scalaVersion := scala212,
@@ -67,7 +67,7 @@ lazy val `scalatestplus-play` = project
   .settings(
     organization := "org.scalatestplus.play",
     libraryDependencies ++= Seq(
-      "org.scalatest" %% "scalatest" % ScalatestVersion(scalaVersion.value),
+      "org.scalatest" %% "scalatest" % ScalatestVersion,
       "org.seleniumhq.selenium" % "selenium-java" % SeleniumVersion exclude(org = "com.codeborne", name = "phantomjsdriver"),
       "org.seleniumhq.selenium" % "htmlunit-driver" % HtmlUnitVersion,
       "net.sourceforge.htmlunit" % "htmlunit-cssparser" % CssParserVersion,

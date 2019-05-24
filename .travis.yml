@@ -2,7 +2,7 @@ language: scala
 
 scala:
 - 2.12.8
-- 2.13.0-M5
+- 2.13.0-RC2
 
 env:
   - SCRIPT=scripts/test         TRAVIS_JDK=adopt@1.8.202-08
