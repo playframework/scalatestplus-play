@@ -39,7 +39,7 @@ lazy val mimaSettings = Seq(
 
 resolvers ++= DefaultOptions.resolvers(snapshot = true)
 resolvers += Resolver.sonatypeRepo("snapshots")
-resolvers += Resolver.bintrayRepo("akka", "snapshots")
+ThisBuild / resolvers += Resolver.bintrayRepo("akka", "snapshots")
 
 lazy val commonSettings = mimaSettings ++ Seq(
   scalaVersion := scala212,
