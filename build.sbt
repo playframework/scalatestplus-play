@@ -27,7 +27,7 @@ val HtmlUnitVersion = "2.35.1"
 val PhantomJsDriverVersion = "1.4.4"
 val MockitoVersion = "2.18.3"
 val CssParserVersion = "1.4.0"
-val ScalatestVersion = "3.0.8-RC4"
+val ScalatestVersion = "3.0.8-RC5"
 
 def previousVersion(scalaVer: String): Option[String] = if(scalaVer.equals(scala213)) None else Some("4.0.0")
 
@@ -39,7 +39,7 @@ lazy val mimaSettings = Seq(
 
 resolvers ++= DefaultOptions.resolvers(snapshot = true)
 resolvers += Resolver.sonatypeRepo("snapshots")
-resolvers += Resolver.bintrayRepo("akka", "snapshots")
+ThisBuild / resolvers += Resolver.bintrayRepo("akka", "snapshots")
 
 lazy val commonSettings = mimaSettings ++ Seq(
   scalaVersion := scala212,
