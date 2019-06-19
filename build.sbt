@@ -23,25 +23,25 @@ import interplay.ScalaVersions._
 resolvers ++= DefaultOptions.resolvers(snapshot = true)
 resolvers += Resolver.sonatypeRepo("snapshots")
 
-val PlayVersion = playVersion("2.7.1")
+val PlayVersion = playVersion("2.7.3")
 
 val SeleniumVersion = "3.141.59"
 val HtmlUnitVersion = "2.33.3"
 val PhantomJsDriverVersion = "1.4.4"
 val MockitoVersion = "2.18.3"
 val CssParserVersion = "1.2.0"
-
-def previousVersion(scalaVer: String): String  = if(scalaVer.equals(scala213))  "4.0.1" else  "4.0.0"
+val ScalatestVersion = "3.0.8"
 
 lazy val mimaSettings = Seq(
-  mimaPreviousArtifacts := Set(organization.value %% name.value % previousVersion(scalaVersion.value))
+  mimaPreviousArtifacts := { 
+    if(scalaVersion.value.equals(scala213))  Set.empty // TODO: update to 4.0.3 once released
+    else  Set(organization.value %% name.value % "4.0.0")
+  }
 )
 
-def ScalatestVersion(scalaVer: String): String = if(scalaVer.equals(scala213)) "3.0.6-SNAP6" else "3.0.5"
-
 lazy val commonSettings = mimaSettings ++ Seq(
-  scalaVersion := scala212,
-  crossScalaVersions := Seq(scala211, scala212, scala213),
+  scalaVersion := scala213,
+  crossScalaVersions := Seq("2.11.12", scala212, scala213),
   fork in Test := false,
   parallelExecution in Test := false,
   testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oTK")
@@ -65,7 +65,7 @@ lazy val `scalatestplus-play` = project
   .settings(
     organization := "org.scalatestplus.play",
     libraryDependencies ++= Seq(
-      "org.scalatest" %% "scalatest" % ScalatestVersion(scalaVersion.value),
+      "org.scalatest" %% "scalatest" % ScalatestVersion,
       "org.seleniumhq.selenium" % "selenium-java" % SeleniumVersion exclude(org = "com.codeborne", name = "phantomjsdriver"),
       "org.seleniumhq.selenium" % "htmlunit-driver" % HtmlUnitVersion,
       "net.sourceforge.htmlunit" % "htmlunit-cssparser" % CssParserVersion,
@@ -109,9 +109,6 @@ lazy val docs = project
     SettingKey[Seq[File]]("migrationManualSources") := Nil
   )
   .settings(commonSettings: _*)
-  .settings(
-    crossScalaVersions := Seq(scala212, scala211, scala213),
-  )
   .dependsOn(`scalatestplus-play`)
 
 playBuildRepoName in ThisBuild := "scalatestplus-play"
