@@ -48,7 +48,7 @@ class OneServerPerTestComponentSynchronizationSpec extends FlatSpec with MustMat
     }
 
     try {
-      Await.result(action, 1 second)
+      Await.result(action, 1.second)
     } catch {
       case _: TimeoutException =>
         fail()
