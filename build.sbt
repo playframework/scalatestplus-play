@@ -42,7 +42,7 @@ lazy val mimaSettings = Seq(
 lazy val commonSettings = mimaSettings ++ Seq(
   scalaVersion := scala213,
   crossScalaVersions := Seq("2.11.12", scala212, scala213),
-  fork in Test := false,
+  fork in Test := true, // see https://github.com/sbt/sbt/issues/4609
   parallelExecution in Test := false,
   testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oTK")
 )
