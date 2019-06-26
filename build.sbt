@@ -82,7 +82,40 @@ lazy val `scalatestplus-play` = project
 
     mimaBinaryIssueFilters ++= Seq(
       ProblemFilters.exclude[ReversedMissingMethodProblem]("org.scalatestplus.play.BaseOneServerPerTest.org$scalatestplus$play$BaseOneServerPerTest$_setter_$org$scalatestplus$play$BaseOneServerPerTest$$lock_="),
-      ProblemFilters.exclude[ReversedMissingMethodProblem]("org.scalatestplus.play.BaseOneServerPerTest.org$scalatestplus$play$BaseOneServerPerTest$$lock")
+      ProblemFilters.exclude[ReversedMissingMethodProblem]("org.scalatestplus.play.BaseOneServerPerTest.org$scalatestplus$play$BaseOneServerPerTest$$lock"),
+      // Using org.scalatestplus.selenium.WebBrowser instead of deprecated org.scalatest.selenium.WebBrowser
+      ProblemFilters.exclude[MissingTypesProblem]("org.scalatestplus.play.AllBrowsersPerTest"),
+      ProblemFilters.exclude[InheritedNewAbstractMethodProblem]("org.scalatestplus.play.AllBrowsersPerTest.org$scalatestplus$selenium$WebBrowser$$targetDir"),
+      ProblemFilters.exclude[InheritedNewAbstractMethodProblem]("org.scalatestplus.play.AllBrowsersPerTest.org$scalatestplus$selenium$WebBrowser$_setter_$cookies_="),
+      ProblemFilters.exclude[InheritedNewAbstractMethodProblem]("org.scalatestplus.play.AllBrowsersPerTest.org$scalatestplus$selenium$WebBrowser$_setter_$alertBox_="),
+      ProblemFilters.exclude[InheritedNewAbstractMethodProblem]("org.scalatestplus.play.AllBrowsersPerTest.org$scalatestplus$selenium$WebBrowser$_setter_$defaultContent_="),
+      ProblemFilters.exclude[InheritedNewAbstractMethodProblem]("org.scalatestplus.play.AllBrowsersPerTest.org$scalatestplus$selenium$WebBrowser$$targetDir_="),
+      ProblemFilters.exclude[InheritedNewAbstractMethodProblem]("org.scalatestplus.play.AllBrowsersPerTest.org$scalatestplus$selenium$WebBrowser$$TagMeta"),
+      ProblemFilters.exclude[InheritedNewAbstractMethodProblem]("org.scalatestplus.play.AllBrowsersPerTest.org$scalatestplus$selenium$WebBrowser$_setter_$activeElement_="),
+      ProblemFilters.exclude[MissingTypesProblem]("org.scalatestplus.play.OneBrowserPerSuite"),
+      ProblemFilters.exclude[InheritedNewAbstractMethodProblem]("org.scalatestplus.play.OneBrowserPerSuite.org$scalatestplus$selenium$WebBrowser$$targetDir"),
+      ProblemFilters.exclude[InheritedNewAbstractMethodProblem]("org.scalatestplus.play.OneBrowserPerSuite.org$scalatestplus$selenium$WebBrowser$_setter_$cookies_="),
+      ProblemFilters.exclude[InheritedNewAbstractMethodProblem]("org.scalatestplus.play.OneBrowserPerSuite.org$scalatestplus$selenium$WebBrowser$_setter_$alertBox_="),
+      ProblemFilters.exclude[InheritedNewAbstractMethodProblem]("org.scalatestplus.play.OneBrowserPerSuite.org$scalatestplus$selenium$WebBrowser$_setter_$defaultContent_="),
+      ProblemFilters.exclude[InheritedNewAbstractMethodProblem]("org.scalatestplus.play.OneBrowserPerSuite.org$scalatestplus$selenium$WebBrowser$$targetDir_="),
+      ProblemFilters.exclude[InheritedNewAbstractMethodProblem]("org.scalatestplus.play.OneBrowserPerSuite.org$scalatestplus$selenium$WebBrowser$$TagMeta"),
+      ProblemFilters.exclude[InheritedNewAbstractMethodProblem]("org.scalatestplus.play.OneBrowserPerSuite.org$scalatestplus$selenium$WebBrowser$_setter_$activeElement_="),
+      ProblemFilters.exclude[MissingTypesProblem]("org.scalatestplus.play.ConfiguredBrowser"),
+      ProblemFilters.exclude[InheritedNewAbstractMethodProblem]("org.scalatestplus.play.ConfiguredBrowser.org$scalatestplus$selenium$WebBrowser$$targetDir"),
+      ProblemFilters.exclude[InheritedNewAbstractMethodProblem]("org.scalatestplus.play.ConfiguredBrowser.org$scalatestplus$selenium$WebBrowser$_setter_$cookies_="),
+      ProblemFilters.exclude[InheritedNewAbstractMethodProblem]("org.scalatestplus.play.ConfiguredBrowser.org$scalatestplus$selenium$WebBrowser$_setter_$alertBox_="),
+      ProblemFilters.exclude[InheritedNewAbstractMethodProblem]("org.scalatestplus.play.ConfiguredBrowser.org$scalatestplus$selenium$WebBrowser$_setter_$defaultContent_="),
+      ProblemFilters.exclude[InheritedNewAbstractMethodProblem]("org.scalatestplus.play.ConfiguredBrowser.org$scalatestplus$selenium$WebBrowser$$targetDir_="),
+      ProblemFilters.exclude[InheritedNewAbstractMethodProblem]("org.scalatestplus.play.ConfiguredBrowser.org$scalatestplus$selenium$WebBrowser$$TagMeta"),
+      ProblemFilters.exclude[InheritedNewAbstractMethodProblem]("org.scalatestplus.play.ConfiguredBrowser.org$scalatestplus$selenium$WebBrowser$_setter_$activeElement_="),
+      ProblemFilters.exclude[MissingTypesProblem]("org.scalatestplus.play.OneBrowserPerTest"),
+      ProblemFilters.exclude[InheritedNewAbstractMethodProblem]("org.scalatestplus.play.OneBrowserPerTest.org$scalatestplus$selenium$WebBrowser$$targetDir"),
+      ProblemFilters.exclude[InheritedNewAbstractMethodProblem]("org.scalatestplus.play.OneBrowserPerTest.org$scalatestplus$selenium$WebBrowser$_setter_$cookies_="),
+      ProblemFilters.exclude[InheritedNewAbstractMethodProblem]("org.scalatestplus.play.OneBrowserPerTest.org$scalatestplus$selenium$WebBrowser$_setter_$alertBox_="),
+      ProblemFilters.exclude[InheritedNewAbstractMethodProblem]("org.scalatestplus.play.OneBrowserPerTest.org$scalatestplus$selenium$WebBrowser$_setter_$defaultContent_="),
+      ProblemFilters.exclude[InheritedNewAbstractMethodProblem]("org.scalatestplus.play.OneBrowserPerTest.org$scalatestplus$selenium$WebBrowser$$targetDir_="),
+      ProblemFilters.exclude[InheritedNewAbstractMethodProblem]("org.scalatestplus.play.OneBrowserPerTest.org$scalatestplus$selenium$WebBrowser$$TagMeta"),
+      ProblemFilters.exclude[InheritedNewAbstractMethodProblem]("org.scalatestplus.play.OneBrowserPerTest.org$scalatestplus$selenium$WebBrowser$_setter_$activeElement_=")
     )
   )
   .settings(commonSettings)
