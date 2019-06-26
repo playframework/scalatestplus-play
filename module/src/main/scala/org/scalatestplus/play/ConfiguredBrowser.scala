@@ -16,11 +16,11 @@
 package org.scalatestplus.play
 
 import org.scalatest._
-import selenium.WebBrowser
 import org.openqa.selenium.WebDriver
 import concurrent.Eventually
 import concurrent.IntegrationPatience
 import BrowserFactory.UninitializedDriver
+import org.scalatestplus.selenium.WebBrowser
 
 /**
  * Trait that provides a configured `Application`, server port number, and Selenium `WebDriver` to the suite

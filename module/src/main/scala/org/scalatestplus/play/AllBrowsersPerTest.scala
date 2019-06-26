@@ -16,7 +16,6 @@
 package org.scalatestplus.play
 
 import org.scalatest._
-import selenium.WebBrowser
 import concurrent.Eventually
 import concurrent.IntegrationPatience
 import org.openqa.selenium.WebDriver
@@ -25,6 +24,7 @@ import BrowserFactory.UnavailableDriver
 import BrowserFactory.UnneededDriver
 import BrowserFactory.UninitializedDriver
 import org.openqa.selenium.firefox.FirefoxProfile
+import org.scalatestplus.selenium.WebBrowser
 
 /**
  * Trait that uses a [[http://doc.scalatest.org/3.0.1/index.html#org.scalatest.FlatSpec@sharedTests ''shared test'']] approach to enable

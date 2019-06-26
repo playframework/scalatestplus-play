@@ -18,7 +18,7 @@ package org.scalatestplus.play
 import org.openqa.selenium.WebDriver
 import org.scalatest._
 import org.scalatest.fixture._
-import org.scalatest.selenium.WebBrowser
+import org.scalatestplus.selenium.WebBrowser
 import org.scalatestplus.play.BrowserFactory.UnavailableDriver
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder

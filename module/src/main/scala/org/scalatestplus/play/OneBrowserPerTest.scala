@@ -16,7 +16,6 @@
 package org.scalatestplus.play
 
 import org.scalatest._
-import selenium.WebBrowser
 import concurrent.Eventually
 import concurrent.IntegrationPatience
 import org.openqa.selenium.WebDriver
@@ -24,6 +23,7 @@ import BrowserFactory.UnavailableDriver
 import org.openqa.selenium.safari.SafariDriver
 import org.openqa.selenium.chrome.ChromeDriver
 import BrowserFactory.UninitializedDriver
+import org.scalatestplus.selenium.WebBrowser
 
 /**
  * Trait that provides a new Selenium `WebDriver` instance for each test executed in a ScalaTest `Suite`.

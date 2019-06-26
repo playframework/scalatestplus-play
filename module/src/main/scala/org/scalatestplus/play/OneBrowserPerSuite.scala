@@ -16,13 +16,13 @@
 package org.scalatestplus.play
 
 import org.scalatest._
-import selenium.WebBrowser
 import concurrent.Eventually
 import concurrent.IntegrationPatience
 import org.openqa.selenium.WebDriver
 import BrowserFactory.UnavailableDriver
 import org.openqa.selenium.safari.SafariDriver
 import org.openqa.selenium.chrome.ChromeDriver
+import org.scalatestplus.selenium.WebBrowser
 
 import scala.util.Try
 
