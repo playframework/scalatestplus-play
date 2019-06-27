@@ -20,31 +20,26 @@ import scala.sys.process._
 import sbt.io.Path._
 import interplay.ScalaVersions._
 
-val PlayVersion = playVersion("2.8.0-M1")
+val PlayVersion = playVersion("2.8.0-M2")
 
 val SeleniumVersion = "3.141.59"
 val HtmlUnitVersion = "2.35.1"
 val PhantomJsDriverVersion = "1.4.4"
 val MockitoVersion = "2.18.3"
 val CssParserVersion = "1.4.0"
-val ScalatestVersion = "3.0.8-RC5"
-
-def previousVersion(scalaVer: String): Option[String] = if(scalaVer.equals(scala213)) None else Some("4.0.0")
+val ScalatestVersion = "3.0.8"
 
 lazy val mimaSettings = Seq(
-  mimaPreviousArtifacts := previousVersion(scalaVersion.value)
-    .map(v => Set(organization.value %% name.value % v))
-    .getOrElse(Set.empty)
+  mimaPreviousArtifacts := {
+    if(scalaVersion.value.equals(scala213))  Set.empty // TODO: update to 5.0.0 once released
+    else  Set(organization.value %% name.value % "4.0.0")
+  }
 )
 
-resolvers ++= DefaultOptions.resolvers(snapshot = true)
-resolvers += Resolver.sonatypeRepo("snapshots")
-ThisBuild / resolvers += Resolver.bintrayRepo("akka", "snapshots")
-
 lazy val commonSettings = mimaSettings ++ Seq(
-  scalaVersion := scala212,
-  crossScalaVersions := Seq(scala212, scala213),
-  fork in Test := false,
+  scalaVersion := scala213,
+  crossScalaVersions := Seq("2.11.12", scala212, scala213),
+  fork in Test := true, // see https://github.com/sbt/sbt/issues/4609
   parallelExecution in Test := false,
   testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oTK")
 )
@@ -556,10 +551,7 @@ lazy val docs = project
     },
     SettingKey[Seq[File]]("migrationManualSources") := Nil
   )
-  .settings(commonSettings)
-  .settings(
-    crossScalaVersions := Seq(scala212, scala213),
-  )
+  .settings(commonSettings: _*)
   .dependsOn(`scalatestplus-play`)
 
 playBuildRepoName in ThisBuild := "scalatestplus-play"
