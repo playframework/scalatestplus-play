@@ -34,8 +34,11 @@ val ScalatestVersion = "3.0.8"
 
 lazy val mimaSettings = Seq(
   mimaPreviousArtifacts := { 
-    if(scalaVersion.value.equals(scala213))  Set.empty // TODO: update to 4.0.3 once released
-    else  Set(organization.value %% name.value % "4.0.0")
+    val artifact = organization.value %% name.value
+    if(scalaVersion.value.equals(scala213))  
+      Set(artifact % "4.0.3")
+    else  
+      Set(artifact % "4.0.0")
   }
 )
 
