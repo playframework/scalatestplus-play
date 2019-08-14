@@ -20,7 +20,7 @@ import scala.sys.process._
 import sbt.io.Path._
 import interplay.ScalaVersions._
 
-val PlayVersion = playVersion("2.8.0-M3")
+val PlayVersion = playVersion("2.8.0-M4")
 
 val SeleniumVersion = "3.141.59"
 val HtmlUnitVersion = "2.35.1"
