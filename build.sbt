@@ -20,13 +20,13 @@ import scala.sys.process._
 import sbt.io.Path._
 import interplay.ScalaVersions._
 
-val PlayVersion = playVersion("2.8.0-M3")
+val PlayVersion = playVersion("2.8.0-M4")
 
 val SeleniumVersion = "3.141.59"
-val HtmlUnitVersion = "2.35.1"
+val HtmlUnitVersion = "2.36.0"
 val PhantomJsDriverVersion = "1.4.4"
 val MockitoVersion = "2.18.3"
-val CssParserVersion = "1.4.0"
+val CssParserVersion = "1.5.0"
 val ScalatestVersion = "3.0.8"
 
 lazy val mimaSettings = Seq(
