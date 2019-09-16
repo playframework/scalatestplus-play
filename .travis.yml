@@ -2,7 +2,7 @@ language: scala
 dist: xenial
 
 scala:
-  - 2.12.8
+  - 2.12.9
   - 2.13.0
 
 services:
@@ -57,6 +57,7 @@ cache:
     - $HOME/.ivy2
     - $HOME/.jabba/jdk
     - $HOME/.sbt
+    - $HOME/.coursier
 
 before_cache:
   - find $HOME/.ivy2 -name "ivydata-*.properties" -delete
