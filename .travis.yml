@@ -1,19 +1,20 @@
 language: scala
+dist: xenial
 
 scala:
-- 2.12.8
+- 2.12.9
 - 2.11.12
 - 2.13.0
 
 env:
-  - SCRIPT=scripts/test         TRAVIS_JDK=adopt@1.8.202-08
-  - SCRIPT=scripts/test         TRAVIS_JDK=adopt@1.11.0-2
-  - SCRIPT=scripts/testDocs     TRAVIS_JDK=adopt@1.8.202-08
-  - SCRIPT=scripts/testDocs     TRAVIS_JDK=adopt@1.11.0-2
-  - SCRIPT=scripts/validateDocs TRAVIS_JDK=adopt@1.8.202-08
-  - SCRIPT=scripts/validateDocs TRAVIS_JDK=adopt@1.11.0-2
-  - SCRIPT=scripts/validateCode TRAVIS_JDK=adopt@1.8.202-08
-  - SCRIPT=scripts/validateCode TRAVIS_JDK=adopt@1.11.0-2
+  - SCRIPT=scripts/test         TRAVIS_JDK=8
+  - SCRIPT=scripts/test         TRAVIS_JDK=11
+  - SCRIPT=scripts/testDocs     TRAVIS_JDK=8
+  - SCRIPT=scripts/testDocs     TRAVIS_JDK=11
+  - SCRIPT=scripts/validateDocs TRAVIS_JDK=8
+  - SCRIPT=scripts/validateDocs TRAVIS_JDK=11
+  - SCRIPT=scripts/validateCode TRAVIS_JDK=8
+  - SCRIPT=scripts/validateCode TRAVIS_JDK=11
 
 # The build matrix produced with the settings above causes a rather big number of travis jobs.
 # The sauce_connect addon below has a limit of 5 concurrent connections so this repository uses a Travis-CI.com
@@ -21,7 +22,7 @@ env:
 #  See https://blog.travis-ci.com/2014-07-18-per-repository-concurrency-setting
 
 before_install: curl -Ls https://git.io/jabba | bash && . ~/.jabba/jabba.sh
-install: jabba install "$TRAVIS_JDK" && jabba use "$_" && java -Xmx32m -version
+install: jabba install "adopt@~1.$TRAVIS_JDK.0-0" && jabba use "$_" && java -Xmx32m -version
 
 before_script:
   # See https://github.com/SeleniumHQ/docker-selenium/issues/87
@@ -32,7 +33,7 @@ before_script:
   - sleep 5 # give xvfb some time to start
   - "mkdir -p ~/tmp/bin"
   - "pushd ~/tmp/bin && wget -c https://chromedriver.storage.googleapis.com/2.44/chromedriver_linux64.zip && unzip chromedriver_linux64.zip && popd"
-  - "pushd ~/tmp/bin && wget -c https://github.com/mozilla/geckodriver/releases/download/v0.23.0/geckodriver-v0.23.0-linux64.tar.gz && tar -xzvf geckodriver-v0.23.0-linux64.tar.gz && popd"
+  - "pushd ~/tmp/bin && wget -c https://github.com/mozilla/geckodriver/releases/download/v0.24.0/geckodriver-v0.24.0-linux64.tar.gz && tar -xzvf geckodriver-v0.24.0-linux64.tar.gz && popd"
   - "chmod -vv +x ~/tmp/bin/*"
   - "export PATH=$HOME/tmp/bin:$PATH"
 
