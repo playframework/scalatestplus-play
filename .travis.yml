@@ -1,6 +1,10 @@
 language: scala
 dist: xenial
 
+# This build connects to saucelabs which limits the number of concurrent connections to 5.
+# As a consequence, the max concurrent jobs setting un travis' web UI must be set to 5
+# https://docs.travis-ci.com/user/web-ui/#limit-concurrent-jobs
+
 scala:
   - 2.12.9
   - 2.13.0
