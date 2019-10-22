@@ -14,8 +14,8 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-# Use travis scala version or defaults to 2.12.6 which is the `scalaVersion` configured in build.sbt
-SCALA_VERSION=${TRAVIS_SCALA_VERSION:-"2.12.6"}
+# Use travis scala version or defaults to 2.13.0 which is the `scalaVersion` configured in build.sbt
+SCALA_VERSION=${TRAVIS_SCALA_VERSION:-"2.13.0"}
 
 # There are lots of different ways to configure the memory with sbt, and not every sbt installation supports
 # all of them, eg on Travis, sbt doesn't support the -mem option. But JAVA_OPTS should be standard across
