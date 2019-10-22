@@ -37,10 +37,18 @@ class AllBrowsersPerSuiteBehaviorSpec extends WordSpec {
 
   "The AllBrowsersPerSuite trait" must {
 
-    val chrome = try { val d = new ChromeDriver(); d.quit(); 1 } catch { case ex: Throwable => 0 }
-    val firefox = try { val d = new FirefoxDriver(); d.quit(); 1 } catch { case ex: Throwable => 0 }
-    val internetExplorer = try { val d = new InternetExplorerDriver; d.quit(); 1 } catch { case ex: Throwable => 0 }
-    val safari = try { val d = new SafariDriver; d.quit(); 1 } catch { case ex: Throwable => 0 }
+    val chrome = try {
+      val d = new ChromeDriver(); d.quit(); 1
+    } catch { case ex: Throwable => 0 }
+    val firefox = try {
+      val d = new FirefoxDriver(); d.quit(); 1
+    } catch { case ex: Throwable => 0 }
+    val internetExplorer = try {
+      val d = new InternetExplorerDriver; d.quit(); 1
+    } catch { case ex: Throwable => 0 }
+    val safari = try {
+      val d = new SafariDriver; d.quit(); 1
+    } catch { case ex: Throwable => 0 }
     val htmlUnit =
       try {
         val d = new HtmlUnitDriver()
@@ -55,11 +63,11 @@ class AllBrowsersPerSuiteBehaviorSpec extends WordSpec {
 
     "run all tests with different browsers available on the system one by one" in {
 
-      val expectedTestStartingCount = 11 // 5 * 2 + 1
+      val expectedTestStartingCount  = 11 // 5 * 2 + 1
       val expectedTestSucceededCount = availableBrowserCount * 2 + 1
-      val expectedTestCanceledCount = (5 - availableBrowserCount) * 2
+      val expectedTestCanceledCount  = (5 - availableBrowserCount) * 2
 
-      val rep = new EventRecordingReporter
+      val rep  = new EventRecordingReporter
       val spec = new TestSpec
       spec.run(None, Args(reporter = rep))
       val testStartingEventsReceived = rep.testStartingEventsReceived
@@ -83,11 +91,11 @@ class AllBrowsersPerSuiteBehaviorSpec extends WordSpec {
     }
 
     "run only chosen test when ChosenTest tag is passed in" in {
-      val expectedTestStartingCount = 6 // 5 + 1
+      val expectedTestStartingCount  = 6 // 5 + 1
       val expectedTestSucceededCount = availableBrowserCount + 1
-      val expectedTestCanceledCount = 5 - availableBrowserCount
+      val expectedTestCanceledCount  = 5 - availableBrowserCount
 
-      val rep = new EventRecordingReporter
+      val rep  = new EventRecordingReporter
       val spec = new TestSpec
       spec.run(None, Args(reporter = rep, filter = Filter.apply(Some(Set("ChosenTest")))))
       val testStartingEventsReceived = rep.testStartingEventsReceived
@@ -104,11 +112,11 @@ class AllBrowsersPerSuiteBehaviorSpec extends WordSpec {
     }
 
     "run only Firefox tests when Firefox tag is passed in" in {
-      val expectedTestStartingCount = 2
+      val expectedTestStartingCount  = 2
       val expectedTestSucceededCount = firefox * 2
-      val expectedTestCanceledCount = expectedTestStartingCount - expectedTestSucceededCount
+      val expectedTestCanceledCount  = expectedTestStartingCount - expectedTestSucceededCount
 
-      val rep = new EventRecordingReporter
+      val rep  = new EventRecordingReporter
       val spec = new TestSpec
       spec.run(None, Args(reporter = rep, filter = Filter.apply(Some(Set("org.scalatest.tags.FirefoxBrowser")))))
       val testStartingEventsReceived = rep.testStartingEventsReceived
@@ -121,11 +129,11 @@ class AllBrowsersPerSuiteBehaviorSpec extends WordSpec {
     }
 
     "run only Safari tests when Safari tag is passed in" in {
-      val expectedTestStartingCount = 2
+      val expectedTestStartingCount  = 2
       val expectedTestSucceededCount = safari * 2
-      val expectedTestCanceledCount = expectedTestStartingCount - expectedTestSucceededCount
+      val expectedTestCanceledCount  = expectedTestStartingCount - expectedTestSucceededCount
 
-      val rep = new EventRecordingReporter
+      val rep  = new EventRecordingReporter
       val spec = new TestSpec
       spec.run(None, Args(reporter = rep, filter = Filter.apply(Some(Set("org.scalatest.tags.SafariBrowser")))))
       val testStartingEventsReceived = rep.testStartingEventsReceived
@@ -138,13 +146,16 @@ class AllBrowsersPerSuiteBehaviorSpec extends WordSpec {
     }
 
     "run only InternetExplorer tests when InternetExplorer tag is passed in" in {
-      val expectedTestStartingCount = 2
+      val expectedTestStartingCount  = 2
       val expectedTestSucceededCount = internetExplorer * 2
-      val expectedTestCanceledCount = expectedTestStartingCount - expectedTestSucceededCount
+      val expectedTestCanceledCount  = expectedTestStartingCount - expectedTestSucceededCount
 
-      val rep = new EventRecordingReporter
+      val rep  = new EventRecordingReporter
       val spec = new TestSpec
-      spec.run(None, Args(reporter = rep, filter = Filter.apply(Some(Set("org.scalatest.tags.InternetExplorerBrowser")))))
+      spec.run(
+        None,
+        Args(reporter = rep, filter = Filter.apply(Some(Set("org.scalatest.tags.InternetExplorerBrowser"))))
+      )
       val testStartingEventsReceived = rep.testStartingEventsReceived
       assert(testStartingEventsReceived.length == expectedTestStartingCount)
       assert(rep.testSucceededEventsReceived.length == expectedTestSucceededCount)
@@ -155,11 +166,11 @@ class AllBrowsersPerSuiteBehaviorSpec extends WordSpec {
     }
 
     "run only Chrome tests when Chrome tag is passed in" in {
-      val expectedTestStartingCount = 2
+      val expectedTestStartingCount  = 2
       val expectedTestSucceededCount = chrome * 2
-      val expectedTestCanceledCount = expectedTestStartingCount - expectedTestSucceededCount
+      val expectedTestCanceledCount  = expectedTestStartingCount - expectedTestSucceededCount
 
-      val rep = new EventRecordingReporter
+      val rep  = new EventRecordingReporter
       val spec = new TestSpec
       spec.run(None, Args(reporter = rep, filter = Filter.apply(Some(Set("org.scalatest.tags.ChromeBrowser")))))
       val testStartingEventsReceived = rep.testStartingEventsReceived
@@ -172,11 +183,11 @@ class AllBrowsersPerSuiteBehaviorSpec extends WordSpec {
     }
 
     "run only HtmlUnit tests when HtmlUnit tag is passed in" in {
-      val expectedTestStartingCount = 2
+      val expectedTestStartingCount  = 2
       val expectedTestSucceededCount = htmlUnit * 2
-      val expectedTestCanceledCount = expectedTestStartingCount - expectedTestSucceededCount
+      val expectedTestCanceledCount  = expectedTestStartingCount - expectedTestSucceededCount
 
-      val rep = new EventRecordingReporter
+      val rep  = new EventRecordingReporter
       val spec = new TestSpec
       spec.run(None, Args(reporter = rep, filter = Filter.apply(Some(Set("org.scalatest.tags.HtmlUnitBrowser")))))
       val testStartingEventsReceived = rep.testStartingEventsReceived
@@ -189,13 +200,19 @@ class AllBrowsersPerSuiteBehaviorSpec extends WordSpec {
     }
 
     "run only Firefox and HtmlUnit tests when Firefox and HtmlUnit tag is passed in" in {
-      val expectedTestStartingCount = 4
+      val expectedTestStartingCount  = 4
       val expectedTestSucceededCount = (firefox + htmlUnit) * 2
-      val expectedTestCanceledCount = expectedTestStartingCount - expectedTestSucceededCount
+      val expectedTestCanceledCount  = expectedTestStartingCount - expectedTestSucceededCount
 
-      val rep = new EventRecordingReporter
+      val rep  = new EventRecordingReporter
       val spec = new TestSpec
-      spec.run(None, Args(reporter = rep, filter = Filter.apply(Some(Set("org.scalatest.tags.FirefoxBrowser", "org.scalatest.tags.HtmlUnitBrowser")))))
+      spec.run(
+        None,
+        Args(
+          reporter = rep,
+          filter = Filter.apply(Some(Set("org.scalatest.tags.FirefoxBrowser", "org.scalatest.tags.HtmlUnitBrowser")))
+        )
+      )
       val testStartingEventsReceived = rep.testStartingEventsReceived
       assert(testStartingEventsReceived.length == expectedTestStartingCount)
       assert(rep.testSucceededEventsReceived.length == expectedTestSucceededCount)
@@ -208,13 +225,16 @@ class AllBrowsersPerSuiteBehaviorSpec extends WordSpec {
     }
 
     "run only HtmlUnit and ChosenTest tests when HtmlUnit and ChosenTest tag is passed in" in {
-      val expectedTestStartingCount = 7 // HtmlUnit * 2 + 3 other browsers on test 2, + test 3
+      val expectedTestStartingCount  = 7 // HtmlUnit * 2 + 3 other browsers on test 2, + test 3
       val expectedTestSucceededCount = (htmlUnit * 2) + firefox + chrome + internetExplorer + safari + 1
-      val expectedTestCanceledCount = expectedTestStartingCount - expectedTestSucceededCount
+      val expectedTestCanceledCount  = expectedTestStartingCount - expectedTestSucceededCount
 
-      val rep = new EventRecordingReporter
+      val rep  = new EventRecordingReporter
       val spec = new TestSpec
-      spec.run(None, Args(reporter = rep, filter = Filter.apply(Some(Set("org.scalatest.tags.HtmlUnitBrowser", "ChosenTest")))))
+      spec.run(
+        None,
+        Args(reporter = rep, filter = Filter.apply(Some(Set("org.scalatest.tags.HtmlUnitBrowser", "ChosenTest"))))
+      )
       val testStartingEventsReceived = rep.testStartingEventsReceived
       assert(testStartingEventsReceived.length == expectedTestStartingCount)
       assert(rep.testSucceededEventsReceived.length == expectedTestSucceededCount)
@@ -230,11 +250,11 @@ class AllBrowsersPerSuiteBehaviorSpec extends WordSpec {
     }
 
     "run no test when unrelated tag is passed in" in {
-      val expectedTestStartingCount = 0
+      val expectedTestStartingCount  = 0
       val expectedTestSucceededCount = 0
-      val expectedTestCanceledCount = 0
+      val expectedTestCanceledCount  = 0
 
-      val rep = new EventRecordingReporter
+      val rep  = new EventRecordingReporter
       val spec = new TestSpec
       spec.run(None, Args(reporter = rep, filter = Filter.apply(Some(Set("NoTest")))))
       val testStartingEventsReceived = rep.testStartingEventsReceived
@@ -246,15 +266,14 @@ class AllBrowsersPerSuiteBehaviorSpec extends WordSpec {
     "run only Firefox and non-browser tests when browsers is overridden to include FirefoxInfo only" in {
       class FirefoxTestSpec extends TestSpec {
         override lazy val browsers: IndexedSeq[BrowserInfo] =
-          Vector(
-            FirefoxInfo(firefoxProfile))
+          Vector(FirefoxInfo(firefoxProfile))
       }
 
-      val expectedTestStartingCount = 3
+      val expectedTestStartingCount  = 3
       val expectedTestSucceededCount = firefox * 2 + 1
-      val expectedTestCanceledCount = expectedTestStartingCount - expectedTestSucceededCount
+      val expectedTestCanceledCount  = expectedTestStartingCount - expectedTestSucceededCount
 
-      val rep = new EventRecordingReporter
+      val rep  = new EventRecordingReporter
       val spec = new FirefoxTestSpec
       spec.run(None, Args(reporter = rep))
       val testStartingEventsReceived = rep.testStartingEventsReceived
@@ -271,15 +290,14 @@ class AllBrowsersPerSuiteBehaviorSpec extends WordSpec {
     "run only Safari and non-browser tests when browsers is overridden to include SafariInfo only" in {
       class SafariTestSpec extends TestSpec {
         override lazy val browsers: IndexedSeq[BrowserInfo] =
-          Vector(
-            SafariInfo)
+          Vector(SafariInfo)
       }
 
-      val expectedTestStartingCount = 3
+      val expectedTestStartingCount  = 3
       val expectedTestSucceededCount = safari * 2 + 1
-      val expectedTestCanceledCount = expectedTestStartingCount - expectedTestSucceededCount
+      val expectedTestCanceledCount  = expectedTestStartingCount - expectedTestSucceededCount
 
-      val rep = new EventRecordingReporter
+      val rep  = new EventRecordingReporter
       val spec = new SafariTestSpec
       spec.run(None, Args(reporter = rep))
       val testStartingEventsReceived = rep.testStartingEventsReceived
@@ -295,15 +313,14 @@ class AllBrowsersPerSuiteBehaviorSpec extends WordSpec {
     "run only InternetExplorer and non-browser tests when browsers is overridden to include InternetExplorerInfo only" in {
       class InternetExplorerTestSpec extends TestSpec {
         override lazy val browsers: IndexedSeq[BrowserInfo] =
-          Vector(
-            InternetExplorerInfo)
+          Vector(InternetExplorerInfo)
       }
 
-      val expectedTestStartingCount = 3
+      val expectedTestStartingCount  = 3
       val expectedTestSucceededCount = internetExplorer * 2 + 1
-      val expectedTestCanceledCount = expectedTestStartingCount - expectedTestSucceededCount
+      val expectedTestCanceledCount  = expectedTestStartingCount - expectedTestSucceededCount
 
-      val rep = new EventRecordingReporter
+      val rep  = new EventRecordingReporter
       val spec = new InternetExplorerTestSpec
       spec.run(None, Args(reporter = rep))
       val testStartingEventsReceived = rep.testStartingEventsReceived
@@ -319,15 +336,14 @@ class AllBrowsersPerSuiteBehaviorSpec extends WordSpec {
     "run only Chrome and non-browser tests when browsers is overridden to include ChromeInfo only" in {
       class ChromeTestSpec extends TestSpec {
         override lazy val browsers: IndexedSeq[BrowserInfo] =
-          Vector(
-            ChromeInfo())
+          Vector(ChromeInfo())
       }
 
-      val expectedTestStartingCount = 3
+      val expectedTestStartingCount  = 3
       val expectedTestSucceededCount = chrome * 2 + 1
-      val expectedTestCanceledCount = expectedTestStartingCount - expectedTestSucceededCount
+      val expectedTestCanceledCount  = expectedTestStartingCount - expectedTestSucceededCount
 
-      val rep = new EventRecordingReporter
+      val rep  = new EventRecordingReporter
       val spec = new ChromeTestSpec
       spec.run(None, Args(reporter = rep))
       val testStartingEventsReceived = rep.testStartingEventsReceived
@@ -343,15 +359,14 @@ class AllBrowsersPerSuiteBehaviorSpec extends WordSpec {
     "run only HtmlUnit and non-browser tests when browsers is overridden to include HtmlUnitInfo only" in {
       class HtmlUnitTestSpec extends TestSpec {
         override lazy val browsers: IndexedSeq[BrowserInfo] =
-          Vector(
-            HtmlUnitInfo(true))
+          Vector(HtmlUnitInfo(true))
       }
 
-      val expectedTestStartingCount = 3
+      val expectedTestStartingCount  = 3
       val expectedTestSucceededCount = htmlUnit * 2 + 1
-      val expectedTestCanceledCount = expectedTestStartingCount - expectedTestSucceededCount
+      val expectedTestCanceledCount  = expectedTestStartingCount - expectedTestSucceededCount
 
-      val rep = new EventRecordingReporter
+      val rep  = new EventRecordingReporter
       val spec = new HtmlUnitTestSpec
       spec.run(None, Args(reporter = rep))
       val testStartingEventsReceived = rep.testStartingEventsReceived
@@ -365,4 +380,3 @@ class AllBrowsersPerSuiteBehaviorSpec extends WordSpec {
     }
   }
 }
-

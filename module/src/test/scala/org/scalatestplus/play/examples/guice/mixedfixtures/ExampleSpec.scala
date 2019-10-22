@@ -71,7 +71,7 @@ class ExampleSpec extends MixedPlaySpec {
     "provide a web driver" in new HtmlUnit(buildApp()) {
       go to ("http://localhost:" + port + "/testing")
       pageTitle mustBe "Test Page"
-      click on find(name("b")).value
+      click.on(find(name("b")).value)
       eventually { pageTitle mustBe "scalatest" }
     }
   }
@@ -92,7 +92,7 @@ class ExampleSpec extends MixedPlaySpec {
     "provide a web driver" in new Firefox(buildApp()) {
       go to ("http://localhost:" + port + "/testing")
       pageTitle mustBe "Test Page"
-      click on find(name("b")).value
+      click.on(find(name("b")).value)
       eventually { pageTitle mustBe "scalatest" }
     }
   }
@@ -113,7 +113,7 @@ class ExampleSpec extends MixedPlaySpec {
     "provide a web driver" in new Safari(buildApp()) {
       go to ("http://localhost:" + port + "/testing")
       pageTitle mustBe "Test Page"
-      click on find(name("b")).value
+      click.on(find(name("b")).value)
       eventually { pageTitle mustBe "scalatest" }
     }
   }
@@ -134,7 +134,7 @@ class ExampleSpec extends MixedPlaySpec {
     "provide a web driver" in new Chrome(buildApp()) {
       go to ("http://localhost:" + port + "/testing")
       pageTitle mustBe "Test Page"
-      click on find(name("b")).value
+      click.on(find(name("b")).value)
       eventually { pageTitle mustBe "scalatest" }
     }
   }
@@ -155,7 +155,7 @@ class ExampleSpec extends MixedPlaySpec {
     "provide a web driver" in new InternetExplorer(buildApp()) {
       go to ("http://localhost:" + port + "/testing")
       pageTitle mustBe "Test Page"
-      click on find(name("b")).value
+      click.on(find(name("b")).value)
       eventually { pageTitle mustBe "scalatest" }
     }
   }
@@ -165,4 +165,3 @@ class ExampleSpec extends MixedPlaySpec {
     }
   }
 }
-

@@ -87,7 +87,8 @@ import org.scalatestplus.selenium.WebBrowser
  * }
  * </pre>
  */
-trait ConfiguredBrowser extends TestSuiteMixin with WebBrowser with Eventually with IntegrationPatience { this: TestSuite with ServerProvider =>
+trait ConfiguredBrowser extends TestSuiteMixin with WebBrowser with Eventually with IntegrationPatience {
+  this: TestSuite with ServerProvider =>
 
   private var configuredWebDriver: WebDriver = UninitializedDriver
 
@@ -117,9 +118,11 @@ trait ConfiguredBrowser extends TestSuiteMixin with WebBrowser with Eventually w
   abstract override def run(testName: Option[String], args: Args): Status = {
     args.configMap.getOptional[WebDriver]("org.scalatestplus.play.webDriver") match {
       case Some(cwd) => synchronized { configuredWebDriver = cwd }
-      case None => throw new Exception("ConfiguredBrowser needs a WebDriver value associated with key \"org.scalatestplus.play.webDriver\" in the config map. Did you forget to annotate a nested suite with @DoNotDiscover?")
+      case None =>
+        throw new Exception(
+          "ConfiguredBrowser needs a WebDriver value associated with key \"org.scalatestplus.play.webDriver\" in the config map. Did you forget to annotate a nested suite with @DoNotDiscover?"
+        )
     }
     super.run(testName, args)
   }
 }
-

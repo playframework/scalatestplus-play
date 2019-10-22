@@ -54,7 +54,7 @@ abstract class MultiBrowserExampleSpec extends PlaySpec with GuiceOneServerPerSu
     "provide a web driver" in {
       go to ("http://localhost:" + port + "/testing")
       pageTitle mustBe "Test Page"
-      click on find(name("b")).value
+      click.on(find(name("b")).value)
       eventually { pageTitle mustBe "scalatest" }
     }
   }
@@ -62,9 +62,8 @@ abstract class MultiBrowserExampleSpec extends PlaySpec with GuiceOneServerPerSu
 
 // Then make a subclass that mixes in the factory for each
 // Selenium driver you want to test with.
-@FirefoxBrowser class FirefoxExampleSpec extends MultiBrowserExampleSpec with FirefoxFactory
-@SafariBrowser class SafariExampleSpec extends MultiBrowserExampleSpec with SafariFactory
+@FirefoxBrowser class FirefoxExampleSpec                   extends MultiBrowserExampleSpec with FirefoxFactory
+@SafariBrowser class SafariExampleSpec                     extends MultiBrowserExampleSpec with SafariFactory
 @InternetExplorerBrowser class InternetExplorerExampleSpec extends MultiBrowserExampleSpec with InternetExplorerFactory
-@ChromeBrowser class ChromeExampleSpec extends MultiBrowserExampleSpec with ChromeFactory
-@HtmlUnitBrowser class HtmlUnitExampleSpec extends MultiBrowserExampleSpec with HtmlUnitFactory
-
+@ChromeBrowser class ChromeExampleSpec                     extends MultiBrowserExampleSpec with ChromeFactory
+@HtmlUnitBrowser class HtmlUnitExampleSpec                 extends MultiBrowserExampleSpec with HtmlUnitFactory

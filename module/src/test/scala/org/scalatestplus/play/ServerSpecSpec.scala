@@ -46,4 +46,3 @@ class ServerSpecSpec extends ServerSpec {
     }
   }
 }
-

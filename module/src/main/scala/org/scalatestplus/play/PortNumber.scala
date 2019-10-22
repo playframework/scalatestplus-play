@@ -28,4 +28,3 @@ package org.scalatestplus.play
  * @param the port number of a provided `play.api.test.TestServer`
  */
 case class PortNumber(value: Int)
-

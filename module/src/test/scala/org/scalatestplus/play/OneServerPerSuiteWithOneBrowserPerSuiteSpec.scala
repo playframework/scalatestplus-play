@@ -21,7 +21,11 @@ import org.openqa.selenium.WebDriver
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.inject.guice._
 
-class OneServerPerSuiteWithOneBrowserPerSuiteSpec extends UnitSpec with GuiceOneServerPerSuite with OneBrowserPerSuite with FirefoxFactory {
+class OneServerPerSuiteWithOneBrowserPerSuiteSpec
+    extends UnitSpec
+    with GuiceOneServerPerSuite
+    with OneBrowserPerSuite
+    with FirefoxFactory {
 
   override def fakeApplication(): Application = {
     GuiceApplicationBuilder()
@@ -60,7 +64,7 @@ class OneServerPerSuiteWithOneBrowserPerSuiteSpec extends UnitSpec with GuiceOne
     }
     "put the app in the configMap" in {
       val configuredApp = configMap.getOptional[Application]("org.scalatestplus.play.app")
-      configuredApp.value must be theSameInstanceAs app
+      (configuredApp.value must be).theSameInstanceAs(app)
     }
     "put the port in the configMap" in {
       val configuredPort = configMap.getOptional[Int]("org.scalatestplus.play.port")
@@ -73,9 +77,8 @@ class OneServerPerSuiteWithOneBrowserPerSuiteSpec extends UnitSpec with GuiceOne
     "provide a web driver" in {
       go to ("http://localhost:" + port + "/testing")
       pageTitle mustBe "Test Page"
-      click on find(name("b")).value
+      click.on(find(name("b")).value)
       eventually { pageTitle mustBe "scalatest" }
     }
   }
 }
-

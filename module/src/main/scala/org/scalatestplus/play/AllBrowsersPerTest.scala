@@ -182,7 +182,8 @@ import org.scalatestplus.selenium.WebBrowser
  * [info] <span class="stGreen">The AllBrowsersPerTest trait</span>
  * </pre>
  */
-trait AllBrowsersPerTest extends TestSuiteMixin with WebBrowser with Eventually with IntegrationPatience { this: TestSuite with ServerProvider =>
+trait AllBrowsersPerTest extends TestSuiteMixin with WebBrowser with Eventually with IntegrationPatience {
+  this: TestSuite with ServerProvider =>
 
   /**
    * Method to provide `FirefoxProfile` for creating `FirefoxDriver`, you can override this method to
@@ -196,12 +197,7 @@ trait AllBrowsersPerTest extends TestSuiteMixin with WebBrowser with Eventually 
    * Info for available browsers. Override to add in custom `BrowserInfo` implementations.
    */
   protected lazy val browsers: IndexedSeq[BrowserInfo] =
-    Vector(
-      FirefoxInfo(firefoxProfile),
-      SafariInfo,
-      InternetExplorerInfo,
-      ChromeInfo(),
-      HtmlUnitInfo(true))
+    Vector(FirefoxInfo(firefoxProfile), SafariInfo, InternetExplorerInfo, ChromeInfo(), HtmlUnitInfo(true))
 
   private var privateWebDriver: WebDriver = UninitializedDriver
 
@@ -251,14 +247,17 @@ trait AllBrowsersPerTest extends TestSuiteMixin with WebBrowser with Eventually 
   abstract override def tags: Map[String, Set[String]] = {
 
     def mergeMap[A, B](ms: List[Map[A, B]])(f: (B, B) => B): Map[A, B] =
-      (for (m <- ms; kv <- m) yield kv).foldLeft(Map.empty[A, B]) { (a, kv) =>
+      (for {
+        m  <- ms
+        kv <- m
+      } yield kv).foldLeft(Map.empty[A, B]) { (a, kv) =>
         a + (if (a.contains(kv._1)) kv._1 -> f(a(kv._1), kv._2) else kv)
       }
 
     val generatedBrowserTags: Map[String, Set[String]] = Map.empty ++ testNames.map { tn =>
       browsers.find(b => tn.endsWith(b.name)) match {
         case Some(b) => (tn, Set(b.tagName))
-        case None => (tn, Set.empty[String])
+        case None    => (tn, Set.empty[String])
       }
     }
     mergeMap(List(super.tags, generatedBrowserTags.filter(_._2.nonEmpty))) {
@@ -285,13 +284,13 @@ trait AllBrowsersPerTest extends TestSuiteMixin with WebBrowser with Eventually 
     val localWebDriver: WebDriver =
       browsers.find(b => test.name.endsWith(b.name)) match {
         case Some(b) => b.createWebDriver()
-        case None => UnneededDriver
+        case None    => UnneededDriver
       }
     localWebDriver match {
       case UnavailableDriver(ex, errorMessage) =>
         ex match {
           case Some(e) => Canceled(errorMessage, e)
-          case None => Canceled(errorMessage)
+          case None    => Canceled(errorMessage)
         }
       case _ =>
         synchronized {
@@ -301,10 +300,9 @@ trait AllBrowsersPerTest extends TestSuiteMixin with WebBrowser with Eventually 
         finally {
           localWebDriver match {
             case _: GrumpyDriver => // do nothing
-            case otherDriver => otherDriver.quit()
+            case otherDriver     => otherDriver.quit()
           }
         }
     }
   }
 }
-

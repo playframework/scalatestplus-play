@@ -39,7 +39,7 @@ trait ServerProvider {
    */
   implicit def app: Application
 
-  implicit protected def runningServer: RunningServer
+  protected implicit def runningServer: RunningServer
 
   /**
    * The port used by the `TestServer`.
@@ -60,4 +60,3 @@ trait ServerProvider {
     PortNumber(port)
   }
 }
-

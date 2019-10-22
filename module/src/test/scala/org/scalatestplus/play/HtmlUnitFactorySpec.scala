@@ -60,7 +60,7 @@ class HtmlUnitFactorySpec extends UnitSpec with GuiceOneServerPerSuite with OneB
     }
     "put the app in the configMap" in {
       val configuredApp = configMap.getOptional[Application]("org.scalatestplus.play.app")
-      configuredApp.value must be theSameInstanceAs app
+      (configuredApp.value must be).theSameInstanceAs(app)
     }
     "put the port in the configMap" in {
       val configuredPort = configMap.getOptional[Int]("org.scalatestplus.play.port")
@@ -73,9 +73,8 @@ class HtmlUnitFactorySpec extends UnitSpec with GuiceOneServerPerSuite with OneB
     "provide a web driver" in {
       go to ("http://localhost:" + port + "/testing")
       pageTitle mustBe "Test Page"
-      click on find(name("b")).value
+      click.on(find(name("b")).value)
       eventually { pageTitle mustBe "scalatest" }
     }
   }
 }
-

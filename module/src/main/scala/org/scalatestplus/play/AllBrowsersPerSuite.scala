@@ -16,12 +16,18 @@
 package org.scalatestplus.play
 
 import org.openqa.selenium.WebDriver
-import org.openqa.selenium.chrome.{ ChromeDriverService, ChromeOptions }
-import org.openqa.selenium.firefox.{ FirefoxOptions, FirefoxProfile }
+import org.openqa.selenium.chrome.ChromeDriverService
+import org.openqa.selenium.chrome.ChromeOptions
+import org.openqa.selenium.firefox.FirefoxOptions
+import org.openqa.selenium.firefox.FirefoxProfile
 import org.scalatest._
-import org.scalatest.concurrent.{ Eventually, IntegrationPatience }
+import org.scalatest.concurrent.Eventually
+import org.scalatest.concurrent.IntegrationPatience
 import org.scalatestplus.selenium.WebBrowser
-import org.scalatestplus.play.BrowserFactory.{ GrumpyDriver, UnavailableDriver, UninitializedDriver, UnneededDriver }
+import org.scalatestplus.play.BrowserFactory.GrumpyDriver
+import org.scalatestplus.play.BrowserFactory.UnavailableDriver
+import org.scalatestplus.play.BrowserFactory.UninitializedDriver
+import org.scalatestplus.play.BrowserFactory.UnneededDriver
 
 /**
  * Trait that uses a [[http://doc.scalatest.org/3.0.1/index.html#org.scalatest.FlatSpec@sharedTests ''shared test'']] approach to enable
@@ -179,7 +185,8 @@ import org.scalatestplus.play.BrowserFactory.{ GrumpyDriver, UnavailableDriver, 
  * [info] <span class="stGreen">The AllBrowsersPerSuite trait</span>
  * </pre>
  */
-trait AllBrowsersPerSuite extends TestSuiteMixin with WebBrowser with Eventually with IntegrationPatience { this: TestSuite with ServerProvider =>
+trait AllBrowsersPerSuite extends TestSuiteMixin with WebBrowser with Eventually with IntegrationPatience {
+  this: TestSuite with ServerProvider =>
 
   /**
    * Method to provide `FirefoxProfile` for creating `FirefoxDriver`, you can override this method to
@@ -222,7 +229,8 @@ trait AllBrowsersPerSuite extends TestSuiteMixin with WebBrowser with Eventually
       SafariInfo,
       InternetExplorerInfo,
       ChromeInfo(chromeDriverService, chromeOptions),
-      HtmlUnitInfo(true))
+      HtmlUnitInfo(true)
+    )
 
   private var privateWebDriver: WebDriver = UninitializedDriver
 
@@ -274,14 +282,17 @@ trait AllBrowsersPerSuite extends TestSuiteMixin with WebBrowser with Eventually
   abstract override def tags: Map[String, Set[String]] = {
 
     def mergeMap[A, B](ms: List[Map[A, B]])(f: (B, B) => B): Map[A, B] =
-      (for (m <- ms; kv <- m) yield kv).foldLeft(Map.empty[A, B]) { (a, kv) =>
+      (for {
+        m  <- ms
+        kv <- m
+      } yield kv).foldLeft(Map.empty[A, B]) { (a, kv) =>
         a + (if (a.contains(kv._1)) kv._1 -> f(a(kv._1), kv._2) else kv)
       }
 
     val generatedBrowserTags: Map[String, Set[String]] = Map.empty ++ testNames.map { tn =>
       browsers.find(b => tn.endsWith(b.name)) match {
         case Some(b) => (tn, Set(b.tagName))
-        case None => (tn, Set.empty[String])
+        case None    => (tn, Set.empty[String])
       }
     }
     mergeMap(List(super.tags, generatedBrowserTags.filter(_._2.nonEmpty))) {
@@ -293,7 +304,7 @@ trait AllBrowsersPerSuite extends TestSuiteMixin with WebBrowser with Eventually
   private def closeWebDriverIfNecessary(): Unit = {
     webDriver match {
       case _: GrumpyDriver => // do nothing
-      case otherDriver => otherDriver.quit()
+      case otherDriver     => otherDriver.quit()
     }
   }
 
@@ -335,7 +346,8 @@ trait AllBrowsersPerSuite extends TestSuiteMixin with WebBrowser with Eventually
               closeWebDriverIfNecessary()
               b.createWebDriver()
             },
-            Some(b.name))
+            Some(b.name)
+          )
         case None =>
           closeWebDriverIfNecessary()
           (UnneededDriver, None)
@@ -348,7 +360,7 @@ trait AllBrowsersPerSuite extends TestSuiteMixin with WebBrowser with Eventually
       case UnavailableDriver(ex, errorMessage) =>
         ex match {
           case Some(e) => Canceled(errorMessage, e)
-          case None => Canceled(errorMessage)
+          case None    => Canceled(errorMessage)
         }
       case _ => super.withFixture(test)
     }
@@ -369,4 +381,3 @@ trait AllBrowsersPerSuite extends TestSuiteMixin with WebBrowser with Eventually
     finally closeWebDriverIfNecessary()
   }
 }
-

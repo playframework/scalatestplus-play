@@ -171,7 +171,8 @@ object BrowserFactory {
    * the `UnsupportedOperationException` thrown by the methods of the Null Object we provide carries a user-friendly error message.
    */
   case object UnneededDriver extends GrumpyDriver {
-    protected def complain(): Nothing = throw new UnsupportedOperationException(Resources("webDriverUsedFromUnsharedTest"))
+    protected def complain(): Nothing =
+      throw new UnsupportedOperationException(Resources("webDriverUsedFromUnsharedTest"))
   }
 
   /**

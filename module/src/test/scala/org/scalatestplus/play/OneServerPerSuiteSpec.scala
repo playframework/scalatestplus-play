@@ -56,7 +56,7 @@ class OneServerPerSuiteSpec extends UnitSpec with GuiceOneServerPerSuite {
     }
     "put the app in the configMap" in {
       val configuredApp = configMap.getOptional[Application]("org.scalatestplus.play.app")
-      configuredApp.value must be theSameInstanceAs app
+      (configuredApp.value must be).theSameInstanceAs(app)
     }
     "put the port in the configMap" in {
       val configuredPort = configMap.getOptional[Int]("org.scalatestplus.play.port")
@@ -64,4 +64,3 @@ class OneServerPerSuiteSpec extends UnitSpec with GuiceOneServerPerSuite {
     }
   }
 }
-

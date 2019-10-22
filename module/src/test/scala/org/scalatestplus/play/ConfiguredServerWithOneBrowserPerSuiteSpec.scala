@@ -21,8 +21,10 @@ import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.Application
 import play.api.inject.guice._
 
-class ConfiguredServerWithOneBrowserPerSuiteSpec extends Suites(
-  new ConfiguredServerWithOneBrowserPerSuiteNestedSpec) with GuiceOneServerPerSuite with TestSuite {
+class ConfiguredServerWithOneBrowserPerSuiteSpec
+    extends Suites(new ConfiguredServerWithOneBrowserPerSuiteNestedSpec)
+    with GuiceOneServerPerSuite
+    with TestSuite {
   override def fakeApplication(): Application = {
     GuiceApplicationBuilder()
       .configure("foo" -> "bar")
@@ -32,7 +34,11 @@ class ConfiguredServerWithOneBrowserPerSuiteSpec extends Suites(
 }
 
 @DoNotDiscover
-class ConfiguredServerWithOneBrowserPerSuiteNestedSpec extends UnitSpec with ConfiguredServer with OneBrowserPerSuite with FirefoxFactory {
+class ConfiguredServerWithOneBrowserPerSuiteNestedSpec
+    extends UnitSpec
+    with ConfiguredServer
+    with OneBrowserPerSuite
+    with FirefoxFactory {
 
   def getConfig(key: String)(implicit app: Application): Option[String] = app.configuration.getOptional[String](key)
 
@@ -64,7 +70,7 @@ class ConfiguredServerWithOneBrowserPerSuiteNestedSpec extends UnitSpec with Con
     }
     "put the app in the configMap" in {
       val configuredApp = configMap.getOptional[Application]("org.scalatestplus.play.app")
-      configuredApp.value must be theSameInstanceAs app
+      (configuredApp.value must be).theSameInstanceAs(app)
     }
     "put the port in the configMap" in {
       val configuredPort = configMap.getOptional[Int]("org.scalatestplus.play.port")
@@ -77,9 +83,8 @@ class ConfiguredServerWithOneBrowserPerSuiteNestedSpec extends UnitSpec with Con
     "provide a web driver" in {
       go to ("http://localhost:" + port + "/testing")
       pageTitle mustBe "Test Page"
-      click on find(name("b")).value
+      click.on(find(name("b")).value)
       eventually { pageTitle mustBe "scalatest" }
     }
   }
 }
-

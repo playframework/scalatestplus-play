@@ -9,7 +9,8 @@ import org.scalatestplus.play.examples.components.SomeAppComponents
 import play.api._
 import play.api.mvc.Result
 import play.api.test.Helpers._
-import play.api.test.{ FakeRequest, Helpers }
+import play.api.test.FakeRequest
+import play.api.test.Helpers
 
 import scala.concurrent.Future
 
@@ -19,10 +20,10 @@ class ExamplePreDefinedSpec extends PlaySpec with OneAppPerTestWithComponents {
 
   "The OneAppPerTestWithComponents trait" must {
     "provide an Application" in {
-      import play.api.test.Helpers.{ GET, route }
+      import play.api.test.Helpers.GET
+      import play.api.test.Helpers.route
       val Some(result: Future[Result]) = route(app, FakeRequest(GET, "/"))
       Helpers.contentAsString(result) must be("success!")
     }
   }
 }
-

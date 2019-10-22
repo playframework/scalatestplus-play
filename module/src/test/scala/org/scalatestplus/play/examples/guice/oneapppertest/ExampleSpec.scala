@@ -38,4 +38,3 @@ class ExampleSpec extends PlaySpec with GuiceOneAppPerTest {
     }
   }
 }
-

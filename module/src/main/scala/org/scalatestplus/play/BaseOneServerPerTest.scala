@@ -75,7 +75,7 @@ import org.scalatest._
  */
 trait BaseOneServerPerTest extends TestSuiteMixin with ServerProvider { this: TestSuite with FakeApplicationFactory =>
 
-  @volatile private var privateApp: Application = _
+  @volatile private var privateApp: Application      = _
   @volatile private var privateServer: RunningServer = _
 
   private[this] val lock = new Object()
@@ -83,15 +83,19 @@ trait BaseOneServerPerTest extends TestSuiteMixin with ServerProvider { this: Te
   /**
    * Implicit method that returns the `Application` instance for the current test.
    */
-  implicit final def app: Application = {
+  final implicit def app: Application = {
     val a = privateApp
-    if (a == null) { throw new IllegalStateException("Test isn't running yet so application is not available") }
+    if (a == null) {
+      throw new IllegalStateException("Test isn't running yet so application is not available")
+    }
     a
   }
 
-  implicit final def runningServer: RunningServer = {
+  final implicit def runningServer: RunningServer = {
     val rs = privateServer
-    if (rs == null) { throw new IllegalStateException("Test isn't running yet so the server endpoints are not available") }
+    if (rs == null) {
+      throw new IllegalStateException("Test isn't running yet so the server endpoints are not available")
+    }
     privateServer
   }
 
@@ -118,7 +122,8 @@ trait BaseOneServerPerTest extends TestSuiteMixin with ServerProvider { this: Te
     lock.synchronized {
       privateApp = newAppForTest(test)
       privateServer = newServerForTest(app, test)
-      try super.withFixture(test) finally {
+      try super.withFixture(test)
+      finally {
         val rs = privateServer // Store before nulling fields
         privateApp = null
         privateServer = null
@@ -128,4 +133,3 @@ trait BaseOneServerPerTest extends TestSuiteMixin with ServerProvider { this: Te
     }
   }
 }
-

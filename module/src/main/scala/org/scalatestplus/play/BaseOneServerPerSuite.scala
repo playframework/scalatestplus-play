@@ -141,7 +141,7 @@ trait BaseOneServerPerSuite extends TestSuiteMixin with ServerProvider { this: T
    */
   implicit lazy val app: Application = fakeApplication()
 
-  implicit protected lazy val runningServer: RunningServer =
+  protected implicit lazy val runningServer: RunningServer =
     DefaultTestServerFactory.start(app)
 
   /**
@@ -159,9 +159,11 @@ trait BaseOneServerPerSuite extends TestSuiteMixin with ServerProvider { this: T
   abstract override def run(testName: Option[String], args: Args): Status = {
     try {
       val newConfigMap = args.configMap + ("org.scalatestplus.play.app" -> app) + ("org.scalatestplus.play.port" -> port)
-      val newArgs = args.copy(configMap = newConfigMap)
-      val status = super.run(testName, newArgs)
-      status.whenCompleted { _ => runningServer.stopServer.close() }
+      val newArgs      = args.copy(configMap = newConfigMap)
+      val status       = super.run(testName, newArgs)
+      status.whenCompleted { _ =>
+        runningServer.stopServer.close()
+      }
       status
     } catch { // In case the suite aborts, ensure the server is stopped
       case ex: Throwable =>
@@ -170,4 +172,3 @@ trait BaseOneServerPerSuite extends TestSuiteMixin with ServerProvider { this: T
     }
   }
 }
-

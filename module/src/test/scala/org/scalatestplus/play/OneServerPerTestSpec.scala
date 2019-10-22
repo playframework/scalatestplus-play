@@ -47,4 +47,3 @@ class OneServerPerTestSpec extends UnitSpec with GuiceOneServerPerTest {
     }
   }
 }
-

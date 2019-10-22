@@ -20,7 +20,8 @@ import org.scalatestplus.play.components.OneServerPerSuiteWithComponents
 import play.api._
 import play.api.mvc.Result
 import play.api.test.Helpers._
-import play.api.test.{ FakeRequest, Helpers }
+import play.api.test.FakeRequest
+import play.api.test.Helpers
 
 import scala.concurrent.Future
 
@@ -33,9 +34,10 @@ class OneServerPerSuiteComponentSpec extends UnitSpec with OneServerPerSuiteWith
     import play.api.routing.sird._
 
     lazy val router: Router = Router.from({
-      case GET(p"/") => defaultActionBuilder {
-        Results.Ok("success!")
-      }
+      case GET(p"/") =>
+        defaultActionBuilder {
+          Results.Ok("success!")
+        }
     })
 
     override lazy val configuration: Configuration = context.initialConfiguration ++ Configuration("foo" -> "bar")
@@ -53,7 +55,8 @@ class OneServerPerSuiteComponentSpec extends UnitSpec with OneServerPerSuiteWith
 
   "The OneServerPerSuiteWithComponents trait" must {
     "provide an Application" in {
-      import play.api.test.Helpers.{ GET, route }
+      import play.api.test.Helpers.GET
+      import play.api.test.Helpers.route
       val Some(result: Future[Result]) = route(app, FakeRequest(GET, "/"))
       Helpers.contentAsString(result) must be("success!")
     }
@@ -72,7 +75,7 @@ class OneServerPerSuiteComponentSpec extends UnitSpec with OneServerPerSuiteWith
     }
     "put the app in the configMap" in {
       val configuredApp = configMap.getOptional[Application]("org.scalatestplus.play.app")
-      configuredApp.value must be theSameInstanceAs app
+      (configuredApp.value must be).theSameInstanceAs(app)
     }
     "put the port in the configMap" in {
       val configuredPort = configMap.getOptional[Int]("org.scalatestplus.play.port")
@@ -80,4 +83,3 @@ class OneServerPerSuiteComponentSpec extends UnitSpec with OneServerPerSuiteWith
     }
   }
 }
-

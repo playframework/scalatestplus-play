@@ -17,25 +17,32 @@ package org.scalatestplus.play
 
 import java.util.concurrent.TimeoutException
 
-import org.scalatest.{ FlatSpec, MustMatchers }
+import org.scalatest.FlatSpec
+import org.scalatest.MustMatchers
 import org.scalatestplus.play.components.OneServerPerTestWithComponents
 import play.api.mvc.Results
 import play.api.routing.Router
-import play.api.{ BuiltInComponents, BuiltInComponentsFromContext, NoHttpFiltersComponents }
+import play.api.BuiltInComponents
+import play.api.BuiltInComponentsFromContext
+import play.api.NoHttpFiltersComponents
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
-import scala.concurrent.{ Await, Future }
+import scala.concurrent.Await
+import scala.concurrent.Future
 
-class OneServerPerTestComponentSynchronizationSpec extends FlatSpec with MustMatchers
-  with OneServerPerTestWithComponents {
+class OneServerPerTestComponentSynchronizationSpec
+    extends FlatSpec
+    with MustMatchers
+    with OneServerPerTestWithComponents {
 
   override def components: BuiltInComponents = new BuiltInComponentsFromContext(context) with NoHttpFiltersComponents {
 
     lazy val router: Router = Router.from({
-      case _ => defaultActionBuilder {
-        Results.Ok("success!")
-      }
+      case _ =>
+        defaultActionBuilder {
+          Results.Ok("success!")
+        }
     })
 
   }
@@ -57,4 +64,3 @@ class OneServerPerTestComponentSynchronizationSpec extends FlatSpec with MustMat
   }
 
 }
-

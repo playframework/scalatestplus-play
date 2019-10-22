@@ -21,6 +21,5 @@ import org.scalatestplus.play.guice.GuiceOneAppPerTest
 
 /*
  * Play-Test super-suite that provides a new fake App to each test.
-*/
+ */
 abstract class AppSpec extends WordSpec with MustMatchers with OptionValues with Inside with GuiceOneAppPerTest
-

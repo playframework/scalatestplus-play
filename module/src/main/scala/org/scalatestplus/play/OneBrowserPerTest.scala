@@ -90,7 +90,12 @@ import org.scalatestplus.selenium.WebBrowser
  * }
  * </pre>
  */
-trait OneBrowserPerTest extends TestSuiteMixin with WebBrowser with Eventually with IntegrationPatience with BrowserFactory { this: TestSuite with ServerProvider =>
+trait OneBrowserPerTest
+    extends TestSuiteMixin
+    with WebBrowser
+    with Eventually
+    with IntegrationPatience
+    with BrowserFactory { this: TestSuite with ServerProvider =>
 
   private var privateWebDriver: WebDriver = UninitializedDriver
 
@@ -117,16 +122,15 @@ trait OneBrowserPerTest extends TestSuiteMixin with WebBrowser with Eventually w
         case UnavailableDriver(ex, errorMessage) =>
           ex match {
             case Some(e) => cancel(errorMessage, e)
-            case None => cancel(errorMessage)
+            case None    => cancel(errorMessage)
           }
         case _ => super.withFixture(test)
       }
     } finally {
       privateWebDriver match {
         case _: UnavailableDriver => // do nothing
-        case _ => privateWebDriver.quit()
+        case _                    => privateWebDriver.quit()
       }
     }
   }
 }
-

@@ -37,4 +37,3 @@ class ExampleSpec extends PlaySpec with GuiceOneAppPerSuite {
     }
   }
 }
-

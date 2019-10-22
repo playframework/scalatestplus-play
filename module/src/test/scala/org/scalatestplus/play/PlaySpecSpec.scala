@@ -25,4 +25,3 @@ class PlaySpecSpec extends UnitSpec {
     }
   }
 }
-
