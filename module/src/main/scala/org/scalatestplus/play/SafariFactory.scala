@@ -50,4 +50,3 @@ trait SafariFactory extends BrowserFactory {
  * Companion object to trait `SafariFactory` that mixes in the trait.
  */
 object SafariFactory extends SafariFactory
-

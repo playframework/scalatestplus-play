@@ -22,11 +22,10 @@ import play.api.Application
 import play.api.inject.guice._
 
 // This is the "master" suite
-class NestedExampleSpec extends Suites(
-  new OneSpec,
-  new TwoSpec,
-  new RedSpec,
-  new BlueSpec) with GuiceOneAppPerSuite with TestSuite {
+class NestedExampleSpec
+    extends Suites(new OneSpec, new TwoSpec, new RedSpec, new BlueSpec)
+    with GuiceOneAppPerSuite
+    with TestSuite {
   // Override fakeApplication if you need an Application with other than non-default parameters.
   override def fakeApplication(): Application = {
     GuiceApplicationBuilder().configure("foo" -> "bar").build()

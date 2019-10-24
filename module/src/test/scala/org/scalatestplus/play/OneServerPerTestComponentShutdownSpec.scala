@@ -26,16 +26,20 @@ import play.api.routing.Router
 
 import scala.concurrent.Future
 
-class OneServerPerTestComponentShutdownSpec extends UnitSpec with OneServerPerTestWithComponents with BeforeAndAfterAll {
+class OneServerPerTestComponentShutdownSpec
+    extends UnitSpec
+    with OneServerPerTestWithComponents
+    with BeforeAndAfterAll {
 
   override def components: BuiltInComponents = new TestComponents(context)
 
   class TestComponents(context: Context) extends BuiltInComponentsFromContext(context) with NoHttpFiltersComponents {
 
     lazy val router: Router = Router.from({
-      case _ => defaultActionBuilder {
-        Results.Ok("success!")
-      }
+      case _ =>
+        defaultActionBuilder {
+          Results.Ok("success!")
+        }
     })
 
     applicationLifecycle.addStopHook(() => {
@@ -43,7 +47,7 @@ class OneServerPerTestComponentShutdownSpec extends UnitSpec with OneServerPerTe
     })
   }
 
-  override protected def afterAll(): Unit = {
+  protected override def afterAll(): Unit = {
     shutDownCounter.get() mustBe 2
     super.afterAll()
   }
@@ -61,4 +65,3 @@ class OneServerPerTestComponentShutdownSpec extends UnitSpec with OneServerPerTe
   }
 
 }
-

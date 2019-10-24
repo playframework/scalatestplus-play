@@ -20,7 +20,11 @@ import org.scalatestplus.play.guice.GuiceOneServerPerTest
 import play.api.Application
 import play.api.inject.guice._
 
-class OneInternetExplorerBrowserPerTestSpec extends UnitSpec with GuiceOneServerPerTest with OneBrowserPerTest with InternetExplorerFactory {
+class OneInternetExplorerBrowserPerTestSpec
+    extends UnitSpec
+    with GuiceOneServerPerTest
+    with OneBrowserPerTest
+    with InternetExplorerFactory {
 
   override def newAppForTest(testData: TestData): Application = {
     GuiceApplicationBuilder()
@@ -51,9 +55,8 @@ class OneInternetExplorerBrowserPerTestSpec extends UnitSpec with GuiceOneServer
     "provide a web driver" in {
       go to ("http://localhost:" + port + "/testing")
       pageTitle mustBe "Test Page"
-      click on find(name("b")).value
+      click.on(find(name("b")).value)
       eventually { pageTitle mustBe "scalatest" }
     }
   }
 }
-

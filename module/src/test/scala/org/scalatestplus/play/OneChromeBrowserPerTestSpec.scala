@@ -21,7 +21,11 @@ import org.scalatestplus.play.guice.GuiceOneServerPerTest
 import play.api.Application
 import play.api.inject.guice._
 
-class OneChromeBrowserPerTestSpec extends UnitSpec with GuiceOneServerPerTest with OneBrowserPerTest with ChromeFactory {
+class OneChromeBrowserPerTestSpec
+    extends UnitSpec
+    with GuiceOneServerPerTest
+    with OneBrowserPerTest
+    with ChromeFactory {
 
   override def newAppForTest(testData: TestData): Application = {
     GuiceApplicationBuilder()
@@ -52,9 +56,8 @@ class OneChromeBrowserPerTestSpec extends UnitSpec with GuiceOneServerPerTest wi
     "provide a web driver" in {
       go to ("http://localhost:" + port + "/testing")
       pageTitle mustBe "Test Page"
-      click on find(name("b")).value
+      click.on(find(name("b")).value)
       eventually { pageTitle mustBe "scalatest" }
     }
   }
 }
-

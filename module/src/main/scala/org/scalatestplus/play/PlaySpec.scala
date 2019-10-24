@@ -24,4 +24,3 @@ import org.scalatest._
  * [[org.scalatestplus.play.guice.GuiceOneAppPerSuite GuiceOneAppPerSuite]], [[org.scalatestplus.play.guice.GuiceOneAppPerTest GuiceOneAppPerTest]], [[org.scalatestplus.play.guice.GuiceOneServerPerSuite GuiceOneServerPerSuite]], [[org.scalatestplus.play.guice.GuiceOneServerPerTest GuiceOneServerPerTest]], [[org.scalatestplus.play.OneBrowserPerSuite OneBrowserPerSuite]], [[org.scalatestplus.play.OneBrowserPerTest OneBrowserPerTest]], [[org.scalatestplus.play.AllBrowsersPerSuite AllBrowsersPerSuite]], or [[org.scalatestplus.play.AllBrowsersPerTest AllBrowsersPerTest]] mix If you want to use trait [[org.scalatestplus.play.MixedFixtures MixedFixtures]], extend [[org.scalatestplus.play.MixedPlaySpec MixedPlaySpec]] instead.
  */
 abstract class PlaySpec extends WordSpec with MustMatchers with OptionValues with WsScalaTestClient
-

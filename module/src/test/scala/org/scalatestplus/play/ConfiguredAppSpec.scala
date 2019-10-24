@@ -43,7 +43,7 @@ class ConfiguredAppSpec extends UnitSpec with SequentialNestedSuiteExecution wit
       }
       "put the app in the configMap" in {
         val configuredApp = configMap.getOptional[Application]("org.scalatestplus.play.app")
-        configuredApp.value must be theSameInstanceAs app
+        (configuredApp.value must be).theSameInstanceAs(app)
       }
     }
   }
@@ -56,4 +56,3 @@ class ConfiguredAppSpec extends UnitSpec with SequentialNestedSuiteExecution wit
 
   def getConfig(key: String)(implicit app: Application): Option[String] = app.configuration.getOptional[String](key)
 }
-

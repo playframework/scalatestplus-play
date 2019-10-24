@@ -1,6 +1,8 @@
 package org.scalatestplus.play
 
-import org.scalatest.{ TestData, TestSuite, TestSuiteMixin }
+import org.scalatest.TestData
+import org.scalatest.TestSuite
+import org.scalatest.TestSuiteMixin
 import play.api.Application
 import play.api.test.Helpers
 
@@ -56,7 +58,7 @@ trait BaseOneAppPerTest extends TestSuiteMixin with AppProvider { this: TestSuit
   /**
    * Implicit method that returns the `Application` instance for the current test.
    */
-  implicit final def app: Application = synchronized { appPerTest }
+  final implicit def app: Application = synchronized { appPerTest }
 
   /**
    * Creates a new `Application` instance before executing each test, and
@@ -73,4 +75,3 @@ trait BaseOneAppPerTest extends TestSuiteMixin with AppProvider { this: TestSuit
     }
   }
 }
-

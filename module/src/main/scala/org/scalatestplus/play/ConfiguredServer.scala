@@ -18,7 +18,8 @@ package org.scalatestplus.play
 import org.scalatest._
 import play.api.Application
 import play.api.test.RunningServer
-import play.core.server.{ ServerEndpoint, ServerEndpoints }
+import play.core.server.ServerEndpoint
+import play.core.server.ServerEndpoints
 
 /**
  * Trait that provides a configured `Application` and server port number to the suite into which it is mixed.
@@ -81,20 +82,26 @@ trait ConfiguredServer extends TestSuiteMixin with ServerProvider { this: TestSu
    *
    * @return the configured `Application`
    */
-  implicit final def app: Application = synchronized { configuredApp }
+  final implicit def app: Application = synchronized { configuredApp }
 
-  implicit protected lazy val runningServer: RunningServer =
+  protected implicit lazy val runningServer: RunningServer =
     RunningServer(
       app,
-      ServerEndpoints(Seq(ServerEndpoint(
-        description = "ConfiguredServer endpoint",
-        scheme = "http",
-        host = "localhost",
-        port = configuredPort,
-        expectedHttpVersions = Set.empty,
-        expectedServerAttr = None,
-        ssl = None))),
-      new AutoCloseable { def close() = () })
+      ServerEndpoints(
+        Seq(
+          ServerEndpoint(
+            description = "ConfiguredServer endpoint",
+            scheme = "http",
+            host = "localhost",
+            port = configuredPort,
+            expectedHttpVersions = Set.empty,
+            expectedServerAttr = None,
+            ssl = None
+          )
+        )
+      ),
+      new AutoCloseable { def close() = () }
+    )
 
   private var _configuredPort: Int = -1
 
@@ -103,7 +110,7 @@ trait ConfiguredServer extends TestSuiteMixin with ServerProvider { this: TestSu
    *
    * @return the configured port number
    */
-  final protected def configuredPort: Int = synchronized { _configuredPort }
+  protected final def configuredPort: Int = synchronized { _configuredPort }
 
   /**
    * Looks in `args.configMap` for a key named "org.scalatestplus.play.app" whose value is a `Application`,
@@ -125,13 +132,18 @@ trait ConfiguredServer extends TestSuiteMixin with ServerProvider { this: TestSu
   abstract override def run(testName: Option[String], args: Args): Status = {
     args.configMap.getOptional[Application]("org.scalatestplus.play.app") match {
       case Some(ca) => synchronized { configuredApp = ca }
-      case None => throw new Exception("Trait ConfiguredServer needs an Application value associated with key \"org.scalatestplus.play.app\" in the config map. Did you forget to annotate a nested suite with @DoNotDiscover?")
+      case None =>
+        throw new Exception(
+          "Trait ConfiguredServer needs an Application value associated with key \"org.scalatestplus.play.app\" in the config map. Did you forget to annotate a nested suite with @DoNotDiscover?"
+        )
     }
     args.configMap.getOptional[Int]("org.scalatestplus.play.port") match {
       case Some(cp) => synchronized { _configuredPort = cp }
-      case None => throw new Exception("Trait ConfiguredServer needs an Int value associated with key \"org.scalatestplus.play.port\" in the config map. Did you forget to annotate a nested suite with @DoNotDiscover?")
+      case None =>
+        throw new Exception(
+          "Trait ConfiguredServer needs an Int value associated with key \"org.scalatestplus.play.port\" in the config map. Did you forget to annotate a nested suite with @DoNotDiscover?"
+        )
     }
     super.run(testName, args)
   }
 }
-

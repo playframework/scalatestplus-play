@@ -20,9 +20,10 @@ import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.Application
 import play.api.inject.guice._
 
-class ConfiguredServerWithAllBrowsersPerTestSpec extends Suites(
-  new ConfiguredServerWithAllBrowsersPerTestNestedSpec)
-  with GuiceOneServerPerSuite with TestSuite {
+class ConfiguredServerWithAllBrowsersPerTestSpec
+    extends Suites(new ConfiguredServerWithAllBrowsersPerTestNestedSpec)
+    with GuiceOneServerPerSuite
+    with TestSuite {
   override def fakeApplication(): Application = {
     GuiceApplicationBuilder()
       .configure("foo" -> "bar")
@@ -42,7 +43,7 @@ class ConfiguredServerWithAllBrowsersPerTestNestedSpec extends UnitSpec with Con
       "provide a web driver " + browser.name in {
         go to ("http://localhost:" + port + "/testing")
         pageTitle mustBe "Test Page"
-        click on find(name("b")).value
+        click.on(find(name("b")).value)
         eventually { pageTitle mustBe "scalatest" }
       }
     }
@@ -66,7 +67,8 @@ class ConfiguredServerWithAllBrowsersPerTestNestedSpec extends UnitSpec with Con
       finally con.disconnect()
     }
     "provide an UnneededDriver to non-shared test whose methods throw UnsupportedOperationException with an error message that gives a hint to put the test into the sharedTests method" in {
-      the[UnsupportedOperationException] thrownBy webDriver.get("funky") must have message org.scalatestplus.play.Resources("webDriverUsedFromUnsharedTest")
+      (the[UnsupportedOperationException] thrownBy webDriver.get("funky") must have)
+        .message(org.scalatestplus.play.Resources("webDriverUsedFromUnsharedTest"))
     }
   }
 }

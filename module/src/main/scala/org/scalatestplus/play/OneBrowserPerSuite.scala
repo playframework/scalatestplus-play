@@ -304,7 +304,12 @@ import scala.util.Try
  * [info] <span class="stGreen">The OneBrowserPerSuite trait</span>
  * </pre>
  */
-trait OneBrowserPerSuite extends TestSuiteMixin with WebBrowser with Eventually with IntegrationPatience with BrowserFactory { this: TestSuite with ServerProvider =>
+trait OneBrowserPerSuite
+    extends TestSuiteMixin
+    with WebBrowser
+    with Eventually
+    with IntegrationPatience
+    with BrowserFactory { this: TestSuite with ServerProvider =>
 
   /**
    * An implicit instance of `WebDriver`, created by calling `createWebDriver`.
@@ -322,7 +327,7 @@ trait OneBrowserPerSuite extends TestSuiteMixin with WebBrowser with Eventually 
       case UnavailableDriver(ex, errorMessage) =>
         ex match {
           case Some(e) => cancel(errorMessage, e)
-          case None => cancel(errorMessage)
+          case None    => cancel(errorMessage)
         }
       case _ => super.withFixture(test)
     }
@@ -343,13 +348,13 @@ trait OneBrowserPerSuite extends TestSuiteMixin with WebBrowser with Eventually 
     val cleanup: Try[Boolean] => Unit = { _ =>
       webDriver match {
         case _: UnavailableDriver => // do nothing for UnavailableDriver
-        case _ => webDriver.quit()
+        case _                    => webDriver.quit()
       }
     }
     try {
       val newConfigMap = args.configMap + ("org.scalatestplus.play.webDriver" -> webDriver)
-      val newArgs = args.copy(configMap = newConfigMap)
-      val status = super.run(testName, newArgs)
+      val newArgs      = args.copy(configMap = newConfigMap)
+      val status       = super.run(testName, newArgs)
       status.whenCompleted(cleanup)
       status
     } catch {
@@ -359,4 +364,3 @@ trait OneBrowserPerSuite extends TestSuiteMixin with WebBrowser with Eventually 
     }
   }
 }
-

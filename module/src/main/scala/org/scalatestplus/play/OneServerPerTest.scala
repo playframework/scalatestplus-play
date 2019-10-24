@@ -25,4 +25,3 @@ import org.scalatestplus.play.guice.GuiceOneServerPerTest
 trait OneServerPerTest extends GuiceOneServerPerTest { this: TestSuite =>
 
 }
-

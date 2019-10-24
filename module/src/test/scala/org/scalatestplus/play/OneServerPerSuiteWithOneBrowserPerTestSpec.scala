@@ -19,7 +19,11 @@ import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.Application
 import play.api.inject.guice._
 
-class OneServerPerSuiteWithOneBrowserPerTestSpec extends UnitSpec with GuiceOneServerPerSuite with OneBrowserPerTest with FirefoxFactory {
+class OneServerPerSuiteWithOneBrowserPerTestSpec
+    extends UnitSpec
+    with GuiceOneServerPerSuite
+    with OneBrowserPerTest
+    with FirefoxFactory {
 
   override def fakeApplication(): Application = {
     GuiceApplicationBuilder()
@@ -50,9 +54,8 @@ class OneServerPerSuiteWithOneBrowserPerTestSpec extends UnitSpec with GuiceOneS
     "provide a web driver" in {
       go to ("http://localhost:" + port + "/testing")
       pageTitle mustBe "Test Page"
-      click on find(name("b")).value
+      click.on(find(name("b")).value)
       eventually { pageTitle mustBe "scalatest" }
     }
   }
 }
-

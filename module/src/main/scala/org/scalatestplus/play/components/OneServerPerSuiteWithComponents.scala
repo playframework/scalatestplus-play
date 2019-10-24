@@ -1,7 +1,8 @@
 package org.scalatestplus.play.components
 
 import org.scalatest.TestSuite
-import org.scalatestplus.play.{ BaseOneServerPerSuite, FakeApplicationFactory }
+import org.scalatestplus.play.BaseOneServerPerSuite
+import org.scalatestplus.play.FakeApplicationFactory
 import play.api.Application
 
 /**
@@ -143,9 +144,9 @@ import play.api.Application
  * </pre>
  */
 trait OneServerPerSuiteWithComponents
-  extends BaseOneServerPerSuite
-  with WithApplicationComponents
-  with FakeApplicationFactory {
+    extends BaseOneServerPerSuite
+    with WithApplicationComponents
+    with FakeApplicationFactory {
   this: TestSuite =>
 
   override def fakeApplication(): Application = newApplication

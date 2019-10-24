@@ -38,7 +38,7 @@ class MixedFixturesWsScalaTestClientSpec extends MixedSpec with ScalaFutures {
 
       "have wsUrl works correctly" in new Server(app) {
         val futureResult = wsUrl("/testing").get
-        val body = futureResult.futureValue.body
+        val body         = futureResult.futureValue.body
         val expectedBody =
           "<html>" +
             "<head><title>Test Page</title></head>" +
@@ -51,7 +51,7 @@ class MixedFixturesWsScalaTestClientSpec extends MixedSpec with ScalaFutures {
 
       "have wsCall works correctly" in new Server(app) {
         val futureResult = wsCall(Call("get", "/testing")).get
-        val body = futureResult.futureValue.body
+        val body         = futureResult.futureValue.body
         val expectedBody =
           "<html>" +
             "<head><title>Test Page</title></head>" +
@@ -68,7 +68,7 @@ class MixedFixturesWsScalaTestClientSpec extends MixedSpec with ScalaFutures {
 
       "have wsUrl works correctly" in new HtmlUnit(app) {
         val futureResult = wsUrl("/testing").get
-        val body = futureResult.futureValue.body
+        val body         = futureResult.futureValue.body
         val expectedBody =
           "<html>" +
             "<head><title>Test Page</title></head>" +
@@ -81,7 +81,7 @@ class MixedFixturesWsScalaTestClientSpec extends MixedSpec with ScalaFutures {
 
       "have wsCall works correctly" in new HtmlUnit(app) {
         val futureResult = wsCall(Call("get", "/testing")).get
-        val body = futureResult.futureValue.body
+        val body         = futureResult.futureValue.body
         val expectedBody =
           "<html>" +
             "<head><title>Test Page</title></head>" +
@@ -98,7 +98,7 @@ class MixedFixturesWsScalaTestClientSpec extends MixedSpec with ScalaFutures {
 
       "have wsUrl works correctly" in new Firefox(app) {
         val futureResult = wsUrl("/testing").get
-        val body = futureResult.futureValue.body
+        val body         = futureResult.futureValue.body
         val expectedBody =
           "<html>" +
             "<head><title>Test Page</title></head>" +
@@ -111,7 +111,7 @@ class MixedFixturesWsScalaTestClientSpec extends MixedSpec with ScalaFutures {
 
       "have wsCall works correctly" in new Firefox(app) {
         val futureResult = wsCall(Call("get", "/testing")).get
-        val body = futureResult.futureValue.body
+        val body         = futureResult.futureValue.body
         val expectedBody =
           "<html>" +
             "<head><title>Test Page</title></head>" +
@@ -128,7 +128,7 @@ class MixedFixturesWsScalaTestClientSpec extends MixedSpec with ScalaFutures {
 
       "have wsUrl works correctly" in new Safari(app) {
         val futureResult = wsUrl("/testing").get
-        val body = futureResult.futureValue.body
+        val body         = futureResult.futureValue.body
         val expectedBody =
           "<html>" +
             "<head><title>Test Page</title></head>" +
@@ -141,7 +141,7 @@ class MixedFixturesWsScalaTestClientSpec extends MixedSpec with ScalaFutures {
 
       "have wsCall works correctly" in new Safari(app) {
         val futureResult = wsCall(Call("get", "/testing")).get
-        val body = futureResult.futureValue.body
+        val body         = futureResult.futureValue.body
         val expectedBody =
           "<html>" +
             "<head><title>Test Page</title></head>" +
@@ -158,7 +158,7 @@ class MixedFixturesWsScalaTestClientSpec extends MixedSpec with ScalaFutures {
 
       "have wsUrl works correctly" in new Chrome(app) {
         val futureResult = wsUrl("/testing").get
-        val body = futureResult.futureValue.body
+        val body         = futureResult.futureValue.body
         val expectedBody =
           "<html>" +
             "<head><title>Test Page</title></head>" +
@@ -171,7 +171,7 @@ class MixedFixturesWsScalaTestClientSpec extends MixedSpec with ScalaFutures {
 
       "have wsCall works correctly" in new Chrome(app) {
         val futureResult = wsCall(Call("get", "/testing")).get
-        val body = futureResult.futureValue.body
+        val body         = futureResult.futureValue.body
         val expectedBody =
           "<html>" +
             "<head><title>Test Page</title></head>" +
@@ -188,7 +188,7 @@ class MixedFixturesWsScalaTestClientSpec extends MixedSpec with ScalaFutures {
 
       "have wsUrl works correctly" in new InternetExplorer(app) {
         val futureResult = wsUrl("/testing").get
-        val body = futureResult.futureValue.body
+        val body         = futureResult.futureValue.body
         val expectedBody =
           "<html>" +
             "<head><title>Test Page</title></head>" +
@@ -201,7 +201,7 @@ class MixedFixturesWsScalaTestClientSpec extends MixedSpec with ScalaFutures {
 
       "have wsCall works correctly" in new InternetExplorer(app) {
         val futureResult = wsCall(Call("get", "/testing")).get
-        val body = futureResult.futureValue.body
+        val body         = futureResult.futureValue.body
         val expectedBody =
           "<html>" +
             "<head><title>Test Page</title></head>" +

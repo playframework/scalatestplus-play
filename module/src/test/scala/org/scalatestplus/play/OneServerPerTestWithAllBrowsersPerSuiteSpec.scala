@@ -40,14 +40,14 @@ class OneServerPerTestWithAllBrowsersPerSuiteSpec extends UnitSpec with GuiceOne
       "provide a web driver " + browser.name in {
         go to ("http://localhost:" + port + "/testing")
         pageTitle mustBe "Test Page"
-        click on find(name("b")).value
+        click.on(find(name("b")).value)
         eventually { pageTitle mustBe "scalatest" }
       }
       "provide, for each browser type,... " + browser.name in {
         theWebDriver = webDriver
       }
       "...the same WebDriver instance " + browser.name in {
-        theWebDriver must be theSameInstanceAs webDriver
+        (theWebDriver must be).theSameInstanceAs(webDriver)
       }
     }
   }
@@ -70,7 +70,8 @@ class OneServerPerTestWithAllBrowsersPerSuiteSpec extends UnitSpec with GuiceOne
       finally con.disconnect()
     }
     "provide an UnneededDriver to non-shared test whose methods throw UnsupportedOperationException with an error message that gives a hint to put the test into the sharedTests method" in {
-      the[UnsupportedOperationException] thrownBy webDriver.get("funky") must have message org.scalatestplus.play.Resources("webDriverUsedFromUnsharedTest")
+      (the[UnsupportedOperationException] thrownBy webDriver.get("funky") must have)
+        .message(org.scalatestplus.play.Resources("webDriverUsedFromUnsharedTest"))
     }
   }
 }

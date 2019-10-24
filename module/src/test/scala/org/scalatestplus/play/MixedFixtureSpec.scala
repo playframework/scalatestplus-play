@@ -17,9 +17,11 @@ package org.scalatestplus.play
 
 import java.util.concurrent.atomic.AtomicInteger
 
-import akka.actor.{ ActorSystem, CoordinatedShutdown }
+import akka.actor.ActorSystem
+import akka.actor.CoordinatedShutdown
 import akka.stream.Materializer
-import play.api.http.{ HttpErrorHandler, HttpRequestHandler }
+import play.api.http.HttpErrorHandler
+import play.api.http.HttpRequestHandler
 import play.api.inject.Injector
 import play.api._
 import play.api.inject.guice._
@@ -34,20 +36,20 @@ class MixedFixtureSpec extends MixedSpec {
 
     counter.incrementAndGet()
 
-    private val app: Application = GuiceApplicationBuilder().build()
-    override def mode: Mode = app.mode
-    override def configuration: Configuration = app.configuration
-    override def actorSystem: ActorSystem = app.actorSystem
+    private val app: Application                          = GuiceApplicationBuilder().build()
+    override def mode: Mode                               = app.mode
+    override def configuration: Configuration             = app.configuration
+    override def actorSystem: ActorSystem                 = app.actorSystem
     override def coordinatedShutdown: CoordinatedShutdown = CoordinatedShutdown(app.actorSystem)
-    override def requestHandler: HttpRequestHandler = app.requestHandler
-    override def errorHandler: HttpErrorHandler = app.errorHandler
-    override def stop(): Future[_] = app.stop()
-    override def injector: Injector = app.injector
-    override def classloader: ClassLoader = app.classloader
-    implicit override def materializer: Materializer = app.materializer
-    override def path: java.io.File = app.path
-    override def environment: Environment = app.environment
-    override def requestFactory: RequestFactory = app.requestFactory
+    override def requestHandler: HttpRequestHandler       = app.requestHandler
+    override def errorHandler: HttpErrorHandler           = app.errorHandler
+    override def stop(): Future[_]                        = app.stop()
+    override def injector: Injector                       = app.injector
+    override def classloader: ClassLoader                 = app.classloader
+    implicit override def materializer: Materializer      = app.materializer
+    override def path: java.io.File                       = app.path
+    override def environment: Environment                 = app.environment
+    override def requestFactory: RequestFactory           = app.requestFactory
   }
 
   def buildApp[A](elems: (String, String)*): Application = {
@@ -70,9 +72,12 @@ class MixedFixtureSpec extends MixedSpec {
       val counter = new AtomicInteger()
 
       class TestSpec extends fixture.WordSpec with MixedFixtures {
-        "test 1" in new App(new TestApplication(counter)) { t => }
-        "test 2" in new App(new TestApplication(counter)) { t => }
-        "test 3" in new App(new TestApplication(counter)) { t => }
+        "test 1" in new App(new TestApplication(counter)) { t =>
+        }
+        "test 2" in new App(new TestApplication(counter)) { t =>
+        }
+        "test 3" in new App(new TestApplication(counter)) { t =>
+        }
       }
       val spec = new TestSpec
       counter.get() mustBe 0
@@ -91,9 +96,12 @@ class MixedFixtureSpec extends MixedSpec {
       val counter = new AtomicInteger()
 
       class TestSpec extends fixture.WordSpec with MixedFixtures {
-        "test 1" in new Server(new TestApplication(counter)) { t => }
-        "test 2" in new Server(new TestApplication(counter)) { t => }
-        "test 3" in new Server(new TestApplication(counter)) { t => }
+        "test 1" in new Server(new TestApplication(counter)) { t =>
+        }
+        "test 2" in new Server(new TestApplication(counter)) { t =>
+        }
+        "test 3" in new Server(new TestApplication(counter)) { t =>
+        }
       }
       val spec = new TestSpec
       counter.get() mustBe 0
@@ -102,7 +110,7 @@ class MixedFixtureSpec extends MixedSpec {
     }
     "send 404 on a bad request" in new Server {
       import java.net._
-      val url = new URL("http://localhost:" + port + "/boom")
+      val url                    = new URL("http://localhost:" + port + "/boom")
       val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
       try con.getResponseCode mustBe 404
       finally con.disconnect()
@@ -119,9 +127,15 @@ class MixedFixtureSpec extends MixedSpec {
       val counter = new AtomicInteger()
       class TestSpec extends fixture.WordSpec with MixedFixtures {
         var testRun = false // will be false if test is canceled due to driver not available on platform.
-        "test 1" in new HtmlUnit(new TestApplication(counter)) { t => testRun = true }
-        "test 2" in new HtmlUnit(new TestApplication(counter)) { t => testRun = true }
-        "test 3" in new HtmlUnit(new TestApplication(counter)) { t => testRun = true }
+        "test 1" in new HtmlUnit(new TestApplication(counter)) { t =>
+          testRun = true
+        }
+        "test 2" in new HtmlUnit(new TestApplication(counter)) { t =>
+          testRun = true
+        }
+        "test 3" in new HtmlUnit(new TestApplication(counter)) { t =>
+          testRun = true
+        }
       }
 
       val spec = new TestSpec
@@ -134,7 +148,7 @@ class MixedFixtureSpec extends MixedSpec {
     }
     "send 404 on a bad request" in new HtmlUnit {
       import java.net._
-      val url = new URL("http://localhost:" + port + "/boom")
+      val url                    = new URL("http://localhost:" + port + "/boom")
       val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
       try con.getResponseCode mustBe 404
       finally con.disconnect()
@@ -142,7 +156,7 @@ class MixedFixtureSpec extends MixedSpec {
     "provide a web driver" in new HtmlUnit(buildApp()) {
       go to ("http://localhost:" + port + "/testing")
       pageTitle mustBe "Test Page"
-      click on find(name("b")).value
+      click.on(find(name("b")).value)
       eventually { pageTitle mustBe "scalatest" }
     }
   }
@@ -157,9 +171,15 @@ class MixedFixtureSpec extends MixedSpec {
       val counter = new AtomicInteger()
       class TestSpec extends fixture.WordSpec with MixedFixtures {
         var testRun = false // will be false if test is canceled due to driver not available on platform.
-        "test 1" in new Firefox(new TestApplication(counter)) { t => testRun = true }
-        "test 2" in new Firefox(new TestApplication(counter)) { t => testRun = true }
-        "test 3" in new Firefox(new TestApplication(counter)) { t => testRun = true }
+        "test 1" in new Firefox(new TestApplication(counter)) { t =>
+          testRun = true
+        }
+        "test 2" in new Firefox(new TestApplication(counter)) { t =>
+          testRun = true
+        }
+        "test 3" in new Firefox(new TestApplication(counter)) { t =>
+          testRun = true
+        }
       }
       val spec = new TestSpec
       counter.get() mustBe 0
@@ -171,7 +191,7 @@ class MixedFixtureSpec extends MixedSpec {
     }
     "send 404 on a bad request" in new Firefox {
       import java.net._
-      val url = new URL("http://localhost:" + port + "/boom")
+      val url                    = new URL("http://localhost:" + port + "/boom")
       val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
       try con.getResponseCode mustBe 404
       finally con.disconnect()
@@ -179,7 +199,7 @@ class MixedFixtureSpec extends MixedSpec {
     "provide a web driver" in new Firefox(buildApp()) {
       go to ("http://localhost:" + port + "/testing")
       pageTitle mustBe "Test Page"
-      click on find(name("b")).value
+      click.on(find(name("b")).value)
       eventually { pageTitle mustBe "scalatest" }
     }
   }
@@ -194,9 +214,15 @@ class MixedFixtureSpec extends MixedSpec {
       val counter = new AtomicInteger()
       class TestSpec extends fixture.WordSpec with MixedFixtures {
         var testRun = false // will be false if test is canceled due to driver not available on platform.
-        "test 1" in new Safari(new TestApplication(counter)) { t => testRun = true }
-        "test 2" in new Safari(new TestApplication(counter)) { t => testRun = true }
-        "test 3" in new Safari(new TestApplication(counter)) { t => testRun = true }
+        "test 1" in new Safari(new TestApplication(counter)) { t =>
+          testRun = true
+        }
+        "test 2" in new Safari(new TestApplication(counter)) { t =>
+          testRun = true
+        }
+        "test 3" in new Safari(new TestApplication(counter)) { t =>
+          testRun = true
+        }
       }
       val spec = new TestSpec
       counter.get() mustBe 0
@@ -208,7 +234,7 @@ class MixedFixtureSpec extends MixedSpec {
     }
     "send 404 on a bad request" in new Safari {
       import java.net._
-      val url = new URL("http://localhost:" + port + "/boom")
+      val url                    = new URL("http://localhost:" + port + "/boom")
       val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
       try con.getResponseCode mustBe 404
       finally con.disconnect()
@@ -216,7 +242,7 @@ class MixedFixtureSpec extends MixedSpec {
     "provide a web driver" in new Safari(buildApp()) {
       go to ("http://localhost:" + port + "/testing")
       pageTitle mustBe "Test Page"
-      click on find(name("b")).value
+      click.on(find(name("b")).value)
       eventually { pageTitle mustBe "scalatest" }
     }
   }
@@ -231,9 +257,15 @@ class MixedFixtureSpec extends MixedSpec {
       val counter = new AtomicInteger()
       class TestSpec extends fixture.WordSpec with MixedFixtures {
         var testRun = false // will be false if test is canceled due to driver not available on platform.
-        "test 1" in new Chrome(new TestApplication(counter)) { t => testRun = true }
-        "test 2" in new Chrome(new TestApplication(counter)) { t => testRun = true }
-        "test 3" in new Chrome(new TestApplication(counter)) { t => testRun = true }
+        "test 1" in new Chrome(new TestApplication(counter)) { t =>
+          testRun = true
+        }
+        "test 2" in new Chrome(new TestApplication(counter)) { t =>
+          testRun = true
+        }
+        "test 3" in new Chrome(new TestApplication(counter)) { t =>
+          testRun = true
+        }
       }
       val spec = new TestSpec
       counter.get() mustBe 0
@@ -245,7 +277,7 @@ class MixedFixtureSpec extends MixedSpec {
     }
     "send 404 on a bad request" in new Chrome {
       import java.net._
-      val url = new URL("http://localhost:" + port + "/boom")
+      val url                    = new URL("http://localhost:" + port + "/boom")
       val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
       try con.getResponseCode mustBe 404
       finally con.disconnect()
@@ -253,7 +285,7 @@ class MixedFixtureSpec extends MixedSpec {
     "provide a web driver" in new Chrome(buildApp()) {
       go to ("http://localhost:" + port + "/testing")
       pageTitle mustBe "Test Page"
-      click on find(name("b")).value
+      click.on(find(name("b")).value)
       eventually { pageTitle mustBe "scalatest" }
     }
   }
@@ -268,9 +300,15 @@ class MixedFixtureSpec extends MixedSpec {
       val counter = new AtomicInteger()
       class TestSpec extends fixture.WordSpec with MixedFixtures {
         var testRun = false // will be false if test is canceled due to driver not available on platform.
-        "test 1" in new InternetExplorer(new TestApplication(counter)) { t => testRun = true }
-        "test 2" in new InternetExplorer(new TestApplication(counter)) { t => testRun = true }
-        "test 3" in new InternetExplorer(new TestApplication(counter)) { t => testRun = true }
+        "test 1" in new InternetExplorer(new TestApplication(counter)) { t =>
+          testRun = true
+        }
+        "test 2" in new InternetExplorer(new TestApplication(counter)) { t =>
+          testRun = true
+        }
+        "test 3" in new InternetExplorer(new TestApplication(counter)) { t =>
+          testRun = true
+        }
       }
       val spec = new TestSpec
       counter.get() mustBe 0
@@ -282,7 +320,7 @@ class MixedFixtureSpec extends MixedSpec {
     }
     "send 404 on a bad request" in new InternetExplorer {
       import java.net._
-      val url = new URL("http://localhost:" + port + "/boom")
+      val url                    = new URL("http://localhost:" + port + "/boom")
       val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
       try con.getResponseCode mustBe 404
       finally con.disconnect()
@@ -290,7 +328,7 @@ class MixedFixtureSpec extends MixedSpec {
     "provide a web driver" in new InternetExplorer(buildApp()) {
       go to ("http://localhost:" + port + "/testing")
       pageTitle mustBe "Test Page"
-      click on find(name("b")).value
+      click.on(find(name("b")).value)
       eventually { pageTitle mustBe "scalatest" }
     }
   }
@@ -300,4 +338,3 @@ class MixedFixtureSpec extends MixedSpec {
     }
   }
 }
-

@@ -1,7 +1,8 @@
 package org.scalatestplus.play.components
 
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.{ BuiltInComponents, _ }
+import play.api.BuiltInComponents
+import play.api._
 
 /**
  * A trait that provides a components in scope and returns them when newApplication is called.

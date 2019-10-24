@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2001-2016 Artima, Inc.
  *
@@ -31,7 +30,7 @@ private[play] object Resources {
   def apply(resourceName: String): String = resourceBundle.getString(resourceName)
 
   private def makeString(resourceName: String, argArray: Array[Any]): String = {
-    val raw = apply(resourceName)
+    val raw    = apply(resourceName)
     val msgFmt = new MessageFormat(raw)
     msgFmt.format(argArray)
   }
@@ -45,4 +44,3 @@ private[play] object Resources {
     if (message.length > 0) Resources("bigProblemsWithMessage", message) else Resources("bigProblems")
   }
 }
-

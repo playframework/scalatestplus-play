@@ -37,4 +37,3 @@ class OneAppPerTestSpec extends UnitSpec with GuiceOneAppPerTest {
     }
   }
 }
-

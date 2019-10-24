@@ -54,9 +54,8 @@ class ExampleSpec extends PlaySpec with GuiceOneServerPerTest with OneBrowserPer
     "provide a web driver" in {
       go to ("http://localhost:" + port + "/testing")
       pageTitle mustBe "Test Page"
-      click on find(name("b")).value
+      click.on(find(name("b")).value)
       eventually { pageTitle mustBe "scalatest" }
     }
   }
 }
-

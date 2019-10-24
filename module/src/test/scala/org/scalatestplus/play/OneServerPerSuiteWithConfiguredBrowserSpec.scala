@@ -21,7 +21,12 @@ import org.openqa.selenium.WebDriver
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.inject.guice._
 
-class OneServerPerSuiteWithConfiguredBrowserSpec extends UnitSpec with SequentialNestedSuiteExecution with GuiceOneServerPerSuite with OneBrowserPerSuite with HtmlUnitFactory {
+class OneServerPerSuiteWithConfiguredBrowserSpec
+    extends UnitSpec
+    with SequentialNestedSuiteExecution
+    with GuiceOneServerPerSuite
+    with OneBrowserPerSuite
+    with HtmlUnitFactory {
 
   override def nestedSuites = Vector(new OneServerPerSuiteWithConfiguredBrowserNestedSpec)
 
@@ -58,7 +63,7 @@ class OneServerPerSuiteWithConfiguredBrowserNestedSpec extends UnitSpec with Con
     }
     "put the app in the configMap" in {
       val configuredApp = configMap.getOptional[Application]("org.scalatestplus.play.app")
-      configuredApp.value must be theSameInstanceAs app
+      (configuredApp.value must be).theSameInstanceAs(app)
     }
     "put the port in the configMap" in {
       val configuredPort = configMap.getOptional[Int]("org.scalatestplus.play.port")
@@ -81,9 +86,8 @@ class OneServerPerSuiteWithConfiguredBrowserNestedSpec extends UnitSpec with Con
     "provide a web driver" in {
       go to ("http://localhost:" + port + "/testing")
       pageTitle mustBe "Test Page"
-      click on find(name("b")).value
+      click.on(find(name("b")).value)
       eventually { pageTitle mustBe "scalatest" }
     }
   }
 }
-
