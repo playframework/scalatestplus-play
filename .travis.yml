@@ -18,14 +18,8 @@ env:
     - CHROME_BIN=/usr/bin/google-chrome
     - DISPLAY=:99.0
   matrix:
-    - SCRIPT=scripts/test         TRAVIS_JDK=8
-    - SCRIPT=scripts/test         TRAVIS_JDK=11
-    - SCRIPT=scripts/testDocs     TRAVIS_JDK=8
-    - SCRIPT=scripts/testDocs     TRAVIS_JDK=11
-    - SCRIPT=scripts/validateDocs TRAVIS_JDK=8
-    - SCRIPT=scripts/validateDocs TRAVIS_JDK=11
-    - SCRIPT=scripts/validateCode TRAVIS_JDK=8
-    - SCRIPT=scripts/validateCode TRAVIS_JDK=11
+    - TRAVIS_JDK=8
+    - TRAVIS_JDK=11
 
 # The build matrix produced with the settings above causes a rather big number of travis jobs.
 # The sauce_connect addon below has a limit of 5 concurrent connections so this repository uses a Travis-CI.com
@@ -42,8 +36,7 @@ before_script:
   - "chmod -vv +x ~/tmp/bin/*"
   - "export PATH=$HOME/tmp/bin:$PATH"
 
-script:
-  - $SCRIPT
+script: scripts/run-ci
 
 addons:
   firefox: "latest"
