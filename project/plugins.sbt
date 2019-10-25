@@ -9,4 +9,9 @@ addSbtPlugin("com.typesafe.play" % "play-docs-sbt-plugin" % sys.props.getOrElse(
 
 addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.2.1")
 
+// remove this resolved when https://github.com/lightbend/mima/issues/422 is solved
+resolvers += Resolver.url(
+  "typesafe sbt-plugins",
+  url("https://dl.bintray.com/typesafe/sbt-plugins")
+)(Resolver.ivyStylePatterns)
 addSbtPlugin("com.typesafe" % "sbt-mima-plugin" % "0.6.1")
