@@ -119,7 +119,7 @@ Instead of calling the `Action` yourself, you can let the `Router` do it:
 
 ## Testing a model
 
-If you are using an SQL database, you can replace the database connection with an in-memory instance of an H2 database using `inMemoryDatabase`.
+If you are using an SQL database, you can replace the database connection with an in-memory instance of an H2 database using `Helpers#inMemoryDatabase`.
 
 @[scalafunctionaltest-testmodel](code/ScalaFunctionalTestSpec.scala)
 
