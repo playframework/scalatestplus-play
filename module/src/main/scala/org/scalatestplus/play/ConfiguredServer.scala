@@ -94,8 +94,8 @@ trait ConfiguredServer extends TestSuiteMixin with ServerProvider { this: TestSu
             scheme = "http",
             host = "localhost",
             port = configuredPort,
-            expectedHttpVersions = Set.empty,
-            expectedServerAttr = None,
+            protocols = Set.empty,
+            serverAttribute = None,
             ssl = None
           )
         )

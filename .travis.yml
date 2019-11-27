@@ -6,8 +6,8 @@ dist: xenial
 # https://docs.travis-ci.com/user/web-ui/#limit-concurrent-jobs
 
 scala:
-  - 2.12.9
-  - 2.13.0
+  - 2.12.10
+  - 2.13.1
 
 services:
   - xvfb
