@@ -20,7 +20,7 @@ import scala.sys.process._
 import sbt.io.Path._
 import interplay.ScalaVersions._
 
-val PlayVersion = playVersion("2.8.0-M6")
+import play.core.PlayVersion
 
 val SeleniumVersion        = "3.141.59"
 val HtmlUnitVersion        = "2.36.0"
@@ -28,6 +28,9 @@ val PhantomJsDriverVersion = "1.4.4"
 val MockitoVersion         = "2.18.3"
 val CssParserVersion       = "1.5.0"
 val ScalatestVersion       = "3.0.8"
+
+playBuildRepoName in ThisBuild := "scalatestplus-play"
+resolvers in ThisBuild += Resolver.sonatypeRepo("releases")
 
 lazy val mimaSettings = Seq(
   mimaPreviousArtifacts := {
@@ -60,15 +63,14 @@ lazy val `scalatestplus-play` = project
   .settings(
     organization := "org.scalatestplus.play",
     libraryDependencies ++= Seq(
-      "org.scalatest" %% "scalatest" % ScalatestVersion,
-      ("org.seleniumhq.selenium" % "selenium-java" % SeleniumVersion)
-        .exclude(org = "com.codeborne", name = "phantomjsdriver"),
-      "org.seleniumhq.selenium"  % "htmlunit-driver"    % HtmlUnitVersion,
+      ws,
+      akkaHttpServer             % Test,
+      "com.typesafe.play"        %% "play-test" % PlayVersion.current,
+      "org.scalatest"            %% "scalatest" % ScalatestVersion,
+      "org.seleniumhq.selenium"  % "selenium-java" % SeleniumVersion,
+      "org.seleniumhq.selenium"  % "htmlunit-driver" % HtmlUnitVersion,
       "net.sourceforge.htmlunit" % "htmlunit-cssparser" % CssParserVersion,
-      "com.codeborne"            % "phantomjsdriver"    % PhantomJsDriverVersion,
-      "com.typesafe.play"        %% "play-test"         % PlayVersion,
-      "com.typesafe.play"        %% "play-ws"           % PlayVersion,
-      "com.typesafe.play"        %% "play-ahc-ws"       % PlayVersion
+      "com.codeborne"            % "phantomjsdriver" % PhantomJsDriverVersion
     ),
     scalacOptions in (Compile, doc) := Seq("-doc-title", "ScalaTest + Play, " + releaseVersion),
     pomExtra := PomExtra,
@@ -777,8 +779,6 @@ lazy val docs = project
   )
   .settings(commonSettings: _*)
   .dependsOn(`scalatestplus-play`)
-
-playBuildRepoName in ThisBuild := "scalatestplus-play"
 
 lazy val PomExtra = {
   <scm>
