@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 import interplay.ScalaVersions._
+import play.core.PlayVersion.{ current => playVersion }
 
 resolvers ++= DefaultOptions.resolvers(snapshot = true)
 
-val PlayVersion = playVersion("2.6.5")
-
-val ScalatestVersion = "3.0.4"
+val ScalatestVersion = "3.0.8"
 val SeleniumVersion = "3.5.3"
 val HtmlUnitVersion = "2.27"
-val PhantomJsDriverVersion = "1.4.3"
+val PhantomJsDriverVersion = "1.4.4"
 val MockitoVersion = "2.7.22"
 
 lazy val commonSettings = Seq(
@@ -46,17 +45,14 @@ lazy val `scalatestplus-play` = project
   .settings(
     organization := "org.scalatestplus.play",
     libraryDependencies ++= Seq(
+      ws, ehcache,
+      "com.typesafe.play" %% "play-test" % playVersion,
       "org.scalatest" %% "scalatest" % ScalatestVersion,
       "org.seleniumhq.selenium" % "selenium-java" % SeleniumVersion exclude(org = "com.codeborne", name = "phantomjsdriver"),
       "org.seleniumhq.selenium" % "htmlunit-driver" % HtmlUnitVersion,
-      "com.codeborne" % "phantomjsdriver" % PhantomJsDriverVersion,
-      "com.typesafe.play" %% "play-test" % PlayVersion,
-      "com.typesafe.play" %% "play-ws" % PlayVersion,
-      "com.typesafe.play" %% "play-ahc-ws" % PlayVersion,
-      "com.typesafe.play" %% "play-cache" % PlayVersion % Test,
-      "com.typesafe.play" %% "play-ehcache" % PlayVersion % Test
+      "com.codeborne" % "phantomjsdriver" % PhantomJsDriverVersion
     ),
-    scalacOptions in(Compile, doc) := Seq("-doc-title", "ScalaTest + Play, " + releaseVersion),
+    scalacOptions in (Compile, doc) := Seq("-doc-title", "ScalaTest + Play, " + releaseVersion),
 
     pomExtra := PomExtra
   )
@@ -67,8 +63,7 @@ lazy val docs = project
   .enablePlugins(PlayDocsPlugin, PlayNoPublish)
   .settings(
     libraryDependencies ++= Seq(
-      "com.typesafe.play" %% "play-cache" % PlayVersion % Test,
-      "com.typesafe.play" %% "play-ehcache" % PlayVersion % Test,
+      ehcache,
       "org.mockito" % "mockito-core" % MockitoVersion % Test
     ),
 
