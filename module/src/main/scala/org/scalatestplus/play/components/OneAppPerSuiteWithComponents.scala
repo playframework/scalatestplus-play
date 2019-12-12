@@ -48,7 +48,7 @@ import play.api.Application
  *       }
  *     })
  *
- *     override lazy val configuration: Configuration = context.initialConfiguration ++ Configuration("foo" -> "bar", "ehcacheplugin" -> "disabled")
+ *     override lazy val configuration: Configuration = Configuration("foo" -> "bar", "ehcacheplugin" -> "disabled").withFallback(context.initialConfiguration)
  *   }
  *
  *   "The OneServerPerSuiteWithComponents trait" must {
@@ -100,7 +100,7 @@ import play.api.Application
  *       }
  *     })
  *
- *     override lazy val configuration: Configuration = context.initialConfiguration ++ Configuration("ehcacheplugin" -> "disabled")
+ *     override lazy val configuration: Configuration = Configuration("ehcacheplugin" -> "disabled").withFallback(context.initialConfiguration)
  *
  *   }
  * }

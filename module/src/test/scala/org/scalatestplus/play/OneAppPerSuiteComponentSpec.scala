@@ -40,7 +40,8 @@ class OneAppPerSuiteComponentSpec extends UnitSpec with OneAppPerSuiteWithCompon
           Results.Ok("success!")
         }
     })
-    override lazy val configuration: Configuration = context.initialConfiguration ++ Configuration("foo" -> "bar")
+    override lazy val configuration: Configuration =
+      Configuration("foo" -> "bar").withFallback(context.initialConfiguration)
   }
 
   def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)

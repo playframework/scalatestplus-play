@@ -40,7 +40,8 @@ class OneServerPerSuiteComponentSpec extends UnitSpec with OneServerPerSuiteWith
         }
     })
 
-    override lazy val configuration: Configuration = context.initialConfiguration ++ Configuration("foo" -> "bar")
+    override lazy val configuration: Configuration =
+      Configuration("foo" -> "bar").withFallback(context.initialConfiguration)
 
   }
 
