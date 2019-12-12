@@ -13,9 +13,7 @@ import play.api.mvc.DefaultActionBuilder
 class ExampleOverrideBrowsersSpec extends PlaySpec with GuiceOneServerPerSuite with AllBrowsersPerSuite {
 
   override lazy val browsers =
-    Vector(
-      FirefoxInfo(firefoxProfile),
-      ChromeInfo())
+    Vector(FirefoxInfo(firefoxProfile), ChromeInfo())
 
   // Override app if you need an Application with other than
   // default parameters.
@@ -25,20 +23,21 @@ class ExampleOverrideBrowsersSpec extends PlaySpec with GuiceOneServerPerSuite w
 
     GuiceApplicationBuilder()
       .appRoutes(app => {
-        case ("GET", "/testing") => app.injector.instanceOf(classOf[DefaultActionBuilder]) {
-          Ok(
-            """
-              |<html>
-              | <head>
-              |   <title>Test Page</title>
-              |   <body>
-              |     <input type='button' name='b' value='Click Me' onclick='document.title="scalatest"' />
-              |   </body>
-              | </head>
-              |</html>
+        case ("GET", "/testing") =>
+          app.injector.instanceOf(classOf[DefaultActionBuilder]) {
+            Ok("""
+                 |<html>
+                 | <head>
+                 |   <title>Test Page</title>
+                 |   <body>
+                 |     <input type='button' name='b' value='Click Me' onclick='document.title="scalatest"' />
+                 |   </body>
+                 | </head>
+                 |</html>
             """.stripMargin).as(HTML)
-        }
-      }).build()
+          }
+      })
+      .build()
   }
 
   def sharedTests(browser: BrowserInfo) = {
@@ -46,7 +45,7 @@ class ExampleOverrideBrowsersSpec extends PlaySpec with GuiceOneServerPerSuite w
       "provide a web driver" + browser.name in {
         go to (s"http://localhost:$port/testing")
         pageTitle mustBe "Test Page"
-        click on find(name("b")).value
+        click.on(find(name("b")).value)
         eventually { pageTitle mustBe "scalatest" }
       }
     }

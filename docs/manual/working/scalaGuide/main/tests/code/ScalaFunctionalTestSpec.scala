@@ -38,10 +38,12 @@ class ScalaFunctionalTestSpec extends MixedPlaySpec with Results {
 
     val applicationWithRouter = GuiceApplicationBuilder()
       .appRoutes(app => {
-        case ("GET", "/Bob") => app.injector.instanceOf(classOf[DefaultActionBuilder]) {
-          Ok("Hello Bob").as(MimeTypes.HTML)
-        }
-      }).build()
+        case ("GET", "/Bob") =>
+          app.injector.instanceOf(classOf[DefaultActionBuilder]) {
+            Ok("Hello Bob").as(MimeTypes.HTML)
+          }
+      })
+      .build()
 
     // #scalafunctionaltest-respondtoroute
     "respond to the index Action" in new App(applicationWithRouter) {
@@ -73,32 +75,34 @@ class ScalaFunctionalTestSpec extends MixedPlaySpec with Results {
     // #scalafunctionaltest-testmodel
 
     // #scalafunctionaltest-testwithbrowser
-    def applicationWithBrowser: Application = GuiceApplicationBuilder()
-      .appRoutes(app => {
-        case ("GET", "/") => app.injector.instanceOf(classOf[DefaultActionBuilder]) {
-          Ok(
-            """
-              |<html>
-              |<head><title>Hello Guest</title></head>
-              |<body>
-              |  <div id="title">Hello Guest, welcome to this website.</div>
-              |  <a href="/login">click me</a>
-              |</body>
-              |</html>
-            """.stripMargin) as "text/html"
-        }
-        case ("GET", "/login") => app.injector.instanceOf(classOf[DefaultActionBuilder]) {
-          Ok(
-            """
-              |<html>
-              |<head><title>Hello Coco</title></head>
-              |<body>
-              |  <div id="title">Hello Coco, welcome to this website.</div>
-              |</body>
-              |</html>
-            """.stripMargin) as "text/html"
-        }
-      }).build()
+    def applicationWithBrowser: Application =
+      GuiceApplicationBuilder()
+        .appRoutes(app => {
+          case ("GET", "/") =>
+            app.injector.instanceOf(classOf[DefaultActionBuilder]) {
+              Ok("""
+                   |<html>
+                   |<head><title>Hello Guest</title></head>
+                   |<body>
+                   |  <div id="title">Hello Guest, welcome to this website.</div>
+                   |  <a href="/login">click me</a>
+                   |</body>
+                   |</html>
+            """.stripMargin).as("text/html")
+            }
+          case ("GET", "/login") =>
+            app.injector.instanceOf(classOf[DefaultActionBuilder]) {
+              Ok("""
+                   |<html>
+                   |<head><title>Hello Coco</title></head>
+                   |<body>
+                   |  <div id="title">Hello Coco, welcome to this website.</div>
+                   |</body>
+                   |</html>
+            """.stripMargin).as("text/html")
+            }
+        })
+        .build()
 
     "run in a browser" in new HtmlUnit(appFun = { applicationWithBrowser }) {
 
@@ -106,7 +110,7 @@ class ScalaFunctionalTestSpec extends MixedPlaySpec with Results {
       go to "http://localhost:" + port
       pageTitle mustEqual "Hello Guest"
 
-      click on linkText("click me")
+      click.on(linkText("click me"))
 
       currentUrl mustEqual "http://localhost:" + port + "/login"
       pageTitle mustEqual "Hello Coco"
@@ -117,13 +121,14 @@ class ScalaFunctionalTestSpec extends MixedPlaySpec with Results {
     "test server logic" in new Server(appFun = { applicationWithBrowser }, port = 19001) { port =>
       implicit val wsClient = app.injector.instanceOf[WSClient]
 
-      val myPublicAddress = s"localhost:$port"
+      val myPublicAddress       = s"localhost:$port"
       val testPaymentGatewayURL = s"http://$myPublicAddress"
       // The test payment gateway requires a callback to this server before it returns a result...
       val callbackURL = s"http://$myPublicAddress/callback"
 
       // await is from play.api.test.FutureAwaits
-      val response = await(wsClient.url(testPaymentGatewayURL).addQueryStringParameters("callbackURL" -> callbackURL).get())
+      val response =
+        await(wsClient.url(testPaymentGatewayURL).addQueryStringParameters("callbackURL" -> callbackURL).get())
 
       response.status mustEqual OK
     }
@@ -132,10 +137,12 @@ class ScalaFunctionalTestSpec extends MixedPlaySpec with Results {
     // #scalafunctionaltest-testws
     val appWithRoutes = GuiceApplicationBuilder()
       .appRoutes(app => {
-        case ("GET", "/") => app.injector.instanceOf(classOf[DefaultActionBuilder]) {
-          Ok("ok")
-        }
-      }).build()
+        case ("GET", "/") =>
+          app.injector.instanceOf(classOf[DefaultActionBuilder]) {
+            Ok("ok")
+          }
+      })
+      .build()
 
     "test WS logic" in new Server(appFun = appWithRoutes, port = 3333) {
       val wsClient = app.injector.instanceOf[WSClient]

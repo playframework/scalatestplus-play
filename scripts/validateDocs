@@ -4,4 +4,4 @@
 
 . "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/build"
 
-build docs/validateDocs
+build docs/validateDocs docs/scalafmtCheckAll docs/scalafmtSbtCheck

@@ -3,22 +3,25 @@
  */
 package oneapppersuite
 
-import org.scalatest.{ DoNotDiscover, Suites, TestSuite }
+import org.scalatest.DoNotDiscover
+import org.scalatest.Suites
+import org.scalatest.TestSuite
 import org.scalatestplus.play.components.OneAppPerSuiteWithComponents
-import org.scalatestplus.play.{ ConfiguredApp, PlaySpec }
+import org.scalatestplus.play.ConfiguredApp
+import org.scalatestplus.play.PlaySpec
 import play.api._
 import play.api.mvc.Result
 import play.api.test.Helpers._
-import play.api.test.{ FakeRequest, Helpers }
+import play.api.test.FakeRequest
+import play.api.test.Helpers
 
 import scala.concurrent.Future
 
 // #scalacomponentstest-nestedsuites
-class NestedExampleSpec extends Suites(
-  new OneSpec,
-  new TwoSpec,
-  new RedSpec,
-  new BlueSpec) with OneAppPerSuiteWithComponents with TestSuite {
+class NestedExampleSpec
+    extends Suites(new OneSpec, new TwoSpec, new RedSpec, new BlueSpec)
+    with OneAppPerSuiteWithComponents
+    with TestSuite {
 
   override def components: BuiltInComponents = new BuiltInComponentsFromContext(context) with NoHttpFiltersComponents {
 
@@ -27,12 +30,14 @@ class NestedExampleSpec extends Suites(
     import play.api.routing.sird._
 
     lazy val router: Router = Router.from({
-      case GET(p"/") => defaultActionBuilder {
-        Results.Ok("success!")
-      }
+      case GET(p"/") =>
+        defaultActionBuilder {
+          Results.Ok("success!")
+        }
     })
 
-    override lazy val configuration: Configuration = context.initialConfiguration ++ Configuration("ehcacheplugin" -> "disabled")
+    override lazy val configuration: Configuration =
+      Configuration("ehcacheplugin" -> "disabled").withFallback(context.initialConfiguration)
   }
 }
 
@@ -56,7 +61,8 @@ class NestedExampleSpec extends Suites(
 
   "The NestedExampleSpec" must {
     "provide an Application" in {
-      import play.api.test.Helpers.{ GET, route }
+      import play.api.test.Helpers.GET
+      import play.api.test.Helpers.route
       val Some(result: Future[Result]) = route(app, FakeRequest(GET, "/"))
       Helpers.contentAsString(result) must be("success!")
     }

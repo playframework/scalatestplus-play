@@ -19,19 +19,19 @@ class ExampleSpec extends MixedPlaySpec {
 
     GuiceApplicationBuilder()
       .appRoutes(app => {
-        case ("GET", "/testing") => app.injector.instanceOf(classOf[DefaultActionBuilder]) {
-          Ok(
-            """
-              |<html>
-              | <head>
-              |   <title>Test Page</title>
-              |   <body>
-              |     <input type='button' name='b' value='Click Me' onclick='document.title="scalatest"' />
-              |   </body>
-              | </head>
-              |</html>
+        case ("GET", "/testing") =>
+          app.injector.instanceOf(classOf[DefaultActionBuilder]) {
+            Ok("""
+                 |<html>
+                 | <head>
+                 |   <title>Test Page</title>
+                 |   <body>
+                 |     <input type='button' name='b' value='Click Me' onclick='document.title="scalatest"' />
+                 |   </body>
+                 | </head>
+                 |</html>
             """.stripMargin).as(HTML)
-        }
+          }
       })
       .configure(Map(elems: _*))
       .build()
@@ -59,7 +59,7 @@ class ExampleSpec extends MixedPlaySpec {
     }
     "send 404 on a bad request" in new Server {
       import java.net._
-      val url = new URL("http://localhost:" + port + "/boom")
+      val url                    = new URL("http://localhost:" + port + "/boom")
       val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
       try con.getResponseCode mustBe 404
       finally con.disconnect()
@@ -77,7 +77,7 @@ class ExampleSpec extends MixedPlaySpec {
     }
     "send 404 on a bad request" in new HtmlUnit {
       import java.net._
-      val url = new URL("http://localhost:" + port + "/boom")
+      val url                    = new URL("http://localhost:" + port + "/boom")
       val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
       try con.getResponseCode mustBe 404
       finally con.disconnect()
@@ -85,7 +85,7 @@ class ExampleSpec extends MixedPlaySpec {
     "provide a web driver" in new HtmlUnit(buildApp()) {
       go to ("http://localhost:" + port + "/testing")
       pageTitle mustBe "Test Page"
-      click on find(name("b")).value
+      click.on(find(name("b")).value)
       eventually { pageTitle mustBe "scalatest" }
     }
   }
@@ -101,7 +101,7 @@ class ExampleSpec extends MixedPlaySpec {
     }
     "send 404 on a bad request" in new Firefox {
       import java.net._
-      val url = new URL("http://localhost:" + port + "/boom")
+      val url                    = new URL("http://localhost:" + port + "/boom")
       val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
       try con.getResponseCode mustBe 404
       finally con.disconnect()
@@ -109,7 +109,7 @@ class ExampleSpec extends MixedPlaySpec {
     "provide a web driver" in new Firefox(buildApp()) {
       go to ("http://localhost:" + port + "/testing")
       pageTitle mustBe "Test Page"
-      click on find(name("b")).value
+      click.on(find(name("b")).value)
       eventually { pageTitle mustBe "scalatest" }
     }
   }
@@ -125,7 +125,7 @@ class ExampleSpec extends MixedPlaySpec {
     }
     "send 404 on a bad request" in new Safari {
       import java.net._
-      val url = new URL("http://localhost:" + port + "/boom")
+      val url                    = new URL("http://localhost:" + port + "/boom")
       val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
       try con.getResponseCode mustBe 404
       finally con.disconnect()
@@ -133,7 +133,7 @@ class ExampleSpec extends MixedPlaySpec {
     "provide a web driver" in new Safari(buildApp()) {
       go to ("http://localhost:" + port + "/testing")
       pageTitle mustBe "Test Page"
-      click on find(name("b")).value
+      click.on(find(name("b")).value)
       eventually { pageTitle mustBe "scalatest" }
     }
   }
@@ -149,7 +149,7 @@ class ExampleSpec extends MixedPlaySpec {
     }
     "send 404 on a bad request" in new Chrome {
       import java.net._
-      val url = new URL("http://localhost:" + port + "/boom")
+      val url                    = new URL("http://localhost:" + port + "/boom")
       val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
       try con.getResponseCode mustBe 404
       finally con.disconnect()
@@ -157,7 +157,7 @@ class ExampleSpec extends MixedPlaySpec {
     "provide a web driver" in new Chrome(buildApp()) {
       go to ("http://localhost:" + port + "/testing")
       pageTitle mustBe "Test Page"
-      click on find(name("b")).value
+      click.on(find(name("b")).value)
       eventually { pageTitle mustBe "scalatest" }
     }
   }
@@ -173,7 +173,7 @@ class ExampleSpec extends MixedPlaySpec {
     }
     "send 404 on a bad request" in new InternetExplorer {
       import java.net._
-      val url = new URL("http://localhost:" + port + "/boom")
+      val url                    = new URL("http://localhost:" + port + "/boom")
       val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
       try con.getResponseCode mustBe 404
       finally con.disconnect()
@@ -181,7 +181,7 @@ class ExampleSpec extends MixedPlaySpec {
     "provide a web driver" in new InternetExplorer(buildApp()) {
       go to ("http://localhost:" + port + "/testing")
       pageTitle mustBe "Test Page"
-      click on find(name("b")).value
+      click.on(find(name("b")).value)
       eventually { pageTitle mustBe "scalatest" }
     }
   }
