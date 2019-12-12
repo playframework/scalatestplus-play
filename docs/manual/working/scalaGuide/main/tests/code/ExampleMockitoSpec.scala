@@ -15,7 +15,7 @@ class ExampleMockitoSpec extends PlaySpec with MockitoSugar {
   "MyService#isDailyData" should {
     "return true if the data is from today" in {
       val mockDataService = mock[DataService]
-      when(mockDataService.findData) thenReturn Data(new java.util.Date())
+      when(mockDataService.findData).thenReturn(Data(new java.util.Date()))
 
       val myService = new MyService() {
         override def dataService = mockDataService
@@ -48,6 +48,6 @@ class MyService {
     val today = Calendar.getInstance()
 
     (retrievalDate.get(Calendar.YEAR) == today.get(Calendar.YEAR)
-      && retrievalDate.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR))
+    && retrievalDate.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR))
   }
 }

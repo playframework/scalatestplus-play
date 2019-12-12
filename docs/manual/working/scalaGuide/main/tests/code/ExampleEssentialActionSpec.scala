@@ -16,7 +16,7 @@ import play.api.test._
 class ExampleEssentialActionSpec extends PlaySpec with GuiceOneAppPerSuite {
 
   implicit lazy val materializer: Materializer = app.materializer
-  implicit lazy val Action = app.injector.instanceOf(classOf[DefaultActionBuilder])
+  implicit lazy val Action                     = app.injector.instanceOf(classOf[DefaultActionBuilder])
 
   "An essential action" should {
     "can parse a JSON body" in {

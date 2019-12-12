@@ -27,7 +27,8 @@ class ExampleSpec extends PlaySpec with OneAppPerSuiteWithComponents {
           Results.Ok("success!")
         }
     })
-    override lazy val configuration: Configuration = context.initialConfiguration ++ Configuration("foo" -> "bar")
+    override lazy val configuration: Configuration =
+      Configuration("foo" -> "bar").withFallback(context.initialConfiguration)
   }
 
   "The OneAppPerSuiteWithComponents trait" must {

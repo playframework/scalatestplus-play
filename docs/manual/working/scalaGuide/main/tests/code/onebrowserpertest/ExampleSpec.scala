@@ -21,27 +21,28 @@ class ExampleSpec extends PlaySpec with GuiceOneServerPerTest with OneBrowserPer
 
     GuiceApplicationBuilder()
       .appRoutes(app => {
-        case ("GET", "/testing") => app.injector.instanceOf(classOf[DefaultActionBuilder]) {
-          Ok(
-            """
-              |<html>
-              | <head>
-              |   <title>Test Page</title>
-              |   <body>
-              |     <input type='button' name='b' value='Click Me' onclick='document.title="scalatest"' />
-              |   </body>
-              | </head>
-              |</html>
+        case ("GET", "/testing") =>
+          app.injector.instanceOf(classOf[DefaultActionBuilder]) {
+            Ok("""
+                 |<html>
+                 | <head>
+                 |   <title>Test Page</title>
+                 |   <body>
+                 |     <input type='button' name='b' value='Click Me' onclick='document.title="scalatest"' />
+                 |   </body>
+                 | </head>
+                 |</html>
             """.stripMargin).as(HTML)
-        }
-      }).build()
+          }
+      })
+      .build()
   }
 
   "The OneBrowserPerTest trait" must {
     "provide a web driver" in {
       go to (s"http://localhost:$port/testing")
       pageTitle mustBe "Test Page"
-      click on find(name("b")).value
+      click.on(find(name("b")).value)
       eventually { pageTitle mustBe "scalatest" }
     }
   }

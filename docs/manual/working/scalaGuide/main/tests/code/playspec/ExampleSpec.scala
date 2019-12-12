@@ -3,7 +3,8 @@
  */
 package scalaguide.tests.scalatest.playspec
 
-import org.scalatest.concurrent.{ IntegrationPatience, ScalaFutures }
+import org.scalatest.concurrent.IntegrationPatience
+import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.play._
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api._
@@ -23,27 +24,28 @@ class ExampleSpec extends PlaySpec with GuiceOneServerPerSuite with ScalaFutures
 
     GuiceApplicationBuilder()
       .appRoutes(app => {
-        case ("GET", "/testing") => app.injector.instanceOf(classOf[DefaultActionBuilder]) {
-          Ok(
-            """
-              |<html>
-              | <head>
-              |   <title>Test Page</title>
-              |   <body>
-              |     <input type='button' name='b' value='Click Me' onclick='document.title="scalatest"' />
-              |   </body>
-              | </head>
-              |</html>""".stripMargin).as(HTML)
-        }
-      }).build()
+        case ("GET", "/testing") =>
+          app.injector.instanceOf(classOf[DefaultActionBuilder]) {
+            Ok("""
+                 |<html>
+                 | <head>
+                 |   <title>Test Page</title>
+                 |   <body>
+                 |     <input type='button' name='b' value='Click Me' onclick='document.title="scalatest"' />
+                 |   </body>
+                 | </head>
+                 |</html>""".stripMargin).as(HTML)
+          }
+      })
+      .build()
   }
 
   "WsScalaTestClient's" must {
 
     "wsUrl works correctly" in {
       implicit val ws: WSClient = app.injector.instanceOf(classOf[WSClient])
-      val futureResult = wsUrl("/testing").get
-      val body = futureResult.futureValue.body
+      val futureResult          = wsUrl("/testing").get
+      val body                  = futureResult.futureValue.body
       val expectedBody =
         """
           |<html>
@@ -59,8 +61,8 @@ class ExampleSpec extends PlaySpec with GuiceOneServerPerSuite with ScalaFutures
 
     "wsCall works correctly" in {
       implicit val ws: WSClient = app.injector.instanceOf(classOf[WSClient])
-      val futureResult = wsCall(Call("get", "/testing")).get
-      val body = futureResult.futureValue.body
+      val futureResult          = wsCall(Call("get", "/testing")).get
+      val body                  = futureResult.futureValue.body
       val expectedBody =
         """
           |<html>

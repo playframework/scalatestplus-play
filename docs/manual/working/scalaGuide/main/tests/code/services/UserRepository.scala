@@ -12,4 +12,3 @@ trait UserRepository {
   def roles(user: User): Set[Role]
 }
 // #scalatest-repository
-

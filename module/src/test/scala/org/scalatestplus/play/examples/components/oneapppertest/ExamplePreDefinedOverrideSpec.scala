@@ -17,7 +17,8 @@ import scala.concurrent.Future
 class ExamplePreDefinedOverrideSpec extends PlaySpec with OneAppPerTestWithComponents {
 
   override def components: BuiltInComponents = new SomeAppComponents(context) {
-    override lazy val configuration: Configuration = context.initialConfiguration ++ Configuration("foo" -> "bar")
+    override lazy val configuration: Configuration =
+      Configuration("foo" -> "bar").withFallback(context.initialConfiguration)
   }
 
   "The OneAppPerTestWithComponents trait" must {

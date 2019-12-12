@@ -20,21 +20,24 @@ class ExampleSpec extends PlaySpec with GuiceOneServerPerTest {
   override def newAppForTest(testData: TestData): Application = {
     GuiceApplicationBuilder()
       .appRoutes(app => {
-        case ("GET", "/") => app.injector.instanceOf(classOf[DefaultActionBuilder]) {
-          Ok("ok")
-        }
-      }).build()
+        case ("GET", "/") =>
+          app.injector.instanceOf(classOf[DefaultActionBuilder]) {
+            Ok("ok")
+          }
+      })
+      .build()
   }
 
   "The OneServerPerTest trait" must {
     "test server logic" in {
-      val wsClient = app.injector.instanceOf[WSClient]
-      val myPublicAddress = s"localhost:$port"
+      val wsClient              = app.injector.instanceOf[WSClient]
+      val myPublicAddress       = s"localhost:$port"
       val testPaymentGatewayURL = s"http://$myPublicAddress"
       // The test payment gateway requires a callback to this server before it returns a result...
       val callbackURL = s"http://$myPublicAddress/callback"
       // await is from play.api.test.FutureAwaits
-      val response = await(wsClient.url(testPaymentGatewayURL).addQueryStringParameters("callbackURL" -> callbackURL).get())
+      val response =
+        await(wsClient.url(testPaymentGatewayURL).addQueryStringParameters("callbackURL" -> callbackURL).get())
 
       response.status mustBe OK
     }
