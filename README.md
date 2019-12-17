@@ -34,7 +34,7 @@ The following tips may be useful for all welcome contributions:
 
 * Raise a Pull Request against the relevant branch
 * The Pull Request will be validated & tested in Travis-CI
-* Builds which don't meet the style guidelines will fail, we recommend running `sbt validateCode` before pushing
+* Builds which don't meet the style guidelines will fail, we recommend running `sbt scalafmtAll scalafmtSbt` before pushing
 * Please use descriptive commit messages
 
 See more details [here](https://playframework.com/contributing).

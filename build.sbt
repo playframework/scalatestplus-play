@@ -128,5 +128,3 @@ lazy val PomExtra = {
       </developer>
     </developers>
 }
-
-addCommandAlias("validateCode", ";scalafmtCheckAll;scalafmtSbtCheck")
