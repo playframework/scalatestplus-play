@@ -4,7 +4,7 @@
 
 . "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/build"
 
-build validateCode || (
+build scalafmtCheckAll scalafmtSbtCheck || (
     echo "[error] ERROR: Scalafmt test failed."
     echo "[error] To fix, format your sources using 'sbt scalafmtAll scalafmtSbt' before submitting a pull request."
     echo "[error] Additionally, please squash your commits (eg, use git commit --amend) if you're going to update this pull request."
