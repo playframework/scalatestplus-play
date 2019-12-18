@@ -12,6 +12,9 @@ scala:
 services:
   - xvfb
 
+git:
+  depth: false # Avoid sbt-dynver not seeing the tag
+
 env:
   global:
     - DBUS_SESSION_BUS_ADDRESS=/dev/null

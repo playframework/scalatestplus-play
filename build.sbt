@@ -32,6 +32,20 @@ val ScalatestVersion       = "3.0.8"
 playBuildRepoName in ThisBuild := "scalatestplus-play"
 resolvers in ThisBuild += Resolver.sonatypeRepo("releases")
 
+// Customise sbt-dynver's behaviour to make it work with tags which aren't v-prefixed
+dynverVTagPrefix in ThisBuild := false
+
+// Sanity-check: assert that version comes from a tag (e.g. not a too-shallow clone)
+// https://github.com/dwijnand/sbt-dynver/#sanity-checking-the-version
+Global / onLoad := (Global / onLoad).value.andThen { s =>
+  val v = version.value
+  if (dynverGitDescribeOutput.value.hasNoTags)
+    throw new MessageOnlyException(
+      s"Failed to derive version from git tags. Maybe run `git fetch --unshallow`? Version: $v"
+    )
+  s
+}
+
 val previousVersion: Option[String] = Some("5.0.0")
 
 lazy val mimaSettings = Seq(
@@ -57,10 +71,26 @@ lazy val `scalatestplus-play-root` = project
     sonatypeProfileName := "org.scalatestplus.play",
     mimaPreviousArtifacts := Set.empty
   )
+  .settings(
+    Seq(
+      // this overrides releaseProcess to make it work with sbt-dynver
+      releaseProcess := {
+        import ReleaseTransformations._
+        Seq[ReleaseStep](
+          checkSnapshotDependencies,
+          runClean,
+          releaseStepCommandAndRemaining("+test"),
+          releaseStepCommandAndRemaining("+publishSigned"),
+          releaseStepCommand("sonatypeBundleRelease"),
+          pushChanges // <- this needs to be removed when releasing from tag
+        )
+      }
+    )
+  )
 
 lazy val `scalatestplus-play` = project
   .in(file("module"))
-  .enablePlugins(Playdoc, PlayLibrary, PlayReleaseBase)
+  .enablePlugins(Playdoc, PlayLibrary)
   .configs(Docs)
   .settings(
     commonSettings,
