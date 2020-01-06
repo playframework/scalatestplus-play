@@ -5,7 +5,7 @@ resolvers ++= Seq(
   Resolver.sonatypeRepo("snapshots"), // used by deploy nightlies, which publish here & use -Dplay.version
 )
 
-addSbtPlugin("com.typesafe.play" % "interplay"            % sys.props.getOrElse("interplay.version", "2.1.4"))
+addSbtPlugin("com.typesafe.play" % "interplay"            % sys.props.getOrElse("interplay.version", "3.0.0"))
 addSbtPlugin("com.typesafe.play" % "sbt-plugin"           % sys.props.getOrElse("play.version", "2.8.0"))
 addSbtPlugin("com.typesafe.play" % "play-docs-sbt-plugin" % sys.props.getOrElse("play.version", "2.8.0"))
 
