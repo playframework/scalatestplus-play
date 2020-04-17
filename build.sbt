@@ -53,10 +53,13 @@ val previousVersion: Option[String] = Some("5.0.0")
 lazy val mimaSettings = Seq(
   mimaBinaryIssueFilters ++= Seq(
     // Add mima filters here
+    ProblemFilters.exclude[MissingTypesProblem]("org.scalatestplus.play.MixedPlaySpec"),
     ProblemFilters.exclude[IncompatibleMethTypeProblem]("org.scalatestplus.play.MixedPlaySpec.*"),
     ProblemFilters.exclude[IncompatibleResultTypeProblem]("org.scalatestplus.play.MixedPlaySpec.*"),
     ProblemFilters.exclude[MissingTypesProblem]("org.scalatestplus.play.PlaySpec"),
+    ProblemFilters.exclude[IncompatibleMethTypeProblem]("org.scalatestplus.play.PlaySpec.*"),
     ProblemFilters.exclude[IncompatibleResultTypeProblem]("org.scalatestplus.play.PlaySpec.*"),
+    ProblemFilters.exclude[DirectMissingMethodProblem]("org.scalatestplus.play.MixedPlaySpec.*"),
   ),
   mimaPreviousArtifacts := previousVersion.map(organization.value %% name.value % _).toSet
 )
