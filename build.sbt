@@ -27,7 +27,8 @@ val HtmlUnitVersion        = "2.39.0"
 val PhantomJsDriverVersion = "1.4.4"
 val MockitoVersion         = "2.18.3"
 val CssParserVersion       = "1.5.0"
-val ScalatestVersion       = "3.0.8"
+val ScalatestVersion       = "3.1.1"
+val ScalatestSeleniumVersion = "3.1.1.0"
 
 playBuildRepoName in ThisBuild := "scalatestplus-play"
 resolvers in ThisBuild += Resolver.sonatypeRepo("releases")
@@ -101,6 +102,7 @@ lazy val `scalatestplus-play` = project
       akkaHttpServer             % Test,
       "com.typesafe.play"        %% "play-test" % PlayVersion.current,
       "org.scalatest"            %% "scalatest" % ScalatestVersion,
+      "org.scalatestplus"        %% "selenium-2-45" % ScalatestSeleniumVersion,
       "org.seleniumhq.selenium"  % "selenium-java" % SeleniumVersion,
       "org.seleniumhq.selenium"  % "htmlunit-driver" % HtmlUnitVersion,
       "net.sourceforge.htmlunit" % "htmlunit-cssparser" % CssParserVersion,
