@@ -29,6 +29,7 @@ val MockitoVersion         = "2.18.3"
 val CssParserVersion       = "1.5.0"
 val ScalatestVersion       = "3.1.1"
 val ScalatestSeleniumVersion = "3.1.1.0"
+val ScalatestMockitoVersion  = "3.1.1.0"
 
 playBuildRepoName in ThisBuild := "scalatestplus-play"
 resolvers in ThisBuild += Resolver.sonatypeRepo("releases")
@@ -119,7 +120,8 @@ lazy val docs = project
   .settings(
     commonSettings,
     libraryDependencies ++= Seq(
-      "org.mockito" % "mockito-core" % MockitoVersion % Test
+      "org.mockito" % "mockito-core" % MockitoVersion % Test,
+      "org.scalatestplus" %% "mockito-3-2" % ScalatestMockitoVersion % Test,
     ),
     PlayDocsKeys.scalaManualSourceDirectories := (baseDirectory.value / "manual" / "working" / "scalaGuide" ** "code").get,
     PlayDocsKeys.resources += {

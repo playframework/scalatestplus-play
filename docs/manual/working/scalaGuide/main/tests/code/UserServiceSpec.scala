@@ -4,7 +4,7 @@
 package scalaguide.tests.scalatest
 
 import org.scalatest._
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play._
 
 import org.mockito.Mockito._

@@ -5,6 +5,8 @@ package scalaguide.tests.scalatest
 
 // #scalafunctionaltest-imports
 import org.scalatest._
+import org.scalatest.matchers.must.Matchers
+import org.scalatest.wordspec.FixtureAnyWordSpec
 import org.scalatestplus.play._
 import play.api.http.MimeTypes
 import play.api.test._
@@ -17,7 +19,7 @@ import play.api.Application
 import play.api.libs.ws._
 import play.api.inject.guice._
 
-abstract class MixedPlaySpec extends fixture.WordSpec with MustMatchers with OptionValues with MixedFixtures
+abstract class MixedPlaySpec extends FixtureAnyWordSpec with Matchers with OptionValues with MixedFixtures
 
 class ScalaFunctionalTestSpec extends MixedPlaySpec with Results {
 
