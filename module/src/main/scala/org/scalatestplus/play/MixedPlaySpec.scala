@@ -25,6 +25,8 @@ import org.openqa.selenium.firefox.FirefoxProfile
 import play.api.http.HttpProtocol
 import play.api.http.Status
 import play.api.http.HeaderNames
+import org.scalatest.wordspec
+import org.scalatest.matchers.must.Matchers
 
 /**
  * Convenience "super Suite" class for "mixed fixture" Play tests.
@@ -34,8 +36,8 @@ import play.api.http.HeaderNames
  * need the same fixture, you're probably better of extending [[org.scalatestplus.play.PlaySpec PlaySpec]] instead.
  */
 abstract class MixedPlaySpec
-    extends fixture.WordSpec
-    with MustMatchers
+    extends wordspec.FixtureAnyWordSpec
+    with Matchers
     with OptionValues
     with MixedFixtures
     with Eventually
