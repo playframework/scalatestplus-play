@@ -29,6 +29,7 @@ import org.scalatest._
 import play.api.mvc.request.RequestFactory
 
 import scala.concurrent.Future
+import org.scalatest.wordspec
 
 class MixedFixtureSpec extends MixedSpec {
 
@@ -71,7 +72,7 @@ class MixedFixtureSpec extends MixedSpec {
     "start the Application lazily" in new App(buildApp("foo" -> "bar")) {
       val counter = new AtomicInteger()
 
-      class TestSpec extends fixture.WordSpec with MixedFixtures {
+      class TestSpec extends wordspec.FixtureAnyWordSpec with MixedFixtures {
         "test 1" in new App(new TestApplication(counter)) { t =>
         }
         "test 2" in new App(new TestApplication(counter)) { t =>
@@ -95,7 +96,7 @@ class MixedFixtureSpec extends MixedSpec {
     "start the Application lazily" in new App(buildApp("foo" -> "bar")) {
       val counter = new AtomicInteger()
 
-      class TestSpec extends fixture.WordSpec with MixedFixtures {
+      class TestSpec extends wordspec.FixtureAnyWordSpec with MixedFixtures {
         "test 1" in new Server(new TestApplication(counter)) { t =>
         }
         "test 2" in new Server(new TestApplication(counter)) { t =>
@@ -125,7 +126,7 @@ class MixedFixtureSpec extends MixedSpec {
     }
     "start the Application lazily" in new App(buildApp("foo" -> "bar")) {
       val counter = new AtomicInteger()
-      class TestSpec extends fixture.WordSpec with MixedFixtures {
+      class TestSpec extends wordspec.FixtureAnyWordSpec with MixedFixtures {
         var testRun = false // will be false if test is canceled due to driver not available on platform.
         "test 1" in new HtmlUnit(new TestApplication(counter)) { t =>
           testRun = true
@@ -169,7 +170,7 @@ class MixedFixtureSpec extends MixedSpec {
     }
     "start the Application lazily" in new App(buildApp("foo" -> "bar")) {
       val counter = new AtomicInteger()
-      class TestSpec extends fixture.WordSpec with MixedFixtures {
+      class TestSpec extends wordspec.FixtureAnyWordSpec with MixedFixtures {
         var testRun = false // will be false if test is canceled due to driver not available on platform.
         "test 1" in new Firefox(new TestApplication(counter)) { t =>
           testRun = true
@@ -212,7 +213,7 @@ class MixedFixtureSpec extends MixedSpec {
     }
     "start the Application lazily" in new App(buildApp("foo" -> "bar")) {
       val counter = new AtomicInteger()
-      class TestSpec extends fixture.WordSpec with MixedFixtures {
+      class TestSpec extends wordspec.FixtureAnyWordSpec with MixedFixtures {
         var testRun = false // will be false if test is canceled due to driver not available on platform.
         "test 1" in new Safari(new TestApplication(counter)) { t =>
           testRun = true
@@ -255,7 +256,7 @@ class MixedFixtureSpec extends MixedSpec {
     }
     "start the Application lazily" in new App(buildApp("foo" -> "bar")) {
       val counter = new AtomicInteger()
-      class TestSpec extends fixture.WordSpec with MixedFixtures {
+      class TestSpec extends wordspec.FixtureAnyWordSpec with MixedFixtures {
         var testRun = false // will be false if test is canceled due to driver not available on platform.
         "test 1" in new Chrome(new TestApplication(counter)) { t =>
           testRun = true
@@ -298,7 +299,7 @@ class MixedFixtureSpec extends MixedSpec {
     }
     "start the Application lazily" in new App(buildApp("foo" -> "bar")) {
       val counter = new AtomicInteger()
-      class TestSpec extends fixture.WordSpec with MixedFixtures {
+      class TestSpec extends wordspec.FixtureAnyWordSpec with MixedFixtures {
         var testRun = false // will be false if test is canceled due to driver not available on platform.
         "test 1" in new InternetExplorer(new TestApplication(counter)) { t =>
           testRun = true

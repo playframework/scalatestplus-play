@@ -22,12 +22,14 @@ import interplay.ScalaVersions._
 
 import play.core.PlayVersion
 
-val SeleniumVersion        = "3.141.59"
-val HtmlUnitVersion        = "2.39.0"
-val PhantomJsDriverVersion = "1.4.4"
-val MockitoVersion         = "2.18.3"
-val CssParserVersion       = "1.5.0"
-val ScalatestVersion       = "3.0.8"
+val SeleniumVersion          = "3.141.59"
+val HtmlUnitVersion          = "2.39.0"
+val PhantomJsDriverVersion   = "1.4.4"
+val MockitoVersion           = "2.18.3"
+val CssParserVersion         = "1.5.0"
+val ScalatestVersion         = "3.1.1"
+val ScalatestSeleniumVersion = "3.1.1.0"
+val ScalatestMockitoVersion  = "3.1.1.0"
 
 playBuildRepoName in ThisBuild := "scalatestplus-play"
 resolvers in ThisBuild += Resolver.sonatypeRepo("releases")
@@ -51,6 +53,13 @@ val previousVersion: Option[String] = Some("5.0.0")
 lazy val mimaSettings = Seq(
   mimaBinaryIssueFilters ++= Seq(
     // Add mima filters here
+    ProblemFilters.exclude[MissingTypesProblem]("org.scalatestplus.play.MixedPlaySpec"),
+    ProblemFilters.exclude[IncompatibleMethTypeProblem]("org.scalatestplus.play.MixedPlaySpec.*"),
+    ProblemFilters.exclude[IncompatibleResultTypeProblem]("org.scalatestplus.play.MixedPlaySpec.*"),
+    ProblemFilters.exclude[MissingTypesProblem]("org.scalatestplus.play.PlaySpec"),
+    ProblemFilters.exclude[IncompatibleMethTypeProblem]("org.scalatestplus.play.PlaySpec.*"),
+    ProblemFilters.exclude[IncompatibleResultTypeProblem]("org.scalatestplus.play.PlaySpec.*"),
+    ProblemFilters.exclude[DirectMissingMethodProblem]("org.scalatestplus.play.MixedPlaySpec.*"),
   ),
   mimaPreviousArtifacts := previousVersion.map(organization.value %% name.value % _).toSet
 )
@@ -101,6 +110,7 @@ lazy val `scalatestplus-play` = project
       akkaHttpServer             % Test,
       "com.typesafe.play"        %% "play-test" % PlayVersion.current,
       "org.scalatest"            %% "scalatest" % ScalatestVersion,
+      "org.scalatestplus"        %% "selenium-2-45" % ScalatestSeleniumVersion,
       "org.seleniumhq.selenium"  % "selenium-java" % SeleniumVersion,
       "org.seleniumhq.selenium"  % "htmlunit-driver" % HtmlUnitVersion,
       "net.sourceforge.htmlunit" % "htmlunit-cssparser" % CssParserVersion,
@@ -117,7 +127,8 @@ lazy val docs = project
   .settings(
     commonSettings,
     libraryDependencies ++= Seq(
-      "org.mockito" % "mockito-core" % MockitoVersion % Test
+      "org.mockito"       % "mockito-core" % MockitoVersion          % Test,
+      "org.scalatestplus" %% "mockito-3-2" % ScalatestMockitoVersion % Test,
     ),
     PlayDocsKeys.scalaManualSourceDirectories := (baseDirectory.value / "manual" / "working" / "scalaGuide" ** "code").get,
     PlayDocsKeys.resources += {
