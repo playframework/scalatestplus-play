@@ -110,7 +110,7 @@ lazy val `scalatestplus-play` = project
       akkaHttpServer             % Test,
       "com.typesafe.play"        %% "play-test" % PlayVersion.current,
       "org.scalatest"            %% "scalatest" % ScalatestVersion,
-      "org.scalatestplus"        %% "selenium-2-45" % ScalatestSeleniumVersion,
+      "org.scalatestplus"        %% "selenium-3-141" % ScalatestSeleniumVersion,
       "org.seleniumhq.selenium"  % "selenium-java" % SeleniumVersion,
       "org.seleniumhq.selenium"  % "htmlunit-driver" % HtmlUnitVersion,
       "net.sourceforge.htmlunit" % "htmlunit-cssparser" % CssParserVersion,
