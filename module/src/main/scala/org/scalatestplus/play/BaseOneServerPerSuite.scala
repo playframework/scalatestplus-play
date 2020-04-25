@@ -28,7 +28,7 @@ import play.api.test._
  * `Application` with non-default parameters, override `app`. If it needs a different port number,
  * override `port`.
  *
- * This `TestSuiteMixin` trait's overridden `run` method calls `start` on the `TestServer`
+ * This `SuiteMixin` trait's overridden `run` method calls `start` on the `TestServer`
  * before executing the `Suite` via a call to `super.run`.
  * In addition, it places a reference to the `Application` provided by `app` into the `ConfigMap`
  * under the key `org.scalatestplus.play.app` and to the port number provided by `port` under the key
@@ -134,7 +134,7 @@ import play.api.test._
  * }
  * </pre>
  */
-trait BaseOneServerPerSuite extends TestSuiteMixin with ServerProvider { this: TestSuite with FakeApplicationFactory =>
+trait BaseOneServerPerSuite extends SuiteMixin with ServerProvider { this: Suite with FakeApplicationFactory =>
 
   /**
    * An implicit instance of `Application`.

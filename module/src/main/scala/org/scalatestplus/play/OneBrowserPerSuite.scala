@@ -31,7 +31,7 @@ import scala.util.Try
 /**
  * Trait that provides a new Selenium `WebDriver` instance per ScalaTest `Suite`.
  *
- * This `TestSuiteMixin` trait's overridden `run` method
+ * This `SuiteMixin` trait's overridden `run` method
  * places a reference to the `WebDriver` provided by `webDriver` under the key `org.scalatestplus.play.webDriver`.
  * This allows any nested `Suite`s to access the `Suite`'s
  * `WebDriver` as well, most easily by having the nested `Suite`s mix in the
@@ -305,11 +305,12 @@ import scala.util.Try
  * </pre>
  */
 trait OneBrowserPerSuite
-    extends TestSuiteMixin
+    extends SuiteMixin
+    with BeforeAndAfterEach
     with WebBrowser
     with Eventually
     with IntegrationPatience
-    with BrowserFactory { this: TestSuite with ServerProvider =>
+    with BrowserFactory { this: Suite with ServerProvider =>
 
   /**
    * An implicit instance of `WebDriver`, created by calling `createWebDriver`.
@@ -322,14 +323,14 @@ trait OneBrowserPerSuite
    * Automatically cancels tests with an appropriate error message when the `webDriver` field is a `UnavailableDriver`,
    * else calls `super.withFixture(test)`
    */
-  abstract override def withFixture(test: NoArgTest): Outcome = {
+  override def beforeEach(): Unit = {
     webDriver match {
       case UnavailableDriver(ex, errorMessage) =>
         ex match {
           case Some(e) => cancel(errorMessage, e)
           case None    => cancel(errorMessage)
         }
-      case _ => super.withFixture(test)
+      case _ => super.beforeEach()
     }
   }
 

@@ -73,7 +73,7 @@ import play.core.server.ServerEndpoints
  * }
  * </pre>
  */
-trait ConfiguredServer extends TestSuiteMixin with ServerProvider { this: TestSuite =>
+trait ConfiguredServer extends SuiteMixin with ServerProvider { this: Suite =>
 
   private var configuredApp: Application = _
 

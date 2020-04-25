@@ -56,7 +56,7 @@ import play.api.Application
  * }
  * </pre>
  */
-trait ConfiguredApp extends TestSuiteMixin { this: TestSuite =>
+trait ConfiguredApp extends SuiteMixin { this: Suite =>
 
   private var configuredApp: Application = _
 

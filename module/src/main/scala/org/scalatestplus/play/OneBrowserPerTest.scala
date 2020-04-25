@@ -91,11 +91,12 @@ import org.scalatestplus.selenium.WebBrowser
  * </pre>
  */
 trait OneBrowserPerTest
-    extends TestSuiteMixin
+    extends SuiteMixin
+    with BeforeAndAfterEach
     with WebBrowser
     with Eventually
     with IntegrationPatience
-    with BrowserFactory { this: TestSuite with ServerProvider =>
+    with BrowserFactory { this: Suite with ServerProvider =>
 
   private var privateWebDriver: WebDriver = UninitializedDriver
 
@@ -110,22 +111,24 @@ trait OneBrowserPerTest
    * If an error occurs when attempting to creat the `WebDriver`, [[org.scalatestplus.play.BrowserFactory.UnavailableDriver BrowserFactory.UnavailableDriver]]
    * will be used instead and all tests will be canceled automatically.
    *
-   * @param test the no-arg test function to run with a fixture
-   * @return the `Outcome` of the test execution
    */
-  abstract override def withFixture(test: NoArgTest) = {
+  override def beforeEach(): Unit = {
     synchronized {
       privateWebDriver = createWebDriver()
     }
+    privateWebDriver match {
+      case UnavailableDriver(ex, errorMessage) =>
+        ex match {
+          case Some(e) => cancel(errorMessage, e)
+          case None    => cancel(errorMessage)
+        }
+      case _ => super.beforeEach()
+    }
+  }
+
+  override def afterEach(): Unit = {
     try {
-      privateWebDriver match {
-        case UnavailableDriver(ex, errorMessage) =>
-          ex match {
-            case Some(e) => cancel(errorMessage, e)
-            case None    => cancel(errorMessage)
-          }
-        case _ => super.withFixture(test)
-      }
+      super.afterEach()
     } finally {
       privateWebDriver match {
         case _: UnavailableDriver => // do nothing

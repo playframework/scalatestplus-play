@@ -15,7 +15,7 @@
  */
 package org.scalatestplus.play.guice
 
-import org.scalatest.TestSuite
+import org.scalatest.Suite
 import org.scalatestplus.play.BaseOneAppPerSuite
 
 /**
@@ -25,7 +25,7 @@ import org.scalatestplus.play.BaseOneAppPerSuite
  * is made available via the `app` field defined in this trait. If your `Suite` needs a `Application` with non-default
  * parameters, override `app` to create it the way you need it.
  *
- * This `TestSuiteMixin` trait's overridden `run` method calls `Play.start`, passing in the
+ * This `SuiteMixin` trait's overridden `run` method calls `Play.start`, passing in the
  * `Application` provided by `app`, before executing the `Suite` via a call to `super.run`.
  * In addition, it places a reference to the `Application` provided by `app` into the `ConfigMap`
  * under the key `org.scalatestplus.play.app`.  This allows any nested `Suite`s to access the `Suite`'s
@@ -108,6 +108,6 @@ import org.scalatestplus.play.BaseOneAppPerSuite
  * }
  * </pre>
  */
-trait GuiceOneAppPerSuite extends BaseOneAppPerSuite with GuiceFakeApplicationFactory { this: TestSuite =>
+trait GuiceOneAppPerSuite extends BaseOneAppPerSuite with GuiceFakeApplicationFactory { this: Suite =>
 
 }

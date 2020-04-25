@@ -22,7 +22,7 @@ import org.scalatest._
 /**
  * Trait that provides a new `Application` and running `TestServer` instance for each test executed in a ScalaTest `Suite`.
  *
- * This `TestSuiteMixin` trait overrides ScalaTest's `withFixture` method to create a new `Application` and `TestServer`
+ * This `SuiteMixin` trait overrides ScalaTest's `withFixture` method to create a new `Application` and `TestServer`
  * before each test, and ensure they are cleaned up after the test has completed. The `Application` is available (implicitly) from
  * method `app`. The `TestServer`'s port number is available as `port` (and implicitly available as `portNumber`, wrapped
  * in a [[org.scalatestplus.play.PortNumber PortNumber]]).
@@ -73,7 +73,8 @@ import org.scalatest._
  * }
  * </pre>
  */
-trait BaseOneServerPerTest extends TestSuiteMixin with ServerProvider { this: TestSuite with FakeApplicationFactory =>
+trait BaseOneServerPerTest extends SuiteMixin with BeforeAndAfterEachTestData with ServerProvider {
+  this: Suite with FakeApplicationFactory =>
 
   @volatile private var privateApp: Application      = _
   @volatile private var privateServer: RunningServer = _
@@ -108,28 +109,23 @@ trait BaseOneServerPerTest extends TestSuiteMixin with ServerProvider { this: Te
   protected def newServerForTest(app: Application, testData: TestData): RunningServer =
     DefaultTestServerFactory.start(app)
 
-  /**
-   * Creates new `Application` and running `TestServer` instances before executing each test, and
-   * ensures they are cleaned up after the test completes. You can access the `Application` from
-   * your tests as `app` and the `TestServer`'s port number as `port`.
-   *
-   * @param test the no-arg test function to run with a fixture
-   * @return the `Outcome` of the test execution
-   */
-  abstract override def withFixture(test: NoArgTest) = {
-    // Need to synchronize within a suite because we store current app/server in fields in the class
-    // Could possibly pass app/server info in a ScalaTest object?
+  override def beforeEach(td: TestData): Unit = {
     lock.synchronized {
-      privateApp = newAppForTest(test)
-      privateServer = newServerForTest(app, test)
-      try super.withFixture(test)
-      finally {
-        val rs = privateServer // Store before nulling fields
-        privateApp = null
-        privateServer = null
-        // Stop server and release locks
-        rs.stopServer.close()
-      }
+      privateApp = newAppForTest(td)
+      privateServer = newServerForTest(app, td)
+    }
+    super.beforeEach(td)
+  }
+
+  override def afterEach(td: TestData): Unit = {
+    try {
+      super.afterEach(td)
+    } finally {
+      val rs = privateServer // Store before nulling fields
+      privateApp = null
+      privateServer = null
+      // Stop server and release locks
+      rs.stopServer.close()
     }
   }
 }

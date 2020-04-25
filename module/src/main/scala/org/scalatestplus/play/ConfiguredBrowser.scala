@@ -87,8 +87,8 @@ import org.scalatestplus.selenium.WebBrowser
  * }
  * </pre>
  */
-trait ConfiguredBrowser extends TestSuiteMixin with WebBrowser with Eventually with IntegrationPatience {
-  this: TestSuite with ServerProvider =>
+trait ConfiguredBrowser extends SuiteMixin with WebBrowser with Eventually with IntegrationPatience {
+  this: Suite with ServerProvider =>
 
   private var configuredWebDriver: WebDriver = UninitializedDriver
 
