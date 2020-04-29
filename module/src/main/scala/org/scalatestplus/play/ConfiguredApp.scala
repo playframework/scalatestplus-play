@@ -56,7 +56,7 @@ import play.api.Application
  * }
  * </pre>
  */
-trait ConfiguredApp extends SuiteMixin { this: Suite =>
+trait ConfiguredApp extends SuiteMixin with BeforeAndAfterAllConfigMap { this: Suite =>
 
   private var configuredApp: Application = _
 
@@ -75,23 +75,21 @@ trait ConfiguredApp extends SuiteMixin { this: Suite =>
    * If no key matches "org.scalatestplus.play.app" in `args.configMap`, or the associated value is
    * not a `Application`, throws `IllegalArgumentException`.
    *
-   * To prevent discovery of nested suites you can annotate them with `@DoNotDiscover`.
-   *
-   * @param testName an optional name of one test to run. If `None`, all relevant tests should be run.
-   *                 I.e., `None` acts like a wildcard that means run all relevant tests in this `Suite`.
-   * @param args the `Args` for this run
-   * @return a `Status` object that indicates when all tests and nested suites started by this method have completed, and whether or not a failure occurred.
-   *
    * @throws java.lang.IllegalArgumentException if the `Application` does not appear in `args.configMap` under the expected key
    */
-  abstract override def run(testName: Option[String], args: Args): Status = {
-    args.configMap.getOptional[Application]("org.scalatestplus.play.app") match {
-      case Some(ca) => synchronized { configuredApp = ca }
+  protected override def beforeAll(configMap: ConfigMap): Unit = {
+    super.beforeAll(configMap)
+    configMap.getOptional[AppProvider]("org.scalatestplus.play.app.provider") match {
+      case Some(ca) => synchronized { configuredApp = ca.app }
       case None =>
         throw new IllegalArgumentException(
-          "ConfiguredApp needs an Application value associated with key \"org.scalatestplus.play.app\" in the config map. Did you forget to annotate a nested suite with @DoNotDiscover?"
+          "ConfiguredApp needs an Application value associated with key \"org.scalatestplus.play.app.provider\" in the config map. Did you forget to annotate a nested suite with @DoNotDiscover?"
         )
     }
-    super.run(testName, args)
   }
+
+  abstract override def testDataFor(testName: String, configMap: ConfigMap): TestData = {
+    super.testDataFor(testName, configMap + ("org.scalatestplus.play.app" -> app))
+  }
+
 }

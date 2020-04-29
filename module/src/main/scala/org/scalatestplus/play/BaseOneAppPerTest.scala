@@ -1,9 +1,6 @@
 package org.scalatestplus.play
 
-import org.scalatest.BeforeAndAfterEachTestData
-import org.scalatest.TestData
-import org.scalatest.Suite
-import org.scalatest.SuiteMixin
+import org.scalatest._
 import play.api.Application
 import play.api.Play
 import play.api.test.Helpers
@@ -50,26 +47,26 @@ import play.api.test.Helpers
 trait BaseOneAppPerTest extends SuiteMixin with BeforeAndAfterEachTestData with AppProvider {
   this: Suite with FakeApplicationFactory =>
 
+  private var appPerTest: Application = _
+
   /**
    * Creates new instance of `Application` with parameters set to their defaults. Override this method if you
    * need a `Application` created with non-default parameter values.
    */
   def newAppForTest(testData: TestData): Application = fakeApplication()
 
-  private var appPerTest: Application = _
-
   /**
    * Implicit method that returns the `Application` instance for the current test.
    */
   final implicit def app: Application = synchronized { appPerTest }
 
-  override def beforeEach(td: TestData): Unit = {
+  protected override def beforeEach(td: TestData): Unit = {
     synchronized { appPerTest = newAppForTest(td) }
     Play.start(appPerTest)
     super.beforeEach(td)
   }
 
-  override def afterEach(td: TestData): Unit = {
+  protected override def afterEach(td: TestData): Unit = {
     try {
       super.afterEach(td)
     } finally {

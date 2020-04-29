@@ -109,7 +109,7 @@ trait BaseOneServerPerTest extends SuiteMixin with BeforeAndAfterEachTestData wi
   protected def newServerForTest(app: Application, testData: TestData): RunningServer =
     DefaultTestServerFactory.start(app)
 
-  override def beforeEach(td: TestData): Unit = {
+  protected override def beforeEach(td: TestData): Unit = {
     lock.synchronized {
       privateApp = newAppForTest(td)
       privateServer = newServerForTest(app, td)
@@ -117,7 +117,7 @@ trait BaseOneServerPerTest extends SuiteMixin with BeforeAndAfterEachTestData wi
     super.beforeEach(td)
   }
 
-  override def afterEach(td: TestData): Unit = {
+  protected override def afterEach(td: TestData): Unit = {
     try {
       super.afterEach(td)
     } finally {
