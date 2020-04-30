@@ -56,9 +56,9 @@ import play.api.Application
  * }
  * </pre>
  */
-trait ConfiguredApp extends SuiteMixin with BeforeAndAfterAllConfigMap { this: Suite =>
+trait ConfiguredApp extends SuiteMixin with BeforeAndAfterAllConfigMap with BeforeAndAfterEachTestData { this: Suite =>
 
-  private var configuredApp: Application = _
+  @volatile private var configuredApp: Application = _
 
   /**
    * The "configured" `Application` instance that was passed into `run` via the `ConfigMap`.
@@ -79,17 +79,37 @@ trait ConfiguredApp extends SuiteMixin with BeforeAndAfterAllConfigMap { this: S
    */
   protected override def beforeAll(configMap: ConfigMap): Unit = {
     super.beforeAll(configMap)
+    setApplicationFrom(configMap)
+  }
+
+  /**
+   * Places a reference to the app into per-test instances
+   */
+  protected override def beforeEach(testData: TestData): Unit = {
+    super.beforeEach(testData)
+    if (isInstanceOf[OneInstancePerTest])
+      setApplicationFrom(testData.configMap)
+  }
+
+  private def setApplicationFrom(configMap: ConfigMap): Unit = {
     configMap.getOptional[AppProvider]("org.scalatestplus.play.app.provider") match {
-      case Some(ca) => synchronized { configuredApp = ca.app }
-      case None =>
+      case Some(cap) => synchronized { configuredApp = cap.app }
+      case _ =>
         throw new IllegalArgumentException(
           "ConfiguredApp needs an Application value associated with key \"org.scalatestplus.play.app.provider\" in the config map. Did you forget to annotate a nested suite with @DoNotDiscover?"
         )
     }
   }
 
+  /**
+   * Places the app into the test's ConfigMap
+   */
   abstract override def testDataFor(testName: String, configMap: ConfigMap): TestData = {
-    super.testDataFor(testName, configMap + ("org.scalatestplus.play.app" -> app))
+    configMap.getOptional[AppProvider]("org.scalatestplus.play.app.provider") match {
+      //when running as OneInstancePerTest, we need to reuse the BeforeAll instance's app
+      case Some(cap) => super.testDataFor(testName, configMap + ("org.scalatestplus.play.app" -> cap.app))
+      case _         => super.testDataFor(testName, configMap + ("org.scalatestplus.play.app" -> app))
+    }
   }
 
 }

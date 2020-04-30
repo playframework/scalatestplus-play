@@ -73,26 +73,18 @@ import play.core.server.ServerEndpoints
  * }
  * </pre>
  */
-trait ConfiguredServer extends ConfiguredApp with BeforeAndAfterAllConfigMap with ServerProvider { this: Suite =>
+trait ConfiguredServer
+    extends ConfiguredApp
+    with BeforeAndAfterAllConfigMap
+    with BeforeAndAfterEachTestData
+    with ServerProvider { this: Suite =>
 
-  protected implicit lazy val runningServer: RunningServer =
-    RunningServer(
-      app,
-      ServerEndpoints(
-        Seq(
-          ServerEndpoint(
-            description = "ConfiguredServer endpoint",
-            scheme = "http",
-            host = "localhost",
-            port = configuredPort,
-            protocols = Set.empty,
-            serverAttribute = None,
-            ssl = None
-          )
-        )
-      ),
-      new AutoCloseable { def close() = () }
-    )
+  @volatile private var privateServer: RunningServer = _
+
+  final implicit def runningServer: RunningServer = {
+    require(privateServer != null, "Test isn't running yet so the server endpoints are not available")
+    privateServer
+  }
 
   private var _configuredPort: Int = -1
 
@@ -114,8 +106,25 @@ trait ConfiguredServer extends ConfiguredApp with BeforeAndAfterAllConfigMap wit
    */
   protected override def beforeAll(configMap: ConfigMap): Unit = {
     super.beforeAll(configMap)
+    setServerFrom(configMap)
+  }
+
+  /**
+   * Places a reference to the server into per-test instances
+   */
+  protected override def beforeEach(testData: TestData): Unit = {
+    super.beforeEach(testData)
+    if (isInstanceOf[OneInstancePerTest])
+      setServerFrom(testData.configMap)
+  }
+
+  private def setServerFrom(configMap: ConfigMap): Unit = {
     configMap.getOptional[ServerProvider]("org.scalatestplus.play.server.provider") match {
-      case Some(cp) => synchronized { _configuredPort = cp.port }
+      case Some(cp) =>
+        synchronized {
+          privateServer = cp.runningServer
+          _configuredPort = cp.port
+        }
       case None =>
         throw new Exception(
           "Trait ConfiguredServer needs an Int value associated with key \"org.scalatestplus.play.server.provider\" in the config map. Did you forget to annotate a nested suite with @DoNotDiscover?"
@@ -123,7 +132,14 @@ trait ConfiguredServer extends ConfiguredApp with BeforeAndAfterAllConfigMap wit
     }
   }
 
+  /**
+   * Places the server port into the test's ConfigMap
+   */
   abstract override def testDataFor(testName: String, configMap: ConfigMap): TestData = {
-    super.testDataFor(testName, configMap + ("org.scalatestplus.play.port" -> port))
+    configMap.getOptional[ServerProvider]("org.scalatestplus.play.server.provider") match {
+      //when running as OneInstancePerTest, we need to reuse the BeforeAll instance's server
+      case Some(sp) => super.testDataFor(testName, configMap + ("org.scalatestplus.play.port" -> sp.port))
+      case _        => super.testDataFor(testName, configMap + ("org.scalatestplus.play.port" -> port))
+    }
   }
 }

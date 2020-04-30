@@ -22,10 +22,10 @@ import play.api.Play
 /**
  * The base abstract trait for one app per suite.
  */
-trait BaseOneAppPerSuite extends SuiteMixin with AppProvider with BeforeAndAfterAll {
+trait BaseOneAppPerSuite extends SuiteMixin with AppProvider with BeforeAndAfterAll with BeforeAndAfterEachTestData {
   this: Suite with FakeApplicationFactory =>
 
-  private var privateApp: Application = _
+  @volatile private var privateApp: Application = _
 
   /**
    * An implicit instance of `Application`.
@@ -51,15 +51,45 @@ trait BaseOneAppPerSuite extends SuiteMixin with AppProvider with BeforeAndAfter
     }
   }
 
+  /**
+   * Places a reference to the app into per-test instances
+   */
+  protected override def beforeEach(testData: TestData): Unit = {
+    if (isInstanceOf[OneInstancePerTest])
+      setApplicationFrom(testData.configMap)
+    super.beforeEach(testData)
+  }
+
+  private def setApplicationFrom(configMap: ConfigMap): Unit = {
+    configMap.getOptional[AppProvider]("org.scalatestplus.play.app.provider") match {
+      case Some(cap) => synchronized { privateApp = cap.app }
+      case _ =>
+        throw new IllegalArgumentException(
+          "ConfiguredApp needs an Application value associated with key \"org.scalatestplus.play.app.provider\" in the config map. Did you forget to annotate a nested suite with @DoNotDiscover?"
+        )
+    }
+  }
+
+  /**
+   * Places the app into the test's ConfigMap
+   */
   abstract override def testDataFor(testName: String, configMap: ConfigMap): TestData = {
-    super.testDataFor(testName, configMap + ("org.scalatestplus.play.app" -> app))
+    configMap.getOptional[AppProvider]("org.scalatestplus.play.app.provider") match {
+      //when running as OneInstancePerTest, we need to reuse the BeforeAll instance's app
+      case Some(cap) => super.testDataFor(testName, configMap + ("org.scalatestplus.play.app" -> cap.app))
+      case _         => super.testDataFor(testName, configMap + ("org.scalatestplus.play.app" -> app))
+    }
   }
 
   //put a provider into the config map(instead of app directly), so that if tests are excluded, the app is never created
   abstract override def run(testName: Option[String], args: Args): Status = {
-    val newConfigMap = args.configMap + ("org.scalatestplus.play.app.provider" -> this)
-    val newArgs      = args.copy(configMap = newConfigMap)
-    super.run(testName, newArgs)
+    // if a test is running under OneInstancePerTest, the config map will already be set
+    if (args.runTestInNewInstance) super.run(testName, args)
+    else {
+      val newConfigMap = args.configMap + ("org.scalatestplus.play.app.provider" -> this)
+      val newArgs      = args.copy(configMap = newConfigMap)
+      super.run(testName, newArgs)
+    }
   }
 
 }

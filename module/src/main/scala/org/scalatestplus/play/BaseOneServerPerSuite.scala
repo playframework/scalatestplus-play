@@ -134,10 +134,14 @@ import play.api.test._
  * }
  * </pre>
  */
-trait BaseOneServerPerSuite extends BaseOneAppPerSuite with BeforeAndAfterAll with ServerProvider {
+trait BaseOneServerPerSuite
+    extends BaseOneAppPerSuite
+    with BeforeAndAfterAll
+    with BeforeAndAfterEachTestData
+    with ServerProvider {
   this: Suite with FakeApplicationFactory =>
 
-  private var privateServer: RunningServer = _
+  @volatile private var privateServer: RunningServer = _
 
   final implicit def runningServer: RunningServer = {
     require(privateServer != null, "Test isn't running yet so the server endpoints are not available")
@@ -146,8 +150,10 @@ trait BaseOneServerPerSuite extends BaseOneAppPerSuite with BeforeAndAfterAll wi
 
   protected override def beforeAll(): Unit = {
     super.beforeAll()
-    privateServer = DefaultTestServerFactory.start(app)
+    privateServer = startTestServer
   }
+
+  protected def startTestServer: RunningServer = DefaultTestServerFactory.start(app)
 
   protected override def afterAll(): Unit = {
     try {
@@ -159,15 +165,45 @@ trait BaseOneServerPerSuite extends BaseOneAppPerSuite with BeforeAndAfterAll wi
     }
   }
 
+  /**
+   * Places a reference to the server into per-test instances
+   */
+  protected override def beforeEach(testData: TestData): Unit = {
+    super.beforeEach(testData)
+    if (isInstanceOf[OneInstancePerTest])
+      setServerFrom(testData.configMap)
+  }
+
+  private def setServerFrom(configMap: ConfigMap): Unit = {
+    configMap.getOptional[ServerProvider]("org.scalatestplus.play.server.provider") match {
+      case Some(sp) => synchronized { privateServer = sp.runningServer }
+      case _ =>
+        throw new IllegalArgumentException(
+          "ConfiguredApp needs an Application value associated with key \"org.scalatestplus.play.server.provider\" in the config map. Did you forget to annotate a nested suite with @DoNotDiscover?"
+        )
+    }
+  }
+
+  /**
+   * Places the server port into the test's ConfigMap
+   */
   abstract override def testDataFor(testName: String, configMap: ConfigMap): TestData = {
-    super.testDataFor(testName, configMap + ("org.scalatestplus.play.port" -> port))
+    configMap.getOptional[ServerProvider]("org.scalatestplus.play.server.provider") match {
+      //when running as OneInstancePerTest, we need to reuse the BeforeAll instance's server provider
+      case Some(sp) => super.testDataFor(testName, configMap + ("org.scalatestplus.play.port" -> sp.port))
+      case _        => super.testDataFor(testName, configMap + ("org.scalatestplus.play.port" -> port))
+    }
   }
 
   //put a provider into the config map(instead of server directly), so that if tests are excluded, the server is never created
   abstract override def run(testName: Option[String], args: Args): Status = {
-    val newConfigMap = args.configMap + ("org.scalatestplus.play.server.provider" -> this)
-    val newArgs      = args.copy(configMap = newConfigMap)
-    super.run(testName, newArgs)
+    // if a test is running under OneInstancePerTest, the config map will already be set
+    if (args.runTestInNewInstance) super.run(testName, args)
+    else {
+      val newConfigMap = args.configMap + ("org.scalatestplus.play.server.provider" -> this)
+      val newArgs      = args.copy(configMap = newConfigMap)
+      super.run(testName, newArgs)
+    }
   }
 
 }

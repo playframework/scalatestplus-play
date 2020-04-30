@@ -39,7 +39,7 @@ trait ServerProvider {
    */
   implicit def app: Application
 
-  protected implicit def runningServer: RunningServer
+  protected[play] implicit def runningServer: RunningServer
 
   /**
    * The port used by the `TestServer`.
