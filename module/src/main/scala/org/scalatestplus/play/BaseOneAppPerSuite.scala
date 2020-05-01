@@ -61,24 +61,24 @@ trait BaseOneAppPerSuite extends SuiteMixin with AppProvider with BeforeAndAfter
   }
 
   private def setApplicationFrom(configMap: ConfigMap): Unit = {
-    configMap.getOptional[AppProvider]("org.scalatestplus.play.app.provider") match {
-      case Some(cap) => synchronized { privateApp = cap.app }
-      case _ =>
-        throw new IllegalArgumentException(
-          "ConfiguredApp needs an Application value associated with key \"org.scalatestplus.play.app.provider\" in the config map. Did you forget to annotate a nested suite with @DoNotDiscover?"
-        )
-    }
+    synchronized { privateApp = providerFrom(configMap).app }
   }
 
   /**
    * Places the app into the test's ConfigMap
    */
   abstract override def testDataFor(testName: String, configMap: ConfigMap): TestData = {
-    configMap.getOptional[AppProvider]("org.scalatestplus.play.app.provider") match {
-      //when running as OneInstancePerTest, we need to reuse the BeforeAll instance's app
-      case Some(cap) => super.testDataFor(testName, configMap + ("org.scalatestplus.play.app" -> cap.app))
-      case _         => super.testDataFor(testName, configMap + ("org.scalatestplus.play.app" -> app))
-    }
+    super.testDataFor(testName, configMap + ("org.scalatestplus.play.app" -> providerFrom(configMap).app))
+  }
+
+  private def providerFrom(configMap: ConfigMap): AppProvider = {
+    configMap
+      .getOptional[AppProvider]("org.scalatestplus.play.app.provider")
+      .getOrElse(
+        throw new IllegalArgumentException(
+          "BaseOneAppPerSuite needs an Application value associated with key \"org.scalatestplus.play.app.provider\" in the config map"
+        )
+      )
   }
 
   //put a provider into the config map(instead of app directly), so that if tests are excluded, the app is never created

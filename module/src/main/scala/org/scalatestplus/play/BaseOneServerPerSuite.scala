@@ -175,24 +175,24 @@ trait BaseOneServerPerSuite
   }
 
   private def setServerFrom(configMap: ConfigMap): Unit = {
-    configMap.getOptional[ServerProvider]("org.scalatestplus.play.server.provider") match {
-      case Some(sp) => synchronized { privateServer = sp.runningServer }
-      case _ =>
+    synchronized { privateServer = providerFrom(configMap).runningServer }
+  }
+
+  private def providerFrom(configMap: ConfigMap): ServerProvider = {
+    configMap
+      .getOptional[ServerProvider]("org.scalatestplus.play.server.provider")
+      .getOrElse(
         throw new IllegalArgumentException(
-          "ConfiguredApp needs an Application value associated with key \"org.scalatestplus.play.server.provider\" in the config map. Did you forget to annotate a nested suite with @DoNotDiscover?"
+          "BaseOneServerPerSuite needs an Application value associated with key \"org.scalatestplus.play.server.provider\" in the config map"
         )
-    }
+      )
   }
 
   /**
    * Places the server port into the test's ConfigMap
    */
   abstract override def testDataFor(testName: String, configMap: ConfigMap): TestData = {
-    configMap.getOptional[ServerProvider]("org.scalatestplus.play.server.provider") match {
-      //when running as OneInstancePerTest, we need to reuse the BeforeAll instance's server provider
-      case Some(sp) => super.testDataFor(testName, configMap + ("org.scalatestplus.play.port" -> sp.port))
-      case _        => super.testDataFor(testName, configMap + ("org.scalatestplus.play.port" -> port))
-    }
+    super.testDataFor(testName, configMap + ("org.scalatestplus.play.port" -> providerFrom(configMap).port))
   }
 
   //put a provider into the config map(instead of server directly), so that if tests are excluded, the server is never created
