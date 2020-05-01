@@ -135,7 +135,7 @@ import play.api.test._
  * </pre>
  */
 trait BaseOneServerPerSuite
-    extends BaseOneAppPerSuite
+    extends SuiteMixin
     with BeforeAndAfterAll
     with BeforeAndAfterEachTestData
     with ServerProvider {
@@ -148,12 +148,19 @@ trait BaseOneServerPerSuite
     privateServer
   }
 
-  protected override def beforeAll(): Unit = {
-    super.beforeAll()
-    privateServer = startTestServer
+  /**
+   * An implicit instance of `Application`.
+   */
+  final implicit def app: Application = {
+    runningServer.app
   }
 
-  protected def startTestServer: RunningServer = DefaultTestServerFactory.start(app)
+  protected override def beforeAll(): Unit = {
+    privateServer = startTestServer
+    super.beforeAll()
+  }
+
+  protected def startTestServer: RunningServer = DefaultTestServerFactory.start(fakeApplication())
 
   protected override def afterAll(): Unit = {
     try {
@@ -192,7 +199,9 @@ trait BaseOneServerPerSuite
    * Places the server port into the test's ConfigMap
    */
   abstract override def testDataFor(testName: String, configMap: ConfigMap): TestData = {
-    super.testDataFor(testName, configMap + ("org.scalatestplus.play.port" -> providerFrom(configMap).port))
+    val serverProvider = providerFrom(configMap)
+    val newConfigMap   = configMap + ("org.scalatestplus.play.app" -> serverProvider.app) + ("org.scalatestplus.play.port" -> serverProvider.port)
+    super.testDataFor(testName, newConfigMap)
   }
 
   //put a provider into the config map(instead of server directly), so that if tests are excluded, the server is never created

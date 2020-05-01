@@ -74,7 +74,7 @@ import play.core.server.ServerEndpoints
  * </pre>
  */
 trait ConfiguredServer
-    extends ConfiguredApp
+    extends SuiteMixin
     with BeforeAndAfterAllConfigMap
     with BeforeAndAfterEachTestData
     with ServerProvider { this: Suite =>
@@ -85,6 +85,8 @@ trait ConfiguredServer
     require(privateServer != null, "Test isn't running yet so the server endpoints are not available")
     privateServer
   }
+
+  final implicit def app: Application = runningServer.app
 
   private var _configuredPort: Int = -1
 
@@ -140,6 +142,8 @@ trait ConfiguredServer
    * Places the server port into the test's ConfigMap
    */
   abstract override def testDataFor(testName: String, configMap: ConfigMap): TestData = {
-    super.testDataFor(testName, configMap + ("org.scalatestplus.play.port" -> providerFrom(configMap).port))
+    val serverProvider = providerFrom(configMap)
+    val newConfigMap   = configMap + ("org.scalatestplus.play.app" -> serverProvider.app) + ("org.scalatestplus.play.port" -> serverProvider.port)
+    super.testDataFor(testName, newConfigMap)
   }
 }
