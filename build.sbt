@@ -108,13 +108,13 @@ lazy val `scalatestplus-play` = project
     libraryDependencies ++= Seq(
       ws,
       akkaHttpServer             % Test,
-      "com.typesafe.play"        %% "play-test" % PlayVersion.current,
-      "org.scalatest"            %% "scalatest" % ScalatestVersion,
-      "org.scalatestplus"        %% "selenium-3-141" % ScalatestSeleniumVersion,
-      "org.seleniumhq.selenium"  % "selenium-java" % SeleniumVersion,
-      "org.seleniumhq.selenium"  % "htmlunit-driver" % HtmlUnitVersion,
+      "com.typesafe.play"        %% "play-test"         % PlayVersion.current,
+      "org.scalatest"            %% "scalatest"         % ScalatestVersion,
+      "org.scalatestplus"        %% "selenium-3-141"    % ScalatestSeleniumVersion,
+      "org.seleniumhq.selenium"  % "selenium-java"      % SeleniumVersion,
+      "org.seleniumhq.selenium"  % "htmlunit-driver"    % HtmlUnitVersion,
       "net.sourceforge.htmlunit" % "htmlunit-cssparser" % CssParserVersion,
-      "com.codeborne"            % "phantomjsdriver" % PhantomJsDriverVersion
+      "com.codeborne"            % "phantomjsdriver"    % PhantomJsDriverVersion
     ),
     scalacOptions in (Compile, doc) := Seq("-doc-title", "ScalaTest + Play, " + releaseVersion),
     pomExtra := PomExtra
