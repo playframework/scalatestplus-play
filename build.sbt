@@ -28,7 +28,7 @@ val PhantomJsDriverVersion   = "1.4.4"
 val MockitoVersion           = "3.2.4"
 val CssParserVersion         = "1.5.0"
 val ScalatestVersion         = "3.1.2"
-val ScalatestSeleniumVersion = "3.1.1.0"
+val ScalatestSeleniumVersion = "3.1.2.0"
 val ScalatestMockitoVersion  = "3.1.1.0"
 
 playBuildRepoName in ThisBuild := "scalatestplus-play"
