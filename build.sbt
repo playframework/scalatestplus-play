@@ -25,11 +25,11 @@ import play.core.PlayVersion
 val SeleniumVersion          = "3.141.59"
 val HtmlUnitVersion          = "2.39.0"
 val PhantomJsDriverVersion   = "1.4.4"
-val MockitoVersion           = "3.2.4"
-val CssParserVersion         = "1.5.0"
+val MockitoVersion           = "3.4.6"
+val CssParserVersion         = "1.6.0"
 val ScalatestVersion         = "3.1.4"
-val ScalatestSeleniumVersion = "3.1.2.0"
-val ScalatestMockitoVersion  = "3.1.1.0"
+val ScalatestSeleniumVersion = "3.1.4.0"
+val ScalatestMockitoVersion  = "3.1.4.0"
 
 playBuildRepoName in ThisBuild := "scalatestplus-play"
 resolvers in ThisBuild += Resolver.sonatypeRepo("releases")
@@ -110,6 +110,7 @@ lazy val `scalatestplus-play` = project
       akkaHttpServer             % Test,
       "com.typesafe.play"        %% "play-test"         % PlayVersion.current,
       "org.scalatest"            %% "scalatest"         % ScalatestVersion,
+      "org.scalatestplus"        %% "mockito-3-4"       % ScalatestMockitoVersion,
       "org.scalatestplus"        %% "selenium-3-141"    % ScalatestSeleniumVersion,
       "org.seleniumhq.selenium"  % "selenium-java"      % SeleniumVersion,
       "org.seleniumhq.selenium"  % "htmlunit-driver"    % HtmlUnitVersion,
@@ -127,8 +128,7 @@ lazy val docs = project
   .settings(
     commonSettings,
     libraryDependencies ++= Seq(
-      "org.mockito"       % "mockito-core" % MockitoVersion          % Test,
-      "org.scalatestplus" %% "mockito-3-2" % ScalatestMockitoVersion % Test,
+      "org.mockito" % "mockito-core" % MockitoVersion % Test,
     ),
     PlayDocsKeys.scalaManualSourceDirectories := (baseDirectory.value / "manual" / "working" / "scalaGuide" ** "code").get,
     PlayDocsKeys.resources += {
