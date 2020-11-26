@@ -27,7 +27,7 @@ libraryDependencies ++= Seq(
 )
 ```
 
-Where `x.x.x` is a specific version of `scalatestplus-play` artifact, for example `3.1.1`. See the [available releases here](https://github.com/playframework/scalatestplus-play#releases).
+Where `x.x.x` is a specific version of `scalatestplus-play` artifact, for example `5.1.0`. See the [available releases here](https://github.com/playframework/scalatestplus-play#releases).
 
 You do not need to add ScalaTest, or ScalaTest plus mockito to your build explicitly. The proper version of ScalaTest will be brought in automatically as a transitive dependency of _ScalaTest + Play_. You will, however, need to select a version of _ScalaTest + Play_ that matches your Play version. You can do so by checking the [releases compatibility](https://github.com/playframework/scalatestplus-play#releases) matrix for _ScalaTest + Play_.
 
