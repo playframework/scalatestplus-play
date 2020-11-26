@@ -128,7 +128,7 @@ lazy val docs = project
   .settings(
     commonSettings,
     libraryDependencies ++= Seq(
-      "org.mockito"       % "mockito-core" % MockitoVersion          % Test,
+      "org.mockito" % "mockito-core" % MockitoVersion % Test,
     ),
     PlayDocsKeys.scalaManualSourceDirectories := (baseDirectory.value / "manual" / "working" / "scalaGuide" ** "code").get,
     PlayDocsKeys.resources += {
