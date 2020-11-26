@@ -110,6 +110,7 @@ lazy val `scalatestplus-play` = project
       akkaHttpServer             % Test,
       "com.typesafe.play"        %% "play-test"         % PlayVersion.current,
       "org.scalatest"            %% "scalatest"         % ScalatestVersion,
+      "org.scalatestplus"        %% "mockito-3-2"       % ScalatestMockitoVersion % Test,
       "org.scalatestplus"        %% "selenium-3-141"    % ScalatestSeleniumVersion,
       "org.seleniumhq.selenium"  % "selenium-java"      % SeleniumVersion,
       "org.seleniumhq.selenium"  % "htmlunit-driver"    % HtmlUnitVersion,
@@ -128,7 +129,6 @@ lazy val docs = project
     commonSettings,
     libraryDependencies ++= Seq(
       "org.mockito"       % "mockito-core" % MockitoVersion          % Test,
-      "org.scalatestplus" %% "mockito-3-2" % ScalatestMockitoVersion % Test,
     ),
     PlayDocsKeys.scalaManualSourceDirectories := (baseDirectory.value / "manual" / "working" / "scalaGuide" ** "code").get,
     PlayDocsKeys.resources += {
