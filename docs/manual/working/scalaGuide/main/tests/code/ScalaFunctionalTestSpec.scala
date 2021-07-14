@@ -10,11 +10,12 @@ import org.scalatest.wordspec.FixtureAnyWordSpec
 import org.scalatestplus.play._
 import play.api.http.MimeTypes
 import play.api.test._
+import play.api.test.Helpers._
 // #scalafunctionaltest-imports
 
 import play.api.mvc._
 
-import play.api.test.Helpers.{ GET => GET_REQUEST, _ }
+import play.api.test.Helpers.{ GET => GET_REQUEST }
 import play.api.Application
 import play.api.libs.ws._
 import play.api.inject.guice._
