@@ -27,9 +27,9 @@ val HtmlUnitVersion          = "2.43.1"
 val PhantomJsDriverVersion   = "1.4.4"
 val MockitoVersion           = "3.2.4"
 val CssParserVersion         = "1.6.0"
-val ScalatestVersion         = "3.1.2"
-val ScalatestSeleniumVersion = "3.1.2.0"
-val ScalatestMockitoVersion  = "3.1.1.0"
+val ScalatestVersion         = "3.2.9"
+val ScalatestSeleniumVersion = "3.2.9.0"
+val ScalatestMockitoVersion  = "3.2.9.0"
 
 ThisBuild / playBuildRepoName := "scalatestplus-play"
 ThisBuild / resolvers += Resolver.sonatypeRepo("releases")
@@ -66,7 +66,7 @@ lazy val mimaSettings = Seq(
 
 lazy val commonSettings = Seq(
   scalaVersion := scala213,
-  crossScalaVersions := Seq(scala212, scala213),
+  crossScalaVersions := Seq(scala212, scala213, "3.0.1"),
   Test / parallelExecution := false,
   Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-oTK")
 )
@@ -105,12 +105,19 @@ lazy val `scalatestplus-play` = project
     commonSettings,
     mimaSettings,
     organization := "org.scalatestplus.play",
+    conflictWarning := {
+      if (scalaBinaryVersion.value == "3") {
+        ConflictWarning("warn", sbt.Level.Warn, false)
+      } else {
+        conflictWarning.value
+      }
+    },
     libraryDependencies ++= Seq(
-      ws,
-      akkaHttpServer             % Test,
-      "com.typesafe.play"        %% "play-test"         % PlayVersion.current,
+      ws.cross(CrossVersion.for3Use2_13),
+      (akkaHttpServer            % Test).cross(CrossVersion.for3Use2_13),
+      ("com.typesafe.play"       %% "play-test"         % PlayVersion.current).cross(CrossVersion.for3Use2_13),
       "org.scalatest"            %% "scalatest"         % ScalatestVersion,
-      "org.scalatestplus"        %% "mockito-3-2"       % ScalatestMockitoVersion,
+      "org.scalatestplus"        %% "mockito-3-4"       % ScalatestMockitoVersion,
       "org.scalatestplus"        %% "selenium-3-141"    % ScalatestSeleniumVersion,
       "org.seleniumhq.selenium"  % "selenium-java"      % SeleniumVersion,
       "org.seleniumhq.selenium"  % "htmlunit-driver"    % HtmlUnitVersion,

@@ -9,6 +9,12 @@ scala:
   - 2.12.10
   - 2.13.1
 
+jobs:
+  include:
+  - script: sbt '++ 3.0.1!' Test/compile # TODO enable test
+    scala: 3
+    env: TRAVIS_JDK=8
+
 services:
   - xvfb
 
