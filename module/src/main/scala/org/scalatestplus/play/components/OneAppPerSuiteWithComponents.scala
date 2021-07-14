@@ -1,6 +1,6 @@
 package org.scalatestplus.play.components
 
-import org.scalatest.TestSuite
+import org.scalatest.Suite
 import org.scalatestplus.play.BaseOneAppPerSuite
 import org.scalatestplus.play.FakeApplicationFactory
 import play.api.Application
@@ -12,7 +12,7 @@ import play.api.Application
  *
  * By default, this trait creates a new `Application` for the `Suite` according to the components defined in the test.
  *
- * This `TestSuiteMixin` trait's overridden `run` method calls `Play.start`, passing in the
+ * This `SuiteMixin` trait's overridden `run` method calls `Play.start`, passing in the
  * `Application` provided by `app`, before executing the `Suite` via a call to `super.run`.
  * In addition, it places a reference to the `Application` provided by `app` into the `ConfigMap`
  * under the key `org.scalatestplus.play.app`.  This allows any nested `Suite`s to access the `Suite`'s
@@ -70,7 +70,7 @@ import play.api.Application
  * `Suite`s. Annotate the nested suites with `@DoNotDiscover` and have them extend `ConfiguredApp`. Here's an example:
  *
  * <pre class="stHighlight">
- * import org.scalatest.{DoNotDiscover, Suites, TestSuite}
+ * import org.scalatest.{DoNotDiscover, Suites, Suite}
  * import org.scalatestplus.play.components.OneAppPerSuiteWithComponents
  * import org.scalatestplus.play.{ConfiguredApp, PlaySpec}
  * import play.api._
@@ -86,7 +86,7 @@ import play.api.Application
  *   new TwoSpec,
  *   new RedSpec,
  *   new BlueSpec
- * ) with OneAppPerSuiteWithComponents with TestSuite {
+ * ) with OneAppPerSuiteWithComponents with Suite {
  *   // Override fakeApplication if you need an Application with other than non-default parameters.
  *   override def components: BuiltInComponents = new BuiltInComponentsFromContext(context) with NoHttpFiltersComponents {
  *
@@ -137,7 +137,7 @@ trait OneAppPerSuiteWithComponents
     extends BaseOneAppPerSuite
     with WithApplicationComponents
     with FakeApplicationFactory {
-  this: TestSuite =>
+  this: Suite =>
 
   override def fakeApplication(): Application = newApplication
 }

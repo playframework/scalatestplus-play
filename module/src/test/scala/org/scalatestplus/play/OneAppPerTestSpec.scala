@@ -20,7 +20,14 @@ import org.scalatestplus.play.guice.GuiceOneAppPerTest
 import play.api.Application
 import play.api.inject.guice._
 
-class OneAppPerTestSpec extends UnitSpec with GuiceOneAppPerTest {
+class OneAppPerTestSpec extends UnitSpec with GuiceOneAppPerTest with BeforeAndAfterEachTestData {
+
+  private var appFromBeforeEachTestData: Application = _
+
+  protected override def beforeEach(testData: TestData): Unit = {
+    super.beforeEach(testData)
+    appFromBeforeEachTestData = app
+  }
 
   override def newAppForTest(testData: TestData): Application = {
     GuiceApplicationBuilder().configure("foo" -> "bar").build()
@@ -34,6 +41,9 @@ class OneAppPerTestSpec extends UnitSpec with GuiceOneAppPerTest {
     }
     "make the Application available implicitly" in {
       getConfig("foo") mustBe Some("bar")
+    }
+    "make the Application available in beforeEach(testData)" in {
+      appFromBeforeEachTestData mustBe app
     }
   }
 }
