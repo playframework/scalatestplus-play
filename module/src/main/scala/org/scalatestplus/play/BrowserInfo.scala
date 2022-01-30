@@ -185,33 +185,3 @@ case class HtmlUnitInfo(enableJavascript: Boolean)
    */
   def createWebDriver(): WebDriver = HtmlUnitFactory.createWebDriver(enableJavascript)
 }
-
-/**
- * PhantomJS browser info, which encapsulates the browser name, `"[PhantomJS]"`; tag name, `org.scalatest.tags.PhantomJS`; and a factory method that produces a Selenium [[org.openqa.selenium.phantomjs.PhantomJSDriver]].
- *
- * This class's superclass, `BrowserInfo`, is used by [[org.scalatestplus.play.AllBrowsersPerSuite AllBrowsersPerSuite]] and
- * [[org.scalatestplus.play.AllBrowsersPerTest AllBrowsersPerTest]]: an `IndexedSeq[BrowserInfo]` is returned
- * from the `browsers` field of these traits to specify the browsers to share between tests.
- * When tests are registered, `AllBrowsersPerSuite` and `AllBrowsersPerTest` use the browser name to ensure the tests shared by multiple browsers
- * have unique names (the name of each shared test is appended with a browser name). When the tests run, these traits
- * use the `BrowserInfo`'s factory method to create `WebDriver`s as needed.
- * The `AllBrowsersPerSuite` and `AllBrowsersPerTest` traits use the  tag name to automatically tag any tests that use
- * a particular `WebDriver` with the appropriate tag so that tests can be dynamically filtered by the browser the use.
- *
- * @param phantomCapabilities the [[DesiredCapabilities]] to use when creating new [[org.openqa.selenium.phantomjs.PhantomJSDriver]]
- *                            in the `createWebDriver` factory method.
- */
-@deprecated("PhantomJS is no longer actively developed, and support will eventually be dropped", "4.0.0")
-case class PhantomJSInfo(phantomCapabilities: DesiredCapabilities = DesiredCapabilities.phantomjs())
-    extends BrowserInfo("[PhantomJS]", "org.scalatest.tags.PhantomJSBrowser") {
-
-  /**
-   * Creates a new instance of a Selenium [[org.openqa.selenium.phantomjs.PhantomJSDriver]], or returns a [[org.scalatestplus.play.BrowserFactory.UnavailableDriver BrowserFactory.UnavailableDriver]] that includes
-   * the exception that indicates Firefox was not supported on the host platform and an appropriate
-   * error message.
-   *
-   * @return an new instance of a Selenium [[org.openqa.selenium.phantomjs.PhantomJSDriver]], or a [[org.scalatestplus.play.BrowserFactory.UnavailableDriver BrowserFactory.UnavailableDriver]] if PhantomJS
-   * was not available on the host platform.
-   */
-  def createWebDriver(): WebDriver = PhantomJSFactory.createWebDriver(phantomCapabilities)
-}

@@ -22,14 +22,13 @@ import interplay.ScalaVersions._
 
 import play.core.PlayVersion
 
-val SeleniumVersion          = "3.141.59"
+val SeleniumVersion          = "4.1.2"
 val HtmlUnitVersion          = "2.43.1"
-val PhantomJsDriverVersion   = "1.4.4"
 val MockitoVersion           = "3.2.4"
 val CssParserVersion         = "1.6.0"
-val ScalatestVersion         = "3.1.2"
-val ScalatestSeleniumVersion = "3.1.2.0"
-val ScalatestMockitoVersion  = "3.1.2.0"
+val ScalatestVersion         = "3.2.11"
+val ScalatestSeleniumVersion = "3.2.11.0"
+val ScalatestMockitoVersion  = "3.2.11.0"
 
 ThisBuild / playBuildRepoName := "scalatestplus-play"
 ThisBuild / resolvers += Resolver.sonatypeRepo("releases")
@@ -110,13 +109,15 @@ lazy val `scalatestplus-play` = project
       akkaHttpServer             % Test,
       "com.typesafe.play"        %% "play-test"         % PlayVersion.current,
       "org.scalatest"            %% "scalatest"         % ScalatestVersion,
-      "org.scalatestplus"        %% "mockito-3-2"       % ScalatestMockitoVersion,
-      "org.scalatestplus"        %% "selenium-3-141"    % ScalatestSeleniumVersion,
+      "org.scalatestplus"        %% "mockito-4-2"       % ScalatestMockitoVersion,
+      "org.scalatestplus"        %% "selenium-4-1"      % ScalatestSeleniumVersion,
       "org.seleniumhq.selenium"  % "selenium-java"      % SeleniumVersion,
       "org.seleniumhq.selenium"  % "htmlunit-driver"    % HtmlUnitVersion,
-      "net.sourceforge.htmlunit" % "htmlunit-cssparser" % CssParserVersion,
-      "com.codeborne"            % "phantomjsdriver"    % PhantomJsDriverVersion
+      "net.sourceforge.htmlunit" % "htmlunit-cssparser" % CssParserVersion
     ),
+    dependencyOverrides ++= Seq("core", "annotations", "databind").map { x =>
+      "com.fasterxml.jackson.core" %% s"jackson-${x}" % "2.12.0"
+    },
     Compile / doc / scalacOptions := Seq("-doc-title", "ScalaTest + Play, " + releaseVersion),
     pomExtra := PomExtra
   )
