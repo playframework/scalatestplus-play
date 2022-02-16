@@ -22,7 +22,7 @@ import interplay.ScalaVersions._
 
 import play.core.PlayVersion
 
-val SeleniumVersion          = "4.1.2"
+val SeleniumVersion          = "3.141.59"
 val HtmlUnitVersion          = "2.43.1"
 val PhantomJsDriverVersion   = "1.4.4"
 val MockitoVersion           = "3.2.4"
