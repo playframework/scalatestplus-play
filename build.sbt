@@ -23,13 +23,13 @@ import interplay.ScalaVersions._
 import play.core.PlayVersion
 
 val SeleniumVersion          = "3.141.59"
-val HtmlUnitVersion          = "2.43.1"
-val PhantomJsDriverVersion   = "1.4.4"
-val MockitoVersion           = "3.2.4"
+val HtmlUnitVersion          = "2.58.0"
+val PhantomJsDriverVersion   = "1.5.0"
+val MockitoVersion           = "3.4.6"
 val CssParserVersion         = "1.11.0"
-val ScalatestVersion         = "3.1.2"
-val ScalatestSeleniumVersion = "3.1.2.0"
-val ScalatestMockitoVersion  = "3.1.1.0"
+val ScalatestVersion         = "3.1.4"
+val ScalatestSeleniumVersion = "3.1.4.0"
+val ScalatestMockitoVersion  = "3.1.4.0"
 
 ThisBuild / playBuildRepoName := "scalatestplus-play"
 ThisBuild / resolvers += Resolver.sonatypeRepo("releases")
@@ -110,7 +110,7 @@ lazy val `scalatestplus-play` = project
       akkaHttpServer             % Test,
       "com.typesafe.play"        %% "play-test"         % PlayVersion.current,
       "org.scalatest"            %% "scalatest"         % ScalatestVersion,
-      "org.scalatestplus"        %% "mockito-3-2"       % ScalatestMockitoVersion,
+      "org.scalatestplus"        %% "mockito-3-4"       % ScalatestMockitoVersion,
       "org.scalatestplus"        %% "selenium-3-141"    % ScalatestSeleniumVersion,
       "org.seleniumhq.selenium"  % "selenium-java"      % SeleniumVersion,
       "org.seleniumhq.selenium"  % "htmlunit-driver"    % HtmlUnitVersion,
