@@ -24,7 +24,7 @@ import play.core.PlayVersion
 
 val SeleniumVersion          = "3.141.59"
 val HtmlUnitVersion          = "2.58.0"
-val PhantomJsDriverVersion   = "1.4.4"
+val PhantomJsDriverVersion   = "1.5.0"
 val MockitoVersion           = "3.2.4"
 val CssParserVersion         = "1.6.0"
 val ScalatestVersion         = "3.1.2"
