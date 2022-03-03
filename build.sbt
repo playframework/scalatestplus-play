@@ -23,19 +23,19 @@ import interplay.ScalaVersions._
 import play.core.PlayVersion
 
 val SeleniumVersion          = "3.141.59"
-val HtmlUnitVersion          = "2.39.0"
-val PhantomJsDriverVersion   = "1.4.4"
+val HtmlUnitVersion          = "2.58.0"
+val PhantomJsDriverVersion   = "1.5.0"
 val MockitoVersion           = "3.4.6"
 val CssParserVersion         = "1.6.0"
 val ScalatestVersion         = "3.1.4"
 val ScalatestSeleniumVersion = "3.1.4.0"
 val ScalatestMockitoVersion  = "3.1.4.0"
 
-playBuildRepoName in ThisBuild := "scalatestplus-play"
-resolvers in ThisBuild += Resolver.sonatypeRepo("releases")
+ThisBuild / playBuildRepoName := "scalatestplus-play"
+ThisBuild / resolvers += Resolver.sonatypeRepo("releases")
 
 // Customise sbt-dynver's behaviour to make it work with tags which aren't v-prefixed
-dynverVTagPrefix in ThisBuild := false
+ThisBuild / dynverVTagPrefix := false
 
 // Sanity-check: assert that version comes from a tag (e.g. not a too-shallow clone)
 // https://github.com/dwijnand/sbt-dynver/#sanity-checking-the-version
@@ -67,8 +67,8 @@ lazy val mimaSettings = Seq(
 lazy val commonSettings = Seq(
   scalaVersion := scala213,
   crossScalaVersions := Seq(scala212, scala213),
-  parallelExecution in Test := false,
-  testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oTK")
+  Test / parallelExecution := false,
+  Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-oTK")
 )
 
 lazy val `scalatestplus-play-root` = project
@@ -117,7 +117,7 @@ lazy val `scalatestplus-play` = project
       "net.sourceforge.htmlunit" % "htmlunit-cssparser" % CssParserVersion,
       "com.codeborne"            % "phantomjsdriver"    % PhantomJsDriverVersion
     ),
-    scalacOptions in (Compile, doc) := Seq("-doc-title", "ScalaTest + Play, " + releaseVersion),
+    Compile / doc / scalacOptions := Seq("-doc-title", "ScalaTest + Play, " + releaseVersion),
     pomExtra := PomExtra
   )
 
@@ -132,7 +132,7 @@ lazy val docs = project
     ),
     PlayDocsKeys.scalaManualSourceDirectories := (baseDirectory.value / "manual" / "working" / "scalaGuide" ** "code").get,
     PlayDocsKeys.resources += {
-      val apiDocs = (doc in (`scalatestplus-play`, Compile)).value
+      val apiDocs = (`scalatestplus-play` / Compile / doc).value
       // Copy the docs to a place so they have the correct api/scala prefix
       val apiDocsStage = target.value / "api-docs-stage"
       val cacheFile    = streams.value.cacheDirectory / "api-docs-stage"

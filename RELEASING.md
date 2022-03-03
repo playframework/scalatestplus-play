@@ -6,10 +6,10 @@ Access to `vegemite.lightbend.com`
 
 ## Process
 
-* Add the release to README.md, PR and merge to master
+* Add the release to README.md, PR and merge to main
 * Log in to `vegemite.lightbend.com`
 * `cd deploy`
-* `./release --project scalatestplus-play --branch master --tag 5.1.0` (notice: the tag is not prefixed with a 'v')
+* `./release --project scalatestplus-play --branch main --tag 5.1.0` (notice: the tag is not prefixed with a 'v')
 
 ## Future
 
@@ -25,4 +25,4 @@ Help welcome!
 ## Background
 
 More background on how Play artifacts are generally released can be
-found at https://github.com/playframework/play-meta/blob/master/releasing/play.md
+found at https://github.com/playframework/play-meta/blob/main/releasing/play.md
