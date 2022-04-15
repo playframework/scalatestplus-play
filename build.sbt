@@ -22,13 +22,12 @@ import interplay.ScalaVersions._
 
 import play.core.PlayVersion
 
-val SeleniumVersion          = "3.141.59"
-val HtmlUnitVersion          = "2.59.0"
-val PhantomJsDriverVersion   = "1.5.0"
-val MockitoVersion           = "3.4.6"
+val SeleniumVersion          = "4.1.1"
+val HtmlUnitVersion          = "3.56.0"
+val MockitoVersion           = "3.4.0"
 val CssParserVersion         = "1.6.0"
-val ScalatestVersion         = "3.1.4"
-val ScalatestSeleniumVersion = "3.1.4.0"
+val ScalatestVersion         = "3.2.10"
+val ScalatestSeleniumVersion = "3.2.10.0"
 val ScalatestMockitoVersion  = "3.2.10.0"
 
 ThisBuild / playBuildRepoName := "scalatestplus-play"
@@ -108,14 +107,10 @@ lazy val `scalatestplus-play` = project
     libraryDependencies ++= Seq(
       ws,
       akkaHttpServer             % Test,
-      "com.typesafe.play"        %% "play-test"         % PlayVersion.current,
+      "com.typesafe.play"        %% "play-test"         % PlayVersion.current exclude ("com.fasterxml.jackson.core", "jackson-databind"),
       "org.scalatest"            %% "scalatest"         % ScalatestVersion,
       "org.scalatestplus"        %% "mockito-3-4"       % ScalatestMockitoVersion,
-      "org.scalatestplus"        %% "selenium-3-141"    % ScalatestSeleniumVersion,
-      "org.seleniumhq.selenium"  % "selenium-java"      % SeleniumVersion,
-      "org.seleniumhq.selenium"  % "htmlunit-driver"    % HtmlUnitVersion,
-      "net.sourceforge.htmlunit" % "htmlunit-cssparser" % CssParserVersion,
-      "com.codeborne"            % "phantomjsdriver"    % PhantomJsDriverVersion
+      "org.scalatestplus"        %% "selenium-4-1"    % ScalatestSeleniumVersion exclude ("com.fasterxml.jackson.core", "jackson-databind"),
     ),
     Compile / doc / scalacOptions := Seq("-doc-title", "ScalaTest + Play, " + releaseVersion),
     pomExtra := PomExtra
