@@ -105,12 +105,21 @@ lazy val `scalatestplus-play` = project
     mimaSettings,
     organization := "org.scalatestplus.play",
     libraryDependencies ++= Seq(
+      // Note: It seems like the only jackson version that works with all play, play-ws, play-json and selenium is 2.11.4.
+      //       play will bring in older version of selenium as well, so need excluding and let scalatest+selenium brings in the newer version.
       ws,
       akkaHttpServer             % Test,
-      "com.typesafe.play"        %% "play-test"         % PlayVersion.current exclude ("com.fasterxml.jackson.core", "jackson-databind"),
+      "com.typesafe.play"        %% "play-test"         % PlayVersion.current exclude ("com.fasterxml.jackson.core", "jackson-core") 
+                                                                              exclude ("com.fasterxml.jackson.core", "jackson-databind")
+                                                                              exclude ("org.seleniumhq.selenium", "htmlunit-driver")
+                                                                              exclude ("org.seleniumhq.selenium", "selenium-api")
+                                                                              exclude ("org.seleniumhq.selenium", "selenium-support")
+                                                                              exclude ("org.seleniumhq.selenium", "selenium-firefox-driver")
+                                                                              exclude ("org.seleniumhq.selenium", "selenium-remote-driver"),
       "org.scalatest"            %% "scalatest"         % ScalatestVersion,
       "org.scalatestplus"        %% "mockito-3-4"       % ScalatestMockitoVersion,
-      "org.scalatestplus"        %% "selenium-4-1"    % ScalatestSeleniumVersion exclude ("com.fasterxml.jackson.core", "jackson-databind"),
+      "org.scalatestplus"        %% "selenium-4-1"    % ScalatestSeleniumVersion exclude ("com.fasterxml.jackson.core", "jackson-core") 
+                                                                                 exclude ("com.fasterxml.jackson.core", "jackson-databind"),
     ),
     Compile / doc / scalacOptions := Seq("-doc-title", "ScalaTest + Play, " + releaseVersion),
     pomExtra := PomExtra

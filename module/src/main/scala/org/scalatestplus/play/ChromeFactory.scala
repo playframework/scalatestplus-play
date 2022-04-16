@@ -40,7 +40,7 @@ trait ChromeFactory extends BrowserFactory {
   /**
    * Default [[ChromeDriverService]] used to create a [[ChromeDriver]] instance. Override to provide different service.
    */
-  lazy val chromeDriverService: ChromeDriverService = ChromeDriverService.createDefaultService()
+  def chromeDriverService: ChromeDriverService = ChromeDriverService.createDefaultService()
 
   /**
    * Creates a new instance of a Selenium [[ChromeDriver]], or returns a [[BrowserFactory.UnavailableDriver]] that

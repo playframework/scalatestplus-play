@@ -218,7 +218,7 @@ trait AllBrowsersPerSuite extends TestSuiteMixin with WebBrowser with Eventually
    *
    * @return an instance of `ChromeDriverService`
    */
-  protected lazy val chromeDriverService: ChromeDriverService = ChromeFactory.chromeDriverService
+  protected def chromeDriverService: ChromeDriverService = ChromeFactory.chromeDriverService
 
   /**
    * Info for available browsers. Override to add in custom `BrowserInfo` implementations.

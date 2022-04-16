@@ -335,7 +335,7 @@ class AllBrowsersPerTestBehaviorSpec extends AnyWordSpec {
 
     "run only Chrome and non-browser tests when browsers is overridden to include ChromeInfo only" in {
       class ChromeTestSpec extends TestSpec {
-        override lazy val browsers: IndexedSeq[BrowserInfo] =
+        override def browsers: IndexedSeq[BrowserInfo] =
           Vector(ChromeInfo())
       }
 

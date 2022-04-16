@@ -23,6 +23,7 @@ import BrowserFactory.GrumpyDriver
 import BrowserFactory.UnavailableDriver
 import BrowserFactory.UnneededDriver
 import BrowserFactory.UninitializedDriver
+import org.openqa.selenium.chrome.{ChromeDriverService, ChromeOptions}
 import org.openqa.selenium.firefox.FirefoxProfile
 import org.scalatestplus.selenium.WebBrowser
 
@@ -194,10 +195,26 @@ trait AllBrowsersPerTest extends TestSuiteMixin with WebBrowser with Eventually 
   protected lazy val firefoxProfile: FirefoxProfile = new FirefoxProfile
 
   /**
+   * Method to provide `ChromeOptions` for creating `ChromeDriver`, you can override this method to
+   * provide a customized instance of `ChromeOptions`
+   *
+   * @return an instance of `ChromeOptions`
+   */
+  protected lazy val chromeOptions: ChromeOptions = ChromeFactory.chromeOptions
+
+  /**
+   * Method to provide `ChromeDriverService` for creating `ChromeDriver`, you can override this method to
+   * provide a customized instance of `ChromeDriverService`
+   *
+   * @return an instance of `ChromeDriverService`
+   */
+  protected def chromeDriverService: ChromeDriverService = ChromeFactory.chromeDriverService
+
+  /**
    * Info for available browsers. Override to add in custom `BrowserInfo` implementations.
    */
-  protected lazy val browsers: IndexedSeq[BrowserInfo] =
-    Vector(FirefoxInfo(firefoxProfile), SafariInfo, InternetExplorerInfo, ChromeInfo(), HtmlUnitInfo(true))
+  protected def browsers: IndexedSeq[BrowserInfo] =
+    Vector(FirefoxInfo(firefoxProfile), SafariInfo, InternetExplorerInfo, ChromeInfo(chromeDriverService, chromeOptions), HtmlUnitInfo(true))
 
   private var privateWebDriver: WebDriver = UninitializedDriver
 
