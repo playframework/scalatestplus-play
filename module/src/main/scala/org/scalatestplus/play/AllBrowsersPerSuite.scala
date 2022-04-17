@@ -194,7 +194,7 @@ trait AllBrowsersPerSuite extends TestSuiteMixin with WebBrowser with Eventually
    *
    * @return an instance of `FirefoxProfile`
    */
-  protected lazy val firefoxProfile: FirefoxProfile = FirefoxFactory.firefoxProfile
+  protected def firefoxProfile: FirefoxProfile = FirefoxFactory.firefoxProfile
 
   /**
    * Method to provide `FirefoxOptions` for creating `FirefoxDriver`, you can override this method to
@@ -202,7 +202,7 @@ trait AllBrowsersPerSuite extends TestSuiteMixin with WebBrowser with Eventually
    *
    * @return an instance of `FirefoxOptions`
    */
-  protected lazy val firefoxOptions: FirefoxOptions = FirefoxFactory.firefoxOptions
+  protected def firefoxOptions: FirefoxOptions = FirefoxFactory.firefoxOptions
 
   /**
    * Method to provide `ChromeOptions` for creating `ChromeDriver`, you can override this method to
@@ -210,7 +210,7 @@ trait AllBrowsersPerSuite extends TestSuiteMixin with WebBrowser with Eventually
    *
    * @return an instance of `ChromeOptions`
    */
-  protected lazy val chromeOptions: ChromeOptions = ChromeFactory.chromeOptions
+  protected def chromeOptions: ChromeOptions = ChromeFactory.chromeOptions
 
   /**
    * Method to provide `ChromeDriverService` for creating `ChromeDriver`, you can override this method to
