@@ -24,7 +24,7 @@ import play.core.PlayVersion
 
 val SeleniumVersion          = "4.1.1"
 val HtmlUnitVersion          = "3.56.0"
-val MockitoVersion           = "3.4.0"
+val MockitoVersion           = "3.4.6"
 val CssParserVersion         = "1.6.0"
 val ScalatestVersion         = "3.2.10"
 val ScalatestSeleniumVersion = "3.2.10.0"
@@ -39,11 +39,7 @@ ThisBuild / dynverVTagPrefix := false
 // Sanity-check: assert that version comes from a tag (e.g. not a too-shallow clone)
 // https://github.com/dwijnand/sbt-dynver/#sanity-checking-the-version
 Global / onLoad := (Global / onLoad).value.andThen { s =>
-  val v = version.value
-  if (dynverGitDescribeOutput.value.hasNoTags)
-    throw new MessageOnlyException(
-      s"Failed to derive version from git tags. Maybe run `git fetch --unshallow`? Version: $v"
-    )
+  dynverAssertTagVersion.value
   s
 }
 
