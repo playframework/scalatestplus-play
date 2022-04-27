@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import com.typesafe.tools.mima.core._
-import sbt.util._
+import sbt.util.{Level => _, _}
 
 import scala.sys.process._
 import sbt.io.Path._
@@ -26,9 +26,9 @@ val SeleniumVersion          = "4.1.1"
 val HtmlUnitVersion          = "3.56.0"
 val MockitoVersion           = "3.4.6"
 val CssParserVersion         = "1.6.0"
-val ScalatestVersion         = "3.2.10"
-val ScalatestSeleniumVersion = "3.2.10.0"
-val ScalatestMockitoVersion  = "3.2.10.0"
+val ScalatestVersion         = "3.2.12"
+val ScalatestSeleniumVersion = "3.2.12.0"
+val ScalatestMockitoVersion  = "3.2.12.0"
 
 ThisBuild / playBuildRepoName := "scalatestplus-play"
 ThisBuild / resolvers += Resolver.sonatypeRepo("releases")
@@ -102,7 +102,7 @@ lazy val `scalatestplus-play` = project
     organization := "org.scalatestplus.play",
     libraryDependencies ++= Seq(
       // Note: It seems like the only jackson version that works with all play, play-ws, play-json and selenium is 2.11.4.
-      //       play will bring in older version of selenium as well, so need excluding and let scalatest+selenium brings in the newer version.
+      //       play will bring in older version of selenium as well, so need excluding and let scalatest+selenium brings in the newer version.4
       ws,
       akkaHttpServer             % Test,
       "com.typesafe.play"        %% "play-test"         % PlayVersion.current exclude ("com.fasterxml.jackson.core", "jackson-core") 
@@ -113,10 +113,11 @@ lazy val `scalatestplus-play` = project
                                                                               exclude ("org.seleniumhq.selenium", "selenium-firefox-driver")
                                                                               exclude ("org.seleniumhq.selenium", "selenium-remote-driver"),
       "org.scalatest"            %% "scalatest"         % ScalatestVersion,
-      "org.scalatestplus"        %% "mockito-3-4"       % ScalatestMockitoVersion,
+      "org.scalatestplus"        %% "mockito-4-5"       % ScalatestMockitoVersion,
       "org.scalatestplus"        %% "selenium-4-1"    % ScalatestSeleniumVersion exclude ("com.fasterxml.jackson.core", "jackson-core") 
                                                                                  exclude ("com.fasterxml.jackson.core", "jackson-databind"),
     ),
+    evictionErrorLevel := Level.Info, 
     Compile / doc / scalacOptions := Seq("-doc-title", "ScalaTest + Play, " + releaseVersion),
     pomExtra := PomExtra
   )
