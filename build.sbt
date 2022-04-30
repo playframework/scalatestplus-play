@@ -111,7 +111,7 @@ lazy val `scalatestplus-play` = project
       "com.typesafe.play"        %% "play-test"         % PlayVersion.current,
       "org.scalatest"            %% "scalatest"         % ScalatestVersion,
       "org.scalatestplus"        %% "mockito-3-4"       % ScalatestMockitoVersion,
-      "org.scalatestplus"        %% "selenium-3-141"    % ScalatestSeleniumVersion,
+      "org.scalatestplus"        %% "selenium-4-1"      % ScalatestSeleniumVersion,
       "org.seleniumhq.selenium"  % "selenium-java"      % SeleniumVersion,
       "org.seleniumhq.selenium"  % "htmlunit-driver"    % HtmlUnitVersion,
       "net.sourceforge.htmlunit" % "htmlunit-cssparser" % CssParserVersion,
