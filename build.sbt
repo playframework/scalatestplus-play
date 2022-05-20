@@ -28,8 +28,8 @@ val PhantomJsDriverVersion   = "1.5.0"
 val MockitoVersion           = "3.4.6"
 val CssParserVersion         = "1.11.0"
 val ScalatestVersion         = "3.1.4"
-val ScalatestSeleniumVersion = "3.2.10.0"
-val ScalatestMockitoVersion  = "3.2.10.0"
+val ScalatestSeleniumVersion = ScalatestVersion + ".0"
+val ScalatestMockitoVersion  = ScalatestVersion + ".0"
 
 ThisBuild / playBuildRepoName := "scalatestplus-play"
 ThisBuild / resolvers += Resolver.sonatypeRepo("releases")
