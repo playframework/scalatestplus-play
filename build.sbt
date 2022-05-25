@@ -22,13 +22,13 @@ import interplay.ScalaVersions._
 
 import play.core.PlayVersion
 
-val SeleniumVersion          = "4.1.1"
-val HtmlUnitVersion          = "3.56.0"
-val MockitoVersion           = "3.4.6"
-val CssParserVersion         = "1.6.0"
+val SeleniumVersion          = "4.1.3"
+val HtmlUnitVersion          = "3.61.0"
+val MockitoVersion           = "4.5.0"  
+val CssParserVersion         = "1.11.0"
 val ScalatestVersion         = "3.2.12"
-val ScalatestSeleniumVersion = "3.2.12.0"
-val ScalatestMockitoVersion  = "3.2.12.0"
+val ScalatestSeleniumVersion = ScalatestVersion + ".0"
+val ScalatestMockitoVersion  = ScalatestVersion + ".0"
 
 ThisBuild / playBuildRepoName := "scalatestplus-play"
 ThisBuild / resolvers += Resolver.sonatypeRepo("releases")
@@ -114,8 +114,11 @@ lazy val `scalatestplus-play` = project
                                                                               exclude ("org.seleniumhq.selenium", "selenium-remote-driver"),
       "org.scalatest"            %% "scalatest"         % ScalatestVersion,
       "org.scalatestplus"        %% "mockito-4-5"       % ScalatestMockitoVersion,
-      "org.scalatestplus"        %% "selenium-4-1"    % ScalatestSeleniumVersion exclude ("com.fasterxml.jackson.core", "jackson-core") 
-                                                                                 exclude ("com.fasterxml.jackson.core", "jackson-databind"),
+      "org.scalatestplus"        %% "selenium-4-1"      % ScalatestSeleniumVersion exclude ("com.fasterxml.jackson.core", "jackson-core") 
+                                                                                   exclude ("com.fasterxml.jackson.core", "jackson-databind"),
+      "org.seleniumhq.selenium"  % "selenium-java"      % SeleniumVersion,
+      "org.seleniumhq.selenium"  % "htmlunit-driver"    % HtmlUnitVersion,
+      "net.sourceforge.htmlunit" % "htmlunit-cssparser" % CssParserVersion
     ),
     evictionErrorLevel := Level.Info, 
     Compile / doc / scalacOptions := Seq("-doc-title", "ScalaTest + Play, " + releaseVersion),
