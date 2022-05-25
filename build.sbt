@@ -27,7 +27,7 @@ val HtmlUnitVersion          = "3.61.0"
 val MockitoVersion           = "4.5.0"  
 val CssParserVersion         = "1.11.0"
 val ScalatestVersion         = "3.2.12"
-val ScalatestSeleniumVersion = ScalatestVersion + ".0"
+val ScalatestSeleniumVersion = ScalatestVersion + ".1"
 val ScalatestMockitoVersion  = ScalatestVersion + ".0"
 
 ThisBuild / playBuildRepoName := "scalatestplus-play"
