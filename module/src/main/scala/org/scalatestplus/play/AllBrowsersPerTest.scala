@@ -214,7 +214,7 @@ trait AllBrowsersPerTest extends TestSuiteMixin with WebBrowser with Eventually 
    * Info for available browsers. Override to add in custom `BrowserInfo` implementations.
    */
   protected def browsers: IndexedSeq[BrowserInfo] =
-    Vector(FirefoxInfo(firefoxProfile), SafariInfo, InternetExplorerInfo, ChromeInfo(chromeDriverService, chromeOptions), HtmlUnitInfo(true))
+    Vector(FirefoxInfo(firefoxProfile), SafariInfo, InternetExplorerInfo, ChromeInfo(chromeDriverService, chromeOptions), EdgeInfo, HtmlUnitInfo(true))
 
   private var privateWebDriver: WebDriver = UninitializedDriver
 

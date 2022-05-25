@@ -133,6 +133,32 @@ case object InternetExplorerInfo
 }
 
 /**
+ * Edge browser info, which encapsulates the browser name, `"[Edge]"`; tag name, `org.scalatest.tags.EdgeBrowser`; and a factory method that produces a Selenium `EdgeDriver`.
+ *
+ * This object's superclass, `BrowserInfo`, is used by [[org.scalatestplus.play.AllBrowsersPerSuite AllBrowsersPerSuite]] and
+ * [[org.scalatestplus.play.AllBrowsersPerTest AllBrowsersPerTest]]: an `IndexedSeq[BrowserInfo]` is returned
+ * from the `browsers` field of these traits to specify the browsers to share between tests.
+ * When tests are registered, `AllBrowsersPerSuite` and `AllBrowsersPerTest` use the browser name to ensure the tests shared by multiple browsers
+ * have unique names (the name of each shared test is appended with a browser name). When the tests run, these traits
+ * use the `BrowserInfo`'s factory method to create `WebDriver`s as needed.
+ * The `AllBrowsersPerSuite` and `AllBrowsersPerTest` traits use the  tag name to automatically tag any tests that use
+ * a particular `WebDriver` with the appropriate tag so that tests can be dynamically filtered by the browser the use.
+ */
+case object EdgeInfo
+  extends BrowserInfo("[Edge]", "org.scalatest.tags.EdgeBrowser") {
+
+  /**
+   * Creates a new instance of a Selenium `EdgeDriver`, or returns a [[org.scalatestplus.play.BrowserFactory.UnavailableDriver BrowserFactory.UnavailableDriver]] that includes
+   * the exception that indicates Edge was not supported on the host platform and an appropriate
+   * error message.
+   *
+   * @return an new instance of a Selenium `EdgeDriver`, or a [[org.scalatestplus.play.BrowserFactory.UnavailableDriver BrowserFactory.UnavailableDriver]] if Edge
+   * was not available on the host platform.
+   */
+  def createWebDriver(): WebDriver = EdgeFactory.createWebDriver()
+}
+
+/**
  * Chrome browser info, which encapsulates the browser name, `"[Chrome]"`; tag name, `org.scalatest.tags.ChromeBrowser`; and a factory method that produces a Selenium `ChromeDriver`.
  *
  * This object's superclass, `BrowserInfo`, is used by [[org.scalatestplus.play.AllBrowsersPerSuite AllBrowsersPerSuite]] and
