@@ -22,10 +22,10 @@ import interplay.ScalaVersions._
 
 import play.core.PlayVersion
 
-val SeleniumVersion          = "4.1.3"
+val SeleniumVersion          = "4.1.4"
 val HtmlUnitVersion          = "3.61.0"
 val MockitoVersion           = "4.5.0"  
-val CssParserVersion         = "1.11.0"
+val CssParserVersion         = "1.12.0"
 val ScalatestVersion         = "3.2.12"
 val ScalatestSeleniumVersion = ScalatestVersion + ".1"
 val ScalatestMockitoVersion  = ScalatestVersion + ".0"
