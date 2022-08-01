@@ -22,12 +22,12 @@ import interplay.ScalaVersions._
 
 import play.core.PlayVersion
 
-val SeleniumVersion          = "4.1.4"
-val HtmlUnitVersion          = "3.61.0"
-val MockitoVersion           = "4.5.0"  
+val SeleniumVersion          = "4.2.2"
+val HtmlUnitVersion          = "3.62.0"
+val MockitoVersion           = "4.6.1"  
 val CssParserVersion         = "1.12.0"
-val ScalatestVersion         = "3.2.12"
-val ScalatestSeleniumVersion = ScalatestVersion + ".1"
+val ScalatestVersion         = "3.2.13"
+val ScalatestSeleniumVersion = ScalatestVersion + ".0"
 val ScalatestMockitoVersion  = ScalatestVersion + ".0"
 
 ThisBuild / playBuildRepoName := "scalatestplus-play"
@@ -113,8 +113,8 @@ lazy val `scalatestplus-play` = project
                                                                               exclude ("org.seleniumhq.selenium", "selenium-firefox-driver")
                                                                               exclude ("org.seleniumhq.selenium", "selenium-remote-driver"),
       "org.scalatest"            %% "scalatest"         % ScalatestVersion,
-      "org.scalatestplus"        %% "mockito-4-5"       % ScalatestMockitoVersion,
-      "org.scalatestplus"        %% "selenium-4-1"      % ScalatestSeleniumVersion exclude ("com.fasterxml.jackson.core", "jackson-core") 
+      "org.scalatestplus"        %% "mockito-4-6"       % ScalatestMockitoVersion,
+      "org.scalatestplus"        %% "selenium-4-2"      % ScalatestSeleniumVersion exclude ("com.fasterxml.jackson.core", "jackson-core") 
                                                                                    exclude ("com.fasterxml.jackson.core", "jackson-databind"),
       "org.seleniumhq.selenium"  % "selenium-java"      % SeleniumVersion,
       "org.seleniumhq.selenium"  % "htmlunit-driver"    % HtmlUnitVersion,
