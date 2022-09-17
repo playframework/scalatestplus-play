@@ -15,6 +15,7 @@
  */
 package org.scalatestplus.play
 
+import org.scalatest.concurrent.IntegrationPatience
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.Application
 import play.api.inject.guice._
@@ -22,7 +23,8 @@ import play.api.inject.guice._
 class OneServerPerSuiteWithOneBrowserPerTestSpec
     extends UnitSpec
     with GuiceOneServerPerSuite
-    with OneBrowserPerTest
+    with OneBrowserPerTest 
+    with IntegrationPatience
     with FirefoxFactory {
 
   override def fakeApplication(): Application = {
