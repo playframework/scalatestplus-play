@@ -1,19 +1,39 @@
+defaults:
+  actions:
+    backport:
+      title: "[{{ destination_branch }}] {{ title }} (backport #{{ number }}) by @{{ author }}"
+
+queue_rules:
+  - name: default
+    conditions:
+      # Conditions to get out of the queue (= merged)
+      - check-success~=/ Ready To Merge$
+
 pull_request_rules:
   - name: Merge PRs that are ready
     conditions:
-      - status-success=Travis CI - Pull Request
-      - status-success=typesafe-cla-validator
+      - check-success~=/ Ready To Merge$
       - "#approved-reviews-by>=1"
       - "#review-requested=0"
       - "#changes-requested-reviews-by=0"
       - label!=status:block-merge
       - label=status:merge-when-green
     actions:
-      merge:
+      queue:
         method: merge
+        name: default
 
-  - name: Delete the PR branch after merge
+  - name: Delete the PR branch and remove label after merge
     conditions:
       - merged
     actions:
       delete_head_branch: {}
+      label:
+        remove: [ "status:merge-when-green" ]
+
+  - name: Labeling for Scala Steward PR's
+    conditions:
+      - author=scala-steward
+    actions:
+      label:
+        add: [ "type:updates" ]
