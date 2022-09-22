@@ -9,6 +9,10 @@ jobs:
     with:
       cmd: sbt validateCode
 
+  check-binary-compatibility:
+    name: Binary Compatibility
+    uses: playframework/.github/.github/workflows/binary-check.yml@v2
+
   check-docs:
     name: Docs
     uses: playframework/.github/.github/workflows/cmd.yml@v2
@@ -19,6 +23,7 @@ jobs:
     runs-on: macos-latest
     needs:
       - "check-code-style"
+      - "check-binary-compatibility"
       - "check-docs"
     steps:
     - name: Checkout

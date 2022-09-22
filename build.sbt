@@ -55,6 +55,11 @@ lazy val mimaSettings = Seq(
     ProblemFilters.exclude[IncompatibleMethTypeProblem]("org.scalatestplus.play.PlaySpec.*"),
     ProblemFilters.exclude[IncompatibleResultTypeProblem]("org.scalatestplus.play.PlaySpec.*"),
     ProblemFilters.exclude[DirectMissingMethodProblem]("org.scalatestplus.play.MixedPlaySpec.*"),
+    // Dropping deprecated phantom-js support.
+    ProblemFilters.exclude[MissingClassProblem]("org.scalatestplus.play.PhantomJSFactory"),
+    ProblemFilters.exclude[MissingClassProblem]("org.scalatestplus.play.PhantomJSFactory$"),
+    ProblemFilters.exclude[MissingClassProblem]("org.scalatestplus.play.PhantomJSInfo"),
+    ProblemFilters.exclude[MissingClassProblem]("org.scalatestplus.play.PhantomJSInfo$")
   ),
   mimaPreviousArtifacts := previousVersion.map(organization.value %% name.value % _).toSet
 )
