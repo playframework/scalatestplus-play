@@ -123,6 +123,7 @@ lazy val `scalatestplus-play` = project
     ),
     evictionErrorLevel := Level.Info,
     Compile / doc / scalacOptions := Seq("-doc-title", "ScalaTest + Play, " + version.value),
+    Test / javaOptions ++= List("--add-exports=java.base/sun.security.x509=ALL-UNNAMED"),
   )
 
 lazy val docs = project
