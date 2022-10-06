@@ -66,7 +66,7 @@ lazy val mimaSettings = Seq(
 
 lazy val commonSettings = Seq(
   scalaVersion := scala213,
-  crossScalaVersions := Seq(scala212, scala213),
+  crossScalaVersions := Seq(scala213),
   Test / parallelExecution := false,
   Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-oTK"),
   headerLicense := Some(
