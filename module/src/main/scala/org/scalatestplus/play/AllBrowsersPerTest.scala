@@ -1,11 +1,11 @@
 /*
- * Copyright 2001-2016 Artima, Inc.
+ * Copyright 2001-2022 Artima, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.scalatestplus.play
 
 import org.scalatest._
@@ -23,7 +24,8 @@ import BrowserFactory.GrumpyDriver
 import BrowserFactory.UnavailableDriver
 import BrowserFactory.UnneededDriver
 import BrowserFactory.UninitializedDriver
-import org.openqa.selenium.chrome.{ChromeDriverService, ChromeOptions}
+import org.openqa.selenium.chrome.ChromeDriverService
+import org.openqa.selenium.chrome.ChromeOptions
 import org.openqa.selenium.firefox.FirefoxProfile
 import org.scalatestplus.selenium.WebBrowser
 
@@ -214,7 +216,14 @@ trait AllBrowsersPerTest extends TestSuiteMixin with WebBrowser with Eventually 
    * Info for available browsers. Override to add in custom `BrowserInfo` implementations.
    */
   protected def browsers: IndexedSeq[BrowserInfo] =
-    Vector(FirefoxInfo(firefoxProfile), SafariInfo, InternetExplorerInfo, ChromeInfo(chromeDriverService, chromeOptions), EdgeInfo, HtmlUnitInfo(true))
+    Vector(
+      FirefoxInfo(firefoxProfile),
+      SafariInfo,
+      InternetExplorerInfo,
+      ChromeInfo(chromeDriverService, chromeOptions),
+      EdgeInfo,
+      HtmlUnitInfo(true)
+    )
 
   private var privateWebDriver: WebDriver = UninitializedDriver
 

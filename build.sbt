@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import com.typesafe.tools.mima.core._
-import sbt.util.{Level => _, _}
+import sbt.util.{ Level => _, _ }
 
 import scala.sys.process._
 import sbt.io.Path._
@@ -68,7 +68,25 @@ lazy val commonSettings = Seq(
   scalaVersion := scala213,
   crossScalaVersions := Seq(scala212, scala213),
   Test / parallelExecution := false,
-  Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-oTK")
+  Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-oTK"),
+  headerLicense := Some(
+    HeaderLicense.Custom(
+      """|Copyright 2001-2022 Artima, Inc.
+         |
+         |Licensed under the Apache License, Version 2.0 (the "License");
+         |you may not use this file except in compliance with the License.
+         |You may obtain a copy of the License at
+         |
+         |     http://www.apache.org/licenses/LICENSE-2.0
+         |
+         |Unless required by applicable law or agreed to in writing, software
+         |distributed under the License is distributed on an "AS IS" BASIS,
+         |WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+         |See the License for the specific language governing permissions and
+         |limitations under the License.
+         |""".stripMargin
+    )
+  )
 )
 
 lazy val `scalatestplus-play-root` = project
@@ -109,23 +127,25 @@ lazy val `scalatestplus-play` = project
       // Note: It seems like the only jackson version that works with all play, play-ws, play-json and selenium is 2.11.4.
       //       play will bring in older version of selenium as well, so need excluding and let scalatest+selenium brings in the newer version.4
       ws,
-      akkaHttpServer             % Test,
-      "com.typesafe.play"        %% "play-test"         % PlayVersion.current exclude ("com.fasterxml.jackson.core", "jackson-core") 
-                                                                              exclude ("com.fasterxml.jackson.core", "jackson-databind")
-                                                                              exclude ("org.seleniumhq.selenium", "htmlunit-driver")
-                                                                              exclude ("org.seleniumhq.selenium", "selenium-api")
-                                                                              exclude ("org.seleniumhq.selenium", "selenium-support")
-                                                                              exclude ("org.seleniumhq.selenium", "selenium-firefox-driver")
-                                                                              exclude ("org.seleniumhq.selenium", "selenium-remote-driver"),
-      "org.scalatest"            %% "scalatest"         % ScalatestVersion,
-      "org.scalatestplus"        %% "mockito-4-6"       % ScalatestMockitoVersion,
-      "org.scalatestplus"        %% "selenium-4-2"      % ScalatestSeleniumVersion exclude ("com.fasterxml.jackson.core", "jackson-core") 
-                                                                                   exclude ("com.fasterxml.jackson.core", "jackson-databind"),
+      akkaHttpServer       % Test,
+      ("com.typesafe.play" %% "play-test" % PlayVersion.current)
+        .exclude("com.fasterxml.jackson.core", "jackson-core")
+        .exclude("com.fasterxml.jackson.core", "jackson-databind")
+        .exclude("org.seleniumhq.selenium", "htmlunit-driver")
+        .exclude("org.seleniumhq.selenium", "selenium-api")
+        .exclude("org.seleniumhq.selenium", "selenium-support")
+        .exclude("org.seleniumhq.selenium", "selenium-firefox-driver")
+        .exclude("org.seleniumhq.selenium", "selenium-remote-driver"),
+      "org.scalatest"      %% "scalatest"    % ScalatestVersion,
+      "org.scalatestplus"  %% "mockito-4-6"  % ScalatestMockitoVersion,
+      ("org.scalatestplus" %% "selenium-4-2" % ScalatestSeleniumVersion)
+        .exclude("com.fasterxml.jackson.core", "jackson-core")
+        .exclude("com.fasterxml.jackson.core", "jackson-databind"),
       "org.seleniumhq.selenium"  % "selenium-java"      % SeleniumVersion,
       "org.seleniumhq.selenium"  % "htmlunit-driver"    % HtmlUnitVersion,
       "net.sourceforge.htmlunit" % "htmlunit-cssparser" % CssParserVersion
     ),
-    evictionErrorLevel := Level.Info, 
+    evictionErrorLevel := Level.Info,
     Compile / doc / scalacOptions := Seq("-doc-title", "ScalaTest + Play, " + releaseVersion),
     pomExtra := PomExtra
   )

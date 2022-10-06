@@ -1,11 +1,11 @@
 /*
- * Copyright 2001-2016 Artima, Inc.
+ * Copyright 2001-2022 Artima, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.scalatestplus.play
 
 import org.openqa.selenium.WebDriver
@@ -144,8 +145,7 @@ case object InternetExplorerInfo
  * The `AllBrowsersPerSuite` and `AllBrowsersPerTest` traits use the  tag name to automatically tag any tests that use
  * a particular `WebDriver` with the appropriate tag so that tests can be dynamically filtered by the browser the use.
  */
-case object EdgeInfo
-  extends BrowserInfo("[Edge]", "org.scalatest.tags.EdgeBrowser") {
+case object EdgeInfo extends BrowserInfo("[Edge]", "org.scalatest.tags.EdgeBrowser") {
 
   /**
    * Creates a new instance of a Selenium `EdgeDriver`, or returns a [[org.scalatestplus.play.BrowserFactory.UnavailableDriver BrowserFactory.UnavailableDriver]] that includes
