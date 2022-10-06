@@ -15,5 +15,3 @@ addSbtPlugin("com.typesafe.play" % "play-docs-sbt-plugin" % sys.props.getOrElse(
 addSbtPlugin("org.scalameta"     % "sbt-scalafmt"    % "2.4.6")
 addSbtPlugin("com.typesafe"      % "sbt-mima-plugin" % "1.1.0")
 addSbtPlugin("de.heikoseeberger" % "sbt-header"      % "5.7.0")
-
-addSbtPlugin("com.dwijnand" % "sbt-dynver" % "4.1.1")

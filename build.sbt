@@ -98,22 +98,6 @@ lazy val `scalatestplus-play-root` = project
     sonatypeProfileName := "org.scalatestplus.play",
     mimaPreviousArtifacts := Set.empty
   )
-  .settings(
-    Seq(
-      // this overrides releaseProcess to make it work with sbt-dynver
-      releaseProcess := {
-        import ReleaseTransformations._
-        Seq[ReleaseStep](
-          checkSnapshotDependencies,
-          runClean,
-          releaseStepCommandAndRemaining("+test"),
-          releaseStepCommandAndRemaining("+publishSigned"),
-          releaseStepCommand("sonatypeBundleRelease"),
-          pushChanges // <- this needs to be removed when releasing from tag
-        )
-      }
-    )
-  )
 
 lazy val `scalatestplus-play` = project
   .in(file("module"))
@@ -146,8 +130,7 @@ lazy val `scalatestplus-play` = project
       "net.sourceforge.htmlunit" % "htmlunit-cssparser" % CssParserVersion
     ),
     evictionErrorLevel := Level.Info,
-    Compile / doc / scalacOptions := Seq("-doc-title", "ScalaTest + Play, " + releaseVersion),
-    pomExtra := PomExtra
+    Compile / doc / scalacOptions := Seq("-doc-title", "ScalaTest + Play, " + version.value),
   )
 
 lazy val docs = project
@@ -174,30 +157,6 @@ lazy val docs = project
     SettingKey[Seq[File]]("migrationManualSources") := Nil
   )
   .dependsOn(`scalatestplus-play`)
-
-lazy val PomExtra = {
-  <scm>
-    <url>https://github.com/playframework/scalatestplus-play</url>
-    <connection>scm:git:git@github.com:playframework/scalatestplus-play.git</connection>
-    <developerConnection>
-      scm:git:git@github.com:playframework/scalatestplus-play.git
-    </developerConnection>
-  </scm>
-    <developers>
-      <developer>
-        <id>bvenners</id>
-        <name>Bill Venners</name>
-      </developer>
-      <developer>
-        <id>gcberger</id>
-        <name>George Berger</name>
-      </developer>
-      <developer>
-        <id>cheeseng</id>
-        <name>Chua Chee Seng</name>
-      </developer>
-    </developers>
-}
 
 addCommandAlias(
   "validateCode",
