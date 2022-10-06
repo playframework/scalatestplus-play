@@ -43,18 +43,10 @@ Global / onLoad := (Global / onLoad).value.andThen { s =>
   s
 }
 
-val previousVersion: Option[String] = Some("5.0.0")
+val previousVersion: Option[String] = Some("5.1.0")
 
 lazy val mimaSettings = Seq(
   mimaBinaryIssueFilters ++= Seq(
-    // Add mima filters here
-    ProblemFilters.exclude[MissingTypesProblem]("org.scalatestplus.play.MixedPlaySpec"),
-    ProblemFilters.exclude[IncompatibleMethTypeProblem]("org.scalatestplus.play.MixedPlaySpec.*"),
-    ProblemFilters.exclude[IncompatibleResultTypeProblem]("org.scalatestplus.play.MixedPlaySpec.*"),
-    ProblemFilters.exclude[MissingTypesProblem]("org.scalatestplus.play.PlaySpec"),
-    ProblemFilters.exclude[IncompatibleMethTypeProblem]("org.scalatestplus.play.PlaySpec.*"),
-    ProblemFilters.exclude[IncompatibleResultTypeProblem]("org.scalatestplus.play.PlaySpec.*"),
-    ProblemFilters.exclude[DirectMissingMethodProblem]("org.scalatestplus.play.MixedPlaySpec.*"),
     // Dropping deprecated phantom-js support.
     ProblemFilters.exclude[MissingClassProblem]("org.scalatestplus.play.PhantomJSFactory"),
     ProblemFilters.exclude[MissingClassProblem]("org.scalatestplus.play.PhantomJSFactory$"),
