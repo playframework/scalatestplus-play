@@ -3,6 +3,12 @@ name: CI
 on: [push, pull_request]
 
 jobs:
+  check-code-style:
+    name: Code Style
+    uses: playframework/.github/.github/workflows/cmd.yml@v2
+    with:
+      cmd: sbt validateCode
+
   check-docs:
     name: Docs
     uses: playframework/.github/.github/workflows/cmd.yml@v2
@@ -12,6 +18,7 @@ jobs:
   test:
     runs-on: macos-latest
     needs:
+      - "check-code-style"
       - "check-docs"
     steps:
     - name: Checkout

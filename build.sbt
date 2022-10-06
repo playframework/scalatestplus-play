@@ -173,3 +173,12 @@ lazy val PomExtra = {
       </developer>
     </developers>
 }
+
+addCommandAlias(
+  "validateCode",
+  List(
+    "headerCheckAll",
+    "scalafmtSbtCheck",
+    "scalafmtCheckAll",
+  ).mkString(";")
+)
