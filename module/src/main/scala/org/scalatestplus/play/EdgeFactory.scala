@@ -17,37 +17,37 @@
 package org.scalatestplus.play
 
 import org.openqa.selenium.WebDriver
-import org.openqa.selenium.safari.SafariDriver
+import org.openqa.selenium.edge.EdgeDriver
 import org.scalatestplus.play.BrowserFactory.UnavailableDriver
 
 /**
- * Factory whose `createWebDriver` method will either return a new Selenium `SafariDriver`, or
- * [[org.scalatestplus.play.BrowserFactory.UnavailableDriver UnavailableDriver]], if Safari is not available on the host platform.
+ * Factory whose `createWebDriver` method will either return a new Selenium `EdgeDriver`, or
+ * [[org.scalatestplus.play.BrowserFactory.UnavailableDriver UnavailableDriver]], if Edge browser is not available on the host platform.
  *
  * Traits [[org.scalatestplus.play.OneBrowserPerSuite OneBrowserPerSuite]] and
  * [[org.scalatestplus.play.OneBrowserPerTest OneBrowserPerTest]] extend `BrowserFactory` and therefore require
  * you to fill in the `createWebDriver` method, usually by mixing in one of the `BrowserFactory` subtraits such as
- * `SafariFactory`.
+ * `EdgeFactory`.
  */
-trait SafariFactory extends BrowserFactory {
+trait EdgeFactory extends BrowserFactory {
 
   /**
-   * Creates a new instance of a Selenium `SafariDriver`, or returns a [[org.scalatestplus.play.BrowserFactory.UnavailableDriver BrowserFactory.UnavailableDriver]] that includes
+   * Creates a new instance of a Selenium `EdgeDriver`, or returns a [[org.scalatestplus.play.BrowserFactory.UnavailableDriver BrowserFactory.UnavailableDriver]] that includes
    * the exception that indicated the driver was not supported on the host platform and an appropriate
    * error message.
    *
-   * @return an new instance of a Selenium `SafariDriver`, or a `BrowserFactory.UnavailableDriver` if a Safari driver is not
-   * available on the host platform.
+   * @return an new instance of a Selenium `EdgeDriver`, or a `BrowserFactory.UnavailableDriver` if an
+   * Edge driver is not available on the host platform.
    */
   def createWebDriver(): WebDriver =
     try {
-      new SafariDriver()
+      new EdgeDriver()
     } catch {
-      case ex: Throwable => UnavailableDriver(Some(ex), Resources("cantCreateSafariDriver", ex.getMessage))
+      case ex: Throwable => UnavailableDriver(Some(ex), Resources("cantCreateEdgeDriver", ex.getMessage))
     }
 }
 
 /**
- * Companion object to trait `SafariFactory` that mixes in the trait.
+ * Companion object to trait `EdgeFactory` that mixes in the trait.
  */
-object SafariFactory extends SafariFactory
+object EdgeFactory extends EdgeFactory

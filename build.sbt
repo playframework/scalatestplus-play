@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import com.typesafe.tools.mima.core._
-import sbt.util._
+import sbt.util.{ Level => _, _ }
 
 import scala.sys.process._
 import sbt.io.Path._
@@ -23,11 +23,10 @@ import interplay.ScalaVersions._
 import play.core.PlayVersion
 
 val SeleniumVersion          = "4.4.0"
-val HtmlUnitVersion          = "2.64.0"
-val PhantomJsDriverVersion   = "1.5.0"
-val MockitoVersion           = "3.4.6"
+val HtmlUnitVersion          = "3.64.0"
+val MockitoVersion           = "4.6.1"
 val CssParserVersion         = "1.12.0"
-val ScalatestVersion         = "3.1.4"
+val ScalatestVersion         = "3.2.13"
 val ScalatestSeleniumVersion = ScalatestVersion + ".0"
 val ScalatestMockitoVersion  = ScalatestVersion + ".0"
 
@@ -44,27 +43,42 @@ Global / onLoad := (Global / onLoad).value.andThen { s =>
   s
 }
 
-val previousVersion: Option[String] = Some("5.0.0")
+val previousVersion: Option[String] = Some("5.1.0")
 
 lazy val mimaSettings = Seq(
   mimaBinaryIssueFilters ++= Seq(
-    // Add mima filters here
-    ProblemFilters.exclude[MissingTypesProblem]("org.scalatestplus.play.MixedPlaySpec"),
-    ProblemFilters.exclude[IncompatibleMethTypeProblem]("org.scalatestplus.play.MixedPlaySpec.*"),
-    ProblemFilters.exclude[IncompatibleResultTypeProblem]("org.scalatestplus.play.MixedPlaySpec.*"),
-    ProblemFilters.exclude[MissingTypesProblem]("org.scalatestplus.play.PlaySpec"),
-    ProblemFilters.exclude[IncompatibleMethTypeProblem]("org.scalatestplus.play.PlaySpec.*"),
-    ProblemFilters.exclude[IncompatibleResultTypeProblem]("org.scalatestplus.play.PlaySpec.*"),
-    ProblemFilters.exclude[DirectMissingMethodProblem]("org.scalatestplus.play.MixedPlaySpec.*"),
+    // Dropping deprecated phantom-js support.
+    ProblemFilters.exclude[MissingClassProblem]("org.scalatestplus.play.PhantomJSFactory"),
+    ProblemFilters.exclude[MissingClassProblem]("org.scalatestplus.play.PhantomJSFactory$"),
+    ProblemFilters.exclude[MissingClassProblem]("org.scalatestplus.play.PhantomJSInfo"),
+    ProblemFilters.exclude[MissingClassProblem]("org.scalatestplus.play.PhantomJSInfo$")
   ),
   mimaPreviousArtifacts := previousVersion.map(organization.value %% name.value % _).toSet
 )
 
 lazy val commonSettings = Seq(
   scalaVersion := scala213,
-  crossScalaVersions := Seq(scala212, scala213),
+  crossScalaVersions := Seq(scala213),
   Test / parallelExecution := false,
-  Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-oTK")
+  Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-oTK"),
+  headerLicense := Some(
+    HeaderLicense.Custom(
+      """|Copyright 2001-2022 Artima, Inc.
+         |
+         |Licensed under the Apache License, Version 2.0 (the "License");
+         |you may not use this file except in compliance with the License.
+         |You may obtain a copy of the License at
+         |
+         |     http://www.apache.org/licenses/LICENSE-2.0
+         |
+         |Unless required by applicable law or agreed to in writing, software
+         |distributed under the License is distributed on an "AS IS" BASIS,
+         |WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+         |See the License for the specific language governing permissions and
+         |limitations under the License.
+         |""".stripMargin
+    )
+  )
 )
 
 lazy val `scalatestplus-play-root` = project
@@ -75,22 +89,6 @@ lazy val `scalatestplus-play-root` = project
   .settings(
     sonatypeProfileName := "org.scalatestplus.play",
     mimaPreviousArtifacts := Set.empty
-  )
-  .settings(
-    Seq(
-      // this overrides releaseProcess to make it work with sbt-dynver
-      releaseProcess := {
-        import ReleaseTransformations._
-        Seq[ReleaseStep](
-          checkSnapshotDependencies,
-          runClean,
-          releaseStepCommandAndRemaining("+test"),
-          releaseStepCommandAndRemaining("+publishSigned"),
-          releaseStepCommand("sonatypeBundleRelease"),
-          pushChanges // <- this needs to be removed when releasing from tag
-        )
-      }
-    )
   )
 
 lazy val `scalatestplus-play` = project
@@ -106,15 +104,19 @@ lazy val `scalatestplus-play` = project
       akkaHttpServer             % Test,
       "com.typesafe.play"        %% "play-test"         % PlayVersion.current,
       "org.scalatest"            %% "scalatest"         % ScalatestVersion,
-      "org.scalatestplus"        %% "mockito-3-4"       % ScalatestMockitoVersion,
-      "org.scalatestplus"        %% "selenium-4-1"      % ScalatestSeleniumVersion,
+      "org.scalatestplus"        %% "mockito-4-6"       % ScalatestMockitoVersion,
+      "org.scalatestplus"        %% "selenium-4-2"      % ScalatestSeleniumVersion,
       "org.seleniumhq.selenium"  % "selenium-java"      % SeleniumVersion,
       "org.seleniumhq.selenium"  % "htmlunit-driver"    % HtmlUnitVersion,
-      "net.sourceforge.htmlunit" % "htmlunit-cssparser" % CssParserVersion,
-      "com.codeborne"            % "phantomjsdriver"    % PhantomJsDriverVersion
+      "net.sourceforge.htmlunit" % "htmlunit-cssparser" % CssParserVersion
     ),
-    Compile / doc / scalacOptions := Seq("-doc-title", "ScalaTest + Play, " + releaseVersion),
-    pomExtra := PomExtra
+    evictionErrorLevel := Level.Info,
+    Compile / doc / scalacOptions := Seq("-doc-title", "ScalaTest + Play, " + version.value),
+    Test / fork := true,
+    Test / javaOptions ++= List(
+      "--add-exports=java.base/sun.security.x509=ALL-UNNAMED",
+      "-Dwebdriver.firefox.logfile=/dev/null", // disable GeckoDriver logs polluting the CI logs
+    ),
   )
 
 lazy val docs = project
@@ -142,26 +144,11 @@ lazy val docs = project
   )
   .dependsOn(`scalatestplus-play`)
 
-lazy val PomExtra = {
-  <scm>
-    <url>https://github.com/playframework/scalatestplus-play</url>
-    <connection>scm:git:git@github.com:playframework/scalatestplus-play.git</connection>
-    <developerConnection>
-      scm:git:git@github.com:playframework/scalatestplus-play.git
-    </developerConnection>
-  </scm>
-    <developers>
-      <developer>
-        <id>bvenners</id>
-        <name>Bill Venners</name>
-      </developer>
-      <developer>
-        <id>gcberger</id>
-        <name>George Berger</name>
-      </developer>
-      <developer>
-        <id>cheeseng</id>
-        <name>Chua Chee Seng</name>
-      </developer>
-    </developers>
-}
+addCommandAlias(
+  "validateCode",
+  List(
+    "headerCheckAll",
+    "scalafmtSbtCheck",
+    "scalafmtCheckAll",
+  ).mkString(";")
+)

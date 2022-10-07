@@ -1,11 +1,11 @@
 /*
- * Copyright 2001-2016 Artima, Inc.
+ * Copyright 2001-2022 Artima, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.scalatestplus.play
 
 import org.scalatest._
@@ -21,8 +22,7 @@ import org.openqa.selenium.WebDriver
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.inject.guice._
 
-@deprecated("PhantomJS is no longer actively developed, and support will eventually be dropped", "4.0.0")
-class PhantomJSFactorySpec extends UnitSpec with GuiceOneServerPerSuite with OneBrowserPerSuite with PhantomJSFactory {
+class EdgeFactorySpec extends UnitSpec with GuiceOneServerPerSuite with OneBrowserPerSuite with EdgeFactory {
 
   override def fakeApplication(): Application = {
     GuiceApplicationBuilder()
@@ -31,7 +31,7 @@ class PhantomJSFactorySpec extends UnitSpec with GuiceOneServerPerSuite with One
       .build()
   }
 
-  def getConfig(key: String)(implicit app: Application) = app.configuration.getOptional[String](key)
+  def getConfig(key: String)(implicit app: Application): Option[String] = app.configuration.getOptional[String](key)
 
   // Doesn't need synchronization because set by withFixture and checked by the test
   // invoked inside same withFixture with super.withFixture(test)
@@ -42,7 +42,7 @@ class PhantomJSFactorySpec extends UnitSpec with GuiceOneServerPerSuite with One
     super.withFixture(test)
   }
 
-  "The PhantomJSFactory trait" must {
+  "The EdgeFactory trait" must {
     "provide an Application" in {
       app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }

@@ -1,11 +1,11 @@
 /*
- * Copyright 2001-2016 Artima, Inc.
+ * Copyright 2001-2022 Artima, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,10 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.scalatestplus.play
 
 import org.scalatest._
 import org.openqa.selenium.chrome.ChromeDriver
+import org.openqa.selenium.edge.EdgeDriver
 import org.openqa.selenium.firefox.FirefoxDriver
 import org.openqa.selenium.ie.InternetExplorerDriver
 import org.openqa.selenium.safari.SafariDriver
@@ -50,6 +52,9 @@ class AllBrowsersPerSuiteBehaviorSpec extends AnyWordSpec {
     val safari = try {
       val d = new SafariDriver; d.quit(); 1
     } catch { case ex: Throwable => 0 }
+    val edge = try {
+      val d = new EdgeDriver; d.quit(); 1
+    } catch { case ex: Throwable => 0 }
     val htmlUnit =
       try {
         val d = new HtmlUnitDriver()
@@ -60,13 +65,13 @@ class AllBrowsersPerSuiteBehaviorSpec extends AnyWordSpec {
         case ex: Throwable => 0
       }
 
-    val availableBrowserCount = chrome + firefox + internetExplorer + safari + htmlUnit
+    val availableBrowserCount = chrome + firefox + internetExplorer + safari + htmlUnit + edge
 
     "run all tests with different browsers available on the system one by one" in {
 
-      val expectedTestStartingCount  = 11 // 5 * 2 + 1
+      val expectedTestStartingCount  = 13 // 6 * 2 + 1
       val expectedTestSucceededCount = availableBrowserCount * 2 + 1
-      val expectedTestCanceledCount  = (5 - availableBrowserCount) * 2
+      val expectedTestCanceledCount  = (6 - availableBrowserCount) * 2
 
       val rep  = new EventRecordingReporter
       val spec = new TestSpec
@@ -84,17 +89,19 @@ class AllBrowsersPerSuiteBehaviorSpec extends AnyWordSpec {
       assert(testStartingEventsReceived(5).testName == "test 2 [InternetExplorer]")
       assert(testStartingEventsReceived(6).testName == "test 1 [Chrome]")
       assert(testStartingEventsReceived(7).testName == "test 2 [Chrome]")
-      assert(testStartingEventsReceived(8).testName == "test 1 [HtmlUnit]")
-      assert(testStartingEventsReceived(9).testName == "test 2 [HtmlUnit]")
-      assert(testStartingEventsReceived(10).testName == "test 3")
+      assert(testStartingEventsReceived(8).testName == "test 1 [Edge]")
+      assert(testStartingEventsReceived(9).testName == "test 2 [Edge]")
+      assert(testStartingEventsReceived(10).testName == "test 1 [HtmlUnit]")
+      assert(testStartingEventsReceived(11).testName == "test 2 [HtmlUnit]")
+      assert(testStartingEventsReceived(12).testName == "test 3")
 
       assert(rep.alertProvidedEventsReceived.isEmpty)
     }
 
     "run only chosen test when ChosenTest tag is passed in" in {
-      val expectedTestStartingCount  = 6 // 5 + 1
+      val expectedTestStartingCount  = 7 // 6 + 1
       val expectedTestSucceededCount = availableBrowserCount + 1
-      val expectedTestCanceledCount  = 5 - availableBrowserCount
+      val expectedTestCanceledCount  = 6 - availableBrowserCount
 
       val rep  = new EventRecordingReporter
       val spec = new TestSpec
@@ -108,8 +115,9 @@ class AllBrowsersPerSuiteBehaviorSpec extends AnyWordSpec {
       assert(testStartingEventsReceived(1).testName == "test 2 [Safari]")
       assert(testStartingEventsReceived(2).testName == "test 2 [InternetExplorer]")
       assert(testStartingEventsReceived(3).testName == "test 2 [Chrome]")
-      assert(testStartingEventsReceived(4).testName == "test 2 [HtmlUnit]")
-      assert(testStartingEventsReceived(5).testName == "test 3")
+      assert(testStartingEventsReceived(4).testName == "test 2 [Edge]")
+      assert(testStartingEventsReceived(5).testName == "test 2 [HtmlUnit]")
+      assert(testStartingEventsReceived(6).testName == "test 3")
     }
 
     "run only Firefox tests when Firefox tag is passed in" in {
@@ -226,8 +234,8 @@ class AllBrowsersPerSuiteBehaviorSpec extends AnyWordSpec {
     }
 
     "run only HtmlUnit and ChosenTest tests when HtmlUnit and ChosenTest tag is passed in" in {
-      val expectedTestStartingCount  = 7 // HtmlUnit * 2 + 3 other browsers on test 2, + test 3
-      val expectedTestSucceededCount = (htmlUnit * 2) + firefox + chrome + internetExplorer + safari + 1
+      val expectedTestStartingCount  = 8 // HtmlUnit * 2 + 5 other browsers on test 2, + test 3
+      val expectedTestSucceededCount = (htmlUnit * 2) + firefox + chrome + internetExplorer + safari + edge + 1
       val expectedTestCanceledCount  = expectedTestStartingCount - expectedTestSucceededCount
 
       val rep  = new EventRecordingReporter
@@ -245,9 +253,10 @@ class AllBrowsersPerSuiteBehaviorSpec extends AnyWordSpec {
       assert(testStartingEventsReceived(1).testName == "test 2 [Safari]")
       assert(testStartingEventsReceived(2).testName == "test 2 [InternetExplorer]")
       assert(testStartingEventsReceived(3).testName == "test 2 [Chrome]")
-      assert(testStartingEventsReceived(4).testName == "test 1 [HtmlUnit]")
-      assert(testStartingEventsReceived(5).testName == "test 2 [HtmlUnit]")
-      assert(testStartingEventsReceived(6).testName == "test 3")
+      assert(testStartingEventsReceived(4).testName == "test 2 [Edge]")
+      assert(testStartingEventsReceived(5).testName == "test 1 [HtmlUnit]")
+      assert(testStartingEventsReceived(6).testName == "test 2 [HtmlUnit]")
+      assert(testStartingEventsReceived(7).testName == "test 3")
     }
 
     "run no test when unrelated tag is passed in" in {
