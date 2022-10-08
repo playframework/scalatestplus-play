@@ -37,7 +37,7 @@ class WsScalaTestClientSpec extends UnitSpec with GuiceOneServerPerSuite with Sc
 
     "wsUrl works correctly" in {
       implicit val ws: WSClient = app.injector.instanceOf(classOf[WSClient])
-      val futureResult          = wsUrl("/testing").get
+      val futureResult          = wsUrl("/testing").get()
       val body                  = futureResult.futureValue.body
       val expectedBody =
         "<html>" +
@@ -52,7 +52,7 @@ class WsScalaTestClientSpec extends UnitSpec with GuiceOneServerPerSuite with Sc
     "wsCall works correctly" in {
       implicit val ws: WSClient = app.injector.instanceOf(classOf[WSClient])
 
-      val futureResult = wsCall(Call("get", "/testing")).get
+      val futureResult = wsCall(Call("get", "/testing")).get()
       val body         = futureResult.futureValue.body
       val expectedBody =
         "<html>" +
