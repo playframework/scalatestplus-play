@@ -24,10 +24,10 @@ class MixedPlaySpecSpec extends MixedPlaySpec { thisSpec =>
 
   "MixedPlaySpec" must {
     "mix in OptionValues" in { () =>
-      thisSpec mustBe an[OptionValues]
+      assert(thisSpec.isInstanceOf[OptionValues])
     }
     "mix in MixedFixtures" in { () =>
-      thisSpec mustBe an[MixedFixtures]
+      assert(thisSpec.isInstanceOf[MixedFixtures])
     }
   }
 
