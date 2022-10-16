@@ -25,7 +25,7 @@ import play.core.PlayVersion
 val SeleniumVersion          = "4.5.0"
 val MockitoVersion           = "4.6.1"
 val CssParserVersion         = "1.12.0"
-val ScalatestVersion         = "3.2.13"
+val ScalatestVersion         = "3.2.14"
 val ScalatestSeleniumVersion = ScalatestVersion + ".0"
 val ScalatestMockitoVersion  = ScalatestVersion + ".0"
 
@@ -104,9 +104,9 @@ lazy val `scalatestplus-play` = project
       "com.typesafe.play"        %% "play-test"         % PlayVersion.current,
       "org.scalatest"            %% "scalatest"         % ScalatestVersion,
       "org.scalatestplus"        %% "mockito-4-6"       % ScalatestMockitoVersion,
-      "org.scalatestplus"        %% "selenium-4-2"      % ScalatestSeleniumVersion,
+      "org.scalatestplus"        %% "selenium-4-4"      % ScalatestSeleniumVersion,
       "org.seleniumhq.selenium"  % "selenium-java"      % SeleniumVersion,
-      "org.seleniumhq.selenium"  % "htmlunit-driver"    % HtmlUnitVersion,
+      "org.seleniumhq.selenium"  % "htmlunit-driver"    % SeleniumVersion,
       "net.sourceforge.htmlunit" % "htmlunit-cssparser" % CssParserVersion
     ),
     evictionErrorLevel := Level.Info,
