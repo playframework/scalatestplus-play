@@ -42,14 +42,11 @@ Where version is one of the listed below, according to your needs.
 
 ## Contributions
 
-The following tips may be useful for all welcome contributions:
+See https://github.com/playframework/.github/blob/main/CONTRIBUTING.md
 
-* Raise a Pull Request against the relevant branch
-* The Pull Request will be validated & tested in Travis-CI
-* Builds which don't meet the style guidelines will fail, we recommend running `sbt scalafmtAll scalafmtSbt` before pushing
-* Please use descriptive commit messages
+## Releasing a new version
 
-See more details [here](https://playframework.com/contributing).
+See https://github.com/playframework/.github/blob/main/RELEASING.md
 
 ## License
 
