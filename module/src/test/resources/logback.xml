@@ -1,3 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
 <!--
 Copyright 2001-2016 Artima, Inc.
 
@@ -13,9 +15,15 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
+
+<!DOCTYPE configuration>
+
 <configuration>
-  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-    <encoder>
+  <import class="ch.qos.logback.classic.encoder.PatternLayoutEncoder"/>
+  <import class="ch.qos.logback.core.ConsoleAppender"/>
+
+  <appender name="STDOUT" class="ConsoleAppender">
+    <encoder class="PatternLayoutEncoder">
       <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
     </encoder>
   </appender>
