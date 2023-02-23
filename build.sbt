@@ -113,8 +113,8 @@ lazy val `scalatestplus-play` = project
     },
     libraryDependencies ++= Seq(
       ws.cross(CrossVersion.for3Use2_13),
-      (akkaHttpServer            % Test).cross(CrossVersion.for3Use2_13),
-      ("com.typesafe.play"       %% "play-test"         % PlayVersion.current).cross(CrossVersion.for3Use2_13),
+      (akkaHttpServer % Test).cross(CrossVersion.for3Use2_13),
+      playTest.cross(CrossVersion.for3Use2_13),
       "org.scalatest"            %% "scalatest"         % ScalatestVersion,
       "org.scalatestplus"        %% "mockito-4-6"       % ScalatestMockitoVersion,
       "org.scalatestplus"        %% "selenium-4-4"      % ScalatestSeleniumVersion,
