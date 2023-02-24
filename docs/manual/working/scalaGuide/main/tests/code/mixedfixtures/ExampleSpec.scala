@@ -42,27 +42,29 @@ class ExampleSpec extends MixedPlaySpec {
   // If a test just needs an Application, use "new App":
   "The App function" must {
     "provide an Application" in new App(buildApp("ehcacheplugin" -> "disabled")) {
-      app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
+      override def running() = app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
     }
     "make the Application available implicitly" in new App(buildApp("ehcacheplugin" -> "disabled")) {
-      getConfig("ehcacheplugin") mustBe Some("disabled")
+      override def running() = getConfig("ehcacheplugin") mustBe Some("disabled")
     }
   }
 
   // If a test needs an Application and running TestServer, use "new Server":
   "The Server function" must {
     "provide an Application" in new Server(buildApp("ehcacheplugin" -> "disabled")) {
-      app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
+      override def running() = app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
     }
     "make the Application available implicitly" in new Server(buildApp("ehcacheplugin" -> "disabled")) {
-      getConfig("ehcacheplugin") mustBe Some("disabled")
+      override def running() = getConfig("ehcacheplugin") mustBe Some("disabled")
     }
     "send 404 on a bad request" in new Server {
-      import java.net._
-      val url                    = new URL("http://localhost:" + port + "/boom")
-      val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
-      try con.getResponseCode mustBe 404
-      finally con.disconnect()
+      override def running() = {
+        import java.net._
+        val url                    = new URL("http://localhost:" + port + "/boom")
+        val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
+        try con.getResponseCode mustBe 404
+        finally con.disconnect()
+      }
     }
   }
 
@@ -70,23 +72,29 @@ class ExampleSpec extends MixedPlaySpec {
   // HtmlUnit driver use "new HtmlUnit":
   "The HtmlUnit function" must {
     "provide an Application" in new HtmlUnit(buildApp("ehcacheplugin" -> "disabled")) {
-      app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
+      override def running() = app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
     }
     "make the Application available implicitly" in new HtmlUnit(buildApp("ehcacheplugin" -> "disabled")) {
-      getConfig("ehcacheplugin") mustBe Some("disabled")
+      override def running() = getConfig("ehcacheplugin") mustBe Some("disabled")
     }
     "send 404 on a bad request" in new HtmlUnit {
-      import java.net._
-      val url                    = new URL("http://localhost:" + port + "/boom")
-      val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
-      try con.getResponseCode mustBe 404
-      finally con.disconnect()
+      override def running() = {
+        import java.net._
+        val url                    = new URL("http://localhost:" + port + "/boom")
+        val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
+        try con.getResponseCode mustBe 404
+        finally con.disconnect()
+      }
     }
     "provide a web driver" in new HtmlUnit(buildApp()) {
-      go to ("http://localhost:" + port + "/testing")
-      pageTitle mustBe "Test Page"
-      click.on(find(name("b")).value)
-      eventually { pageTitle mustBe "scalatest" }
+      override def running() = {
+        go to ("http://localhost:" + port + "/testing")
+        pageTitle mustBe "Test Page"
+        click.on(find(name("b")).value)
+        eventually {
+          pageTitle mustBe "scalatest"
+        }
+      }
     }
   }
 
@@ -94,23 +102,29 @@ class ExampleSpec extends MixedPlaySpec {
   // Firefox driver use "new Firefox":
   "The Firefox function" must {
     "provide an application" in new Firefox(buildApp("ehcacheplugin" -> "disabled")) {
-      app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
+      override def running() = app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
     }
     "make the Application available implicitly" in new Firefox(buildApp("ehcacheplugin" -> "disabled")) {
-      getConfig("ehcacheplugin") mustBe Some("disabled")
+      override def running() = getConfig("ehcacheplugin") mustBe Some("disabled")
     }
     "send 404 on a bad request" in new Firefox {
-      import java.net._
-      val url                    = new URL("http://localhost:" + port + "/boom")
-      val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
-      try con.getResponseCode mustBe 404
-      finally con.disconnect()
+      override def running() = {
+        import java.net._
+        val url                    = new URL("http://localhost:" + port + "/boom")
+        val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
+        try con.getResponseCode mustBe 404
+        finally con.disconnect()
+      }
     }
     "provide a web driver" in new Firefox(buildApp()) {
-      go to ("http://localhost:" + port + "/testing")
-      pageTitle mustBe "Test Page"
-      click.on(find(name("b")).value)
-      eventually { pageTitle mustBe "scalatest" }
+      override def running() = {
+        go to ("http://localhost:" + port + "/testing")
+        pageTitle mustBe "Test Page"
+        click.on(find(name("b")).value)
+        eventually {
+          pageTitle mustBe "scalatest"
+        }
+      }
     }
   }
 
@@ -118,23 +132,29 @@ class ExampleSpec extends MixedPlaySpec {
   // Safari driver use "new Safari":
   "The Safari function" must {
     "provide an Application" in new Safari(buildApp("ehcacheplugin" -> "disabled")) {
-      app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
+      override def running() = app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
     }
     "make the Application available implicitly" in new Safari(buildApp("ehcacheplugin" -> "disabled")) {
-      getConfig("ehcacheplugin") mustBe Some("disabled")
+      override def running() = getConfig("ehcacheplugin") mustBe Some("disabled")
     }
     "send 404 on a bad request" in new Safari {
-      import java.net._
-      val url                    = new URL("http://localhost:" + port + "/boom")
-      val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
-      try con.getResponseCode mustBe 404
-      finally con.disconnect()
+      override def running() = {
+        import java.net._
+        val url                    = new URL("http://localhost:" + port + "/boom")
+        val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
+        try con.getResponseCode mustBe 404
+        finally con.disconnect()
+      }
     }
     "provide a web driver" in new Safari(buildApp()) {
-      go to ("http://localhost:" + port + "/testing")
-      pageTitle mustBe "Test Page"
-      click.on(find(name("b")).value)
-      eventually { pageTitle mustBe "scalatest" }
+      override def running() = {
+        go to ("http://localhost:" + port + "/testing")
+        pageTitle mustBe "Test Page"
+        click.on(find(name("b")).value)
+        eventually {
+          pageTitle mustBe "scalatest"
+        }
+      }
     }
   }
 
@@ -142,23 +162,29 @@ class ExampleSpec extends MixedPlaySpec {
   // Chrome driver use "new Chrome":
   "The Chrome function" must {
     "provide an Application" in new Chrome(buildApp("ehcacheplugin" -> "disabled")) {
-      app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
+      override def running() = app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
     }
     "make the Application available implicitly" in new Chrome(buildApp("ehcacheplugin" -> "disabled")) {
-      getConfig("ehcacheplugin") mustBe Some("disabled")
+      override def running() = getConfig("ehcacheplugin") mustBe Some("disabled")
     }
     "send 404 on a bad request" in new Chrome {
-      import java.net._
-      val url                    = new URL("http://localhost:" + port + "/boom")
-      val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
-      try con.getResponseCode mustBe 404
-      finally con.disconnect()
+      override def running() = {
+        import java.net._
+        val url                    = new URL("http://localhost:" + port + "/boom")
+        val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
+        try con.getResponseCode mustBe 404
+        finally con.disconnect()
+      }
     }
     "provide a web driver" in new Chrome(buildApp()) {
-      go to ("http://localhost:" + port + "/testing")
-      pageTitle mustBe "Test Page"
-      click.on(find(name("b")).value)
-      eventually { pageTitle mustBe "scalatest" }
+      override def running() = {
+        go to ("http://localhost:" + port + "/testing")
+        pageTitle mustBe "Test Page"
+        click.on(find(name("b")).value)
+        eventually {
+          pageTitle mustBe "scalatest"
+        }
+      }
     }
   }
 
@@ -166,23 +192,29 @@ class ExampleSpec extends MixedPlaySpec {
   // InternetExplorer driver use "new InternetExplorer":
   "The InternetExplorer function" must {
     "provide an Application" in new InternetExplorer(buildApp("ehcacheplugin" -> "disabled")) {
-      app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
+      override def running() = app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
     }
     "make the Application available implicitly" in new InternetExplorer(buildApp("ehcacheplugin" -> "disabled")) {
-      getConfig("ehcacheplugin") mustBe Some("disabled")
+      override def running() = getConfig("ehcacheplugin") mustBe Some("disabled")
     }
     "send 404 on a bad request" in new InternetExplorer {
-      import java.net._
-      val url                    = new URL("http://localhost:" + port + "/boom")
-      val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
-      try con.getResponseCode mustBe 404
-      finally con.disconnect()
+      override def running() = {
+        import java.net._
+        val url                    = new URL("http://localhost:" + port + "/boom")
+        val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
+        try con.getResponseCode mustBe 404
+        finally con.disconnect()
+      }
     }
     "provide a web driver" in new InternetExplorer(buildApp()) {
-      go to ("http://localhost:" + port + "/testing")
-      pageTitle mustBe "Test Page"
-      click.on(find(name("b")).value)
-      eventually { pageTitle mustBe "scalatest" }
+      override def running() = {
+        go to ("http://localhost:" + port + "/testing")
+        pageTitle mustBe "Test Page"
+        click.on(find(name("b")).value)
+        eventually {
+          pageTitle mustBe "scalatest"
+        }
+      }
     }
   }
 
