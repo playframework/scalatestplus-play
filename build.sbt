@@ -52,12 +52,18 @@ lazy val mimaSettings = Seq(
     ProblemFilters.exclude[MissingClassProblem]("org.scalatestplus.play.PhantomJSInfo"),
     ProblemFilters.exclude[MissingClassProblem]("org.scalatestplus.play.PhantomJSInfo$")
   ),
-  mimaPreviousArtifacts := previousVersion.map(organization.value %% name.value % _).toSet
+  mimaPreviousArtifacts := {
+    if (scalaBinaryVersion.value == "3") {
+      Set.empty
+    } else {
+      previousVersion.map(organization.value %% name.value % _).toSet
+    }
+  }
 )
 
 lazy val commonSettings = Seq(
   scalaVersion := scala213,
-  crossScalaVersions := Seq(scala213),
+  crossScalaVersions := Seq(scala213, scala3),
   Test / parallelExecution := false,
   Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-oTK"),
   headerLicense := Some(
@@ -98,10 +104,17 @@ lazy val `scalatestplus-play` = project
     commonSettings,
     mimaSettings,
     organization := "org.scalatestplus.play",
+    conflictWarning := {
+      if (scalaBinaryVersion.value == "3") {
+        ConflictWarning("warn", sbt.Level.Warn, false)
+      } else {
+        conflictWarning.value
+      }
+    },
     libraryDependencies ++= Seq(
-      ws,
-      akkaHttpServer             % Test,
-      "com.typesafe.play"        %% "play-test"         % PlayVersion.current,
+      ws.cross(CrossVersion.for3Use2_13),
+      (akkaHttpServer % Test).cross(CrossVersion.for3Use2_13),
+      playTest.cross(CrossVersion.for3Use2_13),
       "org.scalatest"            %% "scalatest"         % ScalatestVersion,
       "org.scalatestplus"        %% "mockito-4-6"       % ScalatestMockitoVersion,
       "org.scalatestplus"        %% "selenium-4-4"      % ScalatestSeleniumVersion,

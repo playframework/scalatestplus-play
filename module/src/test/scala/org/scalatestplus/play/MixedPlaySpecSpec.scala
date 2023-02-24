@@ -24,10 +24,10 @@ class MixedPlaySpecSpec extends MixedPlaySpec { thisSpec =>
 
   "MixedPlaySpec" must {
     "mix in OptionValues" in { () =>
-      thisSpec mustBe an[OptionValues]
+      assert(thisSpec.isInstanceOf[OptionValues])
     }
     "mix in MixedFixtures" in { () =>
-      thisSpec mustBe an[MixedFixtures]
+      assert(thisSpec.isInstanceOf[MixedFixtures])
     }
   }
 
@@ -42,130 +42,164 @@ class MixedPlaySpecSpec extends MixedPlaySpec { thisSpec =>
 
   "The App function" must {
     "provide an Application" in new App(buildApp("foo" -> "bar")) {
-      app.configuration.getOptional[String]("foo") mustBe Some("bar")
+      override def running() =
+        app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
     "make the Application available implicitly" in new App(buildApp("foo" -> "bar")) {
-      getConfig("foo") mustBe Some("bar")
+      override def running() =
+        getConfig("foo") mustBe Some("bar")
     }
   }
   "The Server function" must {
     "provide an Application" in new Server(buildApp("foo" -> "bar")) {
-      app.configuration.getOptional[String]("foo") mustBe Some("bar")
+      override def running() = app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
     "make the Application available implicitly" in new Server(buildApp("foo" -> "bar")) {
-      getConfig("foo") mustBe Some("bar")
+      override def running() = getConfig("foo") mustBe Some("bar")
     }
     "send 404 on a bad request" in new Server {
-      import java.net._
-      val url                    = new URL("http://localhost:" + port + "/boom")
-      val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
-      try con.getResponseCode mustBe 404
-      finally con.disconnect()
+      override def running() = {
+        import java.net._
+        val url                    = new URL("http://localhost:" + port + "/boom")
+        val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
+        try con.getResponseCode mustBe 404
+        finally con.disconnect()
+      }
     }
   }
   "The HtmlUnit function" must {
     "provide an Application" in new HtmlUnit(buildApp("foo" -> "bar")) {
-      app.configuration.getOptional[String]("foo") mustBe Some("bar")
+      override def running() = app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
     "make the Application available implicitly" in new HtmlUnit(buildApp("foo" -> "bar")) {
-      getConfig("foo") mustBe Some("bar")
+      override def running() = getConfig("foo") mustBe Some("bar")
     }
     "send 404 on a bad request" in new HtmlUnit {
-      import java.net._
-      val url                    = new URL("http://localhost:" + port + "/boom")
-      val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
-      try con.getResponseCode mustBe 404
-      finally con.disconnect()
+      override def running() = {
+        import java.net._
+        val url                    = new URL("http://localhost:" + port + "/boom")
+        val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
+        try con.getResponseCode mustBe 404
+        finally con.disconnect()
+      }
     }
     "provide a web driver" in new HtmlUnit(buildApp()) {
-      go to ("http://localhost:" + port + "/testing")
-      pageTitle mustBe "Test Page"
-      click.on(find(name("b")).value)
-      eventually { pageTitle mustBe "scalatest" }
+      override def running() = {
+        go to ("http://localhost:" + port + "/testing")
+        pageTitle mustBe "Test Page"
+        click.on(find(name("b")).value)
+        eventually {
+          pageTitle mustBe "scalatest"
+        }
+      }
     }
   }
   "The Firefox function" must {
     "provide an Application" in new Firefox(buildApp("foo" -> "bar")) {
-      app.configuration.getOptional[String]("foo") mustBe Some("bar")
+      override def running() = app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
     "make the Application available implicitly" in new Firefox(buildApp("foo" -> "bar")) {
-      getConfig("foo") mustBe Some("bar")
+      override def running() = getConfig("foo") mustBe Some("bar")
     }
     "send 404 on a bad request" in new Firefox {
-      import java.net._
-      val url                    = new URL("http://localhost:" + port + "/boom")
-      val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
-      try con.getResponseCode mustBe 404
-      finally con.disconnect()
+      override def running() = {
+        import java.net._
+        val url                    = new URL("http://localhost:" + port + "/boom")
+        val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
+        try con.getResponseCode mustBe 404
+        finally con.disconnect()
+      }
     }
     "provide a web driver" in new Firefox(buildApp()) {
-      go to ("http://localhost:" + port + "/testing")
-      pageTitle mustBe "Test Page"
-      click.on(find(name("b")).value)
-      eventually { pageTitle mustBe "scalatest" }
+      override def running() = {
+        go to ("http://localhost:" + port + "/testing")
+        pageTitle mustBe "Test Page"
+        click.on(find(name("b")).value)
+        eventually {
+          pageTitle mustBe "scalatest"
+        }
+      }
     }
   }
   "The Safari function" must {
     "provide an Application" in new Safari(buildApp("foo" -> "bar")) {
-      app.configuration.getOptional[String]("foo") mustBe Some("bar")
+      override def running() = app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
     "make the Application available implicitly" in new Safari(buildApp("foo" -> "bar")) {
-      getConfig("foo") mustBe Some("bar")
+      override def running() = getConfig("foo") mustBe Some("bar")
     }
     "send 404 on a bad request" in new Safari {
-      import java.net._
-      val url                    = new URL("http://localhost:" + port + "/boom")
-      val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
-      try con.getResponseCode mustBe 404
-      finally con.disconnect()
+      override def running() = {
+        import java.net._
+        val url                    = new URL("http://localhost:" + port + "/boom")
+        val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
+        try con.getResponseCode mustBe 404
+        finally con.disconnect()
+      }
     }
     "provide a web driver" in new Safari(buildApp()) {
-      go to ("http://localhost:" + port + "/testing")
-      pageTitle mustBe "Test Page"
-      click.on(find(name("b")).value)
-      eventually { pageTitle mustBe "scalatest" }
+      override def running() = {
+        go to ("http://localhost:" + port + "/testing")
+        pageTitle mustBe "Test Page"
+        click.on(find(name("b")).value)
+        eventually {
+          pageTitle mustBe "scalatest"
+        }
+      }
     }
   }
   "The Chrome function" must {
     "provide an Application" in new Chrome(buildApp("foo" -> "bar")) {
-      app.configuration.getOptional[String]("foo") mustBe Some("bar")
+      override def running() = app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
     "make the Application available implicitly" in new Chrome(buildApp("foo" -> "bar")) {
-      getConfig("foo") mustBe Some("bar")
+      override def running() = getConfig("foo") mustBe Some("bar")
     }
     "send 404 on a bad request" in new Chrome {
-      import java.net._
-      val url                    = new URL("http://localhost:" + port + "/boom")
-      val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
-      try con.getResponseCode mustBe 404
-      finally con.disconnect()
+      override def running() = {
+        import java.net._
+        val url                    = new URL("http://localhost:" + port + "/boom")
+        val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
+        try con.getResponseCode mustBe 404
+        finally con.disconnect()
+      }
     }
     "provide a web driver" in new Chrome(buildApp()) {
-      go to ("http://localhost:" + port + "/testing")
-      pageTitle mustBe "Test Page"
-      click.on(find(name("b")).value)
-      eventually { pageTitle mustBe "scalatest" }
+      override def running() = {
+        go to ("http://localhost:" + port + "/testing")
+        pageTitle mustBe "Test Page"
+        click.on(find(name("b")).value)
+        eventually {
+          pageTitle mustBe "scalatest"
+        }
+      }
     }
   }
   "The InternetExplorer function" must {
     "provide an Application" in new InternetExplorer(buildApp("foo" -> "bar")) {
-      app.configuration.getOptional[String]("foo") mustBe Some("bar")
+      override def running() = app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
     "make the Application available implicitly" in new InternetExplorer(buildApp("foo" -> "bar")) {
-      getConfig("foo") mustBe Some("bar")
+      override def running() = getConfig("foo") mustBe Some("bar")
     }
     "send 404 on a bad request" in new InternetExplorer {
-      import java.net._
-      val url                    = new URL("http://localhost:" + port + "/boom")
-      val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
-      try con.getResponseCode mustBe 404
-      finally con.disconnect()
+      override def running() = {
+        import java.net._
+        val url                    = new URL("http://localhost:" + port + "/boom")
+        val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
+        try con.getResponseCode mustBe 404
+        finally con.disconnect()
+      }
     }
     "provide a web driver" in new InternetExplorer(buildApp()) {
-      go to ("http://localhost:" + port + "/testing")
-      pageTitle mustBe "Test Page"
-      click.on(find(name("b")).value)
-      eventually { pageTitle mustBe "scalatest" }
+      override def running() = {
+        go to ("http://localhost:" + port + "/testing")
+        pageTitle mustBe "Test Page"
+        click.on(find(name("b")).value)
+        eventually {
+          pageTitle mustBe "scalatest"
+        }
+      }
     }
   }
 }

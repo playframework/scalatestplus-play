@@ -39,7 +39,7 @@ import play.api.test._
  *
  * <pre class="stHighlight">
  * "provide an Application" in new App(fakeApp("ehcacheplugin" -&gt; "disabled")) {
- *   app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
+ *   override def running() = app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
  * }
  * </pre>
  *
@@ -47,11 +47,13 @@ import play.api.test._
  *
  * <pre class="stHighlight">
  * "send 404 on a bad request" in new Server {
- *   import java.net._
- *   val url = new URL("http://localhost:" + port + "/boom")
- *   val con = url.openConnection().asInstanceOf[HttpURLConnection]
- *   try con.getResponseCode mustBe 404
- *   finally con.disconnect()
+ *   override def running() = {
+ *     import java.net._
+ *     val url = new URL("http://localhost:" + port + "/boom")
+ *     val con = url.openConnection().asInstanceOf[HttpURLConnection]
+ *     try con.getResponseCode mustBe 404
+ *     finally con.disconnect()
+ *   }
  * }
  * </pre>
  *
@@ -62,10 +64,12 @@ import play.api.test._
  *
  * <pre class="stHighlight">
  * "provide a web driver" in new Safari(fakeApp()) {
- *   go to ("http://localhost:" + port + "/testing")
- *   pageTitle mustBe "Test Page"
- *   click on find(name("b")).value
- *   eventually { pageTitle mustBe "scalatest" }
+ *   override def running() = {
+ *     go to ("http://localhost:" + port + "/testing")
+ *     pageTitle mustBe "Test Page"
+ *     click on find(name("b")).value
+ *     eventually { pageTitle mustBe "scalatest" }
+ *   }
  * }
  * </pre>
  *
@@ -92,136 +96,158 @@ import play.api.test._
  *
  *   "The App function" must {
  *     "provide an Application" in new App(buildApp("ehcacheplugin" -> "disabled")) {
- *       app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
+ *       override def running() = app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
  *     }
  *     "make the Application available implicitly" in new App(buildApp("ehcacheplugin" -> "disabled")) {
- *       getConfig("ehcacheplugin") mustBe Some("disabled")
+ *       override def running() = getConfig("ehcacheplugin") mustBe Some("disabled")
  *     }
  *   }
  *   "The Server function" must {
  *     "provide an Application" in new Server(buildApp("ehcacheplugin" -> "disabled")) {
- *       app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
+ *       override def running() = app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
  *     }
  *     "make the Application available implicitly" in new Server(buildApp("ehcacheplugin" -> "disabled")) {
- *       getConfig("ehcacheplugin") mustBe Some("disabled")
+ *       override def running() = getConfig("ehcacheplugin") mustBe Some("disabled")
  *     }
  *     import Helpers._
  *     "send 404 on a bad request" in new Server {
- *       import java.net._
- *       val url = new URL("http://localhost:" + port + "/boom")
- *       val con = url.openConnection().asInstanceOf[HttpURLConnection]
- *       try con.getResponseCode mustBe 404
- *       finally con.disconnect()
+ *       override def running() = {
+ *         import java.net._
+ *         val url = new URL("http://localhost:" + port + "/boom")
+ *         val con = url.openConnection().asInstanceOf[HttpURLConnection]
+ *         try con.getResponseCode mustBe 404
+ *         finally con.disconnect()
+ *       }
  *     }
  *   }
  *   "The HtmlUnit function" must {
  *     "provide an Application" in new HtmlUnit(buildApp("ehcacheplugin" -> "disabled")) {
- *       app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
+ *       override def running() = app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
  *     }
  *     "make the Application available implicitly" in new HtmlUnit(buildApp("ehcacheplugin" -> "disabled")) {
- *       getConfig("ehcacheplugin") mustBe Some("disabled")
+ *       override def running() = getConfig("ehcacheplugin") mustBe Some("disabled")
  *     }
  *     import Helpers._
  *     "send 404 on a bad request" in new HtmlUnit {
- *       import java.net._
- *       val url = new URL("http://localhost:" + port + "/boom")
- *       val con = url.openConnection().asInstanceOf[HttpURLConnection]
- *       try con.getResponseCode mustBe 404
- *       finally con.disconnect()
+ *       override def running() = {
+ *         import java.net._
+ *         val url = new URL("http://localhost:" + port + "/boom")
+ *         val con = url.openConnection().asInstanceOf[HttpURLConnection]
+ *         try con.getResponseCode mustBe 404
+ *         finally con.disconnect()
+ *       }
  *     }
  *     "provide a web driver" in new HtmlUnit(buildApp()) {
- *       go to ("http://localhost:" + port + "/testing")
- *       pageTitle mustBe "Test Page"
- *       click on find(name("b")).value
- *       eventually { pageTitle mustBe "scalatest" }
+ *       override def running() = {
+ *         go to ("http://localhost:" + port + "/testing")
+ *         pageTitle mustBe "Test Page"
+ *         click on find(name("b")).value
+ *         eventually { pageTitle mustBe "scalatest" }
+ *       }
  *     }
  *   }
  *   "The Firefox function" must {
  *     "provide an Application" in new Firefox(buildApp("ehcacheplugin" -> "disabled")) {
- *       app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
+ *       override def running() = app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
  *     }
  *     "make the Application available implicitly" in new Firefox(buildApp("ehcacheplugin" -> "disabled")) {
- *       getConfig("ehcacheplugin") mustBe Some("disabled")
+ *       override def running() = getConfig("ehcacheplugin") mustBe Some("disabled")
  *     }
  *     import Helpers._
  *     "send 404 on a bad request" in new Firefox {
- *       import java.net._
- *       val url = new URL("http://localhost:" + port + "/boom")
- *       val con = url.openConnection().asInstanceOf[HttpURLConnection]
- *       try con.getResponseCode mustBe 404
- *       finally con.disconnect()
+ *       override def running() = {
+ *         import java.net._
+ *         val url = new URL("http://localhost:" + port + "/boom")
+ *         val con = url.openConnection().asInstanceOf[HttpURLConnection]
+ *         try con.getResponseCode mustBe 404
+ *         finally con.disconnect()
+ *       }
  *     }
  *     "provide a web driver" in new Firefox(buildApp()) {
- *       go to ("http://localhost:" + port + "/testing")
- *       pageTitle mustBe "Test Page"
- *       click on find(name("b")).value
- *       eventually { pageTitle mustBe "scalatest" }
+ *       override def running() = {
+ *         go to ("http://localhost:" + port + "/testing")
+ *         pageTitle mustBe "Test Page"
+ *         click on find(name("b")).value
+ *         eventually { pageTitle mustBe "scalatest" }
+ *       }
  *     }
  *   }
  *   "The Safari function" must {
  *     "provide an Application" in new Safari(buildApp("ehcacheplugin" -> "disabled")) {
- *       app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
+ *       override def running() = app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
  *     }
  *     "make the Application available implicitly" in new Safari(buildApp("ehcacheplugin" -> "disabled")) {
- *       getConfig("ehcacheplugin") mustBe Some("disabled")
+ *       override def running() = getConfig("ehcacheplugin") mustBe Some("disabled")
  *     }
  *     import Helpers._
  *     "send 404 on a bad request" in new Safari {
- *       import java.net._
- *       val url = new URL("http://localhost:" + port + "/boom")
- *       val con = url.openConnection().asInstanceOf[HttpURLConnection]
- *       try con.getResponseCode mustBe 404
- *       finally con.disconnect()
+ *       override def running() = {
+ *         import java.net._
+ *         val url = new URL("http://localhost:" + port + "/boom")
+ *         val con = url.openConnection().asInstanceOf[HttpURLConnection]
+ *         try con.getResponseCode mustBe 404
+ *         finally con.disconnect()
+ *       }
  *     }
  *     "provide a web driver" in new Safari(buildApp()) {
- *       go to ("http://localhost:" + port + "/testing")
- *       pageTitle mustBe "Test Page"
- *       click on find(name("b")).value
- *       eventually { pageTitle mustBe "scalatest" }
+ *       override def running() = {
+ *         go to ("http://localhost:" + port + "/testing")
+ *         pageTitle mustBe "Test Page"
+ *         click on find(name("b")).value
+ *         eventually { pageTitle mustBe "scalatest" }
+ *       }
  *     }
  *   }
  *   "The Chrome function" must {
  *     "provide an Application" in new Chrome(buildApp("ehcacheplugin" -> "disabled")) {
- *       app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
+ *       override def running() = app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
  *     }
  *     "make the Application available implicitly" in new Chrome(buildApp("ehcacheplugin" -> "disabled")) {
- *       getConfig("ehcacheplugin") mustBe Some("disabled")
+ *       override def running() = getConfig("ehcacheplugin") mustBe Some("disabled")
  *     }
  *     import Helpers._
  *     "send 404 on a bad request" in new Chrome {
- *       import java.net._
- *       val url = new URL("http://localhost:" + port + "/boom")
- *       val con = url.openConnection().asInstanceOf[HttpURLConnection]
- *       try con.getResponseCode mustBe 404
- *       finally con.disconnect()
+ *       override def running() = {
+ *         import java.net._
+ *         val url = new URL("http://localhost:" + port + "/boom")
+ *         val con = url.openConnection().asInstanceOf[HttpURLConnection]
+ *         try con.getResponseCode mustBe 404
+ *         finally con.disconnect()
+ *       }
  *     }
  *     "provide a web driver" in new Chrome(buildApp()) {
- *       go to ("http://localhost:" + port + "/testing")
- *       pageTitle mustBe "Test Page"
- *       click on find(name("b")).value
- *       eventually { pageTitle mustBe "scalatest" }
+ *       override def running() = {
+ *         go to ("http://localhost:" + port + "/testing")
+ *         pageTitle mustBe "Test Page"
+ *         click on find(name("b")).value
+ *         eventually { pageTitle mustBe "scalatest" }
+ *       }
  *     }
  *   }
  *   "The InternetExplorer function" must {
  *     "provide an Application" in new InternetExplorer(buildApp("ehcacheplugin" -> "disabled")) {
- *       app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
+ *       override def running() = app.configuration.getOptional[String]("ehcacheplugin") mustBe Some("disabled")
  *     }
  *     "make the Application available implicitly" in new InternetExplorer(buildApp("ehcacheplugin" -> "disabled")) {
- *       getConfig("ehcacheplugin") mustBe Some("disabled")
+ *       override def running() = getConfig("ehcacheplugin") mustBe Some("disabled")
  *     }
  *     import Helpers._
  *     "send 404 on a bad request" in new InternetExplorer {
- *       import java.net._
- *       val url = new URL("http://localhost:" + port + "/boom")
- *       val con = url.openConnection().asInstanceOf[HttpURLConnection]
- *       try con.getResponseCode mustBe 404
- *       finally con.disconnect()
+ *       override def running() = {
+ *         import java.net._
+ *         val url = new URL("http://localhost:" + port + "/boom")
+ *         val con = url.openConnection().asInstanceOf[HttpURLConnection]
+ *         try con.getResponseCode mustBe 404
+ *         finally con.disconnect()
+ *       }
  *     }
  *     "provide a web driver" in new InternetExplorer(buildApp()) {
- *       go to ("http://localhost:" + port + "/testing")
- *       pageTitle mustBe "Test Page"
- *       click on find(name("b")).value
- *       eventually { pageTitle mustBe "scalatest" }
+ *       override def running() = {
+ *         go to ("http://localhost:" + port + "/testing")
+ *         pageTitle mustBe "Test Page"
+ *         click on find(name("b")).value
+ *         eventually { pageTitle mustBe "scalatest" }
+ *       }
  *     }
  *   }
  *   "Any old thing" must {
@@ -234,10 +260,38 @@ import play.api.test._
  */
 trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: FixtureTestSuite =>
 
+  private def checkScala3Compatibility(clazz: Class[_], className: String) = {
+    val declaringClass = clazz.getMethod("running").getDeclaringClass
+    if (
+      play.core.PlayVersion.scalaVersion
+        .startsWith("3") && declaringClass.getSimpleName == className && declaringClass.getPackageName == "org.scalatestplus.play"
+    ) {
+      throw new NotImplementedError(s"""
+                                       |
+                                       |For Scala 3 you need to wrap the body of $className in an `override def running() = ...` method:
+                                       |
+                                       |// Old:
+                                       |new ${className}() {
+                                       |  <code>
+                                       |}
+                                       |
+                                       |// New:
+                                       |new ${className}() {
+                                       |  override def running() = {
+                                       |    <code>
+                                       |  }
+                                       |}
+                                       |
+                                       |""".stripMargin)
+    }
+  }
+
   /**
    * `NoArg` subclass that provides an `Application` fixture.
    */
   abstract class App(appFun: => Application = new GuiceApplicationBuilder().build()) extends fixture.NoArg {
+
+    checkScala3Compatibility(this.getClass, "App")
 
     /**
      * Makes the passed-in `Application` implicit.
@@ -249,12 +303,25 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
      */
     lazy val app = appFun
 
+    def running(): Unit =
+      throw new NotImplementedError(
+        "For Scala 3 you need to wrap the body of App in a `override def running() = ...` method"
+      )
+
     /**
      * Runs the passed in `Application` before executing the test body, ensuring it is closed after the test body completes.
      */
     override def apply(): Unit = {
-      def callSuper: Unit = super.apply() // this is needed for Scala 2.10 to work
-      Helpers.running(app)(callSuper)
+      val declaringClass = this.getClass.getMethod("running").getDeclaringClass
+      if (
+        play.core.PlayVersion.scalaVersion
+          .startsWith("3") || declaringClass.getSimpleName != "App" || declaringClass.getPackageName != "org.scalatestplus.play"
+      ) {
+        Helpers.running(app)(running())
+      } else {
+        def callSuper: Unit = super.apply() // this is needed for Scala 2.10 to work
+        Helpers.running(app)(callSuper)
+      }
     }
   }
 
@@ -265,6 +332,8 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
       appFun: => Application = new GuiceApplicationBuilder().build(),
       val port: Int = Helpers.testServerPort
   ) extends NoArg {
+
+    checkScala3Compatibility(this.getClass, "Server")
 
     /**
      * Makes the passed in `Application` implicit.
@@ -282,13 +351,26 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
      */
     implicit lazy val portNumber: PortNumber = PortNumber(port)
 
+    def running(): Unit =
+      throw new NotImplementedError(
+        "For Scala 3 you need to wrap the body of Server in a `override def running() = ...` method"
+      )
+
     /**
      * Runs a `TestServer` using the passed-in `Application` and  port before executing the
      * test body, ensuring both are stopped after the test body completes.
      */
     override def apply(): Unit = {
-      def callSuper: Unit = super.apply() // this is needed for Scala 2.10 to work
-      Helpers.running(TestServer(port, app))(callSuper)
+      val declaringClass = this.getClass.getMethod("running").getDeclaringClass
+      if (
+        play.core.PlayVersion.scalaVersion
+          .startsWith("3") || declaringClass.getSimpleName != "Server" || declaringClass.getPackageName != "org.scalatestplus.play"
+      ) {
+        Helpers.running(TestServer(port, app))(running())
+      } else {
+        def callSuper: Unit = super.apply() // this is needed for Scala 2.10 to work
+        Helpers.running(TestServer(port, app))(callSuper)
+      }
     }
   }
 
@@ -302,6 +384,8 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
   ) extends WebBrowser
       with NoArg
       with HtmlUnitFactory {
+
+    checkScala3Compatibility(this.getClass, "HtmlUnit")
 
     /**
      * A lazy implicit instance of `HtmlUnitDriver`. It will hold `UnavailableDriver` if `HtmlUnitDriver`
@@ -325,6 +409,11 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
      */
     implicit lazy val portNumber: PortNumber = PortNumber(port)
 
+    def running(): Unit =
+      throw new NotImplementedError(
+        "For Scala 3 you need to wrap the body of HtmlUnit in a `override def running() = ...` method"
+      )
+
     /**
      * Runs a `TestServer` using the passed-in `Application` and port before executing the
      * test body, which can use the `HtmlUnitDriver` provided by `webDriver`, ensuring all
@@ -338,9 +427,18 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
             case None    => cancel(errorMessage)
           }
         case _ =>
-          def callSuper = super.apply() // this is needed for Scala 2.10 to work
-          try Helpers.running(TestServer(port, app))(callSuper)
-          finally webDriver.quit()
+          val declaringClass = this.getClass.getMethod("running").getDeclaringClass
+          if (
+            play.core.PlayVersion.scalaVersion
+              .startsWith("3") || declaringClass.getSimpleName != "HtmlUnit" || declaringClass.getPackageName != "org.scalatestplus.play"
+          ) {
+            try Helpers.running(TestServer(port, app))(running())
+            finally webDriver.quit()
+          } else {
+            def callSuper = super.apply() // this is needed for Scala 2.10 to work
+            try Helpers.running(TestServer(port, app))(callSuper)
+            finally webDriver.quit()
+          }
       }
     }
   }
@@ -355,6 +453,8 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
   ) extends WebBrowser
       with NoArg
       with FirefoxFactory {
+
+    checkScala3Compatibility(this.getClass, "Firefox")
 
     /**
      * A lazy implicit instance of `FirefoxDriver`, it will hold `UnavailableDriver` if `FirefoxDriver`
@@ -378,6 +478,11 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
      */
     implicit lazy val portNumber: PortNumber = PortNumber(port)
 
+    def running(): Unit =
+      throw new NotImplementedError(
+        "For Scala 3 you need to wrap the body of Firefox in a `override def running() = ...` method"
+      )
+
     /**
      * Runs a `TestServer` using the passed-in `Application` and port before executing the
      * test body, which can use the `FirefoxDriver` provided by `webDriver`, ensuring all
@@ -391,9 +496,18 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
             case None    => cancel(errorMessage)
           }
         case _ =>
-          def callSuper = super.apply() // this is needed for Scala 2.10 to work
-          try Helpers.running(TestServer(port, app))(callSuper)
-          finally webDriver.quit()
+          val declaringClass = this.getClass.getMethod("running").getDeclaringClass
+          if (
+            play.core.PlayVersion.scalaVersion
+              .startsWith("3") || declaringClass.getSimpleName != "Firefox" || declaringClass.getPackageName != "org.scalatestplus.play"
+          ) {
+            try Helpers.running(TestServer(port, app))(running())
+            finally webDriver.quit()
+          } else {
+            def callSuper = super.apply() // this is needed for Scala 2.10 to work
+            try Helpers.running(TestServer(port, app))(callSuper)
+            finally webDriver.quit()
+          }
       }
     }
   }
@@ -408,6 +522,8 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
   ) extends WebBrowser
       with NoArg
       with SafariFactory {
+
+    checkScala3Compatibility(this.getClass, "Safari")
 
     /**
      * A lazy implicit instance of `SafariDriver`, it will hold `UnavailableDriver` if `SafariDriver`
@@ -431,6 +547,11 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
      */
     implicit lazy val portNumber: PortNumber = PortNumber(port)
 
+    def running(): Unit =
+      throw new NotImplementedError(
+        "For Scala 3 you need to wrap the body of Safari in a `override def running() = ...` method"
+      )
+
     /**
      * Runs a `TestServer` using the passed-in `Application` and port before executing the
      * test body, which can use the `SafariDriver` provided by `webDriver`, ensuring all
@@ -444,9 +565,18 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
             case None    => cancel(errorMessage)
           }
         case _ =>
-          def callSuper = super.apply() // this is needed for Scala 2.10 to work
-          try Helpers.running(TestServer(port, app))(callSuper)
-          finally webDriver.quit()
+          val declaringClass = this.getClass.getMethod("running").getDeclaringClass
+          if (
+            play.core.PlayVersion.scalaVersion
+              .startsWith("3") || declaringClass.getSimpleName != "Safari" || declaringClass.getPackageName != "org.scalatestplus.play"
+          ) {
+            try Helpers.running(TestServer(port, app))(running())
+            finally webDriver.quit()
+          } else {
+            def callSuper = super.apply() // this is needed for Scala 2.10 to work
+            try Helpers.running(TestServer(port, app))(callSuper)
+            finally webDriver.quit()
+          }
       }
     }
   }
@@ -461,6 +591,8 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
   ) extends WebBrowser
       with NoArg
       with ChromeFactory {
+
+    checkScala3Compatibility(this.getClass, "Chrome")
 
     /**
      * A lazy implicit instance of `ChromeDriver`, it will hold `UnavailableDriver` if `ChromeDriver`
@@ -484,6 +616,11 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
      */
     implicit lazy val portNumber: PortNumber = PortNumber(port)
 
+    def running(): Unit =
+      throw new NotImplementedError(
+        "For Scala 3 you need to wrap the body of Chrome in a `override def running() = ...` method"
+      )
+
     /**
      * Runs a `TestServer` using the passed-in `Application` and port before executing the
      * test body, which can use the `ChromeDriver` provided by `webDriver`, ensuring all
@@ -497,9 +634,18 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
             case None    => cancel(errorMessage)
           }
         case _ =>
-          def callSuper = super.apply() // this is needed for Scala 2.10 to work
-          try Helpers.running(TestServer(port, app))(callSuper)
-          finally webDriver.quit()
+          val declaringClass = this.getClass.getMethod("running").getDeclaringClass
+          if (
+            play.core.PlayVersion.scalaVersion
+              .startsWith("3") || declaringClass.getSimpleName != "Chrome" || declaringClass.getPackageName != "org.scalatestplus.play"
+          ) {
+            try Helpers.running(TestServer(port, app))(running())
+            finally webDriver.quit()
+          } else {
+            def callSuper = super.apply() // this is needed for Scala 2.10 to work
+            try Helpers.running(TestServer(port, app))(callSuper)
+            finally webDriver.quit()
+          }
       }
     }
   }
@@ -514,6 +660,8 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
   ) extends WebBrowser
       with NoArg
       with InternetExplorerFactory {
+
+    checkScala3Compatibility(this.getClass, "InternetExplorer")
 
     /**
      * A lazy implicit instance of `InternetExplorerDriver`, it will hold `UnavailableDriver` if `InternetExplorerDriver`
@@ -537,6 +685,11 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
      */
     implicit lazy val portNumber: PortNumber = PortNumber(port)
 
+    def running(): Unit =
+      throw new NotImplementedError(
+        "For Scala 3 you need to wrap the body of InternetExplorer in a `override def running() = ...` method"
+      )
+
     /**
      * Runs a `TestServer` using the passed-in `Application` and port before executing the
      * test body, which can use the `InternetExplorerDriver` provided by `webDriver`, ensuring all
@@ -550,9 +703,18 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
             case None    => cancel(errorMessage)
           }
         case _ =>
-          def callSuper = super.apply() // this is needed for Scala 2.10 to work
-          try Helpers.running(TestServer(port, app))(callSuper)
-          finally webDriver.quit()
+          val declaringClass = this.getClass.getMethod("running").getDeclaringClass
+          if (
+            play.core.PlayVersion.scalaVersion
+              .startsWith("3") || declaringClass.getSimpleName != "InternetExplorer" || declaringClass.getPackageName != "org.scalatestplus.play"
+          ) {
+            try Helpers.running(TestServer(port, app))(running())
+            finally webDriver.quit()
+          } else {
+            def callSuper = super.apply() // this is needed for Scala 2.10 to work
+            try Helpers.running(TestServer(port, app))(callSuper)
+            finally webDriver.quit()
+          }
       }
     }
   }

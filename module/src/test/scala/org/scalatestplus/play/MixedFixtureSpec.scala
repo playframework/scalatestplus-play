@@ -65,273 +65,347 @@ class MixedFixtureSpec extends MixedSpec {
 
   "The App function" must {
     "provide a Application" in new App(buildApp("foo" -> "bar")) {
-      app.configuration.getOptional[String]("foo") mustBe Some("bar")
+      override def running() =
+        app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
     "make the Application available implicitly" in new App(buildApp("foo" -> "bar")) {
-      getConfig("foo") mustBe Some("bar")
+      override def running() = getConfig("foo") mustBe Some("bar")
     }
     "start the Application lazily" in new App(buildApp("foo" -> "bar")) {
-      val counter = new AtomicInteger()
+      override def running() = {
+        val counter = new AtomicInteger()
 
-      class TestSpec extends wordspec.FixtureAnyWordSpec with MixedFixtures {
-        "test 1" in new App(new TestApplication(counter)) { t =>
+        class TestSpec extends wordspec.FixtureAnyWordSpec with MixedFixtures {
+          "test 1" in new App(new TestApplication(counter)) {
+            t =>
+            override def running() = ()
+          }
+          "test 2" in new App(new TestApplication(counter)) {
+            t =>
+            override def running() = ()
+          }
+          "test 3" in new App(new TestApplication(counter)) {
+            t =>
+            override def running() = ()
+          }
         }
-        "test 2" in new App(new TestApplication(counter)) { t =>
-        }
-        "test 3" in new App(new TestApplication(counter)) { t =>
-        }
+        val spec = new TestSpec
+        counter.get() mustBe 0
+        spec.run(None, Args(SilentReporter))
+        counter.get() mustBe 3
       }
-      val spec = new TestSpec
-      counter.get() mustBe 0
-      spec.run(None, Args(SilentReporter))
-      counter.get() mustBe 3
     }
   }
   "The Server function" must {
     "provide a Application" in new Server(buildApp("foo" -> "bar")) {
-      app.configuration.getOptional[String]("foo") mustBe Some("bar")
+      override def running() = app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
     "make the Application available implicitly" in new Server(buildApp("foo" -> "bar")) {
-      getConfig("foo") mustBe Some("bar")
+      override def running() = getConfig("foo") mustBe Some("bar")
     }
     "start the Application lazily" in new App(buildApp("foo" -> "bar")) {
-      val counter = new AtomicInteger()
+      override def running() = {
+        val counter = new AtomicInteger()
 
-      class TestSpec extends wordspec.FixtureAnyWordSpec with MixedFixtures {
-        "test 1" in new Server(new TestApplication(counter)) { t =>
+        class TestSpec extends wordspec.FixtureAnyWordSpec with MixedFixtures {
+          "test 1" in new Server(new TestApplication(counter)) {
+            t =>
+            override def running() = ()
+          }
+          "test 2" in new Server(new TestApplication(counter)) {
+            t =>
+            override def running() = ()
+          }
+          "test 3" in new Server(new TestApplication(counter)) {
+            t =>
+            override def running() = ()
+          }
         }
-        "test 2" in new Server(new TestApplication(counter)) { t =>
-        }
-        "test 3" in new Server(new TestApplication(counter)) { t =>
-        }
+        val spec = new TestSpec
+        counter.get() mustBe 0
+        spec.run(None, Args(SilentReporter))
+        counter.get() mustBe 3
       }
-      val spec = new TestSpec
-      counter.get() mustBe 0
-      spec.run(None, Args(SilentReporter))
-      counter.get() mustBe 3
     }
     "send 404 on a bad request" in new Server {
-      import java.net._
-      val url                    = new URL("http://localhost:" + port + "/boom")
-      val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
-      try con.getResponseCode mustBe 404
-      finally con.disconnect()
+      override def running() = {
+        import java.net._
+        val url                    = new URL("http://localhost:" + port + "/boom")
+        val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
+        try con.getResponseCode mustBe 404
+        finally con.disconnect()
+      }
     }
   }
   "The HtmlUnit function" must {
     "provide an Application" in new HtmlUnit(buildApp("foo" -> "bar")) {
-      app.configuration.getOptional[String]("foo") mustBe Some("bar")
+      override def running() = app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
     "make the Application available implicitly" in new HtmlUnit(buildApp("foo" -> "bar")) {
-      getConfig("foo") mustBe Some("bar")
+      override def running() = getConfig("foo") mustBe Some("bar")
     }
     "start the Application lazily" in new App(buildApp("foo" -> "bar")) {
-      val counter = new AtomicInteger()
-      class TestSpec extends wordspec.FixtureAnyWordSpec with MixedFixtures {
-        var testRun = false // will be false if test is canceled due to driver not available on platform.
-        "test 1" in new HtmlUnit(new TestApplication(counter)) { t =>
-          testRun = true
+      override def running() = {
+        val counter = new AtomicInteger()
+        class TestSpec extends wordspec.FixtureAnyWordSpec with MixedFixtures {
+          var testRun = false // will be false if test is canceled due to driver not available on platform.
+          "test 1" in new HtmlUnit(new TestApplication(counter)) {
+            t =>
+            override def running() = testRun = true
+          }
+          "test 2" in new HtmlUnit(new TestApplication(counter)) {
+            t =>
+            override def running() = testRun = true
+          }
+          "test 3" in new HtmlUnit(new TestApplication(counter)) {
+            t =>
+            override def running() = testRun = true
+          }
         }
-        "test 2" in new HtmlUnit(new TestApplication(counter)) { t =>
-          testRun = true
-        }
-        "test 3" in new HtmlUnit(new TestApplication(counter)) { t =>
-          testRun = true
-        }
-      }
 
-      val spec = new TestSpec
-      counter.get() mustBe 0
-      spec.run(None, Args(SilentReporter))
-      if (spec.testRun)
-        counter.get() mustBe 3
-      else
-        counter.get() mustBe 0 // when driver not available, not Application instance should be created at all.
+        val spec = new TestSpec
+        counter.get() mustBe 0
+        spec.run(None, Args(SilentReporter))
+        if (spec.testRun)
+          counter.get() mustBe 3
+        else
+          counter.get() mustBe 0 // when driver not available, not Application instance should be created at all.
+      }
     }
     "send 404 on a bad request" in new HtmlUnit {
-      import java.net._
-      val url                    = new URL("http://localhost:" + port + "/boom")
-      val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
-      try con.getResponseCode mustBe 404
-      finally con.disconnect()
+      override def running() = {
+        import java.net._
+        val url                    = new URL("http://localhost:" + port + "/boom")
+        val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
+        try con.getResponseCode mustBe 404
+        finally con.disconnect()
+      }
     }
     "provide a web driver" in new HtmlUnit(buildApp()) {
-      go to ("http://localhost:" + port + "/testing")
-      pageTitle mustBe "Test Page"
-      click.on(find(name("b")).value)
-      eventually { pageTitle mustBe "scalatest" }
+      override def running() = {
+        go to ("http://localhost:" + port + "/testing")
+        pageTitle mustBe "Test Page"
+        click.on(find(name("b")).value)
+        eventually {
+          pageTitle mustBe "scalatest"
+        }
+      }
     }
   }
   "The Firefox function" must {
     "provide an Application" in new Firefox(buildApp("foo" -> "bar")) {
-      app.configuration.getOptional[String]("foo") mustBe Some("bar")
+      override def running() = app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
     "make the Application available implicitly" in new Firefox(buildApp("foo" -> "bar")) {
-      getConfig("foo") mustBe Some("bar")
+      override def running() = getConfig("foo") mustBe Some("bar")
     }
     "start the Application lazily" in new App(buildApp("foo" -> "bar")) {
-      val counter = new AtomicInteger()
-      class TestSpec extends wordspec.FixtureAnyWordSpec with MixedFixtures {
-        var testRun = false // will be false if test is canceled due to driver not available on platform.
-        "test 1" in new Firefox(new TestApplication(counter)) { t =>
-          testRun = true
+      override def running() = {
+        val counter = new AtomicInteger()
+        class TestSpec extends wordspec.FixtureAnyWordSpec with MixedFixtures {
+          var testRun = false // will be false if test is canceled due to driver not available on platform.
+          "test 1" in new Firefox(new TestApplication(counter)) {
+            t =>
+            override def running() = testRun = true
+          }
+          "test 2" in new Firefox(new TestApplication(counter)) {
+            t =>
+            override def running() = testRun = true
+          }
+          "test 3" in new Firefox(new TestApplication(counter)) {
+            t =>
+            override def running() = testRun = true
+          }
         }
-        "test 2" in new Firefox(new TestApplication(counter)) { t =>
-          testRun = true
-        }
-        "test 3" in new Firefox(new TestApplication(counter)) { t =>
-          testRun = true
-        }
+        val spec = new TestSpec
+        counter.get() mustBe 0
+        spec.run(None, Args(SilentReporter))
+        if (spec.testRun)
+          counter.get() mustBe 3
+        else
+          counter.get() mustBe 0 // when driver not available, not Application instance should be created at all.
       }
-      val spec = new TestSpec
-      counter.get() mustBe 0
-      spec.run(None, Args(SilentReporter))
-      if (spec.testRun)
-        counter.get() mustBe 3
-      else
-        counter.get() mustBe 0 // when driver not available, not Application instance should be created at all.
     }
     "send 404 on a bad request" in new Firefox {
-      import java.net._
-      val url                    = new URL("http://localhost:" + port + "/boom")
-      val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
-      try con.getResponseCode mustBe 404
-      finally con.disconnect()
+      override def running() = {
+        import java.net._
+        val url                    = new URL("http://localhost:" + port + "/boom")
+        val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
+        try con.getResponseCode mustBe 404
+        finally con.disconnect()
+      }
     }
     "provide a web driver" in new Firefox(buildApp()) {
-      go to ("http://localhost:" + port + "/testing")
-      pageTitle mustBe "Test Page"
-      click.on(find(name("b")).value)
-      eventually { pageTitle mustBe "scalatest" }
+      override def running() = {
+        go to ("http://localhost:" + port + "/testing")
+        pageTitle mustBe "Test Page"
+        click.on(find(name("b")).value)
+        eventually {
+          pageTitle mustBe "scalatest"
+        }
+      }
     }
   }
   "The Safari function" must {
     "provide an Application" in new Safari(buildApp("foo" -> "bar")) {
-      app.configuration.getOptional[String]("foo") mustBe Some("bar")
+      override def running() = app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
     "make the Application available implicitly" in new Safari(buildApp("foo" -> "bar")) {
-      getConfig("foo") mustBe Some("bar")
+      override def running() = getConfig("foo") mustBe Some("bar")
     }
     "start the Application lazily" in new App(buildApp("foo" -> "bar")) {
-      val counter = new AtomicInteger()
-      class TestSpec extends wordspec.FixtureAnyWordSpec with MixedFixtures {
-        var testRun = false // will be false if test is canceled due to driver not available on platform.
-        "test 1" in new Safari(new TestApplication(counter)) { t =>
-          testRun = true
+      override def running() = {
+        val counter = new AtomicInteger()
+        class TestSpec extends wordspec.FixtureAnyWordSpec with MixedFixtures {
+          var testRun = false // will be false if test is canceled due to driver not available on platform.
+          "test 1" in new Safari(new TestApplication(counter)) {
+            t =>
+            override def running() = testRun = true
+          }
+          "test 2" in new Safari(new TestApplication(counter)) {
+            t =>
+            override def running() = testRun = true
+          }
+          "test 3" in new Safari(new TestApplication(counter)) {
+            t =>
+            override def running() = testRun = true
+          }
         }
-        "test 2" in new Safari(new TestApplication(counter)) { t =>
-          testRun = true
-        }
-        "test 3" in new Safari(new TestApplication(counter)) { t =>
-          testRun = true
-        }
+        val spec = new TestSpec
+        counter.get() mustBe 0
+        spec.run(None, Args(SilentReporter))
+        if (spec.testRun)
+          counter.get() mustBe 3
+        else
+          counter.get() mustBe 0 // when driver not available, not Application instance should be created at all.
       }
-      val spec = new TestSpec
-      counter.get() mustBe 0
-      spec.run(None, Args(SilentReporter))
-      if (spec.testRun)
-        counter.get() mustBe 3
-      else
-        counter.get() mustBe 0 // when driver not available, not Application instance should be created at all.
     }
     "send 404 on a bad request" in new Safari {
-      import java.net._
-      val url                    = new URL("http://localhost:" + port + "/boom")
-      val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
-      try con.getResponseCode mustBe 404
-      finally con.disconnect()
+      override def running() = {
+        import java.net._
+        val url                    = new URL("http://localhost:" + port + "/boom")
+        val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
+        try con.getResponseCode mustBe 404
+        finally con.disconnect()
+      }
     }
     "provide a web driver" in new Safari(buildApp()) {
-      go to ("http://localhost:" + port + "/testing")
-      pageTitle mustBe "Test Page"
-      click.on(find(name("b")).value)
-      eventually { pageTitle mustBe "scalatest" }
+      override def running() = {
+        go to ("http://localhost:" + port + "/testing")
+        pageTitle mustBe "Test Page"
+        click.on(find(name("b")).value)
+        eventually {
+          pageTitle mustBe "scalatest"
+        }
+      }
     }
   }
   "The Chrome function" must {
     "provide an Application" in new Chrome(buildApp("foo" -> "bar")) {
-      app.configuration.getOptional[String]("foo") mustBe Some("bar")
+      override def running() = app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
     "make the Application available implicitly" in new Chrome(buildApp("foo" -> "bar")) {
-      getConfig("foo") mustBe Some("bar")
+      override def running() = getConfig("foo") mustBe Some("bar")
     }
     "start the Application lazily" in new App(buildApp("foo" -> "bar")) {
-      val counter = new AtomicInteger()
-      class TestSpec extends wordspec.FixtureAnyWordSpec with MixedFixtures {
-        var testRun = false // will be false if test is canceled due to driver not available on platform.
-        "test 1" in new Chrome(new TestApplication(counter)) { t =>
-          testRun = true
+      override def running() = {
+        val counter = new AtomicInteger()
+        class TestSpec extends wordspec.FixtureAnyWordSpec with MixedFixtures {
+          var testRun = false // will be false if test is canceled due to driver not available on platform.
+          "test 1" in new Chrome(new TestApplication(counter)) {
+            t =>
+            override def running() = testRun = true
+          }
+          "test 2" in new Chrome(new TestApplication(counter)) {
+            t =>
+            override def running() = testRun = true
+          }
+          "test 3" in new Chrome(new TestApplication(counter)) {
+            t =>
+            override def running() = testRun = true
+          }
         }
-        "test 2" in new Chrome(new TestApplication(counter)) { t =>
-          testRun = true
-        }
-        "test 3" in new Chrome(new TestApplication(counter)) { t =>
-          testRun = true
-        }
+        val spec = new TestSpec
+        counter.get() mustBe 0
+        spec.run(None, Args(SilentReporter))
+        if (spec.testRun)
+          counter.get() mustBe 3
+        else
+          counter.get() mustBe 0 // when driver not available, not Application instance should be created at all.
       }
-      val spec = new TestSpec
-      counter.get() mustBe 0
-      spec.run(None, Args(SilentReporter))
-      if (spec.testRun)
-        counter.get() mustBe 3
-      else
-        counter.get() mustBe 0 // when driver not available, not Application instance should be created at all.
     }
     "send 404 on a bad request" in new Chrome {
-      import java.net._
-      val url                    = new URL("http://localhost:" + port + "/boom")
-      val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
-      try con.getResponseCode mustBe 404
-      finally con.disconnect()
+      override def running() = {
+        import java.net._
+        val url                    = new URL("http://localhost:" + port + "/boom")
+        val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
+        try con.getResponseCode mustBe 404
+        finally con.disconnect()
+      }
     }
     "provide a web driver" in new Chrome(buildApp()) {
-      go to ("http://localhost:" + port + "/testing")
-      pageTitle mustBe "Test Page"
-      click.on(find(name("b")).value)
-      eventually { pageTitle mustBe "scalatest" }
+      override def running() = {
+        go to ("http://localhost:" + port + "/testing")
+        pageTitle mustBe "Test Page"
+        click.on(find(name("b")).value)
+        eventually {
+          pageTitle mustBe "scalatest"
+        }
+      }
     }
   }
   "The InternetExplorer function" must {
     "provide an Application" in new InternetExplorer(buildApp("foo" -> "bar")) {
-      app.configuration.getOptional[String]("foo") mustBe Some("bar")
+      override def running() = app.configuration.getOptional[String]("foo") mustBe Some("bar")
     }
     "make the Application available implicitly" in new InternetExplorer(buildApp("foo" -> "bar")) {
-      getConfig("foo") mustBe Some("bar")
+      override def running() = getConfig("foo") mustBe Some("bar")
     }
     "start the Application lazily" in new App(buildApp("foo" -> "bar")) {
-      val counter = new AtomicInteger()
-      class TestSpec extends wordspec.FixtureAnyWordSpec with MixedFixtures {
-        var testRun = false // will be false if test is canceled due to driver not available on platform.
-        "test 1" in new InternetExplorer(new TestApplication(counter)) { t =>
-          testRun = true
+      override def running() = {
+        val counter = new AtomicInteger()
+        class TestSpec extends wordspec.FixtureAnyWordSpec with MixedFixtures {
+          var testRun = false // will be false if test is canceled due to driver not available on platform.
+          "test 1" in new InternetExplorer(new TestApplication(counter)) {
+            t =>
+            override def running() = testRun = true
+          }
+          "test 2" in new InternetExplorer(new TestApplication(counter)) {
+            t =>
+            override def running() = testRun = true
+          }
+          "test 3" in new InternetExplorer(new TestApplication(counter)) {
+            t =>
+            override def running() = testRun = true
+          }
         }
-        "test 2" in new InternetExplorer(new TestApplication(counter)) { t =>
-          testRun = true
-        }
-        "test 3" in new InternetExplorer(new TestApplication(counter)) { t =>
-          testRun = true
-        }
+        val spec = new TestSpec
+        counter.get() mustBe 0
+        spec.run(None, Args(SilentReporter))
+        if (spec.testRun)
+          counter.get() mustBe 3
+        else
+          counter.get() mustBe 0 // when driver not available, not Application instance should be created at all.
       }
-      val spec = new TestSpec
-      counter.get() mustBe 0
-      spec.run(None, Args(SilentReporter))
-      if (spec.testRun)
-        counter.get() mustBe 3
-      else
-        counter.get() mustBe 0 // when driver not available, not Application instance should be created at all.
     }
     "send 404 on a bad request" in new InternetExplorer {
-      import java.net._
-      val url                    = new URL("http://localhost:" + port + "/boom")
-      val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
-      try con.getResponseCode mustBe 404
-      finally con.disconnect()
+      override def running() = {
+        import java.net._
+        val url                    = new URL("http://localhost:" + port + "/boom")
+        val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
+        try con.getResponseCode mustBe 404
+        finally con.disconnect()
+      }
     }
     "provide a web driver" in new InternetExplorer(buildApp()) {
-      go to ("http://localhost:" + port + "/testing")
-      pageTitle mustBe "Test Page"
-      click.on(find(name("b")).value)
-      eventually { pageTitle mustBe "scalatest" }
+      override def running() = {
+        go to ("http://localhost:" + port + "/testing")
+        pageTitle mustBe "Test Page"
+        click.on(find(name("b")).value)
+        eventually {
+          pageTitle mustBe "scalatest"
+        }
+      }
     }
   }
   "Any old thing" must {
