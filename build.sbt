@@ -19,7 +19,7 @@ import sbt.util.{ Level => _, _ }
 import sbt.io.Path._
 import interplay.ScalaVersions._
 
-val SeleniumVersion          = "4.8.0"
+val SeleniumVersion          = "4.8.1.1"
 val MockitoVersion           = "4.6.1"
 val CssParserVersion         = "1.14.0"
 val ScalatestVersion         = "3.2.14"
