@@ -110,7 +110,7 @@ lazy val `scalatestplus-play` = project
     },
     libraryDependencies ++= Seq(
       ws,
-      akkaHttpServer % Test,
+      nettyServer % Test, // Using netty for now, we can switch back to akkaHttpServer when it has Scala 3 artifacts
       playTest,
       "org.scalatest"            %% "scalatest"         % ScalatestVersion,
       "org.scalatestplus"        %% "mockito-4-6"       % ScalatestMockitoVersion,
