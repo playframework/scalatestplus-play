@@ -16,11 +16,8 @@
 import com.typesafe.tools.mima.core._
 import sbt.util.{ Level => _, _ }
 
-import scala.sys.process._
 import sbt.io.Path._
 import interplay.ScalaVersions._
-
-import play.core.PlayVersion
 
 val SeleniumVersion          = "4.8.0"
 val MockitoVersion           = "4.6.1"
@@ -112,9 +109,9 @@ lazy val `scalatestplus-play` = project
       }
     },
     libraryDependencies ++= Seq(
-      ws.cross(CrossVersion.for3Use2_13),
-      (akkaHttpServer % Test).cross(CrossVersion.for3Use2_13),
-      playTest.cross(CrossVersion.for3Use2_13),
+      ws,
+      nettyServer % Test, // Using netty for now, we can switch back to akkaHttpServer when it has Scala 3 artifacts
+      playTest,
       "org.scalatest"            %% "scalatest"         % ScalatestVersion,
       "org.scalatestplus"        %% "mockito-4-6"       % ScalatestMockitoVersion,
       "org.scalatestplus"        %% "selenium-4-4"      % ScalatestSeleniumVersion,
