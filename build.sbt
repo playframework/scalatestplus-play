@@ -22,7 +22,7 @@ import interplay.ScalaVersions._
 val SeleniumVersion          = "4.8.0"
 val MockitoVersion           = "4.6.1"
 val CssParserVersion         = "1.14.0"
-val ScalatestVersion         = "3.2.14"
+val ScalatestVersion         = "3.2.15"
 val ScalatestSeleniumVersion = ScalatestVersion + ".0"
 val ScalatestMockitoVersion  = ScalatestVersion + ".0"
 
@@ -114,7 +114,7 @@ lazy val `scalatestplus-play` = project
       playTest,
       "org.scalatest"            %% "scalatest"         % ScalatestVersion,
       "org.scalatestplus"        %% "mockito-4-6"       % ScalatestMockitoVersion,
-      "org.scalatestplus"        %% "selenium-4-4"      % ScalatestSeleniumVersion,
+      "org.scalatestplus"        %% "selenium-4-7"      % ScalatestSeleniumVersion,
       "org.seleniumhq.selenium"  % "selenium-java"      % SeleniumVersion,
       "org.seleniumhq.selenium"  % "htmlunit-driver"    % SeleniumVersion,
       "net.sourceforge.htmlunit" % "htmlunit-cssparser" % CssParserVersion
