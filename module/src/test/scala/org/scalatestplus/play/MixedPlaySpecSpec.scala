@@ -60,7 +60,7 @@ class MixedPlaySpecSpec extends MixedPlaySpec { thisSpec =>
     "send 404 on a bad request" in new Server {
       override def running() = {
         import java.net._
-        val url                    = new URL("http://localhost:" + port + "/boom")
+        val url                    = new URI("http://localhost:" + port + "/boom").toURL
         val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
         try con.getResponseCode mustBe 404
         finally con.disconnect()
@@ -77,7 +77,7 @@ class MixedPlaySpecSpec extends MixedPlaySpec { thisSpec =>
     "send 404 on a bad request" in new HtmlUnit {
       override def running() = {
         import java.net._
-        val url                    = new URL("http://localhost:" + port + "/boom")
+        val url                    = new URI("http://localhost:" + port + "/boom").toURL
         val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
         try con.getResponseCode mustBe 404
         finally con.disconnect()
@@ -104,7 +104,7 @@ class MixedPlaySpecSpec extends MixedPlaySpec { thisSpec =>
     "send 404 on a bad request" in new Firefox {
       override def running() = {
         import java.net._
-        val url                    = new URL("http://localhost:" + port + "/boom")
+        val url                    = new URI("http://localhost:" + port + "/boom").toURL
         val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
         try con.getResponseCode mustBe 404
         finally con.disconnect()
@@ -131,7 +131,7 @@ class MixedPlaySpecSpec extends MixedPlaySpec { thisSpec =>
     "send 404 on a bad request" in new Safari {
       override def running() = {
         import java.net._
-        val url                    = new URL("http://localhost:" + port + "/boom")
+        val url                    = new URI("http://localhost:" + port + "/boom").toURL
         val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
         try con.getResponseCode mustBe 404
         finally con.disconnect()
@@ -158,7 +158,7 @@ class MixedPlaySpecSpec extends MixedPlaySpec { thisSpec =>
     "send 404 on a bad request" in new Chrome {
       override def running() = {
         import java.net._
-        val url                    = new URL("http://localhost:" + port + "/boom")
+        val url                    = new URI("http://localhost:" + port + "/boom").toURL
         val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
         try con.getResponseCode mustBe 404
         finally con.disconnect()
@@ -185,7 +185,7 @@ class MixedPlaySpecSpec extends MixedPlaySpec { thisSpec =>
     "send 404 on a bad request" in new InternetExplorer {
       override def running() = {
         import java.net._
-        val url                    = new URL("http://localhost:" + port + "/boom")
+        val url                    = new URI("http://localhost:" + port + "/boom").toURL
         val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
         try con.getResponseCode mustBe 404
         finally con.disconnect()

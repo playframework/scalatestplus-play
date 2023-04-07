@@ -60,7 +60,7 @@ class ExampleSpec extends PlaySpec with GuiceOneServerPerTest with AllBrowsersPe
     }
     "provide an actual running server" in {
       import java.net._
-      val url = new URL("http://localhost:" + port + "/boum")
+      val url = new URI("http://localhost:" + port + "/boum").toURL
       val con = url.openConnection().asInstanceOf[HttpURLConnection]
       try con.getResponseCode mustBe 404
       finally con.disconnect()

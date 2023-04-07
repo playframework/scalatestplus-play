@@ -75,7 +75,7 @@ class OneServerPerSuiteWithConfiguredBrowserNestedSpec extends UnitSpec with Con
     }
     "send 404 on a bad request" in {
       import java.net._
-      val url = new URL("http://localhost:" + port + "/boum")
+      val url = new URI("http://localhost:" + port + "/boum").toURL
       val con = url.openConnection().asInstanceOf[HttpURLConnection]
       try con.getResponseCode mustBe 404
       finally con.disconnect()
