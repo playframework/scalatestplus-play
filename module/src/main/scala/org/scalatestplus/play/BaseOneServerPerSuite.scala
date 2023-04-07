@@ -142,8 +142,10 @@ trait BaseOneServerPerSuite extends TestSuiteMixin with ServerProvider { this: T
    */
   implicit lazy val app: Application = fakeApplication()
 
+  protected def testServerFactory: TestServerFactory = DefaultTestServerFactory
+
   protected implicit lazy val runningServer: RunningServer =
-    DefaultTestServerFactory.start(app)
+    testServerFactory.start(app)
 
   /**
    * Invokes `start` on a new `TestServer` created with the `Application` provided by `app` and the

@@ -106,8 +106,10 @@ trait BaseOneServerPerTest extends TestSuiteMixin with ServerProvider { this: Te
    */
   def newAppForTest(testData: TestData): Application = fakeApplication()
 
+  protected def testServerFactory: TestServerFactory = DefaultTestServerFactory
+
   protected def newServerForTest(app: Application, testData: TestData): RunningServer =
-    DefaultTestServerFactory.start(app)
+    testServerFactory.start(app)
 
   /**
    * Creates new `Application` and running `TestServer` instances before executing each test, and
