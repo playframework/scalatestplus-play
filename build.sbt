@@ -101,13 +101,6 @@ lazy val `scalatestplus-play` = project
     commonSettings,
     mimaSettings,
     organization := "org.scalatestplus.play",
-    conflictWarning := {
-      if (scalaBinaryVersion.value == "3") {
-        ConflictWarning("warn", sbt.Level.Warn, false)
-      } else {
-        conflictWarning.value
-      }
-    },
     libraryDependencies ++= Seq(
       ws,
       nettyServer % Test, // Using netty for now, we can switch back to akkaHttpServer when it has Scala 3 artifacts
@@ -119,7 +112,6 @@ lazy val `scalatestplus-play` = project
       "org.seleniumhq.selenium"  % "htmlunit-driver"    % SeleniumVersion,
       "net.sourceforge.htmlunit" % "htmlunit-cssparser" % CssParserVersion
     ),
-    evictionErrorLevel := Level.Info,
     Compile / doc / scalacOptions := Seq("-doc-title", "ScalaTest + Play, " + version.value),
     Test / fork := true,
     Test / javaOptions ++= List(
