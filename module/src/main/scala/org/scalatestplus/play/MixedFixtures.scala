@@ -25,6 +25,7 @@ import org.scalatestplus.play.BrowserFactory.UnavailableDriver
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test._
+import play.core.PlayVersion
 
 /**
  * Trait that helps you provide different fixtures to different tests: a `Application`, a `TestServer`, or one
@@ -260,38 +261,45 @@ import play.api.test._
  */
 trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: FixtureTestSuite =>
 
-  private def checkScala3Compatibility(clazz: Class[_], className: String) = {
-    val declaringClass = clazz.getMethod("running").getDeclaringClass
+  abstract class NoArgHelper(helperClass: Class[_]) extends NoArg {
+
+    lazy val errorMsg: String = s"""
+                                   |
+                                   |For Scala 3 you need to wrap the body of ${helperClass.getSimpleName} in an `override def running() = ...` method:
+                                   |
+                                   |// Old:
+                                   |new ${helperClass.getSimpleName}() {
+                                   |  <code>
+                                   |}
+                                   |
+                                   |// New:
+                                   |new ${helperClass.getSimpleName}() {
+                                   |  override def running() = {
+                                   |    <code>
+                                   |  }
+                                   |}
+                                   |
+                                   |""".stripMargin
+
     if (
-      play.core.PlayVersion.scalaVersion
-        .startsWith("3") && declaringClass.getSimpleName == className && declaringClass.getPackageName == "org.scalatestplus.play"
+      PlayVersion.scalaVersion
+        .startsWith("3") && this.getClass.getMethod("running").getDeclaringClass == classOf[NoArgHelper]
     ) {
-      throw new NotImplementedError(s"""
-                                       |
-                                       |For Scala 3 you need to wrap the body of $className in an `override def running() = ...` method:
-                                       |
-                                       |// Old:
-                                       |new ${className}() {
-                                       |  <code>
-                                       |}
-                                       |
-                                       |// New:
-                                       |new ${className}() {
-                                       |  override def running() = {
-                                       |    <code>
-                                       |  }
-                                       |}
-                                       |
-                                       |""".stripMargin)
+      throw new NotImplementedError(errorMsg)
     }
+
+    def running(): Unit = throw new NotImplementedError(errorMsg)
+
+    final def callRunning() =
+      PlayVersion.scalaVersion
+        .startsWith("3") || this.getClass.getMethod("running").getDeclaringClass != classOf[NoArgHelper]
+
   }
 
   /**
    * `NoArg` subclass that provides an `Application` fixture.
    */
-  abstract class App(appFun: => Application = new GuiceApplicationBuilder().build()) extends fixture.NoArg {
-
-    checkScala3Compatibility(this.getClass, "App")
+  abstract class App(appFun: => Application = new GuiceApplicationBuilder().build()) extends NoArgHelper(classOf[App]) {
 
     /**
      * Makes the passed-in `Application` implicit.
@@ -303,20 +311,11 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
      */
     lazy val app = appFun
 
-    def running(): Unit =
-      throw new NotImplementedError(
-        "For Scala 3 you need to wrap the body of App in a `override def running() = ...` method"
-      )
-
     /**
      * Runs the passed in `Application` before executing the test body, ensuring it is closed after the test body completes.
      */
     override def apply(): Unit = {
-      val declaringClass = this.getClass.getMethod("running").getDeclaringClass
-      if (
-        play.core.PlayVersion.scalaVersion
-          .startsWith("3") || declaringClass.getSimpleName != "App" || declaringClass.getPackageName != "org.scalatestplus.play"
-      ) {
+      if (callRunning()) {
         Helpers.running(app)(running())
       } else {
         def callSuper: Unit = super.apply() // this is needed for Scala 2.10 to work
@@ -331,9 +330,7 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
   abstract class Server(
       appFun: => Application = new GuiceApplicationBuilder().build(),
       val port: Int = Helpers.testServerPort
-  ) extends NoArg {
-
-    checkScala3Compatibility(this.getClass, "Server")
+  ) extends NoArgHelper(classOf[Server]) {
 
     /**
      * Makes the passed in `Application` implicit.
@@ -351,21 +348,12 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
      */
     implicit lazy val portNumber: PortNumber = PortNumber(port)
 
-    def running(): Unit =
-      throw new NotImplementedError(
-        "For Scala 3 you need to wrap the body of Server in a `override def running() = ...` method"
-      )
-
     /**
      * Runs a `TestServer` using the passed-in `Application` and  port before executing the
      * test body, ensuring both are stopped after the test body completes.
      */
     override def apply(): Unit = {
-      val declaringClass = this.getClass.getMethod("running").getDeclaringClass
-      if (
-        play.core.PlayVersion.scalaVersion
-          .startsWith("3") || declaringClass.getSimpleName != "Server" || declaringClass.getPackageName != "org.scalatestplus.play"
-      ) {
+      if (callRunning()) {
         Helpers.running(TestServer(port, app))(running())
       } else {
         def callSuper: Unit = super.apply() // this is needed for Scala 2.10 to work
@@ -381,11 +369,9 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
   abstract class HtmlUnit(
       appFun: => Application = new GuiceApplicationBuilder().build(),
       val port: Int = Helpers.testServerPort
-  ) extends WebBrowser
-      with NoArg
+  ) extends NoArgHelper(classOf[HtmlUnit])
+      with WebBrowser
       with HtmlUnitFactory {
-
-    checkScala3Compatibility(this.getClass, "HtmlUnit")
 
     /**
      * A lazy implicit instance of `HtmlUnitDriver`. It will hold `UnavailableDriver` if `HtmlUnitDriver`
@@ -409,11 +395,6 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
      */
     implicit lazy val portNumber: PortNumber = PortNumber(port)
 
-    def running(): Unit =
-      throw new NotImplementedError(
-        "For Scala 3 you need to wrap the body of HtmlUnit in a `override def running() = ...` method"
-      )
-
     /**
      * Runs a `TestServer` using the passed-in `Application` and port before executing the
      * test body, which can use the `HtmlUnitDriver` provided by `webDriver`, ensuring all
@@ -427,11 +408,7 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
             case None    => cancel(errorMessage)
           }
         case _ =>
-          val declaringClass = this.getClass.getMethod("running").getDeclaringClass
-          if (
-            play.core.PlayVersion.scalaVersion
-              .startsWith("3") || declaringClass.getSimpleName != "HtmlUnit" || declaringClass.getPackageName != "org.scalatestplus.play"
-          ) {
+          if (callRunning()) {
             try Helpers.running(TestServer(port, app))(running())
             finally webDriver.quit()
           } else {
@@ -450,11 +427,9 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
   abstract class Firefox(
       appFun: => Application = new GuiceApplicationBuilder().build(),
       val port: Int = Helpers.testServerPort
-  ) extends WebBrowser
-      with NoArg
+  ) extends NoArgHelper(classOf[Firefox])
+      with WebBrowser
       with FirefoxFactory {
-
-    checkScala3Compatibility(this.getClass, "Firefox")
 
     /**
      * A lazy implicit instance of `FirefoxDriver`, it will hold `UnavailableDriver` if `FirefoxDriver`
@@ -478,11 +453,6 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
      */
     implicit lazy val portNumber: PortNumber = PortNumber(port)
 
-    def running(): Unit =
-      throw new NotImplementedError(
-        "For Scala 3 you need to wrap the body of Firefox in a `override def running() = ...` method"
-      )
-
     /**
      * Runs a `TestServer` using the passed-in `Application` and port before executing the
      * test body, which can use the `FirefoxDriver` provided by `webDriver`, ensuring all
@@ -496,11 +466,7 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
             case None    => cancel(errorMessage)
           }
         case _ =>
-          val declaringClass = this.getClass.getMethod("running").getDeclaringClass
-          if (
-            play.core.PlayVersion.scalaVersion
-              .startsWith("3") || declaringClass.getSimpleName != "Firefox" || declaringClass.getPackageName != "org.scalatestplus.play"
-          ) {
+          if (callRunning()) {
             try Helpers.running(TestServer(port, app))(running())
             finally webDriver.quit()
           } else {
@@ -519,11 +485,9 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
   abstract class Safari(
       appFun: => Application = new GuiceApplicationBuilder().build(),
       val port: Int = Helpers.testServerPort
-  ) extends WebBrowser
-      with NoArg
+  ) extends NoArgHelper(classOf[Safari])
+      with WebBrowser
       with SafariFactory {
-
-    checkScala3Compatibility(this.getClass, "Safari")
 
     /**
      * A lazy implicit instance of `SafariDriver`, it will hold `UnavailableDriver` if `SafariDriver`
@@ -547,11 +511,6 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
      */
     implicit lazy val portNumber: PortNumber = PortNumber(port)
 
-    def running(): Unit =
-      throw new NotImplementedError(
-        "For Scala 3 you need to wrap the body of Safari in a `override def running() = ...` method"
-      )
-
     /**
      * Runs a `TestServer` using the passed-in `Application` and port before executing the
      * test body, which can use the `SafariDriver` provided by `webDriver`, ensuring all
@@ -565,11 +524,7 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
             case None    => cancel(errorMessage)
           }
         case _ =>
-          val declaringClass = this.getClass.getMethod("running").getDeclaringClass
-          if (
-            play.core.PlayVersion.scalaVersion
-              .startsWith("3") || declaringClass.getSimpleName != "Safari" || declaringClass.getPackageName != "org.scalatestplus.play"
-          ) {
+          if (callRunning()) {
             try Helpers.running(TestServer(port, app))(running())
             finally webDriver.quit()
           } else {
@@ -588,11 +543,9 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
   abstract class Chrome(
       appFun: => Application = new GuiceApplicationBuilder().build(),
       val port: Int = Helpers.testServerPort
-  ) extends WebBrowser
-      with NoArg
+  ) extends NoArgHelper(classOf[Chrome])
+      with WebBrowser
       with ChromeFactory {
-
-    checkScala3Compatibility(this.getClass, "Chrome")
 
     /**
      * A lazy implicit instance of `ChromeDriver`, it will hold `UnavailableDriver` if `ChromeDriver`
@@ -616,11 +569,6 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
      */
     implicit lazy val portNumber: PortNumber = PortNumber(port)
 
-    def running(): Unit =
-      throw new NotImplementedError(
-        "For Scala 3 you need to wrap the body of Chrome in a `override def running() = ...` method"
-      )
-
     /**
      * Runs a `TestServer` using the passed-in `Application` and port before executing the
      * test body, which can use the `ChromeDriver` provided by `webDriver`, ensuring all
@@ -634,11 +582,7 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
             case None    => cancel(errorMessage)
           }
         case _ =>
-          val declaringClass = this.getClass.getMethod("running").getDeclaringClass
-          if (
-            play.core.PlayVersion.scalaVersion
-              .startsWith("3") || declaringClass.getSimpleName != "Chrome" || declaringClass.getPackageName != "org.scalatestplus.play"
-          ) {
+          if (callRunning()) {
             try Helpers.running(TestServer(port, app))(running())
             finally webDriver.quit()
           } else {
@@ -657,11 +601,9 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
   abstract class InternetExplorer(
       appFun: => Application = new GuiceApplicationBuilder().build(),
       val port: Int = Helpers.testServerPort
-  ) extends WebBrowser
-      with NoArg
+  ) extends NoArgHelper(classOf[InternetExplorer])
+      with WebBrowser
       with InternetExplorerFactory {
-
-    checkScala3Compatibility(this.getClass, "InternetExplorer")
 
     /**
      * A lazy implicit instance of `InternetExplorerDriver`, it will hold `UnavailableDriver` if `InternetExplorerDriver`
@@ -685,11 +627,6 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
      */
     implicit lazy val portNumber: PortNumber = PortNumber(port)
 
-    def running(): Unit =
-      throw new NotImplementedError(
-        "For Scala 3 you need to wrap the body of InternetExplorer in a `override def running() = ...` method"
-      )
-
     /**
      * Runs a `TestServer` using the passed-in `Application` and port before executing the
      * test body, which can use the `InternetExplorerDriver` provided by `webDriver`, ensuring all
@@ -703,11 +640,7 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
             case None    => cancel(errorMessage)
           }
         case _ =>
-          val declaringClass = this.getClass.getMethod("running").getDeclaringClass
-          if (
-            play.core.PlayVersion.scalaVersion
-              .startsWith("3") || declaringClass.getSimpleName != "InternetExplorer" || declaringClass.getPackageName != "org.scalatestplus.play"
-          ) {
+          if (callRunning()) {
             try Helpers.running(TestServer(port, app))(running())
             finally webDriver.quit()
           } else {
