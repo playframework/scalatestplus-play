@@ -1,4 +1,4 @@
-<!--- Copyright (C) 2009-2016 Typesafe Inc. <http://www.typesafe.com> -->
+<!--- Copyright (C) from 2022 The Play Framework Contributors <https://github.com/playframework>, 2011-2021 Lightbend Inc. <https://www.lightbend.com> -->
 # Testing your application with ScalaTest
 
 Writing tests for your application can be an involved process. Play provides helpers and application stubs, and ScalaTest provides an integration library, _ScalaTest + Play_, to make testing your application as easy as possible.
