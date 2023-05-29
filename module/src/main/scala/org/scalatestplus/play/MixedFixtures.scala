@@ -329,7 +329,7 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
    */
   abstract class Server(
       appFun: => Application = new GuiceApplicationBuilder().build(),
-      val port: Int = Helpers.testServerPort
+      val httpPort: Int = Helpers.testServerPort
   ) extends NoArgHelper(classOf[Server]) {
 
     /**
@@ -342,6 +342,10 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
      */
     lazy val app = appFun
 
+    private var testServer: Option[TestServer] = None
+
+    lazy val port: Int = testServer.flatMap(ts => ts.runningHttpPort).getOrElse(httpPort)
+
     /**
      * Implicit `PortNumber` instance that wraps `port`. The value returned from `portNumber.value`
      * will be same as the value of `port`.
@@ -353,12 +357,14 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
      * test body, ensuring both are stopped after the test body completes.
      */
     override def apply(): Unit = {
+      testServer = Some(TestServer(httpPort, app))
       if (callRunning()) {
-        Helpers.running(TestServer(port, app))(running())
+        testServer.foreach(Helpers.running(_)(running()))
       } else {
         def callSuper: Unit = super.apply() // this is needed for Scala 2.10 to work
-        Helpers.running(TestServer(port, app))(callSuper)
+        testServer.foreach(Helpers.running(_)(callSuper))
       }
+      testServer = None
     }
   }
 
@@ -368,7 +374,7 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
    */
   abstract class HtmlUnit(
       appFun: => Application = new GuiceApplicationBuilder().build(),
-      val port: Int = Helpers.testServerPort
+      val httpPort: Int = Helpers.testServerPort
   ) extends NoArgHelper(classOf[HtmlUnit])
       with WebBrowser
       with HtmlUnitFactory {
@@ -388,6 +394,10 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
      * The lazy instance created from passed <code>appFun</code>
      */
     lazy val app = appFun
+
+    private var testServer: Option[TestServer] = None
+
+    lazy val port: Int = testServer.flatMap(ts => ts.runningHttpPort).getOrElse(httpPort)
 
     /**
      * Implicit `PortNumber` instance that wraps `port`. The value returned from `portNumber.value`
@@ -409,12 +419,22 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
           }
         case _ =>
           if (callRunning()) {
-            try Helpers.running(TestServer(port, app))(running())
-            finally webDriver.quit()
+            try {
+              testServer = Some(TestServer(httpPort, app))
+              testServer.foreach(Helpers.running(_)(running()))
+            } finally {
+              webDriver.quit()
+              testServer = None
+            }
           } else {
             def callSuper = super.apply() // this is needed for Scala 2.10 to work
-            try Helpers.running(TestServer(port, app))(callSuper)
-            finally webDriver.quit()
+            try {
+              testServer = Some(TestServer(httpPort, app))
+              testServer.foreach(Helpers.running(_)(callSuper))
+            } finally {
+              webDriver.quit()
+              testServer = None
+            }
           }
       }
     }
@@ -426,7 +446,7 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
    */
   abstract class Firefox(
       appFun: => Application = new GuiceApplicationBuilder().build(),
-      val port: Int = Helpers.testServerPort
+      val httpPort: Int = Helpers.testServerPort
   ) extends NoArgHelper(classOf[Firefox])
       with WebBrowser
       with FirefoxFactory {
@@ -446,6 +466,10 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
      * The lazy instance created from passed <code>appFun</code>
      */
     lazy val app = appFun
+
+    private var testServer: Option[TestServer] = None
+
+    lazy val port: Int = testServer.flatMap(ts => ts.runningHttpPort).getOrElse(httpPort)
 
     /**
      * Implicit `PortNumber` instance that wraps `port`. The value returned from `portNumber.value`
@@ -467,12 +491,22 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
           }
         case _ =>
           if (callRunning()) {
-            try Helpers.running(TestServer(port, app))(running())
-            finally webDriver.quit()
+            try {
+              testServer = Some(TestServer(httpPort, app))
+              testServer.foreach(Helpers.running(_)(running()))
+            } finally {
+              webDriver.quit()
+              testServer = None
+            }
           } else {
             def callSuper = super.apply() // this is needed for Scala 2.10 to work
-            try Helpers.running(TestServer(port, app))(callSuper)
-            finally webDriver.quit()
+            try {
+              testServer = Some(TestServer(httpPort, app))
+              testServer.foreach(Helpers.running(_)(callSuper))
+            } finally {
+              webDriver.quit()
+              testServer = None
+            }
           }
       }
     }
@@ -484,7 +518,7 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
    */
   abstract class Safari(
       appFun: => Application = new GuiceApplicationBuilder().build(),
-      val port: Int = Helpers.testServerPort
+      val httpPort: Int = Helpers.testServerPort
   ) extends NoArgHelper(classOf[Safari])
       with WebBrowser
       with SafariFactory {
@@ -504,6 +538,10 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
      * The lazy instance created from passed <code>appFun</code>
      */
     lazy val app = appFun
+
+    private var testServer: Option[TestServer] = None
+
+    lazy val port: Int = testServer.flatMap(ts => ts.runningHttpPort).getOrElse(httpPort)
 
     /**
      * Implicit `PortNumber` instance that wraps `port`. The value returned from `portNumber.value`
@@ -525,12 +563,22 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
           }
         case _ =>
           if (callRunning()) {
-            try Helpers.running(TestServer(port, app))(running())
-            finally webDriver.quit()
+            try {
+              testServer = Some(TestServer(httpPort, app))
+              testServer.foreach(Helpers.running(_)(running()))
+            } finally {
+              webDriver.quit()
+              testServer = None
+            }
           } else {
             def callSuper = super.apply() // this is needed for Scala 2.10 to work
-            try Helpers.running(TestServer(port, app))(callSuper)
-            finally webDriver.quit()
+            try {
+              testServer = Some(TestServer(httpPort, app))
+              testServer.foreach(Helpers.running(_)(callSuper))
+            } finally {
+              webDriver.quit()
+              testServer = None
+            }
           }
       }
     }
@@ -542,7 +590,7 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
    */
   abstract class Chrome(
       appFun: => Application = new GuiceApplicationBuilder().build(),
-      val port: Int = Helpers.testServerPort
+      val httpPort: Int = Helpers.testServerPort
   ) extends NoArgHelper(classOf[Chrome])
       with WebBrowser
       with ChromeFactory {
@@ -562,6 +610,10 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
      * The lazy instance created from passed <code>appFun</code>
      */
     lazy val app = appFun
+
+    private var testServer: Option[TestServer] = None
+
+    lazy val port: Int = testServer.flatMap(ts => ts.runningHttpPort).getOrElse(httpPort)
 
     /**
      * Implicit `PortNumber` instance that wraps `port`. The value returned from `portNumber.value`
@@ -583,12 +635,22 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
           }
         case _ =>
           if (callRunning()) {
-            try Helpers.running(TestServer(port, app))(running())
-            finally webDriver.quit()
+            try {
+              testServer = Some(TestServer(httpPort, app))
+              testServer.foreach(Helpers.running(_)(running()))
+            } finally {
+              webDriver.quit()
+              testServer = None
+            }
           } else {
             def callSuper = super.apply() // this is needed for Scala 2.10 to work
-            try Helpers.running(TestServer(port, app))(callSuper)
-            finally webDriver.quit()
+            try {
+              testServer = Some(TestServer(httpPort, app))
+              testServer.foreach(Helpers.running(_)(callSuper))
+            } finally {
+              webDriver.quit()
+              testServer = None
+            }
           }
       }
     }
@@ -600,7 +662,7 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
    */
   abstract class InternetExplorer(
       appFun: => Application = new GuiceApplicationBuilder().build(),
-      val port: Int = Helpers.testServerPort
+      val httpPort: Int = Helpers.testServerPort
   ) extends NoArgHelper(classOf[InternetExplorer])
       with WebBrowser
       with InternetExplorerFactory {
@@ -620,6 +682,10 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
      * The lazy instance created from passed <code>appFun</code>
      */
     lazy val app = appFun
+
+    private var testServer: Option[TestServer] = None
+
+    lazy val port: Int = testServer.flatMap(ts => ts.runningHttpPort).getOrElse(httpPort)
 
     /**
      * Implicit `PortNumber` instance that wraps `port`. The value returned from `portNumber.value`
@@ -641,12 +707,22 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
           }
         case _ =>
           if (callRunning()) {
-            try Helpers.running(TestServer(port, app))(running())
-            finally webDriver.quit()
+            try {
+              testServer = Some(TestServer(httpPort, app))
+              testServer.foreach(Helpers.running(_)(running()))
+            } finally {
+              webDriver.quit()
+              testServer = None
+            }
           } else {
             def callSuper = super.apply() // this is needed for Scala 2.10 to work
-            try Helpers.running(TestServer(port, app))(callSuper)
-            finally webDriver.quit()
+            try {
+              testServer = Some(TestServer(httpPort, app))
+              testServer.foreach(Helpers.running(_)(callSuper))
+            } finally {
+              webDriver.quit()
+              testServer = None
+            }
           }
       }
     }

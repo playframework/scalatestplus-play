@@ -129,7 +129,7 @@ class ScalaFunctionalTestSpec extends MixedPlaySpec with Results {
     // #scalafunctionaltest-testwithbrowser
 
     // #scalafunctionaltest-testpaymentgateway
-    "test server logic" in new Server(appFun = { applicationWithBrowser }, port = 19001) {
+    "test server logic" in new Server(appFun = { applicationWithBrowser }, httpPort = 19001) {
       override def running() = {
         implicit val wsClient: WSClient = app.injector.instanceOf[WSClient]
 
@@ -157,7 +157,7 @@ class ScalaFunctionalTestSpec extends MixedPlaySpec with Results {
       })
       .build()
 
-    "test WS logic" in new Server(appFun = appWithRoutes, port = 3333) {
+    "test WS logic" in new Server(appFun = appWithRoutes, httpPort = 3333) {
       override def running() = {
         val wsClient = app.injector.instanceOf[WSClient]
         await(wsClient.url("http://localhost:3333").get()).status mustEqual OK
