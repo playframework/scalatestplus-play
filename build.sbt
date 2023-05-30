@@ -117,7 +117,6 @@ lazy val `scalatestplus-play` = project
     Test / javaOptions ++= List(
       "--add-exports=java.base/sun.security.x509=ALL-UNNAMED",
       "-Dwebdriver.firefox.logfile=/dev/null", // disable GeckoDriver logs polluting the CI logs
-      "-Dtestserver.port=0",
     ),
   )
 
