@@ -115,9 +115,7 @@ lazy val `scalatestplus-play` = project
     Compile / doc / scalacOptions := Seq("-doc-title", "ScalaTest + Play, " + version.value),
     Test / fork := true,
     Test / javaOptions ++= List(
-      "--add-exports=java.base/sun.security.x509=ALL-UNNAMED",
       "-Dwebdriver.firefox.logfile=/dev/null", // disable GeckoDriver logs polluting the CI logs
-      "-Dtestserver.port=0",
     ),
   )
 
