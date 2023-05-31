@@ -23,6 +23,34 @@ import play.api.inject.guice._
 
 class ConfiguredServerSpec extends UnitSpec with SequentialNestedSuiteExecution with GuiceOneServerPerSuite {
 
+  // Doesn't need synchronization because set by withFixture and checked by the test
+  // invoked inside same withFixture with super.withFixture(test)
+  var configMap: ConfigMap = _
+
+  override def withFixture(test: NoArgTest): Outcome = {
+    configMap = test.configMap
+    super.withFixture(test)
+  }
+
+  "provide an Application" in {
+    app.configuration.getOptional[String]("foo") mustBe Some("bar")
+  }
+  "make the Application available implicitly" in {
+    getConfig("foo") mustBe Some("bar")
+  }
+  "put the app in the configMap" in {
+    val configuredApp = configMap.getOptional[Application]("org.scalatestplus.play.app")
+    (configuredApp.value must be).theSameInstanceAs(app)
+  }
+
+  "make the port available" in {
+    port must be > 0
+  }
+  "put the port in the configMap" in {
+    val configuredPort = configMap.getOptional[Int]("org.scalatestplus.play.port")
+    (configuredPort.value must be > 0)
+  }
+
   override def nestedSuites = Vector(new ConfiguredServerNestedSuite)
 
   override def fakeApplication(): Application = {

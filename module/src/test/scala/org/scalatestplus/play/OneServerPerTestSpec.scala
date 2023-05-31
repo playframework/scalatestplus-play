@@ -20,8 +20,18 @@ import org.scalatest._
 import org.scalatestplus.play.guice.GuiceOneServerPerTest
 import play.api.Application
 import play.api.inject.guice._
+import play.api.test.RunningServer
 
-class OneServerPerTestSpec extends UnitSpec with GuiceOneServerPerTest {
+class OneServerPerTestSpec extends UnitSpec with GuiceOneServerPerTest with BeforeAndAfterEach {
+
+  private var serverFromBeforeEachTestData: RunningServer = _
+  private var appFromBeforeEachTestData: Application      = _
+
+  protected override def beforeEach(testData: TestData): Unit = {
+    super.beforeEach(testData)
+    appFromBeforeEachTestData = app
+    serverFromBeforeEachTestData = runningServer
+  }
 
   override def newAppForTest(testData: TestData): Application = {
     GuiceApplicationBuilder().configure("foo" -> "bar").build()
@@ -35,6 +45,12 @@ class OneServerPerTestSpec extends UnitSpec with GuiceOneServerPerTest {
     }
     "make the Application available implicitly" in {
       getConfig("foo") mustBe Some("bar")
+    }
+    "make the Application available in beforeEach(testData)" in {
+      appFromBeforeEachTestData mustBe app
+    }
+    "make the Server available in beforeEach(testData)" in {
+      serverFromBeforeEachTestData mustBe runningServer
     }
     "provide an http endpoint" in {
       runningServer.endpoints.httpEndpoint must not be empty

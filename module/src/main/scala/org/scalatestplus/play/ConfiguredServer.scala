@@ -27,11 +27,11 @@ import play.core.server.ServerEndpoints
  *
  * The purpose of this trait is to allow nested suites of an enclosing suite that extends [[org.scalatestplus.play.guice.GuiceOneServerPerSuite GuiceOneServerPerSuite]]
  * to make use of the `Application` and port number provided by `OneServerPerSuite`. Trait `OneServerPerSuite` will ensure
- * the `Application` is placed in the `ConfigMap` under the key `org.scalatestplus.play.app` and the port number
+ * the `ServerProvider` is placed in the `ConfigMap` under the key `org.scalatestplus.play.server.provider` and the port number
  * under the key `org.scalatestplus.play.port` before nested suites are invoked. This information represents the "configured server" that
  * is passed from the enclosing suite to the nested suites. Trait `ConfiguredServer` extracts this information from
- * from the `ConfigMap` and makes the `Application` available via the `app` method, the port number available as an `Int` from
- * the `port` method, and also the port number wrapped in a [[org.scalatestplus.play.PortNumber PortNumber]] available as implicit method `portNumber` (for use
+ * from the `ConfigMap` and makes the port number available as an `Int` from the `port` method,
+ * and also the port number wrapped in a [[org.scalatestplus.play.PortNumber PortNumber]] available as implicit method `portNumber` (for use
  * with trait [[org.scalatestplus.play.WsScalaTestClient WsScalaTestClient]]).
  *
  * To prevent discovery of nested suites you can annotate them with `@DoNotDiscover`. Here's an example,
@@ -74,35 +74,20 @@ import play.core.server.ServerEndpoints
  * }
  * </pre>
  */
-trait ConfiguredServer extends TestSuiteMixin with ServerProvider { this: TestSuite =>
+trait ConfiguredServer
+    extends SuiteMixin
+    with BeforeAndAfterAllConfigMap
+    with BeforeAndAfterEachTestData
+    with ServerProvider { this: Suite =>
 
-  private var configuredApp: Application = _
+  @volatile private var privateServer: RunningServer = _
 
-  /**
-   * The "configured" `Application` instance that was passed into `run` via the `ConfigMap`.
-   *
-   * @return the configured `Application`
-   */
-  final implicit def app: Application = synchronized { configuredApp }
+  final implicit def runningServer: RunningServer = {
+    require(privateServer != null, "Test isn't running yet so the server endpoints are not available")
+    privateServer
+  }
 
-  protected implicit lazy val runningServer: RunningServer =
-    RunningServer(
-      app,
-      ServerEndpoints(
-        Seq(
-          ServerEndpoint(
-            description = "ConfiguredServer endpoint",
-            scheme = "http",
-            host = "localhost",
-            port = configuredPort,
-            protocols = Set.empty,
-            serverAttribute = None,
-            ssl = None
-          )
-        )
-      ),
-      new AutoCloseable { def close() = () }
-    )
+  final implicit def app: Application = runningServer.app
 
   private var _configuredPort: Int = -1
 
@@ -114,37 +99,52 @@ trait ConfiguredServer extends TestSuiteMixin with ServerProvider { this: TestSu
   protected final def configuredPort: Int = synchronized { _configuredPort }
 
   /**
-   * Looks in `args.configMap` for a key named "org.scalatestplus.play.app" whose value is a `Application`,
-   * and a key named "org.scalatestplus.play.port" whose value is an `Int`,
-   * and if they exist, sets the `Application` as the value that will be returned from the `app` method and
-   * the `Int` as the value that will be returned from the `port` method, then calls
-   * `super.run`.
+   * Looks in `args.configMap` for a key named "org.scalatestplus.play.provider" whose value is an `ServerProvider`,
+   * and if they exist, sets the `ServerProvider` as the value that will be returned from the `port` method, then calls
    *
-   * If no key matches "org.scalatestplus.play.app" in `args.configMap`, or the associated value is
-   * not a `Application`, or if no key matches "org.scalatestplus.play.port" in `args.configMap`,
-   * or the associated value is not an `Int`, throws `IllegalArgumentException`.
+   * If no key matches "org.scalatestplus.play.provider" in `args.configMap`,
+   * or the associated value is not a `ServerProvider`, throws `IllegalArgumentException`.
    *
-   * @param testName an optional name of one test to run. If `None`, all relevant tests should be run.
-   *                 I.e., `None` acts like a wildcard that means run all relevant tests in this `Suite`.
-   * @param args the `Args` for this run
-   * @return a `Status` object that indicates when all tests and nested suites started by this method have completed, and whether or not a failure occurred.
    * @throws java.lang.IllegalArgumentException if the `Application` and/or port number does not appear in `args.configMap` under the expected keys
    */
-  abstract override def run(testName: Option[String], args: Args): Status = {
-    args.configMap.getOptional[Application]("org.scalatestplus.play.app") match {
-      case Some(ca) => synchronized { configuredApp = ca }
-      case None =>
-        throw new Exception(
-          "Trait ConfiguredServer needs an Application value associated with key \"org.scalatestplus.play.app\" in the config map. Did you forget to annotate a nested suite with @DoNotDiscover?"
-        )
+  protected override def beforeAll(configMap: ConfigMap): Unit = {
+    super.beforeAll(configMap)
+    setServerFrom(configMap)
+  }
+
+  /**
+   * Places a reference to the server into per-test instances
+   */
+  protected override def beforeEach(testData: TestData): Unit = {
+    super.beforeEach(testData)
+    if (isInstanceOf[OneInstancePerTest])
+      setServerFrom(testData.configMap)
+  }
+
+  private def setServerFrom(configMap: ConfigMap): Unit = {
+    val cp = providerFrom(configMap)
+    synchronized {
+      privateServer = cp.runningServer
+      _configuredPort = cp.port
     }
-    args.configMap.getOptional[Int]("org.scalatestplus.play.port") match {
-      case Some(cp) => synchronized { _configuredPort = cp }
-      case None =>
-        throw new Exception(
-          "Trait ConfiguredServer needs an Int value associated with key \"org.scalatestplus.play.port\" in the config map. Did you forget to annotate a nested suite with @DoNotDiscover?"
+  }
+
+  private def providerFrom(configMap: ConfigMap): ServerProvider = {
+    configMap
+      .getOptional[ServerProvider]("org.scalatestplus.play.server.provider")
+      .getOrElse(
+        throw new IllegalArgumentException(
+          "ConfiguredServer needs an Application value associated with key \"org.scalatestplus.play.server.provider\" in the config map. Did you forget to annotate a nested suite with @DoNotDiscover?"
         )
-    }
-    super.run(testName, args)
+      )
+  }
+
+  /**
+   * Places the server port into the test's ConfigMap
+   */
+  abstract override def testDataFor(testName: String, configMap: ConfigMap): TestData = {
+    val serverProvider = providerFrom(configMap)
+    val newConfigMap   = configMap + ("org.scalatestplus.play.app" -> serverProvider.app) + ("org.scalatestplus.play.port" -> serverProvider.port)
+    super.testDataFor(testName, newConfigMap)
   }
 }

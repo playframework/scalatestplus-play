@@ -16,16 +16,15 @@
 
 package org.scalatestplus.play
 
-import org.scalatest.TestData
-import org.scalatest.TestSuite
-import org.scalatest.TestSuiteMixin
+import org.scalatest._
 import play.api.Application
+import play.api.Play
 import play.api.test.Helpers
 
 /**
  * Trait that provides a new `Application` instance for each test.
  *
- * This `TestSuiteMixin` trait's overridden `withFixture` method creates a new `Application`
+ * This `SuiteMixin` trait's overridden `withFixture` method creates a new `Application`
  * before each test and ensures it is cleaned up after the test has completed. You can
  * access the `Application` from your tests as method `app` (which is marked implicit).
  *
@@ -61,7 +60,10 @@ import play.api.test.Helpers
  * }
  * </pre>
  */
-trait BaseOneAppPerTest extends TestSuiteMixin with AppProvider { this: TestSuite with FakeApplicationFactory =>
+trait BaseOneAppPerTest extends SuiteMixin with BeforeAndAfterEachTestData with AppProvider {
+  this: Suite with FakeApplicationFactory =>
+
+  private var appPerTest: Application = _
 
   /**
    * Creates new instance of `Application` with parameters set to their defaults. Override this method if you
@@ -69,25 +71,23 @@ trait BaseOneAppPerTest extends TestSuiteMixin with AppProvider { this: TestSuit
    */
   def newAppForTest(testData: TestData): Application = fakeApplication()
 
-  private var appPerTest: Application = _
-
   /**
    * Implicit method that returns the `Application` instance for the current test.
    */
   final implicit def app: Application = synchronized { appPerTest }
 
-  /**
-   * Creates a new `Application` instance before executing each test, and
-   * ensure it is cleaned up after the test completes. You can access the `Application` from
-   * your tests via `app`.
-   *
-   * @param test the no-arg test function to run with a fixture
-   * @return the `Outcome` of the test execution
-   */
-  abstract override def withFixture(test: NoArgTest) = {
-    synchronized { appPerTest = newAppForTest(test) }
-    Helpers.running(app) {
-      super.withFixture(test)
+  protected override def beforeEach(td: TestData): Unit = {
+    synchronized { appPerTest = newAppForTest(td) }
+    Play.start(appPerTest)
+    super.beforeEach(td)
+  }
+
+  protected override def afterEach(td: TestData): Unit = {
+    try {
+      super.afterEach(td)
+    } finally {
+      Play.stop(appPerTest)
     }
   }
+
 }

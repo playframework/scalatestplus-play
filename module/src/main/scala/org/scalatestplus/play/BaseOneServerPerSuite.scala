@@ -29,7 +29,7 @@ import play.api.test._
  * `Application` with non-default parameters, override `app`. If it needs a different port number,
  * override `port`.
  *
- * This `TestSuiteMixin` trait's overridden `run` method calls `start` on the `TestServer`
+ * This `SuiteMixin` trait's overridden `run` method calls `start` on the `TestServer`
  * before executing the `Suite` via a call to `super.run`.
  * In addition, it places a reference to the `Application` provided by `app` into the `ConfigMap`
  * under the key `org.scalatestplus.play.app` and to the port number provided by `port` under the key
@@ -135,41 +135,85 @@ import play.api.test._
  * }
  * </pre>
  */
-trait BaseOneServerPerSuite extends TestSuiteMixin with ServerProvider { this: TestSuite with FakeApplicationFactory =>
+trait BaseOneServerPerSuite
+    extends SuiteMixin
+    with BeforeAndAfterAll
+    with BeforeAndAfterEachTestData
+    with ServerProvider {
+  this: Suite with FakeApplicationFactory =>
+
+  @volatile private var privateServer: RunningServer = _
+
+  final implicit def runningServer: RunningServer = {
+    require(privateServer != null, "Test isn't running yet so the server endpoints are not available")
+    privateServer
+  }
 
   /**
    * An implicit instance of `Application`.
    */
-  implicit lazy val app: Application = fakeApplication()
+  final implicit def app: Application = {
+    runningServer.app
+  }
 
-  protected implicit lazy val runningServer: RunningServer =
-    DefaultTestServerFactory.start(app)
+  protected override def beforeAll(): Unit = {
+    privateServer = startTestServer
+    super.beforeAll()
+  }
 
-  /**
-   * Invokes `start` on a new `TestServer` created with the `Application` provided by `app` and the
-   * port number defined by `port`, places the `Application` and port number into the `ConfigMap` under the keys
-   * `org.scalatestplus.play.app` and `org.scalatestplus.play.port`, respectively, to make
-   * them available to nested suites; calls `super.run`; and lastly ensures the `Application` and test server are stopped after
-   * all tests and nested suites have completed.
-   *
-   * @param testName an optional name of one test to run. If `None`, all relevant tests should be run.
-   *                 I.e., `None` acts like a wildcard that means run all relevant tests in this `Suite`.
-   * @param args the `Args` for this run
-   * @return a `Status` object that indicates when all tests and nested suites started by this method have completed, and whether or not a failure occurred.
-   */
-  abstract override def run(testName: Option[String], args: Args): Status = {
+  protected def startTestServer: RunningServer = DefaultTestServerFactory.start(fakeApplication())
+
+  protected override def afterAll(): Unit = {
     try {
-      val newConfigMap = args.configMap + ("org.scalatestplus.play.app" -> app) + ("org.scalatestplus.play.port" -> port)
-      val newArgs      = args.copy(configMap = newConfigMap)
-      val status       = super.run(testName, newArgs)
-      status.whenCompleted { _ =>
-        runningServer.stopServer.close()
-      }
-      status
-    } catch { // In case the suite aborts, ensure the server is stopped
-      case ex: Throwable =>
-        runningServer.stopServer.close()
-        throw ex
+      super.afterAll()
+    } finally {
+      val server = runningServer
+      privateServer = null
+      server.stopServer.close()
     }
   }
+
+  /**
+   * Places a reference to the server into per-test instances
+   */
+  protected override def beforeEach(testData: TestData): Unit = {
+    super.beforeEach(testData)
+    if (isInstanceOf[OneInstancePerTest])
+      setServerFrom(testData.configMap)
+  }
+
+  private def setServerFrom(configMap: ConfigMap): Unit = {
+    synchronized { privateServer = providerFrom(configMap).runningServer }
+  }
+
+  private def providerFrom(configMap: ConfigMap): ServerProvider = {
+    configMap
+      .getOptional[ServerProvider]("org.scalatestplus.play.server.provider")
+      .getOrElse(
+        throw new IllegalArgumentException(
+          "BaseOneServerPerSuite needs an Application value associated with key \"org.scalatestplus.play.server.provider\" in the config map"
+        )
+      )
+  }
+
+  /**
+   * Places the server port into the test's ConfigMap
+   */
+  abstract override def testDataFor(testName: String, configMap: ConfigMap): TestData = {
+    val serverProvider = providerFrom(configMap)
+    val newConfigMap   = configMap + ("org.scalatestplus.play.app" -> serverProvider.app) + ("org.scalatestplus.play.port" -> serverProvider.port)
+    super.testDataFor(testName, newConfigMap)
+  }
+
+  //put a provider into the config map(instead of server directly), so that if tests are excluded, the server is never created
+  abstract override def run(testName: Option[String], args: Args): Status = {
+    // if a test is running under OneInstancePerTest, the config map will already be set
+    if (args.runTestInNewInstance) super.run(testName, args)
+    else {
+      val newConfigMap = args.configMap + ("org.scalatestplus.play.server.provider" -> this)
+      val newArgs      = args.copy(configMap = newConfigMap)
+      super.run(testName, newArgs)
+    }
+  }
+
 }

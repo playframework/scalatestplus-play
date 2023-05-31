@@ -16,7 +16,7 @@
 
 package org.scalatestplus.play.components
 
-import org.scalatest.TestSuite
+import org.scalatest.Suite
 import org.scalatestplus.play.BaseOneServerPerTest
 import org.scalatestplus.play.FakeApplicationFactory
 import play.api.Application
@@ -26,7 +26,7 @@ import play.api.Application
  *
  * Trait that provides a new `Application` and running `TestServer` instance for each test executed in a ScalaTest `Suite`
  *
- * This `TestSuiteMixin` trait overrides ScalaTest's `withFixture` method to create a new `Application` and `TestServer`
+ * This `SuiteMixin` trait overrides ScalaTest's `withFixture` method to create a new `Application` and `TestServer`
  * before each test, and ensure they are cleaned up after the test has completed. The `Application` is available (implicitly) from
  * method `app`. The `TestServer`'s port number is available as `port` (and implicitly available as `portNumber`, wrapped
  * in a [[org.scalatestplus.play.PortNumber PortNumber]]).
@@ -79,7 +79,7 @@ trait OneServerPerTestWithComponents
     extends BaseOneServerPerTest
     with WithApplicationComponents
     with FakeApplicationFactory {
-  this: TestSuite =>
+  this: Suite =>
 
   override def fakeApplication(): Application = newApplication
 }

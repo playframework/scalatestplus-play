@@ -57,9 +57,9 @@ import play.api.Application
  * }
  * </pre>
  */
-trait ConfiguredApp extends TestSuiteMixin { this: TestSuite =>
+trait ConfiguredApp extends SuiteMixin with BeforeAndAfterAllConfigMap with BeforeAndAfterEachTestData { this: Suite =>
 
-  private var configuredApp: Application = _
+  @volatile private var configuredApp: Application = _
 
   /**
    * The "configured" `Application` instance that was passed into `run` via the `ConfigMap`.
@@ -76,23 +76,41 @@ trait ConfiguredApp extends TestSuiteMixin { this: TestSuite =>
    * If no key matches "org.scalatestplus.play.app" in `args.configMap`, or the associated value is
    * not a `Application`, throws `IllegalArgumentException`.
    *
-   * To prevent discovery of nested suites you can annotate them with `@DoNotDiscover`.
-   *
-   * @param testName an optional name of one test to run. If `None`, all relevant tests should be run.
-   *                 I.e., `None` acts like a wildcard that means run all relevant tests in this `Suite`.
-   * @param args the `Args` for this run
-   * @return a `Status` object that indicates when all tests and nested suites started by this method have completed, and whether or not a failure occurred.
-   *
    * @throws java.lang.IllegalArgumentException if the `Application` does not appear in `args.configMap` under the expected key
    */
-  abstract override def run(testName: Option[String], args: Args): Status = {
-    args.configMap.getOptional[Application]("org.scalatestplus.play.app") match {
-      case Some(ca) => synchronized { configuredApp = ca }
-      case None =>
-        throw new IllegalArgumentException(
-          "ConfiguredApp needs an Application value associated with key \"org.scalatestplus.play.app\" in the config map. Did you forget to annotate a nested suite with @DoNotDiscover?"
-        )
-    }
-    super.run(testName, args)
+  protected override def beforeAll(configMap: ConfigMap): Unit = {
+    super.beforeAll(configMap)
+    setApplicationFrom(configMap)
   }
+
+  /**
+   * Places a reference to the app into per-test instances
+   */
+  protected override def beforeEach(testData: TestData): Unit = {
+    super.beforeEach(testData)
+    if (isInstanceOf[OneInstancePerTest])
+      setApplicationFrom(testData.configMap)
+  }
+
+  private def setApplicationFrom(configMap: ConfigMap): Unit = {
+    synchronized { configuredApp = providerFrom(configMap).app }
+  }
+
+  private def providerFrom(configMap: ConfigMap): AppProvider = {
+    configMap
+      .getOptional[AppProvider]("org.scalatestplus.play.app.provider")
+      .getOrElse(
+        throw new IllegalArgumentException(
+          "ConfiguredApp needs an Application value associated with key \"org.scalatestplus.play.app.provider\" in the config map. Did you forget to annotate a nested suite with @DoNotDiscover?"
+        )
+      )
+  }
+
+  /**
+   * Places the app into the test's ConfigMap
+   */
+  abstract override def testDataFor(testName: String, configMap: ConfigMap): TestData = {
+    super.testDataFor(testName, configMap + ("org.scalatestplus.play.app" -> providerFrom(configMap).app))
+  }
+
 }

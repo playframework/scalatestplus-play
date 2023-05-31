@@ -16,7 +16,7 @@
 
 package org.scalatestplus.play.components
 
-import org.scalatest.TestSuite
+import org.scalatest.Suite
 import org.scalatestplus.play.BaseOneServerPerSuite
 import org.scalatestplus.play.FakeApplicationFactory
 import play.api.Application
@@ -31,7 +31,7 @@ import play.api.Application
  * its `port` field and the `Application` provided by its `app` field. If your `Suite` needs a different port number,
  * override `port`.
  *
- * This `TestSuiteMixin` trait's overridden `run` method calls `start` on the `TestServer`
+ * This `SuiteMixin` trait's overridden `run` method calls `start` on the `TestServer`
  * before executing the `Suite` via a call to `super.run`.
  * In addition, it places a reference to the `Application` provided by `app` into the `ConfigMap`
  * under the key `org.scalatestplus.play.app` and to the port number provided by `port` under the key
@@ -90,7 +90,7 @@ import play.api.Application
  * `Suite`s. Annotate the nested suites with `@DoNotDiscover` and have them extend `ConfiguredServer`. Here's an example:
  *
  * <pre class="stHighlight">
- * import org.scalatest.{ DoNotDiscover, Suites, TestSuite }
+ * import org.scalatest.{ DoNotDiscover, Suites, Suite }
  * import org.scalatestplus.play.components._
  * import org.scalatestplus.play.{ ConfiguredServer, PlaySpec }
  * import play.api._
@@ -105,7 +105,7 @@ import play.api.Application
  *   new TwoSpec,
  *   new RedSpec,
  *   new BlueSpec
- * ) with OneServerPerSuiteWithComponents with TestSuite {
+ * ) with OneServerPerSuiteWithComponents with Suite {
  *   // Override fakeApplication if you need an Application with other than non-default parameters.
  *   override def components: BuiltInComponents = new BuiltInComponentsFromContext(context) with NoHttpFiltersComponents {
  *
@@ -163,7 +163,7 @@ trait OneServerPerSuiteWithComponents
     extends BaseOneServerPerSuite
     with WithApplicationComponents
     with FakeApplicationFactory {
-  this: TestSuite =>
+  this: Suite =>
 
   override def fakeApplication(): Application = newApplication
 }

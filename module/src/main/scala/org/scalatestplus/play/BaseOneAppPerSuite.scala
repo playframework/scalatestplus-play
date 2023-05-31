@@ -16,47 +16,81 @@
 
 package org.scalatestplus.play
 
-import org.scalatest.Args
-import org.scalatest.Status
-import org.scalatest.TestSuite
-import org.scalatest.TestSuiteMixin
+import org.scalatest._
 import play.api.Application
 import play.api.Play
 
 /**
  * The base abstract trait for one app per suite.
  */
-trait BaseOneAppPerSuite extends TestSuiteMixin { this: TestSuite with FakeApplicationFactory =>
+trait BaseOneAppPerSuite extends SuiteMixin with AppProvider with BeforeAndAfterAll with BeforeAndAfterEachTestData {
+  this: Suite with FakeApplicationFactory =>
+
+  @volatile private var privateApp: Application = _
 
   /**
    * An implicit instance of `Application`.
    */
-  implicit lazy val app: Application = fakeApplication()
+  final implicit def app: Application = {
+    require(privateApp != null, "Test isn't running yet so application is not available")
+    privateApp
+  }
 
-  /**
-   * Invokes `Play.start`, passing in the `Application` provided by `app`, and places
-   * that same `Application` into the `ConfigMap` under the key `org.scalatestplus.play.app` to make it available
-   * to nested suites; calls `super.run`; and lastly ensures `Play.stop` is invoked after all tests and nested suites have completed.
-   *
-   * @param testName an optional name of one test to run. If `None`, all relevant tests should be run.
-   *                 I.e., `None` acts like a wildcard that means run all relevant tests in this `Suite`.
-   * @param args the `Args` for this run
-   * @return a `Status` object that indicates when all tests and nested suites started by this method have completed, and whether or not a failure occurred.
-   */
-  abstract override def run(testName: Option[String], args: Args): Status = {
+  protected override def beforeAll: Unit = {
+    privateApp = fakeApplication()
     Play.start(app)
+    super.beforeAll()
+  }
+
+  protected override def afterAll(): Unit = {
     try {
-      val newConfigMap = args.configMap + ("org.scalatestplus.play.app" -> app)
-      val newArgs      = args.copy(configMap = newConfigMap)
-      val status       = super.run(testName, newArgs)
-      status.whenCompleted { _ =>
-        Play.stop(app)
-      }
-      status
-    } catch { // In case the suite aborts, ensure the app is stopped
-      case ex: Throwable =>
-        Play.stop(app)
-        throw ex
+      super.afterAll()
+    } finally {
+      val theApp = app
+      privateApp = null
+      Play.stop(theApp)
     }
   }
+
+  /**
+   * Places a reference to the app into per-test instances
+   */
+  protected override def beforeEach(testData: TestData): Unit = {
+    if (isInstanceOf[OneInstancePerTest])
+      setApplicationFrom(testData.configMap)
+    super.beforeEach(testData)
+  }
+
+  private def setApplicationFrom(configMap: ConfigMap): Unit = {
+    synchronized { privateApp = providerFrom(configMap).app }
+  }
+
+  /**
+   * Places the app into the test's ConfigMap
+   */
+  abstract override def testDataFor(testName: String, configMap: ConfigMap): TestData = {
+    super.testDataFor(testName, configMap + ("org.scalatestplus.play.app" -> providerFrom(configMap).app))
+  }
+
+  private def providerFrom(configMap: ConfigMap): AppProvider = {
+    configMap
+      .getOptional[AppProvider]("org.scalatestplus.play.app.provider")
+      .getOrElse(
+        throw new IllegalArgumentException(
+          "BaseOneAppPerSuite needs an Application value associated with key \"org.scalatestplus.play.app.provider\" in the config map"
+        )
+      )
+  }
+
+  //put a provider into the config map(instead of app directly), so that if tests are excluded, the app is never created
+  abstract override def run(testName: Option[String], args: Args): Status = {
+    // if a test is running under OneInstancePerTest, the config map will already be set
+    if (args.runTestInNewInstance) super.run(testName, args)
+    else {
+      val newConfigMap = args.configMap + ("org.scalatestplus.play.app.provider" -> this)
+      val newArgs      = args.copy(configMap = newConfigMap)
+      super.run(testName, newArgs)
+    }
+  }
+
 }
