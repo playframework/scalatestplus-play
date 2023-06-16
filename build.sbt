@@ -27,6 +27,9 @@ val ScalatestSeleniumVersion = ScalatestVersion + ".0"
 val ScalatestMockitoVersion  = ScalatestVersion + ".0"
 
 ThisBuild / resolvers ++= Resolver.sonatypeOssRepos("releases")
+// To make use of Pekko snapshots uncomment following two resolvers:
+// ThisBuild / resolvers += Resolver.ApacheMavenSnapshotsRepo
+// ThisBuild / resolvers += Resolver.sonatypeRepo("snapshots")
 
 // Customise sbt-dynver's behaviour to make it work with tags which aren't v-prefixed
 ThisBuild / dynverVTagPrefix := false
