@@ -106,8 +106,8 @@ lazy val `scalatestplus-play` = project
       nettyServer % Test, // Using netty for now, we can switch back to akkaHttpServer when it has Scala 3 artifacts
       playTest,
       "org.scalatest"            %% "scalatest"         % ScalatestVersion,
-      "org.scalatestplus"        %% "mockito-4-6"       % ScalatestMockitoVersion,
-      "org.scalatestplus"        %% "selenium-4-7"      % ScalatestSeleniumVersion,
+      "org.scalatestplus"        %% "mockito-4-11"      % ScalatestMockitoVersion,
+      "org.scalatestplus"        %% "selenium-4-9"      % ScalatestSeleniumVersion,
       "org.seleniumhq.selenium"  % "selenium-java"      % SeleniumVersion,
       "org.seleniumhq.selenium"  % "htmlunit-driver"    % SeleniumVersion,
       "net.sourceforge.htmlunit" % "htmlunit-cssparser" % CssParserVersion
