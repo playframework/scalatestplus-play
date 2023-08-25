@@ -39,7 +39,7 @@ If all tests in your test class require separate server instances, use [`OneServ
 
 @[scalafunctionaltest-oneserverpertest](code/oneserverpertest/ExampleSpec.scala)
 
-The `OneServerPerSuite` and `OneServerPerTest` traits provide the port number on which the server is running as the `port` field.  By default this is 19001, however you can change this either overriding `port` or by setting the system property `testserver.port`.  This can be useful for integrating with continuous integration servers, so that ports can be dynamically reserved for each build.
+The `OneServerPerSuite` and `OneServerPerTest` traits provide the port number on which the server is running as the `port` field.  By default this is a random port, however you can change this either overriding `port` or by setting the system property `testserver.port`.  This can be useful for integrating with continuous integration servers, so that ports can be dynamically reserved for each build.
 
 You can also customize the `Application` by overriding `app`, as demonstrated in the previous examples.
 
