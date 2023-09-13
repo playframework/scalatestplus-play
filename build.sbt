@@ -20,6 +20,7 @@ import sbt.io.Path._
 import interplay.ScalaVersions._
 
 val SeleniumVersion          = "4.12.1"
+val SeleniumHtmlunitVersion  = "4.12.0"
 val MockitoVersion           = "4.6.1"
 val CssParserVersion         = "1.14.0"
 val ScalatestVersion         = "3.2.17"
@@ -107,9 +108,9 @@ lazy val `scalatestplus-play` = project
       playTest,
       "org.scalatest"            %% "scalatest"         % ScalatestVersion,
       "org.scalatestplus"        %% "mockito-4-11"      % ScalatestMockitoVersion,
-      "org.scalatestplus"        %% "selenium-4-9"      % ScalatestSeleniumVersion,
+      "org.scalatestplus"        %% "selenium-4-12"     % ScalatestSeleniumVersion,
       "org.seleniumhq.selenium"  % "selenium-java"      % SeleniumVersion,
-      "org.seleniumhq.selenium"  % "htmlunit-driver"    % SeleniumVersion,
+      "org.seleniumhq.selenium"  % "htmlunit-driver"    % SeleniumHtmlunitVersion,
       "net.sourceforge.htmlunit" % "htmlunit-cssparser" % CssParserVersion
     ),
     Compile / doc / scalacOptions := Seq("-doc-title", "ScalaTest + Play, " + version.value),
