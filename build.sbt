@@ -17,7 +17,6 @@ import com.typesafe.tools.mima.core._
 import sbt.util.{ Level => _, _ }
 
 import sbt.io.Path._
-import interplay.ScalaVersions._
 
 val SeleniumVersion          = "4.12.1"
 val SeleniumHtmlunitVersion  = "4.12.0"
@@ -27,7 +26,6 @@ val ScalatestVersion         = "3.2.17"
 val ScalatestSeleniumVersion = ScalatestVersion + ".0"
 val ScalatestMockitoVersion  = ScalatestVersion + ".0"
 
-ThisBuild / playBuildRepoName := "scalatestplus-play"
 ThisBuild / resolvers ++= Resolver.sonatypeOssRepos("releases")
 
 // Customise sbt-dynver's behaviour to make it work with tags which aren't v-prefixed
@@ -49,8 +47,8 @@ lazy val mimaSettings = Seq(
 )
 
 lazy val commonSettings = Seq(
-  scalaVersion := scala213,
-  crossScalaVersions := Seq(scala213, scala3),
+  scalaVersion := "2.13.12",
+  crossScalaVersions := Seq("2.13.12", "3.3.1"),
   Test / parallelExecution := false,
   Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-oTK"),
   headerLicense := Some(
@@ -75,22 +73,26 @@ lazy val commonSettings = Seq(
 
 lazy val `scalatestplus-play-root` = project
   .in(file("."))
-  .enablePlugins(PlayRootProject)
   .aggregate(`scalatestplus-play`)
   .settings(commonSettings)
   .settings(
     sonatypeProfileName := "org.scalatestplus.play",
-    mimaPreviousArtifacts := Set.empty
+    mimaPreviousArtifacts := Set.empty,
+    publish / skip := true
   )
 
 lazy val `scalatestplus-play` = project
   .in(file("module"))
-  .enablePlugins(Playdoc, PlayLibrary)
+  .enablePlugins(Omnidoc, Playdoc)
   .configs(Docs)
   .settings(
     commonSettings,
     mimaSettings,
     organization := "org.scalatestplus.play",
+    organizationName := "The Play Framework Project",
+    organizationHomepage := Some(url("https://playframework.com")),
+    homepage := Some(url(s"https://github.com/playframework/${Omnidoc.repoName}")),
+    licenses := Seq("Apache-2.0" -> url("https://www.apache.org/licenses/LICENSE-2.0.html")),
     libraryDependencies ++= Seq(
       ws,
       nettyServer % Test, // Using netty for now, we can switch back to akkaHttpServer when it has Scala 3 artifacts
@@ -103,18 +105,35 @@ lazy val `scalatestplus-play` = project
       "net.sourceforge.htmlunit" % "htmlunit-cssparser" % CssParserVersion
     ),
     Compile / doc / scalacOptions := Seq("-doc-title", "ScalaTest + Play, " + version.value),
+    doc / javacOptions := Seq("-source", "11"),
     Test / fork := true,
     Test / javaOptions ++= List(
       "-Dwebdriver.firefox.logfile=/dev/null", // disable GeckoDriver logs polluting the CI logs
     ),
+    scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked", "-encoding", "utf8") ++
+      (CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((2, 13)) => Seq("-Xsource:3", "-Xmigration")
+        case _             => Seq.empty
+      }),
+    javacOptions ++= Seq("-encoding", "UTF-8", "-Xlint:-options", "--release", "11"),
+    developers += Developer(
+      "playframework",
+      "The Play Framework Contributors",
+      "contact@playframework.com",
+      url("https://github.com/playframework")
+    ),
+    pomIncludeRepository := { _ =>
+      false
+    }
   )
 
 lazy val docs = project
   .in(file("docs"))
-  .enablePlugins(PlayDocsPlugin, PlayNoPublish)
+  .enablePlugins(PlayDocsPlugin)
   .configs(Docs)
   .settings(
     commonSettings,
+    publish / skip := true,
     libraryDependencies ++= Seq(
       "org.mockito" % "mockito-core" % MockitoVersion % Test,
     ),
