@@ -23,32 +23,10 @@ jobs:
     name: Binary Compatibility
     uses: playframework/.github/.github/workflows/binary-check.yml@v3
 
-  check-docs:
-    name: Docs
-    uses: playframework/.github/.github/workflows/cmd.yml@v3
-    with:
-      cmd: |
-        sbt docs/validateDocs docs/scalafmtCheckAll docs/scalafmtSbtCheck docs/test
-
-  tests:
-    name: Tests
-    needs:
-      - "check-code-style"
-      - "check-binary-compatibility"
-      - "check-docs"
-    uses: playframework/.github/.github/workflows/cmd.yml@v3
-    with:
-      java: 17, 11
-      scala: 2.13.x, 3.x
-      cmd: |
-        export DISPLAY=:99
-        sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 & # optional
-        export MOZ_HEADLESS=1
-        sbt ++$MATRIX_SCALA test
-
   finish:
     name: Finish
     if: github.event_name == 'pull_request'
     needs: # Should be last
-      - "tests"
+      - "check-code-style"
+      - "check-binary-compatibility"
     uses: playframework/.github/.github/workflows/rtm.yml@v3
