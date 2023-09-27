@@ -40,23 +40,12 @@ Global / onLoad := (Global / onLoad).value.andThen { s =>
   s
 }
 
-val previousVersion: Option[String] = Some("5.1.0")
+val previousVersion: Option[String] = Some("6.0.0-RC2")
 
 lazy val mimaSettings = Seq(
   mimaBinaryIssueFilters ++= Seq(
-    // Dropping deprecated phantom-js support.
-    ProblemFilters.exclude[MissingClassProblem]("org.scalatestplus.play.PhantomJSFactory"),
-    ProblemFilters.exclude[MissingClassProblem]("org.scalatestplus.play.PhantomJSFactory$"),
-    ProblemFilters.exclude[MissingClassProblem]("org.scalatestplus.play.PhantomJSInfo"),
-    ProblemFilters.exclude[MissingClassProblem]("org.scalatestplus.play.PhantomJSInfo$")
   ),
-  mimaPreviousArtifacts := {
-    if (scalaBinaryVersion.value == "3") {
-      Set.empty
-    } else {
-      previousVersion.map(organization.value %% name.value % _).toSet
-    }
-  }
+  mimaPreviousArtifacts := previousVersion.map(organization.value %% name.value % _).toSet
 )
 
 lazy val commonSettings = Seq(
