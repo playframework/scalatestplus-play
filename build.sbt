@@ -27,6 +27,9 @@ val ScalatestSeleniumVersion = ScalatestVersion + ".0"
 val ScalatestMockitoVersion  = ScalatestVersion + ".0"
 
 ThisBuild / resolvers ++= Resolver.sonatypeOssRepos("releases")
+// To make use of Pekko snapshots uncomment following two resolvers:
+// ThisBuild / resolvers += Resolver.ApacheMavenSnapshotsRepo
+// ThisBuild / resolvers += Resolver.sonatypeRepo("snapshots")
 
 // Customise sbt-dynver's behaviour to make it work with tags which aren't v-prefixed
 ThisBuild / dynverVTagPrefix := false
@@ -95,7 +98,7 @@ lazy val `scalatestplus-play` = project
     licenses := Seq("Apache-2.0" -> url("https://www.apache.org/licenses/LICENSE-2.0.html")),
     libraryDependencies ++= Seq(
       ws,
-      nettyServer % Test, // Using netty for now, we can switch back to akkaHttpServer when it has Scala 3 artifacts
+      nettyServer % Test, // Using netty for now, we can switch back to pekkoHttpServer when it has Scala 3 artifacts
       playTest,
       "org.scalatest"            %% "scalatest"         % ScalatestVersion,
       "org.scalatestplus"        %% "mockito-4-11"      % ScalatestMockitoVersion,

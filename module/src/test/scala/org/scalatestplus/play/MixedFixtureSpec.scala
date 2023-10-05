@@ -18,9 +18,9 @@ package org.scalatestplus.play
 
 import java.util.concurrent.atomic.AtomicInteger
 
-import akka.actor.ActorSystem
-import akka.actor.CoordinatedShutdown
-import akka.stream.Materializer
+import org.apache.pekko.actor.ActorSystem
+import org.apache.pekko.actor.CoordinatedShutdown
+import org.apache.pekko.stream.Materializer
 import play.api.http.HttpErrorHandler
 import play.api.http.HttpRequestHandler
 import play.api.inject.Injector
