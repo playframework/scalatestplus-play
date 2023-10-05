@@ -41,7 +41,7 @@ Global / onLoad := (Global / onLoad).value.andThen { s =>
   s
 }
 
-val previousVersion: Option[String] = Some("6.0.0-RC2")
+val previousVersion: Option[String] = Some("7.0.0-M1")
 
 lazy val mimaSettings = Seq(
   mimaBinaryIssueFilters ++= Seq(
