@@ -23,7 +23,7 @@ import play.api.inject.guice._
 
 class ConfiguredServerSpec extends UnitSpec with SequentialNestedSuiteExecution with GuiceOneServerPerSuite {
 
-  override def nestedSuites = Vector(new ConfiguredServerNestedSuite)
+  override def nestedSuites: Vector[ConfiguredServerNestedSuite] = Vector(new ConfiguredServerNestedSuite)
 
   override def fakeApplication(): Application = {
     GuiceApplicationBuilder().configure("foo" -> "bar").build()

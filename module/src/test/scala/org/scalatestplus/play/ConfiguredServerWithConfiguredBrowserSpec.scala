@@ -29,7 +29,8 @@ class ConfiguredServerWithConfiguredBrowserSpec
     with OneBrowserPerSuite
     with HtmlUnitFactory {
 
-  override def nestedSuites = Vector(new ConfiguredServerWithConfiguredBrowserNestedSpec)
+  override def nestedSuites: Vector[ConfiguredServerWithConfiguredBrowserNestedSpec] =
+    Vector(new ConfiguredServerWithConfiguredBrowserNestedSpec)
 
   override def fakeApplication(): Application = {
     GuiceApplicationBuilder()
