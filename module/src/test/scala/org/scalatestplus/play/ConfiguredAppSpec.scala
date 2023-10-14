@@ -49,7 +49,7 @@ class ConfiguredAppSpec extends UnitSpec with SequentialNestedSuiteExecution wit
     }
   }
 
-  override def nestedSuites = Vector(new NestedSuite)
+  override def nestedSuites: Vector[NestedSuite] = Vector(new NestedSuite)
 
   override def fakeApplication(): Application = {
     GuiceApplicationBuilder().configure("foo" -> "bar").build()
