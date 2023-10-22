@@ -18,7 +18,7 @@ import sbt.util.{ Level => _, _ }
 
 import sbt.io.Path._
 
-val SeleniumVersion          = "4.12.1"
+val SeleniumVersion          = "4.14.1"
 val SeleniumHtmlunitVersion  = "4.13.0"
 val MockitoVersion           = "4.6.1"
 val CssParserVersion         = "1.14.0"
@@ -115,7 +115,7 @@ lazy val `scalatestplus-play` = project
     ),
     scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked", "-encoding", "utf8") ++
       (CrossVersion.partialVersion(scalaVersion.value) match {
-        case Some((2, 13)) => Seq("-Xsource:3", "-Xmigration")
+        case Some((2, 13)) => Seq("-Xsource:3")
         case _             => Seq.empty
       }),
     javacOptions ++= Seq("-encoding", "UTF-8", "-Xlint:-options", "--release", "11"),
