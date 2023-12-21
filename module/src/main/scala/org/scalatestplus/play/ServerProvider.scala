@@ -55,9 +55,9 @@ trait ServerProvider {
    * @return the configured port number, wrapped in a `PortNumber`
    */
   implicit def portNumber: PortNumber = {
-    val httpEndpoint = runningServer.endpoints.httpEndpoint
-    val port = httpEndpoint
-      .fold(throw new IllegalStateException("No HTTP port available for test server"))(_.port)
+    val port = runningServer.endpoints.httpEndpoint
+      .orElse(runningServer.endpoints.httpsEndpoint)
+      .fold(throw new IllegalStateException("Nor HTTP or HTTPS port available for test server"))(_.port)
     PortNumber(port)
   }
 }
