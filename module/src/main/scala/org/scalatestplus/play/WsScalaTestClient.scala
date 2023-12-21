@@ -50,7 +50,18 @@ trait WsScalaTestClient {
   def wsUrl(url: String)(implicit portNumber: PortNumber, wsClient: WSClient): WSRequest =
     doCall(url, wsClient, portNumber)
 
-  private def doCall(url: String, wsClient: WSClient, portNumber: PortNumber) = {
-    wsClient.url("http://localhost:" + portNumber.value + url)
+  /**
+   * Construct a WS request for the given relative URL.
+   *
+   * @param url the URL of the request
+   * @param secure if the request should be send via https
+   * @param portNumber the port number of the `TestServer`
+   * @param wsClient the implicit WSClient
+   */
+  def wsUrl(url: String, secure: Boolean)(implicit portNumber: PortNumber, wsClient: WSClient): WSRequest =
+    doCall(url, wsClient, portNumber, secure)
+
+  private def doCall(url: String, wsClient: WSClient, portNumber: PortNumber, secure: Boolean = false) = {
+    wsClient.url((if (secure) "https" else "http") + "://localhost:" + portNumber.value + url)
   }
 }
