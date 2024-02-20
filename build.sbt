@@ -22,7 +22,7 @@ val SeleniumVersion          = "4.15.0"
 val SeleniumHtmlunitVersion  = "4.13.0"
 val MockitoVersion           = "4.6.1"
 val CssParserVersion         = "1.14.0"
-val ScalatestVersion         = "3.2.17"
+val ScalatestVersion         = "3.2.18"
 val ScalatestSeleniumVersion = ScalatestVersion + ".0"
 val ScalatestMockitoVersion  = ScalatestVersion + ".0"
 
