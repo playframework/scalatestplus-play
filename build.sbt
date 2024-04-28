@@ -18,7 +18,7 @@ import sbt.util.{ Level => _, _ }
 
 import sbt.io.Path._
 
-val SeleniumVersion          = "4.19.0"
+val SeleniumVersion          = "4.14.1"
 val SeleniumHtmlunitVersion  = "4.13.0"
 val MockitoVersion           = "4.6.1"
 val CssParserVersion         = "1.14.0"
