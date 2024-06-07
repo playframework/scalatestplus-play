@@ -31,7 +31,7 @@ import org.scalatestplus.play.BrowserFactory.UninitializedDriver
 import org.scalatestplus.play.BrowserFactory.UnneededDriver
 
 /**
- * Trait that uses a [[http://doc.scalatest.org/3.0.1/index.html#org.scalatest.FlatSpec@sharedTests ''shared test'']] approach to enable
+ * Trait that uses a [[http://doc.scalatest.org/3.0.3/index.html#org.scalatest.FlatSpec@sharedTests ''shared test'']] approach to enable
  * you to run the same tests on multiple browsers in a ScalaTest `Suite`, where each kind of browser is started and stopped
  * just once for the whole `Suite`.
  *
