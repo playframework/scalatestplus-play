@@ -108,7 +108,7 @@ lazy val `scalatestplus-play` = project
       "net.sourceforge.htmlunit" % "htmlunit-cssparser" % CssParserVersion
     ),
     Compile / doc / scalacOptions := Seq("-doc-title", "ScalaTest + Play, " + version.value),
-    doc / javacOptions := Seq("-source", "11"),
+    doc / javacOptions := Seq("-source", "17"),
     Test / fork := true,
     Test / javaOptions ++= List(
       "-Dwebdriver.firefox.logfile=/dev/null", // disable GeckoDriver logs polluting the CI logs
@@ -118,7 +118,7 @@ lazy val `scalatestplus-play` = project
         case Some((2, 13)) => Seq("-Xsource:3")
         case _             => Seq.empty
       }),
-    javacOptions ++= Seq("-encoding", "UTF-8", "-Xlint:-options", "--release", "11"),
+    javacOptions ++= Seq("-encoding", "UTF-8", "-Xlint:-options", "--release", "17"),
     developers += Developer(
       "playframework",
       "The Play Framework Contributors",
