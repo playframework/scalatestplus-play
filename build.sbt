@@ -22,7 +22,7 @@ val SeleniumVersion          = "4.14.1"
 val SeleniumHtmlunitVersion  = "4.13.0"
 val MockitoVersion           = "4.6.1"
 val CssParserVersion         = "1.14.0"
-val ScalatestVersion         = "3.2.17"
+val ScalatestVersion         = "3.2.19"
 val ScalatestSeleniumVersion = ScalatestVersion + ".0"
 val ScalatestMockitoVersion  = ScalatestVersion + ".0"
 
@@ -50,8 +50,8 @@ lazy val mimaSettings = Seq(
 )
 
 lazy val commonSettings = Seq(
-  scalaVersion := "2.13.15",
-  crossScalaVersions := Seq("2.13.15", "3.3.4"),
+  scalaVersion := "2.13.16",
+  crossScalaVersions := Seq("2.13.16", "3.3.5"),
   Test / parallelExecution := false,
   Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-oTK"),
   headerLicense := Some(
