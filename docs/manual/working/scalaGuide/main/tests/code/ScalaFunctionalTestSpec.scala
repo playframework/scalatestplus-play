@@ -40,11 +40,10 @@ class ScalaFunctionalTestSpec extends MixedPlaySpec with Results {
     // #scalafunctionaltest-application
 
     val applicationWithRouter = GuiceApplicationBuilder()
-      .appRoutes(app => {
-        case ("GET", "/Bob") =>
-          app.injector.instanceOf(classOf[DefaultActionBuilder]) {
-            Ok("Hello Bob").as(MimeTypes.HTML)
-          }
+      .appRoutes(app => { case ("GET", "/Bob") =>
+        app.injector.instanceOf(classOf[DefaultActionBuilder]) {
+          Ok("Hello Bob").as(MimeTypes.HTML)
+        }
       })
       .build()
 
@@ -149,11 +148,10 @@ class ScalaFunctionalTestSpec extends MixedPlaySpec with Results {
 
     // #scalafunctionaltest-testws
     val appWithRoutes = GuiceApplicationBuilder()
-      .appRoutes(app => {
-        case ("GET", "/") =>
-          app.injector.instanceOf(classOf[DefaultActionBuilder]) {
-            Ok("ok")
-          }
+      .appRoutes(app => { case ("GET", "/") =>
+        app.injector.instanceOf(classOf[DefaultActionBuilder]) {
+          Ok("ok")
+        }
       })
       .build()
 

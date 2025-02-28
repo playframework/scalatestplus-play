@@ -109,6 +109,4 @@ import org.scalatestplus.play.BaseOneAppPerSuite
  * }
  * </pre>
  */
-trait GuiceOneAppPerSuite extends BaseOneAppPerSuite with GuiceFakeApplicationFactory { this: TestSuite =>
-
-}
+trait GuiceOneAppPerSuite extends BaseOneAppPerSuite with GuiceFakeApplicationFactory { this: TestSuite => }

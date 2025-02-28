@@ -23,6 +23,4 @@ import org.scalatestplus.play.guice.GuiceOneServerPerTest
  * Synonym for GuiceOneServerPerTest
  */
 @deprecated("Use GuiceOneServerPerTest instead", "2.0.0")
-trait OneServerPerTest extends GuiceOneServerPerTest { this: TestSuite =>
-
-}
+trait OneServerPerTest extends GuiceOneServerPerTest { this: TestSuite => }

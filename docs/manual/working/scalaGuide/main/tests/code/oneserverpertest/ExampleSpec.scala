@@ -19,11 +19,10 @@ class ExampleSpec extends PlaySpec with GuiceOneServerPerTest {
   // Override newAppForTest or mixin GuiceFakeApplicationFactory and use fakeApplication() for an Application
   override def newAppForTest(testData: TestData): Application = {
     GuiceApplicationBuilder()
-      .appRoutes(app => {
-        case ("GET", "/") =>
-          app.injector.instanceOf(classOf[DefaultActionBuilder]) {
-            Ok("ok")
-          }
+      .appRoutes(app => { case ("GET", "/") =>
+        app.injector.instanceOf(classOf[DefaultActionBuilder]) {
+          Ok("ok")
+        }
       })
       .build()
   }

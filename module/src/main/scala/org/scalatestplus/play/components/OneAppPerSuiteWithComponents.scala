@@ -96,7 +96,6 @@ import play.api.Application
  *
  * import scala.concurrent.Future
  *
- *
  * class NestedExampleSpec extends Suites(
  *   new OneSpec,
  *   new TwoSpec,
