@@ -41,11 +41,10 @@ class NestedExampleSpec
     import play.api.routing.Router
     import play.api.routing.sird._
 
-    lazy val router: Router = Router.from({
-      case GET(p"/") =>
-        defaultActionBuilder {
-          Results.Ok("success!")
-        }
+    lazy val router: Router = Router.from({ case GET(p"/") =>
+      defaultActionBuilder {
+        Results.Ok("success!")
+      }
     })
 
     override lazy val configuration: Configuration =

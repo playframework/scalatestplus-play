@@ -33,28 +33,33 @@ class AllBrowsersPerSuiteBehaviorSpec extends AnyWordSpec {
   class TestSpec extends UnitSpec with GuiceOneServerPerTest with AllBrowsersPerSuite {
     def sharedTests(browser: BrowserInfo) = {
       "test 1 " + browser.name in {}
-      "test 2 " + browser.name taggedAs (ChosenTest) in {}
+      "test 2 " + browser.name taggedAs ChosenTest in {}
     }
-    "test 3" taggedAs (ChosenTest) in {}
+    "test 3" taggedAs ChosenTest in {}
   }
 
   "The AllBrowsersPerSuite trait" must {
 
-    val chrome = try {
-      val d = new ChromeDriver(); d.quit(); 1
-    } catch { case ex: Throwable => 0 }
-    val firefox = try {
-      val d = new FirefoxDriver(); d.quit(); 1
-    } catch { case ex: Throwable => 0 }
-    val internetExplorer = try {
-      val d = new InternetExplorerDriver; d.quit(); 1
-    } catch { case ex: Throwable => 0 }
-    val safari = try {
-      val d = new SafariDriver; d.quit(); 1
-    } catch { case ex: Throwable => 0 }
-    val edge = try {
-      val d = new EdgeDriver; d.quit(); 1
-    } catch { case ex: Throwable => 0 }
+    val chrome =
+      try {
+        val d = new ChromeDriver(); d.quit(); 1
+      } catch { case ex: Throwable => 0 }
+    val firefox =
+      try {
+        val d = new FirefoxDriver(); d.quit(); 1
+      } catch { case ex: Throwable => 0 }
+    val internetExplorer =
+      try {
+        val d = new InternetExplorerDriver; d.quit(); 1
+      } catch { case ex: Throwable => 0 }
+    val safari =
+      try {
+        val d = new SafariDriver; d.quit(); 1
+      } catch { case ex: Throwable => 0 }
+    val edge =
+      try {
+        val d = new EdgeDriver; d.quit(); 1
+      } catch { case ex: Throwable => 0 }
     val htmlUnit =
       try {
         val d = new HtmlUnitDriver()

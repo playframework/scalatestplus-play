@@ -161,9 +161,10 @@ trait BaseOneServerPerSuite extends TestSuiteMixin with ServerProvider { this: T
    */
   abstract override def run(testName: Option[String], args: Args): Status = {
     try {
-      val newConfigMap = args.configMap + ("org.scalatestplus.play.app" -> app) + ("org.scalatestplus.play.port" -> port)
-      val newArgs      = args.copy(configMap = newConfigMap)
-      val status       = super.run(testName, newArgs)
+      val newConfigMap =
+        args.configMap + ("org.scalatestplus.play.app" -> app) + ("org.scalatestplus.play.port" -> port)
+      val newArgs = args.copy(configMap = newConfigMap)
+      val status  = super.run(testName, newArgs)
       status.whenCompleted { _ =>
         runningServer.stopServer.close()
       }

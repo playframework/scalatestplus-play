@@ -100,9 +100,9 @@ lazy val `scalatestplus-play` = project
       ws,
       nettyServer % Test, // Using netty for now, we can switch back to pekkoHttpServer when it has Scala 3 artifacts
       playTest,
-      "org.scalatest"            %% "scalatest"         % ScalatestVersion,
-      "org.scalatestplus"        %% "mockito-4-11"      % ScalatestMockitoVersion,
-      "org.scalatestplus"        %% "selenium-4-12"     % ScalatestSeleniumVersion,
+      "org.scalatest"           %% "scalatest"          % ScalatestVersion,
+      "org.scalatestplus"       %% "mockito-4-11"       % ScalatestMockitoVersion,
+      "org.scalatestplus"       %% "selenium-4-12"      % ScalatestSeleniumVersion,
       "org.seleniumhq.selenium"  % "selenium-java"      % SeleniumVersion,
       "org.seleniumhq.selenium"  % "htmlunit-driver"    % SeleniumHtmlunitVersion,
       "net.sourceforge.htmlunit" % "htmlunit-cssparser" % CssParserVersion
@@ -146,8 +146,8 @@ lazy val docs = project
       // Copy the docs to a place so they have the correct api/scala prefix
       val apiDocsStage = target.value / "api-docs-stage"
       val cacheFile    = streams.value.cacheDirectory / "api-docs-stage"
-      val mappings = apiDocs.allPaths.filter(!_.isDirectory).get.pair(relativeTo(apiDocs)).map {
-        case (file, path) => file -> apiDocsStage / "api" / "scala" / path
+      val mappings = apiDocs.allPaths.filter(!_.isDirectory).get.pair(relativeTo(apiDocs)).map { case (file, path) =>
+        file -> apiDocsStage / "api" / "scala" / path
       }
       Sync.sync(CacheStore(cacheFile))(mappings)
       PlayDocsDirectoryResource(apiDocsStage)

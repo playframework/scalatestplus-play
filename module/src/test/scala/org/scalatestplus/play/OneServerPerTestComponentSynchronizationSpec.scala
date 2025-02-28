@@ -39,11 +39,10 @@ class OneServerPerTestComponentSynchronizationSpec
 
   override def components: BuiltInComponents = new BuiltInComponentsFromContext(context) with NoHttpFiltersComponents {
 
-    lazy val router: Router = Router.from({
-      case _ =>
-        defaultActionBuilder {
-          Results.Ok("success!")
-        }
+    lazy val router: Router = Router.from({ case _ =>
+      defaultActionBuilder {
+        Results.Ok("success!")
+      }
     })
 
   }
