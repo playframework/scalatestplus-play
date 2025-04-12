@@ -36,11 +36,11 @@ class OneServerPerTestComponentShutdownSpec
 
   class TestComponents(context: Context) extends BuiltInComponentsFromContext(context) with NoHttpFiltersComponents {
 
-    lazy val router: Router = Router.from({ case _ =>
+    lazy val router: Router = Router.from { case _ =>
       defaultActionBuilder {
         Results.Ok("success!")
       }
-    })
+    }
 
     applicationLifecycle.addStopHook(() => {
       Future.successful(shutDownCounter.incrementAndGet())
