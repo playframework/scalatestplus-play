@@ -47,8 +47,8 @@ lazy val mimaSettings = Seq(
 )
 
 lazy val commonSettings = Seq(
-  scalaVersion := "2.13.16",
-  crossScalaVersions := Seq("2.13.16", "3.3.5"),
+  scalaVersion             := "2.13.16",
+  crossScalaVersions       := Seq("2.13.16", "3.3.5"),
   Test / parallelExecution := false,
   Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-oTK"),
   headerLicense := Some(
@@ -76,9 +76,9 @@ lazy val `scalatestplus-play-root` = project
   .aggregate(`scalatestplus-play`)
   .settings(commonSettings)
   .settings(
-    sonatypeProfileName := "org.scalatestplus.play",
+    sonatypeProfileName   := "org.scalatestplus.play",
     mimaPreviousArtifacts := Set.empty,
-    publish / skip := true
+    publish / skip        := true
   )
 
 lazy val `scalatestplus-play` = project
@@ -88,25 +88,25 @@ lazy val `scalatestplus-play` = project
   .settings(
     commonSettings,
     mimaSettings,
-    organization := "org.scalatestplus.play",
-    organizationName := "The Play Framework Project",
+    organization         := "org.scalatestplus.play",
+    organizationName     := "The Play Framework Project",
     organizationHomepage := Some(url("https://playframework.com")),
-    homepage := Some(url(s"https://github.com/playframework/${Omnidoc.repoName}")),
-    licenses := Seq("Apache-2.0" -> url("https://www.apache.org/licenses/LICENSE-2.0.html")),
+    homepage             := Some(url(s"https://github.com/playframework/${Omnidoc.repoName}")),
+    licenses             := Seq("Apache-2.0" -> url("https://www.apache.org/licenses/LICENSE-2.0.html")),
     libraryDependencies ++= Seq(
       ws,
       nettyServer % Test, // Using netty for now, we can switch back to akkaHttpServer when it has Scala 3 artifacts
       playTest,
-      "org.scalatest"            %% "scalatest"         % ScalatestVersion,
-      "org.scalatestplus"        %% "mockito-4-11"      % ScalatestMockitoVersion,
-      "org.scalatestplus"        %% "selenium-4-12"     % ScalatestSeleniumVersion,
+      "org.scalatest"           %% "scalatest"          % ScalatestVersion,
+      "org.scalatestplus"       %% "mockito-4-11"       % ScalatestMockitoVersion,
+      "org.scalatestplus"       %% "selenium-4-12"      % ScalatestSeleniumVersion,
       "org.seleniumhq.selenium"  % "selenium-java"      % SeleniumVersion,
       "org.seleniumhq.selenium"  % "htmlunit-driver"    % SeleniumHtmlunitVersion,
       "net.sourceforge.htmlunit" % "htmlunit-cssparser" % CssParserVersion
     ),
     Compile / doc / scalacOptions := Seq("-doc-title", "ScalaTest + Play, " + version.value),
-    doc / javacOptions := Seq("-source", "11"),
-    Test / fork := true,
+    doc / javacOptions            := Seq("-source", "11"),
+    Test / fork                   := true,
     Test / javaOptions ++= List(
       "-Dwebdriver.firefox.logfile=/dev/null", // disable GeckoDriver logs polluting the CI logs
     ),
@@ -143,8 +143,8 @@ lazy val docs = project
       // Copy the docs to a place so they have the correct api/scala prefix
       val apiDocsStage = target.value / "api-docs-stage"
       val cacheFile    = streams.value.cacheDirectory / "api-docs-stage"
-      val mappings = apiDocs.allPaths.filter(!_.isDirectory).get.pair(relativeTo(apiDocs)).map {
-        case (file, path) => file -> apiDocsStage / "api" / "scala" / path
+      val mappings = apiDocs.allPaths.filter(!_.isDirectory).get.pair(relativeTo(apiDocs)).map { case (file, path) =>
+        file -> apiDocsStage / "api" / "scala" / path
       }
       Sync.sync(CacheStore(cacheFile))(mappings)
       PlayDocsDirectoryResource(apiDocsStage)
