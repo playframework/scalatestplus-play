@@ -19,8 +19,8 @@ class ExampleSpec extends PlaySpec with GuiceOneServerPerSuite {
   // default parameters.
   override def fakeApplication(): Application = {
     GuiceApplicationBuilder()
-      .appRoutes(app => {
-        case ("GET", "/") => app.injector.instanceOf(classOf[DefaultActionBuilder]) { Ok("ok") }
+      .appRoutes(app => { case ("GET", "/") =>
+        app.injector.instanceOf(classOf[DefaultActionBuilder]) { Ok("ok") }
       })
       .build()
   }

@@ -34,12 +34,11 @@ class OneServerPerSuiteComponentSpec extends UnitSpec with OneServerPerSuiteWith
     import play.api.routing.Router
     import play.api.routing.sird._
 
-    lazy val router: Router = Router.from({
-      case GET(p"/") =>
-        defaultActionBuilder {
-          Results.Ok("success!")
-        }
-    })
+    lazy val router: Router = Router.from { case GET(p"/") =>
+      defaultActionBuilder {
+        Results.Ok("success!")
+      }
+    }
 
     override lazy val configuration: Configuration =
       Configuration("foo" -> "bar").withFallback(context.initialConfiguration)
