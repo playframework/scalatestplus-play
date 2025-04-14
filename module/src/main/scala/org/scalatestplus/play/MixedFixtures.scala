@@ -263,23 +263,24 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
 
   abstract class NoArgHelper(helperClass: Class[_]) extends NoArg {
 
-    lazy val errorMsg: String = s"""
-                                   |
-                                   |For Scala 3 you need to wrap the body of ${helperClass.getSimpleName} in an `override def running() = ...` method:
-                                   |
-                                   |// Old:
-                                   |new ${helperClass.getSimpleName}() {
-                                   |  <code>
-                                   |}
-                                   |
-                                   |// New:
-                                   |new ${helperClass.getSimpleName}() {
-                                   |  override def running() = {
-                                   |    <code>
-                                   |  }
-                                   |}
-                                   |
-                                   |""".stripMargin
+    lazy val errorMsg: String =
+      s"""
+         |
+         |For Scala 3 you need to wrap the body of ${helperClass.getSimpleName} in an `override def running() = ...` method:
+         |
+         |// Old:
+         |new ${helperClass.getSimpleName}() {
+         |  <code>
+         |}
+         |
+         |// New:
+         |new ${helperClass.getSimpleName}() {
+         |  override def running() = {
+         |    <code>
+         |  }
+         |}
+         |
+         |""".stripMargin
 
     if (
       PlayVersion.scalaVersion
@@ -418,16 +419,20 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
         case _ =>
           val currentPort = port
           if (callRunning()) {
-            try Helpers.runningWithPort(TestServer(port, app)) { assignedPort =>
-              port = assignedPort // if port was 0, the OS assigns a random port
-              running()
-            } finally webDriver.quit()
+            try
+              Helpers.runningWithPort(TestServer(port, app)) { assignedPort =>
+                port = assignedPort // if port was 0, the OS assigns a random port
+                running()
+              }
+            finally webDriver.quit()
           } else {
             def callSuper = super.apply() // this is needed for Scala 2.10 to work
-            try Helpers.runningWithPort(TestServer(port, app)) { assignedPort =>
-              port = assignedPort // if port was 0, the OS assigns a random port
-              callSuper
-            } finally webDriver.quit()
+            try
+              Helpers.runningWithPort(TestServer(port, app)) { assignedPort =>
+                port = assignedPort // if port was 0, the OS assigns a random port
+                callSuper
+              }
+            finally webDriver.quit()
           }
           port = currentPort
       }
@@ -482,16 +487,20 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
         case _ =>
           val currentPort = port
           if (callRunning()) {
-            try Helpers.runningWithPort(TestServer(port, app)) { assignedPort =>
-              port = assignedPort // if port was 0, the OS assigns a random port
-              running()
-            } finally webDriver.quit()
+            try
+              Helpers.runningWithPort(TestServer(port, app)) { assignedPort =>
+                port = assignedPort // if port was 0, the OS assigns a random port
+                running()
+              }
+            finally webDriver.quit()
           } else {
             def callSuper = super.apply() // this is needed for Scala 2.10 to work
-            try Helpers.runningWithPort(TestServer(port, app)) { assignedPort =>
-              port = assignedPort // if port was 0, the OS assigns a random port
-              callSuper
-            } finally webDriver.quit()
+            try
+              Helpers.runningWithPort(TestServer(port, app)) { assignedPort =>
+                port = assignedPort // if port was 0, the OS assigns a random port
+                callSuper
+              }
+            finally webDriver.quit()
           }
           port = currentPort
       }
@@ -546,16 +555,20 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
         case _ =>
           val currentPort = port
           if (callRunning()) {
-            try Helpers.runningWithPort(TestServer(port, app)) { assignedPort =>
-              port = assignedPort // if port was 0, the OS assigns a random port
-              running()
-            } finally webDriver.quit()
+            try
+              Helpers.runningWithPort(TestServer(port, app)) { assignedPort =>
+                port = assignedPort // if port was 0, the OS assigns a random port
+                running()
+              }
+            finally webDriver.quit()
           } else {
             def callSuper = super.apply() // this is needed for Scala 2.10 to work
-            try Helpers.runningWithPort(TestServer(port, app)) { assignedPort =>
-              port = assignedPort // if port was 0, the OS assigns a random port
-              callSuper
-            } finally webDriver.quit()
+            try
+              Helpers.runningWithPort(TestServer(port, app)) { assignedPort =>
+                port = assignedPort // if port was 0, the OS assigns a random port
+                callSuper
+              }
+            finally webDriver.quit()
           }
           port = currentPort
       }
@@ -610,16 +623,20 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
         case _ =>
           val currentPort = port
           if (callRunning()) {
-            try Helpers.runningWithPort(TestServer(port, app)) { assignedPort =>
-              port = assignedPort // if port was 0, the OS assigns a random port
-              running()
-            } finally webDriver.quit()
+            try
+              Helpers.runningWithPort(TestServer(port, app)) { assignedPort =>
+                port = assignedPort // if port was 0, the OS assigns a random port
+                running()
+              }
+            finally webDriver.quit()
           } else {
             def callSuper = super.apply() // this is needed for Scala 2.10 to work
-            try Helpers.runningWithPort(TestServer(port, app)) { assignedPort =>
-              port = assignedPort // if port was 0, the OS assigns a random port
-              callSuper
-            } finally webDriver.quit()
+            try
+              Helpers.runningWithPort(TestServer(port, app)) { assignedPort =>
+                port = assignedPort // if port was 0, the OS assigns a random port
+                callSuper
+              }
+            finally webDriver.quit()
           }
           port = currentPort
       }
@@ -674,16 +691,20 @@ trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: Fixt
         case _ =>
           val currentPort = port
           if (callRunning()) {
-            try Helpers.runningWithPort(TestServer(port, app)) { assignedPort =>
-              port = assignedPort // if port was 0, the OS assigns a random port
-              running()
-            } finally webDriver.quit()
+            try
+              Helpers.runningWithPort(TestServer(port, app)) { assignedPort =>
+                port = assignedPort // if port was 0, the OS assigns a random port
+                running()
+              }
+            finally webDriver.quit()
           } else {
             def callSuper = super.apply() // this is needed for Scala 2.10 to work
-            try Helpers.runningWithPort(TestServer(port, app)) { assignedPort =>
-              port = assignedPort // if port was 0, the OS assigns a random port
-              callSuper
-            } finally webDriver.quit()
+            try
+              Helpers.runningWithPort(TestServer(port, app)) { assignedPort =>
+                port = assignedPort // if port was 0, the OS assigns a random port
+                callSuper
+              }
+            finally webDriver.quit()
           }
           port = currentPort
       }
