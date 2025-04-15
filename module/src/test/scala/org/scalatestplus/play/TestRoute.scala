@@ -35,19 +35,17 @@ object TestRoutes {
     )
     .as(MimeTypes.HTML)
 
-  def router(implicit app: Application): PartialFunction[(String, String), Handler] = {
-    case ("GET", "/testing") =>
-      app.injector.instanceOf(classOf[DefaultActionBuilder]) {
-        Success
-      }
+  def router(implicit app: Application): PartialFunction[(String, String), Handler] = { case ("GET", "/testing") =>
+    app.injector.instanceOf(classOf[DefaultActionBuilder]) {
+      Success
+    }
   }
 
   def router(Action: DefaultActionBuilder): Router = {
-    Router.from {
-      case GET(p"/testing") =>
-        Action {
-          Success
-        }
+    Router.from { case GET(p"/testing") =>
+      Action {
+        Success
+      }
     }
   }
 }

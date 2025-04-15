@@ -297,9 +297,8 @@ trait AllBrowsersPerSuite extends TestSuiteMixin with WebBrowser with Eventually
         case None    => (tn, Set.empty[String])
       }
     }
-    mergeMap(List(super.tags, generatedBrowserTags.filter(_._2.nonEmpty))) {
-      case (s1, s2) =>
-        s1 ++ s2 // just add the 2 sets together
+    mergeMap(List(super.tags, generatedBrowserTags.filter(_._2.nonEmpty))) { case (s1, s2) =>
+      s1 ++ s2 // just add the 2 sets together
     }
   }
 

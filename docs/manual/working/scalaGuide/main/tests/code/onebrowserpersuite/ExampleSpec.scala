@@ -19,20 +19,19 @@ class ExampleSpec extends PlaySpec with GuiceOneServerPerSuite with OneBrowserPe
     import play.api.mvc.Results._
 
     GuiceApplicationBuilder()
-      .appRoutes(app => {
-        case ("GET", "/testing") =>
-          app.injector.instanceOf(classOf[DefaultActionBuilder]) {
-            Ok("""
-                 |<html>
-                 | <head>
-                 |   <title>Test Page</title>
-                 |   <body>
-                 |     <input type='button' name='b' value='Click Me' onclick='document.title="scalatest"' />
-                 |   </body>
-                 | </head>
-                 |</html>
+      .appRoutes(app => { case ("GET", "/testing") =>
+        app.injector.instanceOf(classOf[DefaultActionBuilder]) {
+          Ok("""
+               |<html>
+               | <head>
+               |   <title>Test Page</title>
+               |   <body>
+               |     <input type='button' name='b' value='Click Me' onclick='document.title="scalatest"' />
+               |   </body>
+               | </head>
+               |</html>
             """.stripMargin).as(HTML)
-          }
+        }
       })
       .build()
   }
