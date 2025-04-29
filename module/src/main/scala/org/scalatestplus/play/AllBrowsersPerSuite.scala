@@ -187,7 +187,7 @@ import org.scalatestplus.play.BrowserFactory.UnneededDriver
  * </pre>
  */
 trait AllBrowsersPerSuite extends TestSuiteMixin with WebBrowser with Eventually with IntegrationPatience {
-  this: TestSuite with ServerProvider =>
+  this: TestSuite & ServerProvider =>
 
   /**
    * Method to provide `FirefoxProfile` for creating `FirefoxDriver`, you can override this method to

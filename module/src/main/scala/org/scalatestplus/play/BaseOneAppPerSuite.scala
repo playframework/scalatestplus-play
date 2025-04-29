@@ -26,7 +26,7 @@ import play.api.Play
 /**
  * The base abstract trait for one app per suite.
  */
-trait BaseOneAppPerSuite extends TestSuiteMixin { this: TestSuite with FakeApplicationFactory =>
+trait BaseOneAppPerSuite extends TestSuiteMixin { this: TestSuite & FakeApplicationFactory =>
 
   /**
    * An implicit instance of `Application`.
