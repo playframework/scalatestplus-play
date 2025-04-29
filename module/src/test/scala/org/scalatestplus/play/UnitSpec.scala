@@ -16,8 +16,8 @@
 
 package org.scalatestplus.play
 
-import play.api.test._
-import org.scalatest._
+import play.api.test.*
+import org.scalatest.*
 
 /*
  * Play-Test super-suite for basic unit tests.

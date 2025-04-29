@@ -16,10 +16,10 @@
 
 package org.scalatestplus.play
 
-import org.scalatest._
+import org.scalatest.*
 import org.scalatestplus.play.guice.GuiceOneAppPerTest
 import play.api.Application
-import play.api.inject.guice._
+import play.api.inject.guice.*
 
 class OneAppPerTestSpec extends UnitSpec with GuiceOneAppPerTest {
 

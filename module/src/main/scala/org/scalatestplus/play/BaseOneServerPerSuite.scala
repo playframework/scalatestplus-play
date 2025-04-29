@@ -16,9 +16,9 @@
 
 package org.scalatestplus.play
 
-import org.scalatest._
+import org.scalatest.*
 import play.api.Application
-import play.api.test._
+import play.api.test.*
 
 /**
  * Trait that provides a new `Application` and running `TestServer` instance per ScalaTest `Suite`.

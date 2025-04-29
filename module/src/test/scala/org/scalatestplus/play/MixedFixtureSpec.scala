@@ -24,9 +24,9 @@ import org.apache.pekko.stream.Materializer
 import play.api.http.HttpErrorHandler
 import play.api.http.HttpRequestHandler
 import play.api.inject.Injector
-import play.api._
-import play.api.inject.guice._
-import org.scalatest._
+import play.api.*
+import play.api.inject.guice.*
+import org.scalatest.*
 import play.api.mvc.request.RequestFactory
 
 import scala.concurrent.Future
@@ -45,7 +45,7 @@ class MixedFixtureSpec extends MixedSpec {
     override def coordinatedShutdown: CoordinatedShutdown = CoordinatedShutdown(app.actorSystem)
     override def requestHandler: HttpRequestHandler       = app.requestHandler
     override def errorHandler: HttpErrorHandler           = app.errorHandler
-    override def stop(): Future[_]                        = app.stop()
+    override def stop(): Future[?]                        = app.stop()
     override def injector: Injector                       = app.injector
     override def classloader: ClassLoader                 = app.classloader
     implicit override def materializer: Materializer      = app.materializer
@@ -56,7 +56,7 @@ class MixedFixtureSpec extends MixedSpec {
 
   def buildApp[A](elems: (String, String)*): Application = {
     GuiceApplicationBuilder()
-      .configure(Map(elems: _*))
+      .configure(Map(elems*))
       .appRoutes(app => TestRoutes.router(app))
       .build()
   }
@@ -129,7 +129,7 @@ class MixedFixtureSpec extends MixedSpec {
     }
     "send 404 on a bad request" in new Server {
       override def running() = {
-        import java.net._
+        import java.net.*
         val url                    = new URI("http://localhost:" + port + "/boom").toURL
         val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
         try con.getResponseCode mustBe 404
@@ -174,7 +174,7 @@ class MixedFixtureSpec extends MixedSpec {
     }
     "send 404 on a bad request" in new HtmlUnit {
       override def running() = {
-        import java.net._
+        import java.net.*
         val url                    = new URI("http://localhost:" + port + "/boom").toURL
         val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
         try con.getResponseCode mustBe 404
@@ -228,7 +228,7 @@ class MixedFixtureSpec extends MixedSpec {
     }
     "send 404 on a bad request" in new Firefox {
       override def running() = {
-        import java.net._
+        import java.net.*
         val url                    = new URI("http://localhost:" + port + "/boom").toURL
         val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
         try con.getResponseCode mustBe 404
@@ -282,7 +282,7 @@ class MixedFixtureSpec extends MixedSpec {
     }
     "send 404 on a bad request" in new Safari {
       override def running() = {
-        import java.net._
+        import java.net.*
         val url                    = new URI("http://localhost:" + port + "/boom").toURL
         val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
         try con.getResponseCode mustBe 404
@@ -336,7 +336,7 @@ class MixedFixtureSpec extends MixedSpec {
     }
     "send 404 on a bad request" in new Chrome {
       override def running() = {
-        import java.net._
+        import java.net.*
         val url                    = new URI("http://localhost:" + port + "/boom").toURL
         val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
         try con.getResponseCode mustBe 404
@@ -390,7 +390,7 @@ class MixedFixtureSpec extends MixedSpec {
     }
     "send 404 on a bad request" in new InternetExplorer {
       override def running() = {
-        import java.net._
+        import java.net.*
         val url                    = new URI("http://localhost:" + port + "/boom").toURL
         val con: HttpURLConnection = url.openConnection().asInstanceOf[HttpURLConnection]
         try con.getResponseCode mustBe 404

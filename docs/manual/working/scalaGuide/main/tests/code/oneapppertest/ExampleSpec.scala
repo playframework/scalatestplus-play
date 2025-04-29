@@ -3,11 +3,11 @@
  */
 package scalaguide.tests.scalatest.oneapppertest
 
-import org.scalatest._
-import org.scalatestplus.play._
+import org.scalatest.*
+import org.scalatestplus.play.*
 import org.scalatestplus.play.guice.GuiceOneAppPerTest
 import play.api.Application
-import play.api.inject.guice._
+import play.api.inject.guice.*
 
 // #scalafunctionaltest-oneapppertest
 class ExampleSpec extends PlaySpec with GuiceOneAppPerTest {

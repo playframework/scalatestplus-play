@@ -16,7 +16,7 @@
 
 package org.scalatestplus.play
 
-import org.scalatest._
+import org.scalatest.*
 import play.api.Application
 import play.api.test.RunningServer
 import play.core.server.ServerEndpoint

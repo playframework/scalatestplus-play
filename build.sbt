@@ -142,6 +142,12 @@ lazy val docs = project
     libraryDependencies ++= Seq(
       "org.mockito" % "mockito-core" % MockitoVersion % Test,
     ),
+    scalacOptions ++= {
+      CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((2, _)) => Seq("-Xsource:3")
+        case _            => Seq.empty
+      }
+    },
     PlayDocsKeys.scalaManualSourceDirectories := (baseDirectory.value / "manual" / "working" / "scalaGuide" ** "code").get,
     PlayDocsKeys.resources += {
       val apiDocs = (`scalatestplus-play` / Compile / doc).value
@@ -161,8 +167,8 @@ lazy val docs = project
 addCommandAlias(
   "validateCode",
   List(
-    "headerCheckAll",
+    "+ headerCheckAll",
     "scalafmtSbtCheck",
-    "scalafmtCheckAll",
+    "+ scalafmtCheckAll",
   ).mkString(";")
 )

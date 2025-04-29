@@ -3,9 +3,9 @@
  */
 package scalaguide.tests.scalatest.allbrowserspertest
 
-import org.scalatestplus.play._
+import org.scalatestplus.play.*
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
-import play.api._
+import play.api.*
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.DefaultActionBuilder
 
@@ -15,8 +15,8 @@ class ExampleSpec extends PlaySpec with GuiceOneServerPerSuite with AllBrowsersP
   // Override app if you need an Application with other than
   // default parameters.
   override def fakeApplication(): Application = {
-    import play.api.http.MimeTypes._
-    import play.api.mvc.Results._
+    import play.api.http.MimeTypes.*
+    import play.api.mvc.Results.*
 
     GuiceApplicationBuilder()
       .appRoutes(app => { case ("GET", "/testing") =>

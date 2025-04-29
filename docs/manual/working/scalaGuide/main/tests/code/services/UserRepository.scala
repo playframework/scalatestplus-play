@@ -5,7 +5,7 @@ package scalaguide.tests
 
 package services
 
-import models._
+import models.*
 
 // #scalatest-repository
 trait UserRepository {

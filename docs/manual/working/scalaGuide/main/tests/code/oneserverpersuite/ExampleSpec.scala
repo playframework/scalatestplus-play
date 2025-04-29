@@ -3,14 +3,14 @@
  */
 package scalaguide.tests.scalatest.oneserverpersuite
 
-import org.scalatestplus.play._
+import org.scalatestplus.play.*
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.Application
-import play.api.inject.guice._
-import play.api.libs.ws._
-import play.api.mvc.Results._
-import play.api.mvc._
-import play.api.test.Helpers._
+import play.api.inject.guice.*
+import play.api.libs.ws.*
+import play.api.mvc.Results.*
+import play.api.mvc.*
+import play.api.test.Helpers.*
 
 // #scalafunctionaltest-oneserverpersuite
 class ExampleSpec extends PlaySpec with GuiceOneServerPerSuite {

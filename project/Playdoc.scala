@@ -1,5 +1,5 @@
-import sbt._
-import sbt.Keys._
+import sbt.*
+import sbt.Keys.*
 import sbt.io.IO
 
 object Playdoc extends AutoPlugin {
@@ -10,7 +10,7 @@ object Playdoc extends AutoPlugin {
     val playdocPackage   = taskKey[File]("Package play documentation")
   }
 
-  import autoImport._
+  import autoImport.*
 
   override def requires = sbt.plugins.JvmPlugin
 

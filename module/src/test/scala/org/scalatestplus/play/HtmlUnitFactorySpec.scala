@@ -17,10 +17,10 @@
 package org.scalatestplus.play
 
 import org.openqa.selenium.WebDriver
-import org.scalatest._
+import org.scalatest.*
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.Application
-import play.api.inject.guice._
+import play.api.inject.guice.*
 
 class HtmlUnitFactorySpec extends UnitSpec with GuiceOneServerPerSuite with OneBrowserPerSuite with HtmlUnitFactory {
 
@@ -53,7 +53,7 @@ class HtmlUnitFactorySpec extends UnitSpec with GuiceOneServerPerSuite with OneB
       runningServer.endpoints.httpEndpoint must not be empty
     }
     "send 404 on a bad request" in {
-      import java.net._
+      import java.net.*
       val url = new URI("http://localhost:" + port + "/boum").toURL
       val con = url.openConnection().asInstanceOf[HttpURLConnection]
       try con.getResponseCode mustBe 404

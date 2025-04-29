@@ -16,7 +16,7 @@
 
 package org.scalatestplus.play
 
-import org.scalatest.events._
+import org.scalatest.events.*
 import org.scalatest.Reporter
 
 class EventRecordingReporter extends Reporter {

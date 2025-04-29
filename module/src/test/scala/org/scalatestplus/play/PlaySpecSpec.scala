@@ -16,7 +16,7 @@
 
 package org.scalatestplus.play
 
-import org.scalatest._
+import org.scalatest.*
 
 class PlaySpecSpec extends UnitSpec {
 

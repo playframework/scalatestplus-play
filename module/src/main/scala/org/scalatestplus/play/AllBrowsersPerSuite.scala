@@ -21,7 +21,7 @@ import org.openqa.selenium.chrome.ChromeDriverService
 import org.openqa.selenium.chrome.ChromeOptions
 import org.openqa.selenium.firefox.FirefoxOptions
 import org.openqa.selenium.firefox.FirefoxProfile
-import org.scalatest._
+import org.scalatest.*
 import org.scalatest.concurrent.Eventually
 import org.scalatest.concurrent.IntegrationPatience
 import org.scalatestplus.selenium.WebBrowser

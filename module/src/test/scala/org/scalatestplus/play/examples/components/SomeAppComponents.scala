@@ -30,7 +30,7 @@ protected class SomeAppComponents(context: Context)
     extends BuiltInComponentsFromContext(context)
     with NoHttpFiltersComponents {
 
-  import play.api.routing.sird._
+  import play.api.routing.sird.*
 
   lazy val router: Router = Router.from { case GET(p"/") =>
     defaultActionBuilder {
