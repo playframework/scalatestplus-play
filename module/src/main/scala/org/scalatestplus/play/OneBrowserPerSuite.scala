@@ -310,7 +310,7 @@ trait OneBrowserPerSuite
     with WebBrowser
     with Eventually
     with IntegrationPatience
-    with BrowserFactory { this: TestSuite with ServerProvider =>
+    with BrowserFactory { this: TestSuite & ServerProvider =>
 
   /**
    * An implicit instance of `WebDriver`, created by calling `createWebDriver`.

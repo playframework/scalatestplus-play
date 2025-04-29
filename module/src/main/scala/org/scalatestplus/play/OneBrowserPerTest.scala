@@ -96,7 +96,7 @@ trait OneBrowserPerTest
     with WebBrowser
     with Eventually
     with IntegrationPatience
-    with BrowserFactory { this: TestSuite with ServerProvider =>
+    with BrowserFactory { this: TestSuite & ServerProvider =>
 
   private var privateWebDriver: WebDriver = UninitializedDriver
 

@@ -74,7 +74,7 @@ import org.scalatest._
  * }
  * </pre>
  */
-trait BaseOneServerPerTest extends TestSuiteMixin with ServerProvider { this: TestSuite with FakeApplicationFactory =>
+trait BaseOneServerPerTest extends TestSuiteMixin with ServerProvider { this: TestSuite & FakeApplicationFactory =>
 
   @volatile private var privateApp: Application      = _
   @volatile private var privateServer: RunningServer = _

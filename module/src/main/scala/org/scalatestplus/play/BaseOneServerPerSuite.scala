@@ -135,7 +135,7 @@ import play.api.test._
  * }
  * </pre>
  */
-trait BaseOneServerPerSuite extends TestSuiteMixin with ServerProvider { this: TestSuite with FakeApplicationFactory =>
+trait BaseOneServerPerSuite extends TestSuiteMixin with ServerProvider { this: TestSuite & FakeApplicationFactory =>
 
   /**
    * An implicit instance of `Application`.

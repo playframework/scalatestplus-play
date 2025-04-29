@@ -61,7 +61,7 @@ import play.api.test.Helpers
  * }
  * </pre>
  */
-trait BaseOneAppPerTest extends TestSuiteMixin with AppProvider { this: TestSuite with FakeApplicationFactory =>
+trait BaseOneAppPerTest extends TestSuiteMixin with AppProvider { this: TestSuite & FakeApplicationFactory =>
 
   /**
    * Creates new instance of `Application` with parameters set to their defaults. Override this method if you

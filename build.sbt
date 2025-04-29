@@ -109,9 +109,9 @@ lazy val `scalatestplus-play` = project
       "org.seleniumhq.selenium"  % "htmlunit-driver"        % SeleniumHtmlunitVersion,
       "net.sourceforge.htmlunit" % "htmlunit-cssparser"     % CssParserVersion
     ),
-    Compile / doc / scalacOptions := Seq("-doc-title", "ScalaTest + Play, " + version.value),
-    doc / javacOptions            := Seq("-source", "17"),
-    Test / fork                   := true,
+    Compile / doc / scalacOptions ++= Seq("-doc-title", "ScalaTest + Play, " + version.value),
+    doc / javacOptions := Seq("-source", "17"),
+    Test / fork        := true,
     Test / javaOptions ++= List(
       "-Dwebdriver.firefox.logfile=/dev/null", // disable GeckoDriver logs polluting the CI logs
     ),
