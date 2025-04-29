@@ -16,11 +16,11 @@
 
 package org.scalatestplus.play
 
-import play.api._
+import play.api.*
 import play.api.http.MimeTypes
-import play.api.mvc._
+import play.api.mvc.*
 import play.api.routing.Router
-import play.api.routing.sird._
+import play.api.routing.sird.*
 
 object TestRoutes {
 

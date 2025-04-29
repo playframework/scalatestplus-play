@@ -16,11 +16,11 @@
 
 package org.scalatestplus.play.examples.guice.oneapppersuite
 
-import org.scalatest._
-import org.scalatestplus.play._
+import org.scalatest.*
+import org.scalatestplus.play.*
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
-import play.api.inject.guice._
+import play.api.inject.guice.*
 
 // This is the "master" suite
 class NestedExampleSpec

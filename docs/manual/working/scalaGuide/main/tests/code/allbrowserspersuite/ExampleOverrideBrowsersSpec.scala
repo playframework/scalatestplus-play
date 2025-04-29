@@ -3,23 +3,23 @@
  */
 package scalaguide.tests.scalatest.allbrowserspersuite
 
-import org.scalatestplus.play._
+import org.scalatestplus.play.*
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
-import play.api._
+import play.api.*
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.DefaultActionBuilder
 
 // #scalafunctionaltest-allbrowserspersuite
 class ExampleOverrideBrowsersSpec extends PlaySpec with GuiceOneServerPerSuite with AllBrowsersPerSuite {
 
-  override lazy val browsers =
+  override lazy val browsers: Vector[BrowserInfo] =
     Vector(FirefoxInfo(firefoxProfile), ChromeInfo())
 
   // Override app if you need an Application with other than
   // default parameters.
   override def fakeApplication(): Application = {
-    import play.api.http.MimeTypes._
-    import play.api.mvc.Results._
+    import play.api.http.MimeTypes.*
+    import play.api.mvc.Results.*
 
     GuiceApplicationBuilder()
       .appRoutes(app => { case ("GET", "/testing") =>

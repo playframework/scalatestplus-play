@@ -5,12 +5,12 @@ package scalaguide.tests.scalatest.playspec
 
 import org.scalatest.concurrent.IntegrationPatience
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatestplus.play._
+import org.scalatestplus.play.*
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
-import play.api._
+import play.api.*
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.ws.WSClient
-import play.api.mvc._
+import play.api.mvc.*
 
 // #scalafunctionaltest-playspec
 class ExampleSpec extends PlaySpec with GuiceOneServerPerSuite with ScalaFutures with IntegrationPatience {
@@ -19,8 +19,8 @@ class ExampleSpec extends PlaySpec with GuiceOneServerPerSuite with ScalaFutures
   // default parameters.
   override def fakeApplication(): Application = {
 
-    import play.api.http.MimeTypes._
-    import play.api.mvc.Results._
+    import play.api.http.MimeTypes.*
+    import play.api.mvc.Results.*
 
     GuiceApplicationBuilder()
       .appRoutes(app => { case ("GET", "/testing") =>

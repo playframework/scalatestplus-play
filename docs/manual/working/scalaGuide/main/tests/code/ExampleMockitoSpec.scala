@@ -5,9 +5,9 @@ package scalaguide.tests.scalatest
 
 // #scalatest-mockitosugar
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatestplus.play._
+import org.scalatestplus.play.*
 
-import org.mockito.Mockito._
+import org.mockito.Mockito.*
 
 class ExampleMockitoSpec extends PlaySpec with MockitoSugar {
 
@@ -36,7 +36,7 @@ trait DataService {
 // #scalatest-mockito-dataservice
 
 class MyService {
-  import java.util._
+  import java.util.*
 
   def dataService: DataService = null // implementation reference...
 

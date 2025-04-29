@@ -5,9 +5,9 @@ package scalaguide.tests.scalatest.oneserverpertest
 
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.components.OneServerPerTestWithComponents
-import play.api._
+import play.api.*
 import play.api.mvc.Result
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import play.api.test.FakeRequest
 import play.api.test.Helpers
 
@@ -19,7 +19,7 @@ class ExampleComponentsSpec extends PlaySpec with OneServerPerTestWithComponents
 
     import play.api.mvc.Results
     import play.api.routing.Router
-    import play.api.routing.sird._
+    import play.api.routing.sird.*
 
     lazy val router: Router = Router.from { case GET(p"/") =>
       defaultActionBuilder {

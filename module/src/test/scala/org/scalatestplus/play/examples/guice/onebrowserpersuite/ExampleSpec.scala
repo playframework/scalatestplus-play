@@ -17,10 +17,10 @@
 package org.scalatestplus.play.examples.guice.onebrowserpersuite
 
 import org.scalatest.tags.FirefoxBrowser
-import org.scalatestplus.play._
+import org.scalatestplus.play.*
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.Application
-import play.api.inject.guice._
+import play.api.inject.guice.*
 
 @FirefoxBrowser
 class ExampleSpec extends PlaySpec with GuiceOneServerPerSuite with OneBrowserPerSuite with FirefoxFactory {
@@ -45,7 +45,7 @@ class ExampleSpec extends PlaySpec with GuiceOneServerPerSuite with OneBrowserPe
       runningServer.endpoints.httpEndpoint must not be empty
     }
     "provide an actual running server" in {
-      import java.net._
+      import java.net.*
       val url = new URI("http://localhost:" + port + "/boum").toURL
       val con = url.openConnection().asInstanceOf[HttpURLConnection]
       try con.getResponseCode mustBe 404

@@ -16,7 +16,7 @@
 
 package org.scalatestplus.play
 
-import org.scalatest._
+import org.scalatest.*
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.edge.EdgeDriver
 import org.openqa.selenium.firefox.FirefoxDriver

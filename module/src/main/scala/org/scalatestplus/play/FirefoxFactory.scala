@@ -17,7 +17,7 @@
 package org.scalatestplus.play
 
 import org.openqa.selenium.WebDriver
-import org.openqa.selenium.firefox._
+import org.openqa.selenium.firefox.*
 import org.scalatestplus.play.BrowserFactory.UnavailableDriver
 
 /**

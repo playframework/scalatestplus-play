@@ -19,9 +19,9 @@ package org.scalatestplus.play.examples.components.oneapppertest
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.components.OneAppPerTestWithComponents
 import org.scalatestplus.play.examples.components.SomeAppComponents
-import play.api._
+import play.api.*
 import play.api.mvc.Result
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import play.api.test.FakeRequest
 import play.api.test.Helpers
 

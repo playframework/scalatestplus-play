@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger
 import org.scalatest.BeforeAndAfterAll
 import org.scalatestplus.play.components.OneServerPerTestWithComponents
 import play.api.ApplicationLoader.Context
-import play.api._
+import play.api.*
 import play.api.mvc.Results
 import play.api.routing.Router
 

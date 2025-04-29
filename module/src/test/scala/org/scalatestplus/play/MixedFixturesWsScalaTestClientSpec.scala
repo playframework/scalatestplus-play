@@ -19,7 +19,7 @@ package org.scalatestplus.play
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.concurrent.IntegrationPatience
 import play.api.Application
-import play.api.inject.guice._
+import play.api.inject.guice.*
 import play.api.libs.ws.WSClient
 import play.api.mvc.Call
 

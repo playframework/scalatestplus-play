@@ -18,9 +18,9 @@ package org.scalatestplus.play.examples.components.oneapppersuite
 
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.components.OneAppPerSuiteWithComponents
-import play.api._
+import play.api.*
 import play.api.mvc.Result
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import play.api.test.FakeRequest
 import play.api.test.Helpers
 
@@ -32,7 +32,7 @@ class ExampleSpec extends PlaySpec with OneAppPerSuiteWithComponents {
 
     import play.api.mvc.Results
     import play.api.routing.Router
-    import play.api.routing.sird._
+    import play.api.routing.sird.*
 
     lazy val router: Router = Router.from { case GET(p"/") =>
       defaultActionBuilder {

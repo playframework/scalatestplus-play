@@ -4,7 +4,7 @@
 package scalaguide.tests.scalatest
 
 // #scalatest-stackspec
-import org.scalatestplus.play._
+import org.scalatestplus.play.*
 
 import scala.collection.mutable
 

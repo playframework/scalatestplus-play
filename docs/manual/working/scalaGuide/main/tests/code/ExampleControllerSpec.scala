@@ -6,11 +6,11 @@ package scalaguide.tests.scalatest
 // #scalatest-examplecontrollerspec
 import scala.concurrent.Future
 
-import org.scalatestplus.play._
+import org.scalatestplus.play.*
 
-import play.api.mvc._
-import play.api.test._
-import play.api.test.Helpers._
+import play.api.mvc.*
+import play.api.test.*
+import play.api.test.Helpers.*
 
 class ExampleControllerSpec extends PlaySpec with Results {
 

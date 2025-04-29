@@ -16,11 +16,11 @@
 
 package org.scalatestplus.play
 
-import org.scalatest._
+import org.scalatest.*
 import org.scalatestplus.play.components.OneServerPerSuiteWithComponents
-import play.api._
+import play.api.*
 import play.api.mvc.Result
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import play.api.test.FakeRequest
 import play.api.test.Helpers
 
@@ -32,7 +32,7 @@ class OneServerPerSuiteComponentSpec extends UnitSpec with OneServerPerSuiteWith
 
     import play.api.mvc.Results
     import play.api.routing.Router
-    import play.api.routing.sird._
+    import play.api.routing.sird.*
 
     lazy val router: Router = Router.from { case GET(p"/") =>
       defaultActionBuilder {
@@ -68,7 +68,7 @@ class OneServerPerSuiteComponentSpec extends UnitSpec with OneServerPerSuiteWith
       runningServer.endpoints.httpEndpoint must not be empty
     }
     "send 404 on a bad request" in {
-      import java.net._
+      import java.net.*
       val url = new URI("http://localhost:" + port + "/boum").toURL
       val con = url.openConnection().asInstanceOf[HttpURLConnection]
       try con.getResponseCode mustBe 404

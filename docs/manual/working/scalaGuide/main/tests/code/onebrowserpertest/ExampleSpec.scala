@@ -4,9 +4,9 @@
 package scalaguide.tests.scalatest.onebrowserpertest
 
 import org.scalatest.TestData
-import org.scalatestplus.play._
+import org.scalatestplus.play.*
 import org.scalatestplus.play.guice.GuiceOneServerPerTest
-import play.api._
+import play.api.*
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.DefaultActionBuilder
 
@@ -16,8 +16,8 @@ class ExampleSpec extends PlaySpec with GuiceOneServerPerTest with OneBrowserPer
   // Override app if you need an Application with other than
   // default parameters.
   override def newAppForTest(testData: TestData): Application = {
-    import play.api.http.MimeTypes._
-    import play.api.mvc.Results._
+    import play.api.http.MimeTypes.*
+    import play.api.mvc.Results.*
 
     GuiceApplicationBuilder()
       .appRoutes(app => { case ("GET", "/testing") =>

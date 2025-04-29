@@ -17,14 +17,14 @@
 package org.scalatestplus.play
 
 import org.openqa.selenium.WebDriver
-import org.scalatest._
-import org.scalatest.fixture._
+import org.scalatest.*
+import org.scalatest.fixture.*
 import org.scalatest.FixtureTestSuite
 import org.scalatestplus.selenium.WebBrowser
 import org.scalatestplus.play.BrowserFactory.UnavailableDriver
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.test._
+import play.api.test.*
 import play.core.PlayVersion
 
 /**
@@ -261,7 +261,7 @@ import play.core.PlayVersion
  */
 trait MixedFixtures extends TestSuiteMixin with fixture.UnitFixture { this: FixtureTestSuite =>
 
-  abstract class NoArgHelper(helperClass: Class[_]) extends NoArg {
+  abstract class NoArgHelper(helperClass: Class[?]) extends NoArg {
 
     lazy val errorMsg: String =
       s"""

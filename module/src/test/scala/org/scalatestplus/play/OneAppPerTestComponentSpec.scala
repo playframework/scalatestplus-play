@@ -17,9 +17,9 @@
 package org.scalatestplus.play
 
 import org.scalatestplus.play.components.OneAppPerTestWithComponents
-import play.api._
+import play.api.*
 import play.api.mvc.Result
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import play.api.test.FakeRequest
 import play.api.test.Helpers
 
@@ -31,7 +31,7 @@ class OneAppPerTestComponentSpec extends UnitSpec with OneAppPerTestWithComponen
 
     import play.api.mvc.Results
     import play.api.routing.Router
-    import play.api.routing.sird._
+    import play.api.routing.sird.*
 
     lazy val router: Router = Router.from { case GET(p"/") =>
       defaultActionBuilder {

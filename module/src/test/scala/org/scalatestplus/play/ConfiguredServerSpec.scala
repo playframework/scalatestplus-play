@@ -16,10 +16,10 @@
 
 package org.scalatestplus.play
 
-import org.scalatest._
+import org.scalatest.*
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.Application
-import play.api.inject.guice._
+import play.api.inject.guice.*
 
 class ConfiguredServerSpec extends UnitSpec with SequentialNestedSuiteExecution with GuiceOneServerPerSuite {
 

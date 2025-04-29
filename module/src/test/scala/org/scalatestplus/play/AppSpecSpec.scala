@@ -16,9 +16,9 @@
 
 package org.scalatestplus.play
 
-import org.scalatest._
+import org.scalatest.*
 import play.api.Application
-import play.api.inject.guice._
+import play.api.inject.guice.*
 
 class AppSpecSpec extends AppSpec {
 

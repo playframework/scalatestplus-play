@@ -4,21 +4,21 @@
 package scalaguide.tests.scalatest
 
 // #scalafunctionaltest-imports
-import org.scalatest._
+import org.scalatest.*
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.wordspec.FixtureAnyWordSpec
-import org.scalatestplus.play._
+import org.scalatestplus.play.*
 import play.api.http.MimeTypes
-import play.api.test._
-import play.api.test.Helpers._
+import play.api.test.*
+import play.api.test.Helpers.*
 // #scalafunctionaltest-imports
 
-import play.api.mvc._
+import play.api.mvc.*
 
-import play.api.test.Helpers.{ GET => GET_REQUEST }
+import play.api.test.Helpers.GET as GET_REQUEST
 import play.api.Application
-import play.api.libs.ws._
-import play.api.inject.guice._
+import play.api.libs.ws.*
+import play.api.inject.guice.*
 
 abstract class MixedPlaySpec extends FixtureAnyWordSpec with Matchers with OptionValues with MixedFixtures
 

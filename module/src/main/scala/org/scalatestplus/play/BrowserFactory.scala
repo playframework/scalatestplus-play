@@ -41,7 +41,7 @@ trait BrowserFactory {
   def createWebDriver(): WebDriver
 }
 
-import org.openqa.selenium._
+import org.openqa.selenium.*
 
 /**
  * Companion object to trait `BrowserFactory` that holds a `UnavailableDriver` object that implements

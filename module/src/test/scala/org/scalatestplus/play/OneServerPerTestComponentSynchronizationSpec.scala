@@ -26,7 +26,7 @@ import play.api.BuiltInComponentsFromContext
 import play.api.NoHttpFiltersComponents
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 import scala.concurrent.Await
 import scala.concurrent.Future
 import org.scalatest.flatspec.AnyFlatSpec

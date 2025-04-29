@@ -21,7 +21,7 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.Application
 import play.api.mvc.Call
-import play.api.inject.guice._
+import play.api.inject.guice.*
 import play.api.libs.ws.WSClient
 
 class WsScalaTestClientSpec extends UnitSpec with GuiceOneServerPerSuite with ScalaFutures with IntegrationPatience {

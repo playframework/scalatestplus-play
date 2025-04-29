@@ -3,7 +3,7 @@
  */
 package views.html
 
-import play.api.mvc._
+import play.api.mvc.*
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future

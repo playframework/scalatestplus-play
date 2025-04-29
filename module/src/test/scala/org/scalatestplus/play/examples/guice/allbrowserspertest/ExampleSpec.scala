@@ -16,11 +16,11 @@
 
 package org.scalatestplus.play.examples.guice.allbrowserspertest
 
-import org.scalatest._
-import org.scalatestplus.play._
-import org.scalatestplus.play.guice._
+import org.scalatest.*
+import org.scalatestplus.play.*
+import org.scalatestplus.play.guice.*
 import play.api.Application
-import play.api.inject.guice._
+import play.api.inject.guice.*
 
 class ExampleSpec extends PlaySpec with GuiceOneServerPerTest with AllBrowsersPerTest {
 
@@ -59,7 +59,7 @@ class ExampleSpec extends PlaySpec with GuiceOneServerPerTest with AllBrowsersPe
       runningServer.endpoints.httpEndpoint must not be empty
     }
     "provide an actual running server" in {
-      import java.net._
+      import java.net.*
       val url = new URI("http://localhost:" + port + "/boum").toURL
       val con = url.openConnection().asInstanceOf[HttpURLConnection]
       try con.getResponseCode mustBe 404
