@@ -20,8 +20,8 @@ import org.scalatest.events._
 import org.scalatest.Reporter
 
 class EventRecordingReporter extends Reporter {
-  private var eventList: List[Event] = List()
-  def eventsReceived                 = eventList.reverse
+  private var eventList: List[Event]                   = List()
+  def eventsReceived                                   = eventList.reverse
   def testSucceededEventsReceived: List[TestSucceeded] = {
     eventsReceived
       .filter {
