@@ -2,3 +2,6 @@
 492dac113216acbd8b17c2193ae39092ec676d24
 f4b9e2bb4127b33c96be4f4e0b8d4ee7c8d46e66
 d2f28e266b37ac4352f4d68b32f4e20253b6e369
+
+# Scala Steward: Reformat with scalafmt 3.9.7
+4ac706fb4ceddcd31b0b0828ffc6d46277a89c31
