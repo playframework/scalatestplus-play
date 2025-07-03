@@ -26,7 +26,7 @@ val ScalatestVersion         = "3.2.17"
 val ScalatestSeleniumVersion = ScalatestVersion + ".0"
 val ScalatestMockitoVersion  = ScalatestVersion + ".0"
 
-ThisBuild / resolvers ++= Resolver.sonatypeOssRepos("releases")
+ThisBuild / resolvers += Resolver.sonatypeCentralSnapshots
 // To make use of Pekko snapshots uncomment following two resolvers:
 // ThisBuild / resolvers += Resolver.ApacheMavenSnapshotsRepo
 // ThisBuild / resolvers += Resolver.sonatypeRepo("snapshots")
@@ -79,7 +79,6 @@ lazy val `scalatestplus-play-root` = project
   .aggregate(`scalatestplus-play`)
   .settings(commonSettings)
   .settings(
-    sonatypeProfileName   := "org.scalatestplus.play",
     mimaPreviousArtifacts := Set.empty,
     publish / skip        := true
   )
