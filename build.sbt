@@ -26,7 +26,7 @@ val ScalatestVersion         = "3.2.17"
 val ScalatestSeleniumVersion = ScalatestVersion + ".0"
 val ScalatestMockitoVersion  = ScalatestVersion + ".0"
 
-ThisBuild / resolvers ++= Resolver.sonatypeOssRepos("releases")
+ThisBuild / resolvers += Resolver.sonatypeCentralSnapshots
 
 // Customise sbt-dynver's behaviour to make it work with tags which aren't v-prefixed
 ThisBuild / dynverVTagPrefix := false
@@ -76,7 +76,6 @@ lazy val `scalatestplus-play-root` = project
   .aggregate(`scalatestplus-play`)
   .settings(commonSettings)
   .settings(
-    sonatypeProfileName   := "org.scalatestplus.play",
     mimaPreviousArtifacts := Set.empty,
     publish / skip        := true
   )
