@@ -45,7 +45,7 @@ class ExampleSpec extends PlaySpec with GuiceOneServerPerSuite with ScalaFutures
       implicit val ws: WSClient = app.injector.instanceOf(classOf[WSClient])
       val futureResult          = wsUrl("/testing").get()
       val body                  = futureResult.futureValue.body
-      val expectedBody =
+      val expectedBody          =
         """
           |<html>
           | <head>
@@ -62,7 +62,7 @@ class ExampleSpec extends PlaySpec with GuiceOneServerPerSuite with ScalaFutures
       implicit val ws: WSClient = app.injector.instanceOf(classOf[WSClient])
       val futureResult          = wsCall(Call("get", "/testing")).get()
       val body                  = futureResult.futureValue.body
-      val expectedBody =
+      val expectedBody          =
         """
           |<html>
           | <head>

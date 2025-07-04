@@ -133,14 +133,14 @@ trait ConfiguredServer extends TestSuiteMixin with ServerProvider { this: TestSu
   abstract override def run(testName: Option[String], args: Args): Status = {
     args.configMap.getOptional[Application]("org.scalatestplus.play.app") match {
       case Some(ca) => synchronized { configuredApp = ca }
-      case None =>
+      case None     =>
         throw new Exception(
           "Trait ConfiguredServer needs an Application value associated with key \"org.scalatestplus.play.app\" in the config map. Did you forget to annotate a nested suite with @DoNotDiscover?"
         )
     }
     args.configMap.getOptional[Int]("org.scalatestplus.play.port") match {
       case Some(cp) => synchronized { _configuredPort = cp }
-      case None =>
+      case None     =>
         throw new Exception(
           "Trait ConfiguredServer needs an Int value associated with key \"org.scalatestplus.play.port\" in the config map. Did you forget to annotate a nested suite with @DoNotDiscover?"
         )
