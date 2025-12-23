@@ -1,7 +1,7 @@
 resolvers ++= DefaultOptions.resolvers(snapshot = true)
 resolvers += Resolver.sonatypeCentralSnapshots // used by deploy nightlies, which publish here & use -Dplay.version
 
-addSbtPlugin("com.typesafe.play" % "play-docs-sbt-plugin" % sys.props.getOrElse("play.version", "2.9.9"))
+addSbtPlugin("com.typesafe.play" % "play-docs-sbt-plugin" % sys.props.getOrElse("play.version", "2.9.10"))
 
 addSbtPlugin("org.scalameta"  % "sbt-scalafmt"    % "2.5.6")
 addSbtPlugin("com.typesafe"   % "sbt-mima-plugin" % "1.1.4")
