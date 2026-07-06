@@ -149,13 +149,14 @@ lazy val docs = project
         case _            => Seq.empty
       }
     },
-    PlayDocsKeys.scalaManualSourceDirectories := (baseDirectory.value / "manual" / "working" / "scalaGuide" ** "code").get,
+    PlayDocsKeys.scalaManualSourceDirectories := (baseDirectory.value / "manual" / "working" / "scalaGuide" ** "code")
+      .get(),
     PlayDocsKeys.resources += {
       val apiDocs = (`scalatestplus-play` / Compile / doc).value
       // Copy the docs to a place so they have the correct api/scala prefix
       val apiDocsStage = target.value / "api-docs-stage"
       val cacheFile    = streams.value.cacheDirectory / "api-docs-stage"
-      val mappings = apiDocs.allPaths.filter(!_.isDirectory).get.pair(relativeTo(apiDocs)).map { case (file, path) =>
+      val mappings = apiDocs.allPaths.filter(!_.isDirectory).get().pair(relativeTo(apiDocs)).map { case (file, path) =>
         file -> apiDocsStage / "api" / "scala" / path
       }
       Sync.sync(CacheStore(cacheFile))(mappings)
