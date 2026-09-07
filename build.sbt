@@ -94,9 +94,9 @@ lazy val `scalatestplus-play` = project
     mimaSettings,
     organization         := "org.scalatestplus.play",
     organizationName     := "The Play Framework Project",
-    organizationHomepage := Some(url("https://playframework.com")),
-    homepage             := Some(url(s"https://github.com/playframework/${Omnidoc.repoName}")),
-    licenses             := Seq("Apache-2.0" -> url("https://www.apache.org/licenses/LICENSE-2.0.html")),
+    organizationHomepage := Some(uri("https://playframework.com")),
+    homepage             := Some(uri(s"https://github.com/playframework/${Omnidoc.repoName}")),
+    licenses             := Seq("Apache-2.0" -> uri("https://www.apache.org/licenses/LICENSE-2.0.html")),
     libraryDependencies ++= Seq(
       ws,
       nettyServer % Test, // Using netty for now, we can switch back to pekkoHttpServer when it has Scala 3 artifacts
@@ -126,7 +126,7 @@ lazy val `scalatestplus-play` = project
       "playframework",
       "The Play Framework Contributors",
       "contact@playframework.com",
-      url("https://github.com/playframework")
+      uri("https://github.com/playframework")
     ),
     pomIncludeRepository := { _ =>
       false
@@ -151,7 +151,7 @@ lazy val docs = project
     },
     PlayDocsKeys.scalaManualSourceDirectories := (baseDirectory.value / "manual" / "working" / "scalaGuide" ** "code")
       .get(),
-    PlayDocsKeys.resources += {
+    PlayDocsKeys.resources += Def.uncached {
       val apiDocs = (`scalatestplus-play` / Compile / doc).value
       // Copy the docs to a place so they have the correct api/scala prefix
       val apiDocsStage = target.value / "api-docs-stage"
