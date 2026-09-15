@@ -39,12 +39,13 @@ jobs:
     uses: playframework/.github/.github/workflows/cmd.yml@v4
     with:
       java: 21, 17
-      scala: 2.13.x, 3.x
+      # Symbolic lanes resolve to exact versions in project/Dependencies.scala.
+      scala: 2.13.x, 3.3.x, 3.9.x, 3.next
       cmd: |
         export DISPLAY=:99
         sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 & # optional
         export MOZ_HEADLESS=1
-        sbt "++$MATRIX_SCALA ; test"
+        sbt -Dscala.version=$MATRIX_SCALA testFull
 
   finish:
     name: Finish

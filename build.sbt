@@ -17,6 +17,9 @@ import com.typesafe.tools.mima.core._
 import sbt.util.{ Level => _, _ }
 
 import sbt.io.Path._
+import Dependencies.publishedScalaVersions
+import Dependencies.resolveScalaVersion
+import Dependencies.scala213Version
 
 val SeleniumVersion          = "4.14.1"
 val SeleniumHtmlunitVersion  = "4.13.0"
@@ -28,7 +31,7 @@ val ScalatestMockitoVersion  = ScalatestVersion + ".0"
 
 ThisBuild / resolvers += Resolver.sonatypeCentralSnapshots
 // To make use of Pekko snapshots uncomment following two resolvers:
-// ThisBuild / resolvers += Resolver.ApacheMavenSnapshotsRepo
+ThisBuild / resolvers += Resolver.ApacheMavenSnapshotsRepo
 // ThisBuild / resolvers += Resolver.sonatypeRepo("snapshots")
 
 // Customise sbt-dynver's behaviour to make it work with tags which aren't v-prefixed
@@ -52,8 +55,8 @@ lazy val mimaSettings = Seq(
 )
 
 lazy val commonSettings = Seq(
-  scalaVersion             := "2.13.18",
-  crossScalaVersions       := Seq("2.13.18", "3.8.3"),
+  scalaVersion             := resolveScalaVersion(sys.props.getOrElse("scala.version", scala213Version)),
+  crossScalaVersions       := publishedScalaVersions,
   Test / parallelExecution := false,
   Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-oTK"),
   headerLicense := Some(
@@ -116,11 +119,11 @@ lazy val `scalatestplus-play` = project
     Test / javaOptions ++= List(
       "-Dwebdriver.firefox.logfile=/dev/null", // disable GeckoDriver logs polluting the CI logs
     ),
-    scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked", "-encoding", "utf8") ++
+    scalacOptions ++= Seq("-release", "17", "-deprecation", "-feature", "-unchecked", "-encoding", "utf8") ++
       (CrossVersion.partialVersion(scalaVersion.value) match {
         case Some((2, 13)) => Seq("-Xsource:3")
         case _             => Seq.empty
-      }),
+      }) ++ (if (scalaVersion.value.startsWith("3.3.")) Seq("-Yfuture-lazy-vals") else Seq.empty),
     javacOptions ++= Seq("-encoding", "UTF-8", "-Xlint:-options", "--release", "17"),
     developers += Developer(
       "playframework",
