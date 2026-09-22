@@ -1,4 +1,3 @@
-resolvers ++= DefaultOptions.resolvers(snapshot = true)
 resolvers += Resolver.sonatypeCentralSnapshots // used by deploy nightlies, which publish here & use -Dplay.version
 
 addSbtPlugin("org.playframework" % "play-docs-sbt-plugin" % sys.props.getOrElse("play.version", "3.1.0-M9"))
