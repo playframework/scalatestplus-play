@@ -102,7 +102,7 @@ lazy val `scalatestplus-play` = project
     licenses             := Seq("Apache-2.0" -> uri("https://www.apache.org/licenses/LICENSE-2.0.html")),
     libraryDependencies ++= Seq(
       ws,
-      nettyServer % Test, // Using netty for now, we can switch back to pekkoHttpServer when it has Scala 3 artifacts
+      pekkoHttpServer % Test,
       playTest,
       "org.scalatest"           %% "scalatest-wordspec"     % ScalatestVersion,
       "org.scalatest"           %% "scalatest-flatspec"     % ScalatestVersion % Test,
