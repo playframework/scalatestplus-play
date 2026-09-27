@@ -21,7 +21,7 @@ import Dependencies.publishedScalaVersions
 import Dependencies.resolveScalaVersion
 import Dependencies.scala213Version
 
-val SeleniumVersion          = "4.14.1"
+val SeleniumVersion          = "4.49.0"
 val SeleniumHtmlunitVersion  = "4.13.0"
 val MockitoVersion           = "4.6.1"
 val CssParserVersion         = "1.14.0"
