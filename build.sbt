@@ -21,10 +21,10 @@ import Dependencies.publishedScalaVersions
 import Dependencies.resolveScalaVersion
 import Dependencies.scala213Version
 
-val SeleniumVersion          = "4.14.1"
-val SeleniumHtmlunitVersion  = "4.13.0"
+// Keep in sync with the Selenium and HtmlUnit driver versions Play's play-test depends on (Play uses Selenide)
+val SeleniumVersion          = "4.49.0"
+val SeleniumHtmlunitVersion  = "4.48.0"
 val MockitoVersion           = "4.6.1"
-val CssParserVersion         = "1.14.0"
 val ScalatestVersion         = "3.2.17"
 val ScalatestSeleniumVersion = ScalatestVersion + ".0"
 val ScalatestMockitoVersion  = ScalatestVersion + ".0"
@@ -104,14 +104,15 @@ lazy val `scalatestplus-play` = project
       ws,
       pekkoHttpServer % Test,
       playTest,
-      "org.scalatest"           %% "scalatest-wordspec"     % ScalatestVersion,
-      "org.scalatest"           %% "scalatest-flatspec"     % ScalatestVersion % Test,
-      "org.scalatest"           %% "scalatest-mustmatchers" % ScalatestVersion,
-      "org.scalatestplus"       %% "mockito-4-11"           % ScalatestMockitoVersion,
-      "org.scalatestplus"       %% "selenium-4-12"          % ScalatestSeleniumVersion,
-      "org.seleniumhq.selenium"  % "selenium-java"          % SeleniumVersion,
-      "org.seleniumhq.selenium"  % "htmlunit-driver"        % SeleniumHtmlunitVersion,
-      "net.sourceforge.htmlunit" % "htmlunit-cssparser"     % CssParserVersion
+      "org.scalatest"      %% "scalatest-wordspec"     % ScalatestVersion,
+      "org.scalatest"      %% "scalatest-flatspec"     % ScalatestVersion % Test,
+      "org.scalatest"      %% "scalatest-mustmatchers" % ScalatestVersion,
+      "org.scalatestplus"  %% "mockito-4-11"           % ScalatestMockitoVersion,
+      ("org.scalatestplus" %% "selenium-4-12"          % ScalatestSeleniumVersion)
+        // brings the old htmlunit-driver (HtmlUnit 2.x), which contains the same HtmlUnitDriver class as htmlunit3-driver
+        .excludeAll(ExclusionRule("org.seleniumhq.selenium", "htmlunit-driver")),
+      "org.seleniumhq.selenium" % "selenium-java"    % SeleniumVersion,
+      "org.seleniumhq.selenium" % "htmlunit3-driver" % SeleniumHtmlunitVersion
     ),
     Compile / doc / scalacOptions ++= Seq("-doc-title", "ScalaTest + Play, " + version.value),
     doc / javacOptions := Seq("-source", "17"),
