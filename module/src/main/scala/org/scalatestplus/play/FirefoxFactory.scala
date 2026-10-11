@@ -85,10 +85,8 @@ object FirefoxFactory extends FirefoxFactory {
    */
   def createWebDriver(firefoxProfile: FirefoxProfile, options: FirefoxOptions): WebDriver = {
     try {
-      val binary = new FirefoxBinary()
       new FirefoxDriver(
         options
-          .setBinary(binary)
           .setLogLevel(FirefoxDriverLogLevel.WARN)
           .setProfile(firefoxProfile)
           .merge(new FirefoxOptions())

@@ -3,7 +3,7 @@ resolvers += Resolver.sonatypeCentralSnapshots // used by deploy nightlies, whic
 addSbtPlugin(
   "org.playframework" % "play-docs-sbt-plugin" % sys.props.getOrElse(
     "play.version",
-    "3.1.0-M10-e1f3c2a9-SNAPSHOT",
+    "3.1.0-M10-3968a052-SNAPSHOT",
   )
 )
 
