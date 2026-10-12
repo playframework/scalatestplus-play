@@ -24,10 +24,10 @@ import Dependencies.scala213Version
 // Keep in sync with the Selenium and HtmlUnit driver versions Play's play-test depends on (Play uses Selenide)
 val SeleniumVersion          = "4.51.0"
 val SeleniumHtmlunitVersion  = "4.51.0"
-val MockitoVersion           = "4.6.1"
+val MockitoVersion           = "5.24.0"
 val ScalatestVersion         = "3.2.20"
 val ScalatestSeleniumVersion = ScalatestVersion + ".0"
-val ScalatestMockitoVersion  = "3.2.17.0"
+val ScalatestMockitoVersion  = ScalatestVersion + ".0"
 
 ThisBuild / resolvers += Resolver.sonatypeCentralSnapshots
 // To make use of Pekko snapshots uncomment following two resolvers:
@@ -107,7 +107,7 @@ lazy val `scalatestplus-play` = project
       "org.scalatest"      %% "scalatest-wordspec"     % ScalatestVersion,
       "org.scalatest"      %% "scalatest-flatspec"     % ScalatestVersion % Test,
       "org.scalatest"      %% "scalatest-mustmatchers" % ScalatestVersion,
-      "org.scalatestplus"  %% "mockito-4-11"           % ScalatestMockitoVersion,
+      "org.scalatestplus"  %% "mockito-5-23"           % ScalatestMockitoVersion,
       ("org.scalatestplus" %% "selenium-4-41"          % ScalatestSeleniumVersion)
         // brings the old htmlunit-driver (HtmlUnit 2.x), which contains the same HtmlUnitDriver class as htmlunit3-driver
         .excludeAll(ExclusionRule("org.seleniumhq.selenium", "htmlunit-driver")),
