@@ -22,8 +22,8 @@ import Dependencies.resolveScalaVersion
 import Dependencies.scala213Version
 
 // Keep in sync with the Selenium and HtmlUnit driver versions Play's play-test depends on (Play uses Selenide)
-val SeleniumVersion          = "4.49.0"
-val SeleniumHtmlunitVersion  = "4.48.0"
+val SeleniumVersion          = "4.51.0"
+val SeleniumHtmlunitVersion  = "4.51.0"
 val MockitoVersion           = "4.6.1"
 val ScalatestVersion         = "3.2.17"
 val ScalatestSeleniumVersion = ScalatestVersion + ".0"
